@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="stylesheet" href="~/lib/devextreme/css/dx.common.css" />
+    <link rel="stylesheet" href="~/lib/devextreme/css/dx.light.css" />
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/globalize/lib/globalize.js"></script>
+    <script src="~/lib/devextreme/js/dx.all.debug.js"></script>
+
+    <script src="~/lib/dx.aspnet.data.js"></script>
+</head>
+<body>
+    <div id="grid"></div>
+    <script>
+        $(function() {
+            $("#grid").dxDataGrid({
+
+                dataSource: DevExpress.data.AspNet.createStore({
+                    key: "OrderID",
+                    loadUrl: "@Url.Action("Orders", "Northwind")",
+                    updateUrl: "@Url.Action("UpdateOrder", "Northwind")",
+                    insertUrl: "@Url.Action("InsertOrder", "Northwind")",
+                    deleteUrl: "@Url.Action("DeleteOrder", "Northwind")",
+
+                    onBeforeSend: function(operation, ajaxSettings) {
+                        // operation - any of "load", "update", "insert", "delete"
+                        // ajaxSettings - http://api.jquery.com/jquery.ajax/
+                    }
+                }),
+
+                columns: [
+                    {
+                        dataField: "CustomerID",
+                        caption: "Customer",
+                        lookup: {
+                            valueExpr: "Value",
+                            displayExpr: "Text",
+                            dataSource: DevExpress.data.AspNet.createStore({
+                                key: "Value",
+                                loadUrl: "@Url.Action("CustomersLookup", "Northwind")"
+                            })
+                        }
+                    },
+                    {
+                        dataField: "OrderDate",
+                        dataType: "date"
+                    },
+                    "Freight",
+                    "ShipCountry",
+                    "ShipRegion",
+                    {
+                        dataField: "ShipVia",
+                        lookup: {
+                            valueExpr: "Value",
+                            displayExpr: "Text",
+                            dataSource: DevExpress.data.AspNet.createStore({
+                                key: "Value",
+                                loadUrl: "@Url.Action("ShippersLookup", "Northwind")"
+                            })
+                        }
+                    }
+                ],
+
+                groupPanel: { visible: true },
+                filterRow: { visible: true },
+                headerFilter: { visible: true },
+                editing: {
+                    editEnabled: true,
+                    insertEnabled: true,
+                    removeEnabled: true
+                },
+
+                masterDetail: {
+                    enabled: true,
+                    template: function(container, options) {
+                        $("<div>")
+                            .dxDataGrid({
+                                dataSource: DevExpress.data.AspNet.createStore({
+                                    loadUrl: "@Url.Action("OrderDetails", "Northwind")" + "?" + $.param({ orderID: options.data.OrderID })
+                                })
+                            })
+                            .appendTo(container);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

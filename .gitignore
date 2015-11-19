@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+node_modules/
+**/wwwroot/lib/
+project.lock.json
+*.suo
+*.*proj.user

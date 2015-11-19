@@ -1,0 +1,31 @@
+version: '{build}'
+
+environment:
+  DNX_VERSION: '1.0.0-rc1-final'
+
+cache:
+  - '%USERPROFILE%\.dnx\runtimes -> appveyor.yml'
+  - '%USERPROFILE%\.dnx\packages -> appveyor.yml, **\project.json'
+  - node_modules
+
+install:
+  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
+  - dnvm install %DNX_VERSION% -r clr
+  - npm install jshint
+
+before_build:
+  - dnu restore --quiet
+  - powershell -File build\patch_version.ps1 %APPVEYOR_REPO_TAG_NAME%
+
+build_script:
+  - msbuild net\DevExtreme.AspNet.Data.sln /v:q
+
+test_script:
+  - node_modules\.bin\jshint js
+  - dnx -p net\DevExtreme.AspNet.Data.Tests test
+
+after_test:
+  - dnu pack net\DevExtreme.AspNet.Data --configuration=Release --quiet
+
+artifacts:
+  - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg

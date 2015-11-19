@@ -1,0 +1,134 @@
+﻿// https://github.com/DevExpress/DevExtreme.AspNet.Data
+// Copyright (c) Developer Express Inc.
+
+(function($, DX) {
+
+    function createStore(options) {
+        return new DX.data.CustomStore(createStoreConfig(options));
+    }
+
+    function createStoreConfig(options) {
+        var keyExpr = options.key,
+            loadUrl = options.loadUrl,
+            updateUrl = options.updateUrl,
+            insertUrl = options.insertUrl,
+            deleteUrl = options.deleteUrl,
+            onBeforeSend = options.onBeforeSend;
+
+        function send(operation, settings) {
+            if(onBeforeSend)
+                onBeforeSend(operation, settings);
+
+            return $.ajax(settings);
+        }
+
+        function filterByKey(keyValue) {
+            if(!$.isArray(keyExpr))
+                return [keyExpr, keyValue];
+
+            return $.map(keyExpr, function(i) {
+                return [[i, keyValue[i]]];
+            });
+        }
+
+        return {
+            key: keyExpr,
+
+            load: function(loadOptions) {
+                var d = new $.Deferred();
+
+                send("load", {
+                    url: loadUrl,
+                    data: loadOptionsToActionParams(loadOptions)
+                }).done(function(res) {
+                    if("totalCount" in res)
+                        d.resolve(res.data, { totalCount: res.totalCount });
+                    else
+                        d.resolve(res);
+                });
+
+                return d.promise();
+            },
+
+            totalCount: function(loadOptions) {
+                return send("load", {
+                    url: loadUrl,
+                    data: loadOptionsToActionParams(loadOptions, true)
+                });
+            },
+
+            byKey: keyExpr && function(key) {
+                var d = new $.Deferred();
+
+                send("load", {
+                    url: loadUrl,
+                    data: loadOptionsToActionParams({ filter: filterByKey(key) })
+                }).done(function(res) {
+                    d.resolve(res[0]);
+                });
+
+                return d.promise();
+            },
+
+            update: updateUrl && function(key, values) {
+                return send("update", {
+                    url: updateUrl,
+                    type: options.updateMethod || "PUT",
+                    data: {
+                        key: serializeKey(key),
+                        values: JSON.stringify(values)
+                    }
+                });
+            },
+
+            insert: insertUrl && function(values) {
+                return send("insert", {
+                    url: insertUrl,
+                    type: options.insertMethod || "POST",
+                    data: { values: JSON.stringify(values) }
+                });
+            },
+
+            remove: deleteUrl && function(key) {
+                return send("delete", {
+                    url: deleteUrl,
+                    type: options.deleteMethod || "DELETE",
+                    data: { key: serializeKey(key) }
+                });
+            }
+
+        };
+    }
+
+    function loadOptionsToActionParams(options, isCountQuery) {
+        var result = {
+            requireTotalCount: options.requireTotalCount,
+            isCountQuery: isCountQuery,
+            skip: options.skip,
+            take: options.take,
+        };
+
+        if($.isArray(options.sort))
+            result.sort = JSON.stringify(options.sort);
+
+        if($.isArray(options.filter))
+            result.filter = JSON.stringify(options.filter);
+
+        return result;
+    }
+
+    function serializeKey(key) {
+        if(typeof key === "object")
+            return JSON.stringify(key);
+
+        return key;
+    }
+
+    $.extend(DX.data, {
+        AspNet: {
+            createStore: createStore,
+            createStoreConfig: createStoreConfig
+        }
+    });
+
+})(jQuery, DevExpress);

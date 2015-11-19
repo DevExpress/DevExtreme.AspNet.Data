@@ -1,0 +1,40 @@
+{
+    "webroot": "wwwroot",
+
+    "dependencies": {
+        "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
+        "Microsoft.Extensions.DependencyInjection": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
+        "EntityFramework.Core": "7.0.0-rc1-final",
+        "EntityFramework.Commands": "7.0.0-rc1-final",
+        "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
+        "EntityFramework.MicrosoftSqlServer.Design": "7.0.0-rc1-final",
+        "DevExtreme.AspNet.Data": ""
+    },
+
+    "commands": {
+        "web": "Microsoft.AspNet.Server.Kestrel"
+    },
+
+    "frameworks": {
+        "dnx451": { },
+        "dnxcore50": { }
+    },
+
+    "publishExclude": [
+        "node_modules",
+        "bower_components",
+        "**.xproj",
+        "**.user"
+    ],
+
+    "exclude": [
+        "wwwroot",
+        "node_modules",
+        "bower_components"
+    ]
+}

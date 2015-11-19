@@ -1,0 +1,45 @@
+﻿{
+    "version": "0.0-dev",
+    "authors": [ "Developer Express Inc." ],
+    "copyright": "Copyright (c) Developer Express Inc.",
+    "description": "DevExtreme data layer extension for ASP.NET MVC",
+
+    "projectUrl": "https://github.com/DevExpress/DevExtreme.AspNet.Data",
+    "licenseUrl": "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE",
+
+
+    "dependencies": {
+        "Newtonsoft.Json": "7.0.1"
+    },
+
+    "frameworks": {
+        "net45": {
+            "compilationOptions": {
+                "define": [ "MVC5" ]
+            },
+            "dependencies": {
+                "Microsoft.AspNet.Mvc": "5.2.3"
+            }
+        },
+
+        "net451": {
+            "compilationOptions": {
+                "define": [ "MVC6" ]
+            },
+            "dependencies": {
+                "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
+            }
+        },
+
+        "dotnet5.4": {
+            "compilationOptions": {
+                "define": [ "MVC6" ]
+            },
+            "dependencies": {
+                "System.Linq.Queryable": "4.0.0",
+                "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
+            }
+        }
+
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "name": "devextreme-aspnet-data",
+    "description": "DevExtreme data layer extension for ASP.NET MVC",
+    "authors": [ "Developer Express Inc." ],
+    "license": "MIT",
+    "ignore": [ "build", "net", "appveyor.yml" ],
+    "main": [ "js/dx.aspnet.data.js" ]
+}
