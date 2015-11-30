@@ -1,12 +1,11 @@
 ﻿{
-    "version": "0.0-dev",
-    "authors": [ "Developer Express Inc." ],
-    "copyright": "Copyright (c) Developer Express Inc.",
-    "description": "DevExtreme data layer extension for ASP.NET MVC",
+    "version": "0.0",
 
-    "projectUrl": "https://github.com/DevExpress/DevExtreme.AspNet.Data",
-    "licenseUrl": "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE",
-
+    "authors": [ "%meta_company%" ],
+    "copyright": "%meta_copyright%",
+    "description": "%meta_description%",
+    "licenseUrl": "%meta_license_url%",
+    "projectUrl": "%meta_project_url%",
 
     "dependencies": {
         "Newtonsoft.Json": "7.0.1"

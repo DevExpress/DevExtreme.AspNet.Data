@@ -15,7 +15,7 @@ install:
 
 before_build:
   - dnu restore --quiet
-  - powershell -File build\patch_version.ps1 %APPVEYOR_REPO_TAG_NAME%
+  - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
 
 build_script:
   - msbuild net\DevExtreme.AspNet.Data.sln /v:q
