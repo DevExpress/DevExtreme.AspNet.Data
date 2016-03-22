@@ -9,22 +9,26 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceLoaderTests {
 
+        class SampleLoadOptions : DataSourceLoadOptionsBase {
+
+        }
+
         [Fact]
         public void TotalCount() {
             var data = new[] { 1, 3, 2 };
-            var options = new DataSourceLoadOptions {
+            var options = new SampleLoadOptions {
                 Filter = new object[] { "this", "<>", 2 },
                 Take = 1,
                 IsCountQuery = true
             };
 
-            Assert.Equal(2, new DataSourceLoader().Load(data, options));
+            Assert.Equal(2, DataSourceLoader.Load(data, options));
         }
 
         [Fact]
         public void Load_NoRequireTotalCount() {
             var data = new[] { 1, 3, 5, 2, 4 };
-            var options = new DataSourceLoadOptions {
+            var options = new SampleLoadOptions {
                 Skip = 1,
                 Take = 2,
                 Filter = new object[] { "this", "<>", 2 },
@@ -34,13 +38,13 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = false
             };
 
-            Assert.Equal(new[] { 3, 4 }, new DataSourceLoader().Load(data, options) as IEnumerable<int>);
+            Assert.Equal(new[] { 3, 4 }, DataSourceLoader.Load(data, options) as IEnumerable<int>);
         }
 
         [Fact]
         public void Load_RequireTotalCount() {
             var data = new[] { 1, 3, 5, 2, 4 };
-            var options = new DataSourceLoadOptions {
+            var options = new SampleLoadOptions {
                 Skip = 1,
                 Take = 2,
                 Filter = new object[] { "this", "<>", 2 },
@@ -50,7 +54,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             };
 
-            var result = new DataSourceLoader().Load(data, options) as IDictionary;
+            var result = DataSourceLoader.Load(data, options) as IDictionary;
             Assert.NotNull(result);
 
             Assert.Equal(4, result["totalCount"]);

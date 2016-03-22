@@ -6,7 +6,7 @@ namespace DevExtreme.AspNet.Data {
 
     public class DataSourceLoader {
 
-        public object Load<T>(IEnumerable<T> source, DataSourceLoadOptions options) {
+        public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
             var builder = new DataSourceExpressionBuilder<T> {
                 Skip = options.Skip,
                 Take = options.Take,

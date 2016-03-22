@@ -18,13 +18,13 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("orders")]
-        public IActionResult Orders(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoadResult.Create(_nwind.Orders, loadOptions);
+        public object Orders(DataSourceLoadOptions loadOptions) {
+            return DataSourceLoader.Load(_nwind.Orders, loadOptions);
         }
 
         [HttpGet("order-details")]
-        public IActionResult OrderDetails(int orderID, DataSourceLoadOptions options) {
-            return DataSourceLoadResult.Create(
+        public object OrderDetails(int orderID, DataSourceLoadOptions options) {
+            return DataSourceLoader.Load(
                 from i in _nwind.Order_Details
                 where i.OrderID == orderID
                 select new {
@@ -38,8 +38,8 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("customers-lookup")]
-        public IActionResult CustomersLookup(DataSourceLoadOptions options) {
-            return DataSourceLoadResult.Create(
+        public object CustomersLookup(DataSourceLoadOptions options) {
+            return DataSourceLoader.Load(
                 from c in _nwind.Customers orderby c.CompanyName select new {
                     Value = c.CustomerID,
                     Text = $"{c.CompanyName} ({c.Country})"
@@ -49,8 +49,8 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("shippers-lookup")]
-        public IActionResult ShippersLookup(DataSourceLoadOptions options) {
-            return DataSourceLoadResult.Create(
+        public object ShippersLookup(DataSourceLoadOptions options) {
+            return DataSourceLoader.Load(
                 from s in _nwind.Shippers orderby s.CompanyName select new {
                     Value = s.ShipperID,
                     Text = s.CompanyName
