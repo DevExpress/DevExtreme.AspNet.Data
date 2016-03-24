@@ -22,6 +22,7 @@ namespace Sample {
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {
+            DevExtreme.AspNet.Data.Helpers.Compat.EF3361 = true;
             loggerFactory.AddConsole(LogLevel.Information);
             app.UseMvc();
             app.UseStaticFiles();

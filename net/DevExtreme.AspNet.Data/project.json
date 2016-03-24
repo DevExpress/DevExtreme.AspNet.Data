@@ -12,33 +12,15 @@
     },
 
     "frameworks": {
-        "net45": {
-            "compilationOptions": {
-                "define": [ "MVC5" ]
-            },
+        "net45": { },
+        "dnxcore50": {
             "dependencies": {
-                "Microsoft.AspNet.Mvc": "5.2.3"
-            }
-        },
-
-        "net451": {
-            "compilationOptions": {
-                "define": [ "MVC6" ]
-            },
-            "dependencies": {
-                "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
-            }
-        },
-
-        "dotnet5.4": {
-            "compilationOptions": {
-                "define": [ "MVC6" ]
-            },
-            "dependencies": {
+                "System.ComponentModel.TypeConverter": "4.0.0",
+                "System.Linq.Expressions": "4.0.11-23516",
                 "System.Linq.Queryable": "4.0.0",
-                "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
+                "System.Reflection.TypeExtensions": "4.0.0",
+                "System.Text.RegularExpressions": "4.0.0"
             }
         }
-
     }
 }

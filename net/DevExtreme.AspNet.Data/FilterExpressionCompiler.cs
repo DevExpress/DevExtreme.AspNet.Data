@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,10 +45,8 @@ namespace DevExtreme.AspNet.Data {
                 clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
                 Expression valueExpr = Expression.Constant(clientValue);
 
-#if MVC6
-                if(clientValue is DateTime)
-                    valueExpr = Workaround_3361((DateTime)clientValue);
-#endif
+                if(Compat.EF3361 && clientValue is DateTime)
+                    valueExpr = Compat.Workaround_EF3361((DateTime)clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
                     valueExpr = ConvertToType(valueExpr, accessorExpr.Type);
@@ -56,14 +55,6 @@ namespace DevExtreme.AspNet.Data {
             }
 
         }
-
-#if MVC6
-#warning remove when https://github.com/aspnet/EntityFramework/issues/3361 is fixed
-        Expression Workaround_3361(DateTime date) {
-            Expression<Func<DateTime>> closure = () => date;
-            return closure.Body;
-        }
-#endif
 
         protected virtual bool IsStringFunction(string clientOperation) {
             return clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
