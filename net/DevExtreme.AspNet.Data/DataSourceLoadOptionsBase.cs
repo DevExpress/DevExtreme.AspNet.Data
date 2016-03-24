@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     public abstract class DataSourceLoadOptionsBase {
-        public const string
+        const string
             KEY_REQUIRE_TOTAL_COUNT = "requireTotalCount",
             KEY_IS_COUNT_QUERY = "isCountQuery",
             KEY_SKIP = "skip",
@@ -34,33 +34,37 @@ namespace DevExtreme.AspNet.Data {
         public IList Filter { get; set; }
 
 #warning TODO add test
-        public static T Parse<T>(IDictionary<string, string> values) where T : DataSourceLoadOptionsBase, new() {
+        public static T Parse<T>(Func<string, string> valueSource) where T : DataSourceLoadOptionsBase, new() {
+            var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
+            var isCountQuery = valueSource(KEY_IS_COUNT_QUERY);
+            var skip = valueSource(KEY_SKIP);
+            var take = valueSource(KEY_TAKE);
+            var sort = valueSource(KEY_SORT);
+            var filter = valueSource(KEY_FILTER);
+
             var result = new T();
 
-            if(HasKey(values, KEY_REQUIRE_TOTAL_COUNT))
-                result.RequireTotalCount = Convert.ToBoolean(values[KEY_REQUIRE_TOTAL_COUNT]);
+            if(!String.IsNullOrEmpty(requireTotalCount))
+                result.RequireTotalCount = Convert.ToBoolean(requireTotalCount);
 
-            if(HasKey(values, KEY_IS_COUNT_QUERY))
-                result.IsCountQuery = Convert.ToBoolean(values[KEY_IS_COUNT_QUERY]);
+            if(!String.IsNullOrEmpty(isCountQuery))
+                result.IsCountQuery = Convert.ToBoolean(isCountQuery);
 
-            if(HasKey(values, KEY_SKIP))
-                result.Skip = Convert.ToInt32(values[KEY_SKIP]);
+            if(!String.IsNullOrEmpty(skip))
+                result.Skip = Convert.ToInt32(skip);
 
-            if(HasKey(values, KEY_TAKE))
-                result.Take = Convert.ToInt32(values[KEY_TAKE]);
+            if(!String.IsNullOrEmpty(take))
+                result.Take = Convert.ToInt32(take);
 
-            if(HasKey(values, KEY_SORT))
-                result.Sort = JsonConvert.DeserializeObject<SortingInfo[]>(values[KEY_SORT]);
+            if(!String.IsNullOrEmpty(sort))
+                result.Sort = JsonConvert.DeserializeObject<SortingInfo[]>(sort);
 
-            if(HasKey(values, KEY_FILTER))
-                result.Filter = JsonConvert.DeserializeObject<IList>(values[KEY_FILTER]);
+            if(!String.IsNullOrEmpty(filter))
+                result.Filter = JsonConvert.DeserializeObject<IList>(filter);
 
             return result;
         }
 
-        static bool HasKey(IDictionary<string, string> values, string key) {
-            return values.ContainsKey(key) && !String.IsNullOrEmpty(values[key]);
-        }
     }
 
 }
