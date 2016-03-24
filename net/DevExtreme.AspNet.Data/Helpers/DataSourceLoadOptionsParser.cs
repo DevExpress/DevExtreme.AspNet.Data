@@ -16,7 +16,6 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_SORT = "sort",
             KEY_FILTER = "filter";
 
-#warning TODO add test
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
             var isCountQuery = valueSource(KEY_IS_COUNT_QUERY);

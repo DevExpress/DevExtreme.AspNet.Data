@@ -9,10 +9,6 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceLoaderTests {
 
-        class SampleLoadOptions : DataSourceLoadOptionsBase {
-
-        }
-
         [Fact]
         public void TotalCount() {
             var data = new[] { 1, 3, 2 };
