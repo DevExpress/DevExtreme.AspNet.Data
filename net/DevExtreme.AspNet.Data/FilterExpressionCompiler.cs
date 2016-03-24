@@ -44,8 +44,8 @@ namespace DevExtreme.AspNet.Data {
                 clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
                 Expression valueExpr = Expression.Constant(clientValue);
 
-                if(clientValue is DateTime)
-                    valueExpr = Workaround_3361((DateTime)clientValue);
+                if(Compat.EF3361 && clientValue is DateTime)
+                    valueExpr = Compat.Workaround_EF3361((DateTime)clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
                     valueExpr = ConvertToType(valueExpr, accessorExpr.Type);
@@ -53,12 +53,6 @@ namespace DevExtreme.AspNet.Data {
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
-        }
-
-#warning remove when https://github.com/aspnet/EntityFramework/issues/3361 is fixed
-        Expression Workaround_3361(DateTime date) {
-            Expression<Func<DateTime>> closure = () => date;
-            return closure.Body;
         }
 
         protected virtual bool IsStringFunction(string clientOperation) {
