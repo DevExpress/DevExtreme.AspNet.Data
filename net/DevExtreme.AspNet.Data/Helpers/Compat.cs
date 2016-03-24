@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DevExtreme.AspNet.Data {
+namespace DevExtreme.AspNet.Data.Helpers {
 
     public static class Compat {
         public static bool EF3361;

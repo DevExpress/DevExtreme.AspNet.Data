@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.Helpers;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Newtonsoft.Json;
@@ -17,10 +18,9 @@ namespace Sample {
     public class DataSourceLoadOptionsBinder : IModelBinder {
 
         public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext) {
-            return ModelBindingResult.SuccessAsync(
-                bindingContext.ModelName, 
-                DataSourceLoadOptionsBase.Parse<DataSourceLoadOptions>(key => bindingContext.ValueProvider.GetValue(key).FirstOrDefault())
-            );
+            var loadOptions = new DataSourceLoadOptions();
+            DataSourceLoadOptionsParser.Parse(loadOptions, key => bindingContext.ValueProvider.GetValue(key).FirstOrDefault());
+            return ModelBindingResult.SuccessAsync(bindingContext.ModelName, loadOptions);
         }
 
     }
