@@ -51,6 +51,15 @@ namespace DevExtreme.AspNet.Data {
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
                     valueExpr = ConvertToType(valueExpr, accessorExpr.Type);
 
+                if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
+                    if(clientValue == null)
+                        valueExpr = Expression.Constant(null, typeof(String));
+
+                    var compareMethod = typeof(String).GetMethod("Compare", new[] { typeof(String), typeof(String) });
+                    accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
+                    valueExpr = Expression.Constant(0);
+                }
+
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
@@ -58,6 +67,10 @@ namespace DevExtreme.AspNet.Data {
 
         protected virtual bool IsStringFunction(string clientOperation) {
             return clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
+        }
+
+        protected virtual bool IsInequality(ExpressionType type) {
+            return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
         }
 
         protected virtual Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
