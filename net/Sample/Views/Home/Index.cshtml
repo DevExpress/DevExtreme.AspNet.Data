@@ -79,7 +79,8 @@
                         $("<div>")
                             .dxDataGrid({
                                 dataSource: DevExpress.data.AspNet.createStore({
-                                    loadUrl: "@Url.Action("OrderDetails", "Northwind")" + "?" + $.param({ orderID: options.data.OrderID })
+                                    loadUrl: "@Url.Action("OrderDetails", "Northwind")",
+                                    loadParams: { orderID: options.data.OrderID }
                                 })
                             })
                             .appendTo(container);

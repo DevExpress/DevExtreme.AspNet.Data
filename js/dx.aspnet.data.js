@@ -10,6 +10,7 @@
     function createStoreConfig(options) {
         var keyExpr = options.key,
             loadUrl = options.loadUrl,
+            loadParams = options.loadParams,
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
             deleteUrl = options.deleteUrl,
@@ -29,6 +30,25 @@
             return $.map(keyExpr, function(i) {
                 return [[i, keyValue[i]]];
             });
+        }
+
+        function loadOptionsToActionParams(options, isCountQuery) {
+            var result = {
+                requireTotalCount: options.requireTotalCount,
+                isCountQuery: isCountQuery,
+                skip: options.skip,
+                take: options.take,
+            };
+
+            if($.isArray(options.sort))
+                result.sort = JSON.stringify(options.sort);
+
+            if($.isArray(options.filter))
+                result.filter = JSON.stringify(options.filter);
+
+            $.extend(result, loadParams);
+
+            return result;
         }
 
         return {
@@ -98,23 +118,6 @@
             }
 
         };
-    }
-
-    function loadOptionsToActionParams(options, isCountQuery) {
-        var result = {
-            requireTotalCount: options.requireTotalCount,
-            isCountQuery: isCountQuery,
-            skip: options.skip,
-            take: options.take,
-        };
-
-        if($.isArray(options.sort))
-            result.sort = JSON.stringify(options.sort);
-
-        if($.isArray(options.filter))
-            result.filter = JSON.stringify(options.filter);
-
-        return result;
     }
 
     function serializeKey(key) {
