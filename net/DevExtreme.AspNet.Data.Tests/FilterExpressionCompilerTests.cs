@@ -216,6 +216,20 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(@"((obj.StringProp == ""abc"") AndAlso (obj.NullableProp == null))", expr.Body.ToString());
         }
 
+        [Fact]
+        public void StringInequality() {
+            foreach(var op in new[] { "<", "<=", ">=", ">" }) {
+                Assert.Equal(
+                    $@"(Compare(obj.StringProp, ""a"") {op} 0)",
+                    Compile<DataItem1>(new[] { "StringProp", op, "a" }).Body.ToString()
+                );
+            }
+
+            Assert.Equal(
+                "(Compare(obj.StringProp, null) > 0)",
+                Compile<DataItem1>(new[] { "StringProp", ">", null }).Body.ToString()
+            );
+        }
 
     }
 
