@@ -65,6 +65,8 @@
                         d.resolve(res.data, { totalCount: res.totalCount });
                     else
                         d.resolve(res);
+                }).fail(function(error) {
+                    d.reject(error);
                 });
 
                 return d.promise();
@@ -85,6 +87,8 @@
                     data: loadOptionsToActionParams({ filter: filterByKey(key) })
                 }).done(function(res) {
                     d.resolve(res[0]);
+                }).fail(function(error) {
+                    d.reject(error);
                 });
 
                 return d.promise();
