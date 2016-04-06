@@ -135,8 +135,7 @@
 
     $.extend(DX.data, {
         AspNet: {
-            createStore: createStore,
-            createStoreConfig: createStoreConfig
+            createStore: createStore
         }
     });
 
