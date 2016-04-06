@@ -81,5 +81,10 @@ namespace Sample.Controllers {
             _nwind.SaveChanges();
         }
 
+        [HttpGet("products")]
+        public object Products(DataSourceLoadOptions loadOptions) {
+            return DataSourceLoader.Load(_nwind.Products, loadOptions);
+        }
+
     }
 }

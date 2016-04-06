@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+<div id="lookup"></div>
+<script>
+    $(function() {
+        $("#lookup").dxLookup({
+            dataSource: DevExpress.data.AspNet.createStore({
+                loadUrl: "@Url.Action("Products", "Northwind")"
+            }),
+            valueExpr: "ProductID",
+            displayExpr: "ProductName",
+            searchEnabled: true
+        });
+    });
+</script>

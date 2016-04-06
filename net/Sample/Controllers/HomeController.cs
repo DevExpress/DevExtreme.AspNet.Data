@@ -12,5 +12,10 @@ namespace Sample.Controllers {
             return View();
         }
 
+        [Route("SearchApi")]
+        public IActionResult SearchApi() {
+            return View();
+        }
+
     }
 }
