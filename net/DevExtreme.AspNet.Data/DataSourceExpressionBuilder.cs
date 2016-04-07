@@ -52,11 +52,13 @@ namespace DevExtreme.AspNet.Data {
                 if(Sort != null)
                     body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
 
-                if(Skip > 0)
-                    body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
+                if(!HasGroups) {
+                    if(Skip > 0)
+                        body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
 
-                if(Take > 0)
-                    body = Expression.Call(queryableType, "Take", genericTypeArguments, body, Expression.Constant(Take));
+                    if(Take > 0)
+                        body = Expression.Call(queryableType, "Take", genericTypeArguments, body, Expression.Constant(Take));
+                }
             }
 
             if(isCountQuery)

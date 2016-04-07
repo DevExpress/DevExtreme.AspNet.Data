@@ -20,13 +20,7 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(q);
 
-            var loadResult = builder.BuildLoadExpr().Compile()(q);
-
-            object data = null;
-            if(builder.HasGroups)
-                data = new GroupHelper<T>(loadResult).Group(builder.GetGroupSelectors());
-            else
-                data = loadResult;
+            object data = LoadData(builder, q);
 
             if(options.RequireTotalCount)
                 return new Dictionary<string, object> {
@@ -35,6 +29,22 @@ namespace DevExtreme.AspNet.Data {
                 };
 
             return data;
+        }
+
+        static object LoadData<T>(DataSourceExpressionBuilder<T> builder, IQueryable<T> q) {
+            var loadResult = builder.BuildLoadExpr().Compile()(q);
+            if(!builder.HasGroups)
+                return loadResult;
+
+            IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(loadResult).Group(builder.GetGroupSelectors());
+
+            if(builder.Skip > 0)
+                groups = groups.Skip(builder.Skip);
+
+            if(builder.Take > 0)
+                groups = groups.Take(builder.Take);
+
+            return groups;
         }
 
     }

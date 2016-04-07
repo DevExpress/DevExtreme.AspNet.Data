@@ -80,6 +80,33 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, g2.key);
             Assert.Same(data[0], g2.items[0]);
         }
+
+        [Fact]
+        public void Load_GroupWithOtherOptions() {
+            var data = new[] {
+                new { g = "g2", a = 1 },
+                new { g = "g2", a = 2 }, // filtered
+                new { g = "g2", a = 3 },
+                new { g = "g1", a = 0 }  // skipped
+            };
+
+            var result = (IDictionary)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Filter = new[] { "a", "<>", "2" },
+                Sort = new[] { new SortingInfo { Selector = "a", Desc = true } },
+                Group = new[] { new GroupingInfo { Selector = "g" } },
+                Skip = 1,
+                Take = 1,
+                RequireTotalCount = true
+            });
+
+            Assert.Equal(3, result["totalCount"]);
+
+            var groups = (result["data"] as IEnumerable<DevExtremeGroup>).ToArray();
+            Assert.Equal(1, groups.Length);
+            Assert.Equal(2, groups[0].items.Count);
+            Assert.Same(data[2], groups[0].items[0]);
+            Assert.Same(data[0], groups[0].items[1]);
+        }
     }
 
 }
