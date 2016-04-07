@@ -8,6 +8,14 @@ namespace Sample.Models {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Category>(entity => {
+                entity.HasIndex(e => e.CategoryName).HasName("CategoryName");
+
+                entity.Property(e => e.Description).HasColumnType("ntext");
+
+                entity.Property(e => e.Picture).HasColumnType("image");
+            });
+
             modelBuilder.Entity<Order_Details>(entity => {
                 entity.HasKey(e => new { e.OrderID, e.ProductID });
 
@@ -35,6 +43,7 @@ namespace Sample.Models {
             });
         }
 
+        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Order_Details> Order_Details { get; set; }
         public virtual DbSet<Order> Orders { get; set; }

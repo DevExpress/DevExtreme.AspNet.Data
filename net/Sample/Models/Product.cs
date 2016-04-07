@@ -30,5 +30,9 @@ namespace Sample.Models {
         [JsonIgnore]
         [InverseProperty("Product")]
         public virtual ICollection<Order_Details> Order_Details { get; set; }
+
+        [ForeignKey("CategoryID")]
+        [InverseProperty("Products")]
+        public virtual Category Category { get; set; }
     }
 }
