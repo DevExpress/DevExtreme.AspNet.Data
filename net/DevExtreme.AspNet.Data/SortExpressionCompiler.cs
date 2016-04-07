@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data {
     class SortExpressionCompiler<T> : ExpressionCompiler {
 
         public virtual Expression Compile(Expression target, SortingInfo[] clientExprList) {
-            var dataItemExpr = Expression.Parameter(typeof(T), "obj");
+            var dataItemExpr = CreateItemParam(typeof(T));
             var first = true;
 
             foreach(var item in clientExprList) {
