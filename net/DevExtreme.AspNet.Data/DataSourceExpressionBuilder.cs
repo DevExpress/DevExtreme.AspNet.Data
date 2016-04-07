@@ -15,8 +15,12 @@ namespace DevExtreme.AspNet.Data {
         public SortingInfo[] Sort { get; set; }
         public GroupingInfo[] Group { get; set; }
 
-        bool HasGroups {
+        public bool HasGroups {
             get { return Group != null && Group.Length > 0; }
+        }
+
+        public string[] GetGroupSelectors() {
+            return Group.Select(i => i.Selector).ToArray();
         }
 
         public LambdaExpression Build(bool isCountQuery) {

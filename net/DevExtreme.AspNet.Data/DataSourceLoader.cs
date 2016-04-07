@@ -11,7 +11,8 @@ namespace DevExtreme.AspNet.Data {
                 Skip = options.Skip,
                 Take = options.Take,
                 Filter = options.Filter,
-                Sort = options.Sort
+                Sort = options.Sort,
+                Group = options.Group
             };
 
             var q = source.AsQueryable();
@@ -20,6 +21,10 @@ namespace DevExtreme.AspNet.Data {
                 return builder.Build(true).Compile().DynamicInvoke(q);
 
             var data = builder.Build(false).Compile().DynamicInvoke(q);
+
+            if(builder.HasGroups) {
+                data = new GroupHelper<T>((IEnumerable<T>)data).Group(builder.GetGroupSelectors());
+            }
 
             if(options.RequireTotalCount)
                 return new Dictionary<string, object> {
