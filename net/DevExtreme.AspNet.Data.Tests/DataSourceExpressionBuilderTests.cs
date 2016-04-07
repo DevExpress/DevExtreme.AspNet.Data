@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 222
             };
 
-            var expr = builder.Build(false);
+            var expr = builder.BuildLoadExpr();
 
             Assert.Equal("data.Skip(111).Take(222)", expr.Body.ToString());
         }
@@ -24,7 +24,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Filter = new object[] { "this", ">", 123 }
             };
 
-            var expr = builder.Build(false);
+            var expr = builder.BuildLoadExpr();
 
             Assert.Equal("data.Where(obj => (obj > 123))", expr.Body.ToString());
         }
@@ -40,7 +40,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 },
             };
 
-            var expr = builder.Build(true);
+            var expr = builder.BuildCountExpr();
             var text = expr.ToString();
 
             Assert.Contains("Where", text);
@@ -64,7 +64,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var expr = builder.Build(false);
+            var expr = builder.BuildLoadExpr();
             Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.Body.ToString());
         }
 
@@ -83,7 +83,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
-                builder.Build(false).Body.ToString()
+                builder.BuildLoadExpr().Body.ToString()
             );
         }
     }

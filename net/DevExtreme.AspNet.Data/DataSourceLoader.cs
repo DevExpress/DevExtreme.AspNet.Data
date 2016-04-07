@@ -18,18 +18,20 @@ namespace DevExtreme.AspNet.Data {
             var q = source.AsQueryable();
 
             if(options.IsCountQuery)
-                return builder.Build(true).Compile().DynamicInvoke(q);
+                return builder.BuildCountExpr().Compile()(q);
 
-            var data = builder.Build(false).Compile().DynamicInvoke(q);
+            var loadResult = builder.BuildLoadExpr().Compile()(q);
 
-            if(builder.HasGroups) {
-                data = new GroupHelper<T>((IEnumerable<T>)data).Group(builder.GetGroupSelectors());
-            }
+            object data = null;
+            if(builder.HasGroups)
+                data = new GroupHelper<T>(loadResult).Group(builder.GetGroupSelectors());
+            else
+                data = loadResult;
 
             if(options.RequireTotalCount)
                 return new Dictionary<string, object> {
-                    { "data", data  },
-                    { "totalCount",  builder.Build(true).Compile().DynamicInvoke(q) }
+                    { "data", data },
+                    { "totalCount", builder.BuildCountExpr().Compile()(q) }
                 };
 
             return data;
