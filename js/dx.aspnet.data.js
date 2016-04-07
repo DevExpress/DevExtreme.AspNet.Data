@@ -4,7 +4,9 @@
 (function($, DX) {
 
     function createStore(options) {
-        return new DX.data.CustomStore(createStoreConfig(options));
+        var store = new DX.data.CustomStore(createStoreConfig(options));
+        store._useDefaultSearch = true;
+        return store;
     }
 
     function createStoreConfig(options) {
@@ -133,8 +135,7 @@
 
     $.extend(DX.data, {
         AspNet: {
-            createStore: createStore,
-            createStoreConfig: createStoreConfig
+            createStore: createStore
         }
     });
 
