@@ -14,6 +14,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_SKIP = "skip",
             KEY_TAKE = "take",
             KEY_SORT = "sort",
+            KEY_GROUP = "group",
             KEY_FILTER = "filter";
 
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
@@ -22,6 +23,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             var skip = valueSource(KEY_SKIP);
             var take = valueSource(KEY_TAKE);
             var sort = valueSource(KEY_SORT);
+            var group = valueSource(KEY_GROUP);
             var filter = valueSource(KEY_FILTER);
 
             if(!String.IsNullOrEmpty(requireTotalCount))
@@ -38,6 +40,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             if(!String.IsNullOrEmpty(sort))
                 loadOptions.Sort = JsonConvert.DeserializeObject<SortingInfo[]>(sort);
+
+            if(!String.IsNullOrEmpty(group))
+                loadOptions.Group = JsonConvert.DeserializeObject<GroupingInfo[]>(group);
 
             if(!String.IsNullOrEmpty(filter))
                 loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter);
