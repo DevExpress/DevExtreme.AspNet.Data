@@ -13,6 +13,11 @@ namespace DevExtreme.AspNet.Data {
         public int Take { get; set; }
         public IList Filter { get; set; }
         public SortingInfo[] Sort { get; set; }
+        public GroupingInfo[] Group { get; set; }
+
+        bool HasGroups {
+            get { return Group != null && Group.Length > 0; }
+        }
 
         public LambdaExpression Build(bool isCountQuery) {
             var queryableType = typeof(Queryable);
@@ -26,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
 
             if(!isCountQuery) {
                 if(Sort != null)
-                    body = new SortExpressionCompiler<T>().Compile(body, Sort);
+                    body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
 
                 if(Skip > 0)
                     body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
@@ -39,6 +44,26 @@ namespace DevExtreme.AspNet.Data {
                 body = Expression.Call(queryableType, "Count", genericTypeArguments, body);
 
             return Expression.Lambda(body, paramExpr);
+        }
+
+        IEnumerable<SortingInfo> GetFullSort() {
+            if(!HasGroups)
+                return Sort;
+
+            var memo = new HashSet<string>();
+            var result = new List<SortingInfo>();
+
+            foreach(var g in Group) {
+                memo.Add(g.Selector);
+                result.Add(g);
+            }
+
+            foreach(var s in Sort) {
+                if(!memo.Contains(s.Selector))
+                    result.Add(s);
+            }
+
+            return result;
         }
     }
 

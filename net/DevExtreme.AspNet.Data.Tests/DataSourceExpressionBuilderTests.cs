@@ -67,6 +67,25 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = builder.Build(false);
             Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.Body.ToString());
         }
+
+        [Fact]
+        public void GroupingAddedToSorting() {
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int, int>> {
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item2" },
+                    new SortingInfo { Selector = "Item3" }
+                },
+                Group = new[] {
+                    new GroupingInfo { Selector = "Item1" },
+                    new GroupingInfo { Selector = "Item2", Desc = true  } // this must win
+                }
+            };
+
+            Assert.Equal(
+                "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
+                builder.Build(false).Body.ToString()
+            );
+        }
     }
 
 }
