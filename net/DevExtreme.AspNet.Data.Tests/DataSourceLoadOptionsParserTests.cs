@@ -18,6 +18,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 { DataSourceLoadOptionsParser.KEY_SKIP, "42" },
                 { DataSourceLoadOptionsParser.KEY_TAKE, "43" },
                 { DataSourceLoadOptionsParser.KEY_SORT, @"[ { ""selector"": ""foo"", ""desc"": true } ]" },
+                { DataSourceLoadOptionsParser.KEY_GROUP, @"[ { ""selector"": ""g"" } ]" },
                 { DataSourceLoadOptionsParser.KEY_FILTER, @" [ ""foo"", ""bar"" ] " },
             };
 
@@ -29,6 +30,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(43, opts.Take);
             Assert.Equal("foo", opts.Sort[0].Selector);
             Assert.True(opts.Sort[0].Desc);
+            Assert.Equal("g", opts.Group[0].Selector);
             Assert.Equal(new[] { "foo", "bar" }, opts.Filter.Cast<string>());
         }
 
