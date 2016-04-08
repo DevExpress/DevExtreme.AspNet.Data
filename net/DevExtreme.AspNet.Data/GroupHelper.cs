@@ -76,6 +76,25 @@ namespace DevExtreme.AspNet.Data {
                 return number - number % interval;
             }
 
+            switch(intervalString) {
+                case "year":
+                    return Convert.ToDateTime(memberValue).Year;
+                case "quarter":
+                    return (int)Math.Ceiling(Convert.ToDateTime(memberValue).Month / 3.0);
+                case "month":
+                    return Convert.ToDateTime(memberValue).Month ;
+                case "day":
+                    return Convert.ToDateTime(memberValue).Day;
+                case "dayOfWeek":
+                    return (int)Convert.ToDateTime(memberValue).DayOfWeek;
+                case "hour":
+                    return Convert.ToDateTime(memberValue).Hour;
+                case "minute":
+                    return Convert.ToDateTime(memberValue).Minute;
+                case "second":
+                    return Convert.ToDateTime(memberValue).Second;
+            }
+
             throw new NotSupportedException();
         }
 

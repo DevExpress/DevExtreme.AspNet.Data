@@ -91,6 +91,42 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Same(data[2], groups[1].items[0]);
         }
 
+        [Fact]
+        public void GroupInterval_Dates() {
+            var data = new[] {
+                new { d = new DateTime(2011, 12, 13, 14, 15, 16) }
+            };
+
+            var groups = CreateHelper(data).Group(new[] {
+                new GroupingInfo { Selector = "d", GroupInterval = "year" },
+                new GroupingInfo { Selector = "d", GroupInterval = "quarter" },
+                new GroupingInfo { Selector = "d", GroupInterval = "month" },
+                new GroupingInfo { Selector = "d", GroupInterval = "day" },
+                new GroupingInfo { Selector = "d", GroupInterval = "dayOfWeek" },
+                new GroupingInfo { Selector = "d", GroupInterval = "hour" },
+                new GroupingInfo { Selector = "d", GroupInterval = "minute" },
+                new GroupingInfo { Selector = "d", GroupInterval = "second" },
+            });
+
+            var g_year = groups[0];
+            var g_quarter = g_year.items[0] as DevExtremeGroup;
+            var g_month = g_quarter.items[0] as DevExtremeGroup;
+            var g_day = g_month.items[0] as DevExtremeGroup;
+            var g_dayOfWeek = g_day.items[0] as DevExtremeGroup;
+            var g_hour = g_dayOfWeek.items[0] as DevExtremeGroup;
+            var g_minute = g_hour.items[0] as DevExtremeGroup;
+            var g_second = g_minute.items[0] as DevExtremeGroup;
+
+            Assert.Equal(2011, g_year.key);
+            Assert.Equal(4, g_quarter.key);
+            Assert.Equal(12, g_month.key);
+            Assert.Equal(2, g_dayOfWeek.key);
+            Assert.Equal(13, g_day.key);
+            Assert.Equal(14, g_hour.key);
+            Assert.Equal(15, g_minute.key);
+            Assert.Equal(16, g_second.key);
+        }
+
     }
 
 }
