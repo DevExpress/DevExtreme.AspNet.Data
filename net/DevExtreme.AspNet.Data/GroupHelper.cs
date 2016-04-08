@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-#warning dont serialize default null items and null count
     class DevExtremeGroup {
         public object key;
         public IList<object> items;
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? count;
     }
 
