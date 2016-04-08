@@ -19,10 +19,6 @@ namespace DevExtreme.AspNet.Data {
             get { return Group != null && Group.Length > 0; }
         }
 
-        public string[] GetGroupSelectors() {
-            return Group.Select(i => i.Selector).ToArray();
-        }
-
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, IQueryable<T>>>(

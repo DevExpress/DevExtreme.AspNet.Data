@@ -21,18 +21,18 @@ namespace DevExtreme.AspNet.Data {
             _data = data;
         }
 
-        public IList<DevExtremeGroup> Group(params string[] selectors) {
-            return Group(_data, selectors);
+        public IList<DevExtremeGroup> Group(IEnumerable<GroupingInfo> groupInfo) {
+            return Group(_data, groupInfo);
         }
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<string> selectors) {
-            var groups = Group(data, selectors.First());
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+            var groups = Group(data, groupInfo.First());
 
-            if(selectors.Count() > 1) {
+            if(groupInfo.Count() > 1) {
                 groups = groups
                     .Select(g => new DevExtremeGroup {
                         key = g.key,
-                        items = Group(g.items.Cast<T>(), selectors.Skip(1))
+                        items = Group(g.items.Cast<T>(), groupInfo.Skip(1))
                             .Cast<object>()
                             .ToArray()
                     })
@@ -43,12 +43,12 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, string selector) {
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
             var map = new Dictionary<object, DevExtremeGroup>();
             var groups = new List<DevExtremeGroup>();
 
             foreach(var item in data) {
-                var key = GetMember(item, selector);
+                var key = GetMember(item, groupInfo.Selector);
                 if(!map.ContainsKey(key)) {
                     var group = new DevExtremeGroup {
                         key = key,

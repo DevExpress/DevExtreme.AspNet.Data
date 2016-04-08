@@ -42,7 +42,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var helper = CreateHelper(data);
-            var groups = helper.Group("Year", "Q");
+            var groups = helper.Group(new[] {
+                new GroupingInfo { Selector = "Year" },
+                new GroupingInfo { Selector = "Q" }
+            });
 
             Assert.Equal(2015, groups[0].key);
             Assert.Equal(2016, groups[1].key);
