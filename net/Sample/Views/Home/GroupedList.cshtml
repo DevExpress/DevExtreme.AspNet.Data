@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+<div id="list"></div>
+<script>
+    $(function() {
+        $("#list").dxList({
+            dataSource: {
+                store: DevExpress.data.AspNet.createStore({
+                    loadUrl: "@Url.Action("Products", "Northwind")"
+                }),
+                group: "Category.CategoryName",
+                sort: "ProductName",
+                paginate: true,
+                pageSize: 1 // group
+            },
+            grouped: true,
+            itemTemplate: function(product) {
+                return product.ProductName;
+            }
+        });
+    });
+</script>

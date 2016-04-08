@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
 using Sample.Models;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
+using Microsoft.Data.Entity;
 
 namespace Sample.Controllers {
 
@@ -83,7 +84,10 @@ namespace Sample.Controllers {
 
         [HttpGet("products")]
         public object Products(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoader.Load(_nwind.Products, loadOptions);
+            return DataSourceLoader.Load(
+                _nwind.Products.Include(p => p.Category), 
+                loadOptions
+            );
         }
 
     }

@@ -38,6 +38,10 @@ namespace DevExtreme.AspNet.Data {
             return Expression.Convert(expr, type);
         }
 
+        protected ParameterExpression CreateItemParam(Type type) {
+            return Expression.Parameter(type, "obj");
+        }
+
     }
 
 }

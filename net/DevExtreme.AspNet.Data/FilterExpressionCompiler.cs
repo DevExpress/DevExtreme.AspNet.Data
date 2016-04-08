@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data {
     class FilterExpressionCompiler<T> : ExpressionCompiler {
 
         public virtual LambdaExpression Compile(IList criteriaJson) {
-            var dataItemExpr = Expression.Parameter(typeof(T), "obj");
+            var dataItemExpr = CreateItemParam(typeof(T));
             return Expression.Lambda(CompileCore(dataItemExpr, criteriaJson), dataItemExpr);
         }
 

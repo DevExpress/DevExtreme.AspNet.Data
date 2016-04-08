@@ -42,8 +42,13 @@
                 take: options.take,
             };
 
-            if($.isArray(options.sort))
-                result.sort = JSON.stringify(options.sort);
+            var normalizeSorting = DX.data.utils.normalizeSortingInfo;
+
+            if(options.sort)
+                result.sort = JSON.stringify(normalizeSorting(options.sort));
+
+            if(options.group)
+                result.group = JSON.stringify(normalizeSorting(options.group));
 
             if($.isArray(options.filter))
                 result.filter = JSON.stringify(options.filter);

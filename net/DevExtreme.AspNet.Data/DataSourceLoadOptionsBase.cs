@@ -12,6 +12,7 @@ namespace DevExtreme.AspNet.Data {
         public int Skip { get; set; }
         public int Take { get; set; }
         public SortingInfo[] Sort { get; set; }
+        public GroupingInfo[] Group { get; set; }
         public IList Filter { get; set; }
     }
 

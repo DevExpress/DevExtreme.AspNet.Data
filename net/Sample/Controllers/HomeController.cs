@@ -17,5 +17,10 @@ namespace Sample.Controllers {
             return View();
         }
 
+        [Route("GroupedList")]
+        public IActionResult GroupedList() {
+            return View();
+        }
+
     }
 }

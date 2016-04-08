@@ -11,23 +11,40 @@ namespace DevExtreme.AspNet.Data {
                 Skip = options.Skip,
                 Take = options.Take,
                 Filter = options.Filter,
-                Sort = options.Sort
+                Sort = options.Sort,
+                Group = options.Group
             };
 
             var q = source.AsQueryable();
 
             if(options.IsCountQuery)
-                return builder.Build(true).Compile().DynamicInvoke(q);
+                return builder.BuildCountExpr().Compile()(q);
 
-            var data = builder.Build(false).Compile().DynamicInvoke(q);
+            object data = LoadData(builder, q);
 
             if(options.RequireTotalCount)
                 return new Dictionary<string, object> {
-                    { "data", data  },
-                    { "totalCount",  builder.Build(true).Compile().DynamicInvoke(q) }
+                    { "data", data },
+                    { "totalCount", builder.BuildCountExpr().Compile()(q) }
                 };
 
             return data;
+        }
+
+        static object LoadData<T>(DataSourceExpressionBuilder<T> builder, IQueryable<T> q) {
+            var loadResult = builder.BuildLoadExpr().Compile()(q);
+            if(!builder.HasGroups)
+                return loadResult;
+
+            IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(loadResult).Group(builder.GetGroupSelectors());
+
+            if(builder.Skip > 0)
+                groups = groups.Skip(builder.Skip);
+
+            if(builder.Take > 0)
+                groups = groups.Take(builder.Take);
+
+            return groups;
         }
 
     }
