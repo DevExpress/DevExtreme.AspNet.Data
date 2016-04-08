@@ -71,6 +71,29 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(0, totals[4]);
         }
 
+        [Fact]
+        public void NestedGroups() {
+            var data = new[] {
+                new DevExtremeGroup {
+                    items = new[] {
+                        new DevExtremeGroup {
+                            items = new object[] { 1, 5 }
+                        }
+                    }
+                }
+            };
+
+            var calculator = new AggregateCalculator<int>(data, new Accessor<int>(), null, new[] {
+                new SummaryInfo { Selector = "this", SummaryType = "sum" }
+            });
+
+            var totals = calculator.Run();
+            Assert.Null(totals);
+
+            Assert.Equal(6M, data[0].Summary[0]);
+            Assert.Equal(6M, (data[0].items[0] as DevExtremeGroup).Summary[0]);
+        }
+
     }
 
 }
