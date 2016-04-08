@@ -157,6 +157,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(nestedGroup.items);
         }
 
+        [Fact]
+        public void NullKey() {
+            var data = new[] {
+                null,
+                "not null"
+            };
+
+            var groups = CreateHelper(data).Group(new[] { new GroupingInfo { Selector = "this" } });
+            Assert.Null(groups[0].key);
+        }
+
     }
 
 }

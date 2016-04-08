@@ -18,6 +18,8 @@ namespace DevExtreme.AspNet.Data {
 
 
     class GroupHelper<T> : ExpressionCompiler {
+        readonly static object NULL_KEY = new object();
+
         IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
         IEnumerable<T> _data;
 
@@ -49,20 +51,22 @@ namespace DevExtreme.AspNet.Data {
 
 
         IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo, bool isMostNested) {
-            var map = new Dictionary<object, DevExtremeGroup>();
+            var groupsIndex = new Dictionary<object, DevExtremeGroup>();
             var groups = new List<DevExtremeGroup>();
             var expanded = groupInfo.IsExpanded == null || groupInfo.IsExpanded.Value == true;
             var countOnly = isMostNested && !expanded;
 
             foreach(var item in data) {
-                var key = GetKey(item, groupInfo);
-                if(!map.ContainsKey(key)) {
-                    var newGroup = new DevExtremeGroup { key = key };
-                    map[key] = newGroup;
+                var groupKey = GetKey(item, groupInfo);
+                var groupIndexKey = groupKey ?? NULL_KEY;
+
+                if(!groupsIndex.ContainsKey(groupIndexKey)) {
+                    var newGroup = new DevExtremeGroup { key = groupKey };
+                    groupsIndex[groupIndexKey] = newGroup;
                     groups.Add(newGroup);
                 }
 
-                var group = map[key];
+                var group = groupsIndex[groupIndexKey];
 
                 if(countOnly) {
                     if(!group.count.HasValue)
