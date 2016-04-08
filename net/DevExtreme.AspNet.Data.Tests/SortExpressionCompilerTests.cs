@@ -94,6 +94,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = new SortExpressionCompiler<DataItem2>().Compile(targetExpr, clientExpr);
             Assert.Equal("data.OrderBy(obj => obj.Inner.Prop1)", expr.ToString());
         }
+
+        [Fact]
+        public void T361903() {
+            Assert.Equal("data", _compiler.Compile(_targetExpr, new[] { new SortingInfo { Selector = "" } }).ToString());
+            Assert.Equal("data", _compiler.Compile(_targetExpr, new[] { new SortingInfo { Selector = null } }).ToString());
+        }
     }
 
 }
