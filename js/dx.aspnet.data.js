@@ -44,10 +44,10 @@
 
             var normalizeSorting = DX.data.utils.normalizeSortingInfo;
 
-            if("sort" in options)
+            if(options.sort)
                 result.sort = JSON.stringify(normalizeSorting(options.sort));
 
-            if("group" in options)
+            if(options.group)
                 result.group = JSON.stringify(normalizeSorting(options.group));
 
             if($.isArray(options.filter))
