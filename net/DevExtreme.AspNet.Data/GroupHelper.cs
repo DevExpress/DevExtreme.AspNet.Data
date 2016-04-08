@@ -48,7 +48,7 @@ namespace DevExtreme.AspNet.Data {
             var groups = new List<DevExtremeGroup>();
 
             foreach(var item in data) {
-                var key = GetMember(item, groupInfo.Selector);
+                var key = GetKey(item, groupInfo);
                 if(!map.ContainsKey(key)) {
                     var group = new DevExtremeGroup {
                         key = key,
@@ -61,6 +61,22 @@ namespace DevExtreme.AspNet.Data {
             }
 
             return groups;
+        }
+
+        object GetKey(T obj, GroupingInfo groupInfo) {
+            var memberValue = GetMember(obj, groupInfo.Selector);
+
+            var intervalString = groupInfo.GroupInterval;
+            if(String.IsNullOrEmpty(intervalString))
+                return memberValue;
+
+            if(Char.IsDigit(intervalString[0])) {
+                var number = Convert.ToDecimal(memberValue);
+                var interval = Decimal.Parse(intervalString);
+                return number - number % interval;
+            }
+
+            throw new NotSupportedException();
         }
 
 

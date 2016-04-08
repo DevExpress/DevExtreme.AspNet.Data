@@ -64,6 +64,33 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Same(item_16_1_1, g_2016_1.items[0]);
         }
 
+        [Fact]
+        public void GroupInterval_Numeric() {
+            var data = new[] {
+                new { n = (object)1.41 },
+                new { n = (object)4 },
+                new { n = (object)11M },
+            };
+
+            var helper = CreateHelper(data);
+            var groups = helper.Group(new[] {
+                new GroupingInfo { Selector = "n", GroupInterval = "5" }
+            });
+
+            // [0, 5)   -   1, 4
+            // [5, 10)  -   none
+            // [10, 15) -   11
+
+            Assert.Equal(2, groups.Count);
+
+            Assert.Equal(0M, groups[0].key);
+            Assert.Equal(10M, groups[1].key);
+
+            Assert.Same(data[0], groups[0].items[0]);
+            Assert.Same(data[1], groups[0].items[1]);
+            Assert.Same(data[2], groups[1].items[0]);
+        }
+
     }
 
 }
