@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
+#warning TODO extract to file
     class DevExtremeGroup {
         public object key;
         public IList<object> items;
+
+#warning TEST ignore default
+        public object[] Summary;
     }
 
 
