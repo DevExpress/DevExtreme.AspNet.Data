@@ -12,6 +12,9 @@ namespace DevExtreme.AspNet.Data {
         IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
 
         public object Read(T obj, string selector) {
+            if(String.IsNullOrEmpty(selector))
+                return null;
+
             if(!_accessors.ContainsKey(selector)) {
                 var param = CreateItemParam(typeof(T));
 

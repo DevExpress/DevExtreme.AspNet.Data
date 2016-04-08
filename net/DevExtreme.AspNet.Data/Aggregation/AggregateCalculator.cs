@@ -84,6 +84,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             switch(summaryType) {
                 case "sum":
                     return new SumAggregator();
+                case "min":
+                    return new MinAggregator();
+                case "max":
+                    return new MaxAggregator();
+                case "avg":
+                    return new AvgAggregator();
+                case "count":
+                    return new CountAggregator();
             }
 
             throw new NotSupportedException();
