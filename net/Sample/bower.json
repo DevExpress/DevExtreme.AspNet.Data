@@ -2,6 +2,6 @@
     "name": "Sample",
     "private": true,
     "dependencies": {
-        "devextreme": "15.1.8"
+        "devextreme": "15.2.9"
     }
 }
