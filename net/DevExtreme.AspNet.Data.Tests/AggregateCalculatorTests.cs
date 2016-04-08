@@ -52,6 +52,25 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(3, totals[4]);
         }
 
+        [Fact]
+        public void EmptyData() {
+            var calculator = new AggregateCalculator<object>(new object[] { }, new Accessor<object>(), new[] {
+                new SummaryInfo { Selector = "this", SummaryType = "sum" },
+                new SummaryInfo { Selector = "this", SummaryType = "min" },
+                new SummaryInfo { Selector = "this", SummaryType = "max" },
+                new SummaryInfo { Selector = "this", SummaryType = "avg" },
+                new SummaryInfo { SummaryType = "count" },
+            }, null);
+
+            var totals = calculator.Run();
+
+            Assert.Equal(0M, totals[0]);
+            Assert.Equal(null, totals[1]);
+            Assert.Equal(null, totals[2]);
+            Assert.Equal(null, totals[3]);
+            Assert.Equal(0, totals[4]);
+        }
+
     }
 
 }
