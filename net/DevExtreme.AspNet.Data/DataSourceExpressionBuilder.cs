@@ -19,6 +19,10 @@ namespace DevExtreme.AspNet.Data {
             get { return Group != null && Group.Length > 0; }
         }
 
+        public bool HasSort {
+            get { return Sort != null && Sort.Length > 0; }
+        }
+
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, IQueryable<T>>>(
@@ -45,7 +49,7 @@ namespace DevExtreme.AspNet.Data {
                 body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>().Compile(Filter));
 
             if(!isCountQuery) {
-                if(Sort != null)
+                if(HasSort || HasGroups)
                     body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
 
                 if(!HasGroups) {
@@ -64,20 +68,27 @@ namespace DevExtreme.AspNet.Data {
         }
 
         IEnumerable<SortingInfo> GetFullSort() {
-            if(!HasGroups)
-                return Sort;
-
             var memo = new HashSet<string>();
             var result = new List<SortingInfo>();
 
-            foreach(var g in Group) {
-                memo.Add(g.Selector);
-                result.Add(g);
+            if(HasGroups) {
+                foreach(var g in Group) {
+                    if(memo.Contains(g.Selector))
+                        continue;
+
+                    memo.Add(g.Selector);
+                    result.Add(g);
+                }
             }
 
-            foreach(var s in Sort) {
-                if(!memo.Contains(s.Selector))
+            if(HasSort) {
+                foreach(var s in Sort) {
+                    if(memo.Contains(s.Selector))
+                        continue;
+
+                    memo.Add(s.Selector);
                     result.Add(s);
+                }
             }
 
             return result;
