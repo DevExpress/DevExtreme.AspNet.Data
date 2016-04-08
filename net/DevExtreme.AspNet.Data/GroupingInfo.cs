@@ -7,6 +7,7 @@ namespace DevExtreme.AspNet.Data {
 
     public class GroupingInfo : SortingInfo {
         public string GroupInterval { get; set; }
+        public bool? IsExpanded { get; set; }
     }
 
 }
