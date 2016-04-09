@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,10 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 if(!_sum.HasValue)
                     _sum = 0;
 
-                _sum += Convert.ToDecimal(value);
+                try {
+                    _sum += Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                } catch(FormatException) {
+                }
             }
         }
 

@@ -38,9 +38,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                 SQL script to validate
 
                 drop table if exists t1;
-                create table t1 (a int);
-                insert into t1 (a) values (1), (3), (5);
-                insert into t1 (a) values (null);
+
+                #create table t1 (a int);
+                #insert into t1 (a) values (1), (3), (5);
+
+                #create table t1 (a varchar(32));
+                #insert into t1 (a) values ('a'), ('z');
+
+                #insert into t1 (a) values (null);
 
                 select concat(
                     " sum=",   coalesce(sum(a),   'N'), 
@@ -109,6 +114,18 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Assert.Equal(5, totals[2]);
                 Assert.Equal(3M, totals[3]);
                 Assert.Equal(4, totals[4]);
+            }
+
+            {
+                var data = new object[] { "a", "z", null };
+                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+                // SQL: sum=0 min=a max=z avg=0 count=3
+
+                Assert.Equal(0M, totals[0]);
+                Assert.Equal("a", totals[1]);
+                Assert.Equal("z", totals[2]);
+                Assert.Equal(0M, totals[3]);
+                Assert.Equal(3, totals[4]);
             }
         }
 
