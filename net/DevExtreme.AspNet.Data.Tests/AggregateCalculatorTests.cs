@@ -32,8 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(7M, data[1].Summary[0]);
         }
 
-        [Fact]
-        public void Calculation() {
+        void AssertCalculation(object[] data, object expectedSum, object expectedMin, object expectedMax, object expectedAvg, object expectedCount) {
             /*
                 SQL script to validate
 
@@ -65,68 +64,83 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new SummaryInfo { SummaryType = "count" },
             };
 
-            {
-                var data = new object[0];
-                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+            var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+
+            Assert.Equal(expectedSum, totals[0]);
+            Assert.Equal(expectedMin, totals[1]);
+            Assert.Equal(expectedMax, totals[2]);
+            Assert.Equal(expectedAvg, totals[3]);
+            Assert.Equal(expectedCount, totals[4]);
+        }
+
+        [Fact]
+        public void Calculation_Empty() {
+            AssertCalculation(
+                new object[0],
                 // SQL: sum=N min=N max=N avg=N count=0
 
-                Assert.Null(totals[0]);
-                Assert.Null(totals[1]);
-                Assert.Null(totals[2]);
-                Assert.Null(totals[3]);
-                Assert.Equal(0, totals[4]);
-            }
+                expectedSum: null,
+                expectedMin: null,
+                expectedMax: null,
+                expectedAvg: null,
+                expectedCount: 0
+            );
+        }
 
-            {
-                var data = new object[] { null };
-                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
-                // SQL:  sum=N min=N max=N avg=N count=1
-
-                Assert.Null(totals[0]);
-                Assert.Null(totals[1]);
-                Assert.Null(totals[2]);
-                Assert.Null(totals[3]);
-
-                // "Summaries of the count type do not skip empty values regardless of the skipEmptyValues"
-                // http://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/summary/totalItems/?version=15_2#skipEmptyValues
-                Assert.Equal(1, totals[4]);
-            }
-
-            {
-                var data = new object[] { 1, 3, 5 };
-                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+        [Fact]
+        public void Calculation_NoNulls() {
+            AssertCalculation(
+                new object[] { 1, 3, 5 },
                 // SQL: sum=9 min=1 max=5 avg=3.0000 count=3
 
-                Assert.Equal(9M, totals[0]);
-                Assert.Equal(1, totals[1]);
-                Assert.Equal(5, totals[2]);
-                Assert.Equal(3M, totals[3]);
-                Assert.Equal(3, totals[4]);
-            }
+                expectedSum: 9M,
+                expectedMin: 1,
+                expectedMax: 5,
+                expectedAvg: 3M,
+                expectedCount: 3
+            );
+        }
 
-            {
-                var data = new object[] { 1, 3, 5, null };
-                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+        [Fact]
+        public void Calculation_Nulls() {
+            // "Summaries of the count type do not skip empty values regardless of the skipEmptyValues"
+            // http://js.devexpress.com/Documentation/ApiReference/UI_Widgets/dxDataGrid/Configuration/summary/totalItems/?version=15_2#skipEmptyValues
+
+            AssertCalculation(
+                new object[] { null },
+                // SQL:  sum=N min=N max=N avg=N count=1
+
+                expectedSum: null,
+                expectedMin: null,
+                expectedMax: null,
+                expectedAvg: null,
+                expectedCount: 1
+            );
+
+            AssertCalculation(
+                new object[] { 1, 3, 5, null },
                 // SQL: sum=9 min=1 max=5 avg=3.0000 count=4
 
-                Assert.Equal(9M, totals[0]);
-                Assert.Equal(1, totals[1]);
-                Assert.Equal(5, totals[2]);
-                Assert.Equal(3M, totals[3]);
-                Assert.Equal(4, totals[4]);
-            }
+                expectedSum: 9M,
+                expectedMin: 1,
+                expectedMax: 5,
+                expectedAvg: 3M,
+                expectedCount: 4
+            );
+        }
 
-            {
-                var data = new object[] { "a", "z", null };
-                var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+        [Fact]
+        public void Calculation_Strings() {
+            AssertCalculation(
+                new object[] { "a", "z", null },
                 // SQL: sum=0 min=a max=z avg=0 count=3
 
-                Assert.Equal(0M, totals[0]);
-                Assert.Equal("a", totals[1]);
-                Assert.Equal("z", totals[2]);
-                Assert.Equal(0M, totals[3]);
-                Assert.Equal(3, totals[4]);
-            }
+                expectedSum: 0M,
+                expectedMin: "a",
+                expectedMax: "z",
+                expectedAvg: 0M,
+                expectedCount: 3
+            );
         }
 
         [Fact]
