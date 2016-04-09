@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class MinAggregator : Aggregator {
-        object _min = UNINITIALIZED;
+        object _min = null;
 
         public override void Step(object value) {
-            if(IsNotInitialized(_min) || value != null && Comparer<object>.Default.Compare(value, _min) < 0)
-                _min = value;
+            if(value is IComparable) {
+                if(_min == null || Comparer<object>.Default.Compare(value, _min) < 0)
+                    _min = value;
+            }
         }
 
         public override object Finish() {
-            if(IsNotInitialized(_min))
-                return null;
-
             return _min;
         }
 

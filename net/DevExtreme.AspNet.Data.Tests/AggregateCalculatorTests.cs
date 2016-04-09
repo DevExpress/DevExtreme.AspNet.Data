@@ -144,6 +144,20 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void Calculation_NonComparable() {
+            AssertCalculation(
+                new[] { new object() },
+
+                // NOTE sum and avg by analogy with strings case
+                expectedSum: 0M,
+                expectedMin: null,
+                expectedMax: null,
+                expectedAvg: 0M,
+                expectedCount: 1
+            );
+        }
+
+        [Fact]
         public void NestedGroups() {
             var data = new[] {
                 new DevExtremeGroup {

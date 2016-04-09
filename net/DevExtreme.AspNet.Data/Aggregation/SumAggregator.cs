@@ -17,6 +17,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 try {
                     _sum += Convert.ToDecimal(value, CultureInfo.InvariantCulture);
                 } catch(FormatException) {
+                } catch(InvalidCastException) {
                 }
             }
         }
