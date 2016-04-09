@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class AvgAggregator : Aggregator {
-        CountAggregator _counter = new CountAggregator();
+        CountAggregator _counter = new CountAggregator(true);
         SumAggregator _summator = new SumAggregator();
 
         public override void Step(object value) {

@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class SumAggregator : Aggregator {
-        decimal _sum;
+        decimal? _sum;
 
         public override void Step(object value) {
-            _sum += Convert.ToDecimal(value);
+            if(value != null) {
+                if(!_sum.HasValue)
+                    _sum = 0;
+
+                _sum += Convert.ToDecimal(value);
+            }
         }
 
         public override object Finish() {

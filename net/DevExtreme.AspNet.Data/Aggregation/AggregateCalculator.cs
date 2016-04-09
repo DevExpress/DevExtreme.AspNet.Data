@@ -91,7 +91,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 case "avg":
                     return new AvgAggregator();
                 case "count":
-                    return new CountAggregator();
+                    return new CountAggregator(false);
             }
 
             throw new NotSupportedException();

@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         object _min = UNINITIALIZED;
 
         public override void Step(object value) {
-            if(IsNotInitialized(_min) || Comparer<object>.Default.Compare(value, _min) < 0)
+            if(IsNotInitialized(_min) || value != null && Comparer<object>.Default.Compare(value, _min) < 0)
                 _min = value;
         }
 
