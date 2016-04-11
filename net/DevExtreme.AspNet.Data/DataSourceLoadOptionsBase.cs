@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     public abstract class DataSourceLoadOptionsBase {
-        public bool RequireTotalCount { get; set; }
-        public bool IsCountQuery { get; set; }
-        public int Skip { get; set; }
-        public int Take { get; set; }
-        public SortingInfo[] Sort { get; set; }
-        public GroupingInfo[] Group { get; set; }
-        public IList Filter { get; set; }
-        public SummaryInfo[] TotalSummary { get; set; }
-        public SummaryInfo[] GroupSummary { get; set; }
+        public bool RequireTotalCount;
+        public bool IsCountQuery;
+        public int Skip;
+        public int Take;
+        public SortingInfo[] Sort;
+        public GroupingInfo[] Group;
+        public IList Filter;
+        public SummaryInfo[] TotalSummary;
+        public SummaryInfo[] GroupSummary;
 
         internal bool HasGroups {
             get { return Group != null && Group.Length > 0; }
