@@ -8,15 +8,7 @@ namespace DevExtreme.AspNet.Data {
     public class DataSourceLoader {
 
         public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
-            var builder = new DataSourceExpressionBuilder<T> {
-                Skip = options.Skip,
-                Take = options.Take,
-                Filter = options.Filter,
-                Sort = options.Sort,
-                Group = options.Group,
-                GroupSummary = options.GroupSummary,
-                TotalSummary = options.TotalSummary
-            };
+            var builder = new DataSourceExpressionBuilder<T>(options);
 
             var queryableSource = source.AsQueryable();
 
@@ -30,20 +22,20 @@ namespace DevExtreme.AspNet.Data {
             if(options.RequireTotalCount)
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
-            if(builder.HasGroups) {
-                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray(), accessor).Group(builder.Group);
+            if(options.HasGroups) {
+                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray(), accessor).Group(options.Group);
 
-                if(builder.HasSummary)
-                    result.summary = new AggregateCalculator<T>(groups, accessor, builder.TotalSummary, builder.GroupSummary).Run();
+                if(options.HasSummary)
+                    result.summary = new AggregateCalculator<T>(groups, accessor, options.TotalSummary, options.GroupSummary).Run();
 
-                groups = Paginate(groups, builder.Skip, builder.Take);
-                CollapseGroups(groups, builder.Group);
+                groups = Paginate(groups, options.Skip, options.Take);
+                CollapseGroups(groups, options.Group);
 
                 result.data = groups;
-            } else if(builder.HasSummary) {
+            } else if(options.HasSummary) {
                 var cached = query.ToArray();
-                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), accessor, builder.TotalSummary, null).Run();
-                result.data = Paginate(cached, builder.Skip, builder.Take);
+                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), accessor, options.TotalSummary, null).Run();
+                result.data = Paginate(cached, options.Skip, options.Take);
             } else {
                 result.data = query;
             }
