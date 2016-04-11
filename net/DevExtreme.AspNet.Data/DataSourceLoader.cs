@@ -30,7 +30,7 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
             if(builder.HasGroups) {
-                IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
+                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
 
                 if(builder.HasSummary)
                     result.summary = new AggregateCalculator<T>(groups, new Accessor<T>(), builder.TotalSummary, builder.GroupSummary).Run();
@@ -63,7 +63,7 @@ namespace DevExtreme.AspNet.Data {
             return data;
         }
 
-        static IEnumerable<DevExtremeGroup> CollapseGroups(IEnumerable<DevExtremeGroup> groups, IEnumerable<GroupingInfo> grouping) {
+        static IEnumerable<Group> CollapseGroups(IEnumerable<Group> groups, IEnumerable<GroupingInfo> grouping) {
 #warning can collapse non-leaf groups?
             var isLeafGroup = grouping.Count() < 2;
             var thisGrouping = grouping.First();
@@ -76,7 +76,7 @@ namespace DevExtreme.AspNet.Data {
                         g.items = null;
                     }
                 } else {
-                    CollapseGroups(g.items.Cast<DevExtremeGroup>(), grouping.Skip(1));
+                    CollapseGroups(g.items.Cast<Group>(), grouping.Skip(1));
                 }
             }
 

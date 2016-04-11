@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,19 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
-
-#warning TODO extract to file
-    class DevExtremeGroup {
-        public object key;
-        public IList<object> items;
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int? count;
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public object[] summary;
-    }
-
 
     class GroupHelper<T> : ExpressionCompiler {
         readonly static object NULL_KEY = new object();
@@ -31,16 +17,16 @@ namespace DevExtreme.AspNet.Data {
             _data = data;
         }
 
-        public IList<DevExtremeGroup> Group(IEnumerable<GroupingInfo> groupInfo) {
+        public IList<Group> Group(IEnumerable<GroupingInfo> groupInfo) {
             return Group(_data, groupInfo);
         }
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+        IList<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
             var groups = Group(data, groupInfo.First());
 
             if(groupInfo.Count() > 1) {
                 groups = groups
-                    .Select(g => new DevExtremeGroup {
+                    .Select(g => new Group {
                         key = g.key,
                         items = Group(g.items.Cast<T>(), groupInfo.Skip(1))
                             .Cast<object>()
@@ -53,16 +39,16 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
-            var groupsIndex = new Dictionary<object, DevExtremeGroup>();
-            var groups = new List<DevExtremeGroup>();
+        IList<Group> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
+            var groupsIndex = new Dictionary<object, Group>();
+            var groups = new List<Group>();
 
             foreach(var item in data) {
                 var groupKey = GetKey(item, groupInfo);
                 var groupIndexKey = groupKey ?? NULL_KEY;
 
                 if(!groupsIndex.ContainsKey(groupIndexKey)) {
-                    var newGroup = new DevExtremeGroup { key = groupKey };
+                    var newGroup = new Group { key = groupKey };
                     groupsIndex[groupIndexKey] = newGroup;
                     groups.Add(newGroup);
                 }
