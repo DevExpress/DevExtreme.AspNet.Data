@@ -121,6 +121,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, result.summary[0]);
             Assert.Equal(3, result.summary[1]);
         }
+
+        [Fact]
+        public void Load_GroupSummary() {
+            var data = new[] {
+                new { g = 1, value = 1 },
+                new { g = 1, value = 2 },
+                new { g = 2, value = 10 },
+                new { g = 2, value = 20 }
+            };
+
+            var result = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g" }
+                },
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "value", SummaryType = "sum" }
+                }
+            });            
+
+            Assert.Equal(3M, result[0].Summary[0]);
+            Assert.Equal(30M, result[1].Summary[0]);
+        }
     }
 
 }
