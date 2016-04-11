@@ -57,6 +57,12 @@
             if($.isArray(options.filter))
                 result.filter = JSON.stringify(options.filter);
 
+            if(options.totalSummary)
+                result.totalSummary = JSON.stringify(options.totalSummary);
+
+            if(options.groupSummary)
+                result.groupSummary = JSON.stringify(options.groupSummary);
+
             $.extend(result, loadParams);
 
             return result;
@@ -72,8 +78,8 @@
                     url: loadUrl,
                     data: loadOptionsToActionParams(loadOptions)
                 }).done(function(res) {
-                    if("totalCount" in res)
-                        d.resolve(res.data, { totalCount: res.totalCount });
+                    if("data" in res)
+                        d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary });
                     else
                         d.resolve(res);
                 }).fail(function(error) {

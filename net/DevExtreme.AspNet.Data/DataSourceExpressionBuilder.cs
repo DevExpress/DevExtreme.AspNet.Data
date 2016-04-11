@@ -14,6 +14,8 @@ namespace DevExtreme.AspNet.Data {
         public IList Filter { get; set; }
         public SortingInfo[] Sort { get; set; }
         public GroupingInfo[] Group { get; set; }
+        public SummaryInfo[] TotalSummary { get; set; }
+        public SummaryInfo[] GroupSummary { get; set; }
 
         public bool HasGroups {
             get { return Group != null && Group.Length > 0; }
@@ -21,6 +23,10 @@ namespace DevExtreme.AspNet.Data {
 
         public bool HasSort {
             get { return Sort != null && Sort.Length > 0; }
+        }
+
+        public bool HasSummary {
+            get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
         }
 
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
@@ -52,7 +58,7 @@ namespace DevExtreme.AspNet.Data {
                 if(HasSort || HasGroups)
                     body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
 
-                if(!HasGroups) {
+                if(!HasGroups && !HasSummary) {
                     if(Skip > 0)
                         body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
 

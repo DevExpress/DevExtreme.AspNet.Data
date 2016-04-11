@@ -68,14 +68,18 @@
                 allowAdding: true,
                 allowDeleting: true
             },
-            remoteOperations: {
-                filtering: true,
-                grouping: true,
-                paging: true,
-                sorting: true
-            },
+            remoteOperations: true,
             grouping: {
                 autoExpandAll: false
+            },
+            summary: {
+                totalItems: [
+                    { column: "Freight", summaryType: "sum" }
+                ],
+                groupItems: [
+                    { column: "Freight", summaryType: "sum" },
+                    { summaryType: "count" }
+                ]
             },
 
             masterDetail: {

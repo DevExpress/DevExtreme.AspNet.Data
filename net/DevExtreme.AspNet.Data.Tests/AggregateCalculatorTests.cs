@@ -28,8 +28,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var totals = calculator.Run();
 
             Assert.Equal(13M, totals[0]);
-            Assert.Equal(6M, data[0].Summary[0]);
-            Assert.Equal(7M, data[1].Summary[0]);
+            Assert.Equal(6M, data[0].summary[0]);
+            Assert.Equal(7M, data[1].summary[0]);
         }
 
         void AssertCalculation(object[] data, object expectedSum, object expectedMin, object expectedMax, object expectedAvg, object expectedCount) {
@@ -176,8 +176,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var totals = calculator.Run();
             Assert.Null(totals);
 
-            Assert.Equal(6M, data[0].Summary[0]);
-            Assert.Equal(6M, (data[0].items[0] as DevExtremeGroup).Summary[0]);
+            Assert.Equal(6M, data[0].summary[0]);
+            Assert.Equal(6M, (data[0].items[0] as DevExtremeGroup).summary[0]);
         }
 
     }

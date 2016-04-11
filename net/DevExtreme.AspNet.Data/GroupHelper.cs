@@ -16,8 +16,8 @@ namespace DevExtreme.AspNet.Data {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? count;
 
-#warning TEST ignore default
-        public object[] Summary;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public object[] summary;
     }
 
 
@@ -36,10 +36,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
         IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
-            var isMostNested = groupInfo.Count() < 2;
-            var groups = Group(data, groupInfo.First(), isMostNested);
+            var groups = Group(data, groupInfo.First());
 
-            if(!isMostNested) {
+            if(groupInfo.Count() > 1) {
                 groups = groups
                     .Select(g => new DevExtremeGroup {
                         key = g.key,
@@ -54,11 +53,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo, bool isMostNested) {
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
             var groupsIndex = new Dictionary<object, DevExtremeGroup>();
             var groups = new List<DevExtremeGroup>();
-            var expanded = groupInfo.IsExpanded == null || groupInfo.IsExpanded.Value == true;
-            var countOnly = isMostNested && !expanded;
 
             foreach(var item in data) {
                 var groupKey = GetKey(item, groupInfo);
@@ -71,16 +68,9 @@ namespace DevExtreme.AspNet.Data {
                 }
 
                 var group = groupsIndex[groupIndexKey];
-
-                if(countOnly) {
-                    if(!group.count.HasValue)
-                        group.count = 0;
-                    group.count++;
-                } else {
-                    if(group.items == null)
-                        group.items = new List<object>();
-                    group.items.Add(item);
-                }
+                if(group.items == null)
+                    group.items = new List<object>();
+                group.items.Add(item);
             }
 
             return groups;

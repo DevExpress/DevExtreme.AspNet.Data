@@ -50,11 +50,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             };
 
-            var result = DataSourceLoader.Load(data, options) as IDictionary;
-            Assert.NotNull(result);
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, options);
 
-            Assert.Equal(4, result["totalCount"]);
-            Assert.Equal(new[] { 3, 4 }, result["data"] as IEnumerable<int>);
+            Assert.Equal(4, result.totalCount);
+            Assert.Equal(new[] { 3, 4 }, result.data.Cast<int>());
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = "g1", a = 0 }  // skipped
             };
 
-            var result = (IDictionary)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
                 Filter = new[] { "a", "<>", "2" },
                 Sort = new[] { new SortingInfo { Selector = "a", Desc = true } },
                 Group = new[] { new GroupingInfo { Selector = "g" } },
@@ -99,13 +98,106 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             });
 
-            Assert.Equal(3, result["totalCount"]);
+            Assert.Equal(3, result.totalCount);
 
-            var groups = (result["data"] as IEnumerable<DevExtremeGroup>).ToArray();
+            var groups = result.data.Cast<DevExtremeGroup>().ToArray();
             Assert.Equal(1, groups.Length);
             Assert.Equal(2, groups[0].items.Count);
             Assert.Same(data[2], groups[0].items[0]);
             Assert.Same(data[0], groups[0].items[1]);
+        }
+
+        [Fact]
+        public void Load_GroupIsExpandedFalse() {
+            var data = new[] {
+                new { g1 = 1, g2 = 2 },
+                new { g1 = 1, g2 = 2 }
+            };
+
+            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g1", IsExpanded = false },
+                    new GroupingInfo { Selector = "g2", IsExpanded = false }
+                }
+            });
+
+            var nestedGroup = (groups[0].items[0] as DevExtremeGroup);
+            Assert.Equal(2, nestedGroup.count);
+            Assert.Null(nestedGroup.items);
+        }
+
+        [Fact]
+        public void Load_TotalSummary() {
+            var data = new[] { 1, 2, 3 };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "min" },
+                    new SummaryInfo { Selector = "this", SummaryType = "max" }
+                }
+            });            
+
+            Assert.Equal(1, result.summary[0]);
+            Assert.Equal(3, result.summary[1]);
+        }
+
+        [Fact]
+        public void Load_GroupSummary() {
+            var data = new[] {
+                new { g = 1, value = 1 },
+                new { g = 1, value = 2 },
+                new { g = 2, value = 10 },
+                new { g = 2, value = 20 }
+            };
+
+            var result = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g" }
+                },
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "value", SummaryType = "sum" }
+                }
+            });            
+
+            Assert.Equal(3M, result[0].summary[0]);
+            Assert.Equal(30M, result[1].summary[0]);
+        }
+
+        [Fact]
+        public void Load_TotalSummaryAndPaging() {
+            var data = new[] { 1, 3, 5 };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Skip = 1,
+                Take = 1,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "sum" }
+                }
+            });
+
+            Assert.Equal(9M, result.summary[0]);
+            Assert.Equal(1, result.data.Cast<object>().Count());
+        }
+
+        [Fact]
+        public void Load_SummaryAndIsExpandedFalse() {
+            var data = new[] {
+                new { g = 1, value = 1 },
+                new { g = 1, value = 2 }
+            };
+
+            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g", IsExpanded = false }
+                },
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "value",  SummaryType = "sum" }
+                }
+            });
+
+            Assert.Equal(3M, groups[0].summary[0]);
+            Assert.Null(groups[0].items);
+            Assert.Equal(2, groups[0].count);
         }
     }
 
