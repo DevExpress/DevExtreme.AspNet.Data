@@ -42,13 +42,17 @@
                 take: options.take,
             };
 
-            var normalizeSorting = DX.data.utils.normalizeSortingInfo;
+            var normalizeSorting = DX.data.utils.normalizeSortingInfo,
+                group = options.group;
 
             if(options.sort)
                 result.sort = JSON.stringify(normalizeSorting(options.sort));
 
-            if(options.group)
-                result.group = JSON.stringify(normalizeSorting(options.group));
+            if(group) {
+                if(!isAdvancedGrouping(group))
+                    group = normalizeSorting(group);
+                result.group = JSON.stringify(group);
+            }
 
             if($.isArray(options.filter))
                 result.filter = JSON.stringify(options.filter);
@@ -136,6 +140,18 @@
             return JSON.stringify(key);
 
         return key;
+    }    
+
+    function isAdvancedGrouping(expr) {
+        if(!$.isArray(expr))
+            return false;
+
+        for(var i = 0; i < expr.length; i++) {
+            if("groupInterval" in expr[i] || "isExpanded" in expr[i])
+                return true;
+        }
+
+        return false;
     }
 
     $.extend(DX.data, {

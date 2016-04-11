@@ -21,18 +21,18 @@ namespace DevExtreme.AspNet.Data {
             _data = data;
         }
 
-        public IList<DevExtremeGroup> Group(params string[] selectors) {
-            return Group(_data, selectors);
+        public IList<DevExtremeGroup> Group(IEnumerable<GroupingInfo> groupInfo) {
+            return Group(_data, groupInfo);
         }
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<string> selectors) {
-            var groups = Group(data, selectors.First());
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+            var groups = Group(data, groupInfo.First());
 
-            if(selectors.Count() > 1) {
+            if(groupInfo.Count() > 1) {
                 groups = groups
                     .Select(g => new DevExtremeGroup {
                         key = g.key,
-                        items = Group(g.items.Cast<T>(), selectors.Skip(1))
+                        items = Group(g.items.Cast<T>(), groupInfo.Skip(1))
                             .Cast<object>()
                             .ToArray()
                     })
@@ -43,12 +43,12 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, string selector) {
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
             var map = new Dictionary<object, DevExtremeGroup>();
             var groups = new List<DevExtremeGroup>();
 
             foreach(var item in data) {
-                var key = GetMember(item, selector);
+                var key = GetKey(item, groupInfo);
                 if(!map.ContainsKey(key)) {
                     var group = new DevExtremeGroup {
                         key = key,
@@ -61,6 +61,41 @@ namespace DevExtreme.AspNet.Data {
             }
 
             return groups;
+        }
+
+        object GetKey(T obj, GroupingInfo groupInfo) {
+            var memberValue = GetMember(obj, groupInfo.Selector);
+
+            var intervalString = groupInfo.GroupInterval;
+            if(String.IsNullOrEmpty(intervalString))
+                return memberValue;
+
+            if(Char.IsDigit(intervalString[0])) {
+                var number = Convert.ToDecimal(memberValue);
+                var interval = Decimal.Parse(intervalString);
+                return number - number % interval;
+            }
+
+            switch(intervalString) {
+                case "year":
+                    return Convert.ToDateTime(memberValue).Year;
+                case "quarter":
+                    return (int)Math.Ceiling(Convert.ToDateTime(memberValue).Month / 3.0);
+                case "month":
+                    return Convert.ToDateTime(memberValue).Month ;
+                case "day":
+                    return Convert.ToDateTime(memberValue).Day;
+                case "dayOfWeek":
+                    return (int)Convert.ToDateTime(memberValue).DayOfWeek;
+                case "hour":
+                    return Convert.ToDateTime(memberValue).Hour;
+                case "minute":
+                    return Convert.ToDateTime(memberValue).Minute;
+                case "second":
+                    return Convert.ToDateTime(memberValue).Second;
+            }
+
+            throw new NotSupportedException();
         }
 
 

@@ -85,6 +85,21 @@ namespace DevExtreme.AspNet.Data.Tests {
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
                 builder.BuildLoadExpr().Body.ToString()
             );
+
+            builder.Sort = null;
+            Assert.Contains("OrderBy", builder.BuildLoadExpr().Body.ToString());
+        }
+
+        [Fact]
+        public void MultiIntervalGroupsSortedOnce() {
+            var builder = new DataSourceExpressionBuilder<int> {
+                Group = new[] {
+                    new GroupingInfo { Selector = "this", GroupInterval = "a" },
+                    new GroupingInfo { Selector = "this", GroupInterval = "b" }
+                }
+            };
+
+            Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().Body.ToString());
         }
     }
 
