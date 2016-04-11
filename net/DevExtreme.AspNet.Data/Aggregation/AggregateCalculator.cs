@@ -17,7 +17,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         Stack<Aggregator[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable<object> data, Accessor<T> accessor, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable<object> data, Accessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
