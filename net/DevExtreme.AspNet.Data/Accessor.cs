@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-#warning TODO use shared accessor for grouping and aggregation
-
     class Accessor<T> : ExpressionCompiler {
         IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
 

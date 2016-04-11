@@ -23,6 +23,7 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);
 
+            var accessor = new Accessor<T>();
             var result = new DataSourceLoadResult();
             var query = builder.BuildLoadExpr().Compile()(queryableSource);
 
@@ -30,10 +31,10 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
             if(builder.HasGroups) {
-                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
+                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray(), accessor).Group(builder.Group);
 
                 if(builder.HasSummary)
-                    result.summary = new AggregateCalculator<T>(groups, new Accessor<T>(), builder.TotalSummary, builder.GroupSummary).Run();
+                    result.summary = new AggregateCalculator<T>(groups, accessor, builder.TotalSummary, builder.GroupSummary).Run();
 
                 groups = Paginate(groups, builder.Skip, builder.Take);
                 CollapseGroups(groups, builder.Group);
@@ -41,7 +42,7 @@ namespace DevExtreme.AspNet.Data {
                 result.data = groups;
             } else if(builder.HasSummary) {
                 var cached = query.ToArray();
-                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), new Accessor<T>(), builder.TotalSummary, null).Run();
+                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), accessor, builder.TotalSummary, null).Run();
                 result.data = Paginate(cached, builder.Skip, builder.Take);
             } else {
                 result.data = query;

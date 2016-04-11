@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class GroupHelper<T> : ExpressionCompiler {
+    class GroupHelper<T> {
         readonly static object NULL_KEY = new object();
 
-        IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
         IEnumerable<T> _data;
+        Accessor<T> _accessor;
 
-        public GroupHelper(IEnumerable<T> data) {
+        public GroupHelper(IEnumerable<T> data, Accessor<T> accessor) {
             _data = data;
+            _accessor = accessor;
         }
 
         public IList<Group> Group(IEnumerable<GroupingInfo> groupInfo) {
@@ -63,7 +64,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         object GetKey(T obj, GroupingInfo groupInfo) {
-            var memberValue = GetMember(obj, groupInfo.Selector);
+            var memberValue = _accessor.Read(obj, groupInfo.Selector);
 
             var intervalString = groupInfo.GroupInterval;
             if(String.IsNullOrEmpty(intervalString))
@@ -96,22 +97,6 @@ namespace DevExtreme.AspNet.Data {
 
             throw new NotSupportedException();
         }
-
-
-        object GetMember(T obj, string name) {
-            if(!_accessors.ContainsKey(name)) {
-                var param = CreateItemParam(typeof(T));
-
-                _accessors[name] = Expression.Lambda<Func<T, object>>(
-                    Expression.Convert(CompileAccessorExpression(param, name), typeof(Object)),
-                    param
-                ).Compile();
-            }
-
-            return _accessors[name](obj);
-        }
-
-
     }
 
 }

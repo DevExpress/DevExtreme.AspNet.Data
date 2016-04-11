@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Tests {
     public class GroupHelperTests {
 
         static GroupHelper<T> CreateHelper<T>(IEnumerable<T> data) {
-            return new GroupHelper<T>(data);
+            return new GroupHelper<T>(data, new Accessor<T>());
         }
 
         [Fact]
