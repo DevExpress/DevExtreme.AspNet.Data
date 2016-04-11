@@ -15,7 +15,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_TAKE = "take",
             KEY_SORT = "sort",
             KEY_GROUP = "group",
-            KEY_FILTER = "filter";
+            KEY_FILTER = "filter",
+            KEY_TOTAL_SUMMARY = "totalSummary",
+            KEY_GROUP_SUMMARY = "groupSummary";
 
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
@@ -25,6 +27,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             var sort = valueSource(KEY_SORT);
             var group = valueSource(KEY_GROUP);
             var filter = valueSource(KEY_FILTER);
+            var totalSummary = valueSource(KEY_TOTAL_SUMMARY);
+            var groupSummary = valueSource(KEY_GROUP_SUMMARY);
 
             if(!String.IsNullOrEmpty(requireTotalCount))
                 loadOptions.RequireTotalCount = Convert.ToBoolean(requireTotalCount);
@@ -46,6 +50,12 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             if(!String.IsNullOrEmpty(filter))
                 loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter);
+
+            if(!String.IsNullOrEmpty(totalSummary))
+                loadOptions.TotalSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(totalSummary);
+
+            if(!String.IsNullOrEmpty(groupSummary))
+                loadOptions.GroupSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(groupSummary);
         }
     }
 
