@@ -58,7 +58,7 @@ namespace DevExtreme.AspNet.Data {
                 if(HasSort || HasGroups)
                     body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
 
-                if(!HasGroups) {
+                if(!HasGroups && !HasSummary) {
                     if(Skip > 0)
                         body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
 

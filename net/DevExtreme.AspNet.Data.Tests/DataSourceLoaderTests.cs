@@ -143,6 +143,22 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(3M, result[0].summary[0]);
             Assert.Equal(30M, result[1].summary[0]);
         }
+
+        [Fact]
+        public void Load_TotalSummaryAndPaging() {
+            var data = new[] { 1, 3, 5 };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Skip = 1,
+                Take = 1,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "sum" }
+                }
+            });
+
+            Assert.Equal(9M, result.summary[0]);
+            Assert.Equal(1, result.data.Cast<object>().Count());
+        }
     }
 
 }
