@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
+#warning TODO extract to file
     class DevExtremeGroup {
         public object key;
         public IList<object> items;
 
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? count;
+
+#warning TEST ignore default
+        public object[] Summary;
     }
 
 
