@@ -142,23 +142,6 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void IsExpandedFalse() {
-            var data = new[] {
-                new { g1 = 1, g2 = 2 },
-                new { g1 = 1, g2 = 2 }
-            };
-
-            var groups = CreateHelper(data).Group(new[] {
-                new GroupingInfo { Selector = "g1", IsExpanded = false },
-                new GroupingInfo { Selector = "g2", IsExpanded = false }
-            });
-
-            var nestedGroup = (groups[0].items[0] as DevExtremeGroup);
-            Assert.Equal(2, nestedGroup.count);
-            Assert.Null(nestedGroup.items);
-        }
-
-        [Fact]
         public void NullKey() {
             var data = new[] {
                 null,

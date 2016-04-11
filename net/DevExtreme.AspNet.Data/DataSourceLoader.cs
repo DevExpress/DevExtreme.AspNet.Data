@@ -30,12 +30,15 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
             if(builder.HasGroups) {
-                var groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
+                IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
 
                 if(builder.HasSummary)
                     result.summary = new AggregateCalculator<T>(groups, new Accessor<T>(), builder.TotalSummary, builder.GroupSummary).Run();
 
-                result.data = Paginate(groups, builder.Skip, builder.Take);
+                groups = Paginate(groups, builder.Skip, builder.Take);
+                CollapseGroups(groups, builder.Group);
+
+                result.data = groups;
             } else if(builder.HasSummary) {
                 var cached = query.ToArray();
                 result.summary = new AggregateCalculator<T>(cached.Cast<object>(), new Accessor<T>(), builder.TotalSummary, null).Run();
@@ -58,6 +61,26 @@ namespace DevExtreme.AspNet.Data {
                 data = data.Take(take);
 
             return data;
+        }
+
+        static IEnumerable<DevExtremeGroup> CollapseGroups(IEnumerable<DevExtremeGroup> groups, IEnumerable<GroupingInfo> grouping) {
+#warning can collapse non-leaf groups?
+            var isLeafGroup = grouping.Count() < 2;
+            var thisGrouping = grouping.First();
+            var isExpanded = !thisGrouping.IsExpanded.HasValue || thisGrouping.IsExpanded.Value;
+
+            foreach(var g in groups) {
+                if(isLeafGroup) {
+                    if(!isExpanded) {
+                        g.count = g.items.Count;
+                        g.items = null;
+                    }
+                } else {
+                    CollapseGroups(g.items.Cast<DevExtremeGroup>(), grouping.Skip(1));
+                }
+            }
+
+            return groups;
         }
     }
 

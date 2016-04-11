@@ -108,6 +108,25 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void Load_GroupIsExpandedFalse() {
+            var data = new[] {
+                new { g1 = 1, g2 = 2 },
+                new { g1 = 1, g2 = 2 }
+            };
+
+            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g1", IsExpanded = false },
+                    new GroupingInfo { Selector = "g2", IsExpanded = false }
+                }
+            });
+
+            var nestedGroup = (groups[0].items[0] as DevExtremeGroup);
+            Assert.Equal(2, nestedGroup.count);
+            Assert.Null(nestedGroup.items);
+        }
+
+        [Fact]
         public void Load_TotalSummary() {
             var data = new[] { 1, 2, 3 };
 
@@ -158,6 +177,27 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(9M, result.summary[0]);
             Assert.Equal(1, result.data.Cast<object>().Count());
+        }
+
+        [Fact]
+        public void Load_SummaryAndIsExpandedFalse() {
+            var data = new[] {
+                new { g = 1, value = 1 },
+                new { g = 1, value = 2 }
+            };
+
+            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "g", IsExpanded = false }
+                },
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "value",  SummaryType = "sum" }
+                }
+            });
+
+            Assert.Equal(3M, groups[0].summary[0]);
+            Assert.Null(groups[0].items);
+            Assert.Equal(2, groups[0].count);
         }
     }
 
