@@ -140,8 +140,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });            
 
-            Assert.Equal(3M, result[0].Summary[0]);
-            Assert.Equal(30M, result[1].Summary[0]);
+            Assert.Equal(3M, result[0].summary[0]);
+            Assert.Equal(30M, result[1].summary[0]);
         }
     }
 

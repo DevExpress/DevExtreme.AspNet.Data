@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 ProcessItem(i);
 
             if(_groupAggregatorsStack != null)
-                group.Summary = Finish(_groupAggregatorsStack.Pop());            
+                group.summary = Finish(_groupAggregatorsStack.Pop());            
         }
 
         void Step(object obj, Aggregator[] aggregators, string[] selectors) {

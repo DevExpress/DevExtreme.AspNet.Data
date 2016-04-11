@@ -138,6 +138,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("\"items\":", json);
 
             Assert.DoesNotContain("\"count\":", json);
+            Assert.DoesNotContain("\"summary\":", json);
         }
 
         [Fact]

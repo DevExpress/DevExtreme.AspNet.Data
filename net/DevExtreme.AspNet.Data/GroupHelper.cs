@@ -16,8 +16,8 @@ namespace DevExtreme.AspNet.Data {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? count;
 
-#warning TEST ignore default
-        public object[] Summary;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public object[] summary;
     }
 
 
