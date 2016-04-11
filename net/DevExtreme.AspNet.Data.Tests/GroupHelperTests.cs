@@ -68,7 +68,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void GroupInterval_Numeric() {
             var data = new[] {
-                new { n = (object)1.41 },
+                new { n = (object)1.0 },
                 new { n = (object)4 },
                 new { n = (object)11M },
             };
