@@ -14,6 +14,8 @@ namespace DevExtreme.AspNet.Data {
         public SortingInfo[] Sort { get; set; }
         public GroupingInfo[] Group { get; set; }
         public IList Filter { get; set; }
+        public SummaryInfo[] TotalSummary { get; set; }
+        public SummaryInfo[] GroupSummary { get; set; }
     }
 
 }

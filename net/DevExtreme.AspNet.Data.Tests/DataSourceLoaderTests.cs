@@ -50,11 +50,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             };
 
-            var result = DataSourceLoader.Load(data, options) as IDictionary;
-            Assert.NotNull(result);
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, options);
 
-            Assert.Equal(4, result["totalCount"]);
-            Assert.Equal(new[] { 3, 4 }, result["data"] as IEnumerable<int>);
+            Assert.Equal(4, result.totalCount);
+            Assert.Equal(new[] { 3, 4 }, result.data.Cast<int>());
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = "g1", a = 0 }  // skipped
             };
 
-            var result = (IDictionary)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
                 Filter = new[] { "a", "<>", "2" },
                 Sort = new[] { new SortingInfo { Selector = "a", Desc = true } },
                 Group = new[] { new GroupingInfo { Selector = "g" } },
@@ -99,13 +98,28 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             });
 
-            Assert.Equal(3, result["totalCount"]);
+            Assert.Equal(3, result.totalCount);
 
-            var groups = (result["data"] as IEnumerable<DevExtremeGroup>).ToArray();
+            var groups = result.data.Cast<DevExtremeGroup>().ToArray();
             Assert.Equal(1, groups.Length);
             Assert.Equal(2, groups[0].items.Count);
             Assert.Same(data[2], groups[0].items[0]);
             Assert.Same(data[0], groups[0].items[1]);
+        }
+
+        [Fact]
+        public void Load_TotalSummary() {
+            var data = new[] { 1, 2, 3 };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "min" },
+                    new SummaryInfo { Selector = "this", SummaryType = "max" }
+                }
+            });            
+
+            Assert.Equal(1, result.summary[0]);
+            Assert.Equal(3, result.summary[1]);
         }
     }
 

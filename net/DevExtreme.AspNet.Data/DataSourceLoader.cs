@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Aggregation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,9 @@ namespace DevExtreme.AspNet.Data {
                 Take = options.Take,
                 Filter = options.Filter,
                 Sort = options.Sort,
-                Group = options.Group
+                Group = options.Group,
+                GroupSummary = options.GroupSummary,
+                TotalSummary = options.TotalSummary
             };
 
             var q = source.AsQueryable();
@@ -20,33 +23,37 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(q);
 
-            object data = LoadData(builder, q);
+            var result = new DataSourceLoadResult();
+            var queryResult = builder.BuildLoadExpr().Compile()(q).ToArray();
 
             if(options.RequireTotalCount)
-                return new Dictionary<string, object> {
-                    { "data", data },
-                    { "totalCount", builder.BuildCountExpr().Compile()(q) }
-                };
+                result.totalCount = builder.BuildCountExpr().Compile()(q);
 
-            return data;
+            if(builder.HasGroups) {
+                IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(queryResult).Group(builder.Group);
+
+                if(builder.HasSummary)
+                    result.summary = new AggregateCalculator<T>(groups, new Accessor<T>(), builder.TotalSummary, builder.GroupSummary).Run();
+
+                if(builder.Skip > 0)
+                    groups = groups.Skip(builder.Skip);
+
+                if(builder.Take > 0)
+                    groups = groups.Take(builder.Take);
+
+                result.data = groups;
+            } else {
+                if(builder.HasSummary)
+                    result.summary = new AggregateCalculator<T>(queryResult.Cast<object>(), new Accessor<T>(), builder.TotalSummary, null).Run();
+
+                result.data = queryResult;
+            }
+
+            if(result.IsDataOnly())
+                return result.data;
+
+            return result;
         }
-
-        static object LoadData<T>(DataSourceExpressionBuilder<T> builder, IQueryable<T> q) {
-            var loadResult = builder.BuildLoadExpr().Compile()(q);
-            if(!builder.HasGroups)
-                return loadResult;
-
-            IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(loadResult).Group(builder.Group);
-
-            if(builder.Skip > 0)
-                groups = groups.Skip(builder.Skip);
-
-            if(builder.Take > 0)
-                groups = groups.Take(builder.Take);
-
-            return groups;
-        }
-
     }
 
 }
