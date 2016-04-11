@@ -34,9 +34,17 @@
                 },
                 {
                     dataField: "OrderDate",
-                    dataType: "date"
+                    dataType: "date",
+                    headerFilter: {
+                        groupInterval: "quarter"
+                    }
                 },
-                "Freight",
+                {
+                    dataField: "Freight",
+                    headerFilter: {
+                        groupInterval: 100
+                    }
+                },
                 "ShipCountry",
                 "ShipRegion",
                 {
@@ -59,6 +67,15 @@
                 allowUpdating: true,
                 allowAdding: true,
                 allowDeleting: true
+            },
+            remoteOperations: {
+                filtering: true,
+                grouping: true,
+                paging: true,
+                sorting: true
+            },
+            grouping: {
+                autoExpandAll: false
             },
 
             masterDetail: {

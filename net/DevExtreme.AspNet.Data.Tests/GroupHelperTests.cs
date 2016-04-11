@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,6 +126,35 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(14, g_hour.key);
             Assert.Equal(15, g_minute.key);
             Assert.Equal(16, g_second.key);
+        }
+
+        [Fact]
+        public void GroupExtraProps_NotSerializedIfEmpty() {
+            var group = new DevExtremeGroup();
+            var json = JsonConvert.SerializeObject(group);
+
+            // these must always present
+            Assert.Contains("\"key\":", json);
+            Assert.Contains("\"items\":", json);
+
+            Assert.DoesNotContain("\"count\":", json);
+        }
+
+        [Fact]
+        public void IsExpandedFalse() {
+            var data = new[] {
+                new { g1 = 1, g2 = 2 },
+                new { g1 = 1, g2 = 2 }
+            };
+
+            var groups = CreateHelper(data).Group(new[] {
+                new GroupingInfo { Selector = "g1", IsExpanded = false },
+                new GroupingInfo { Selector = "g2", IsExpanded = false }
+            });
+
+            var nestedGroup = (groups[0].items[0] as DevExtremeGroup);
+            Assert.Equal(2, nestedGroup.count);
+            Assert.Null(nestedGroup.items);
         }
 
     }

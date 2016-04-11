@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,6 +12,9 @@ namespace DevExtreme.AspNet.Data {
     class DevExtremeGroup {
         public object key;
         public IList<object> items;
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? count;
 
 #warning TEST ignore default
         public object[] Summary;
@@ -30,9 +34,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
-            var groups = Group(data, groupInfo.First());
+            var isMostNested = groupInfo.Count() < 2;
+            var groups = Group(data, groupInfo.First(), isMostNested);
 
-            if(groupInfo.Count() > 1) {
+            if(!isMostNested) {
                 groups = groups
                     .Select(g => new DevExtremeGroup {
                         key = g.key,
@@ -47,21 +52,31 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
+        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo, bool isMostNested) {
             var map = new Dictionary<object, DevExtremeGroup>();
             var groups = new List<DevExtremeGroup>();
+            var expanded = groupInfo.IsExpanded == null || groupInfo.IsExpanded.Value == true;
+            var countOnly = isMostNested && !expanded;
 
             foreach(var item in data) {
                 var key = GetKey(item, groupInfo);
                 if(!map.ContainsKey(key)) {
-                    var group = new DevExtremeGroup {
-                        key = key,
-                        items = new List<object>()
-                    };
-                    map[key] = group;
-                    groups.Add(group);
+                    var newGroup = new DevExtremeGroup { key = key };
+                    map[key] = newGroup;
+                    groups.Add(newGroup);
                 }
-                map[key].items.Add(item);
+
+                var group = map[key];
+
+                if(countOnly) {
+                    if(!group.count.HasValue)
+                        group.count = 0;
+                    group.count++;
+                } else {
+                    if(group.items == null)
+                        group.items = new List<object>();
+                    group.items.Add(item);
+                }
             }
 
             return groups;
