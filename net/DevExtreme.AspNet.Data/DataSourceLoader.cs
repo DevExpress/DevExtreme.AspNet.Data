@@ -36,7 +36,7 @@ namespace DevExtreme.AspNet.Data {
             if(!builder.HasGroups)
                 return loadResult;
 
-            IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(loadResult).Group(builder.GetGroupSelectors());
+            IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(loadResult).Group(builder.Group);
 
             if(builder.Skip > 0)
                 groups = groups.Skip(builder.Skip);
