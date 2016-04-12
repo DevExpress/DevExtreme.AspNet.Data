@@ -9,6 +9,10 @@ namespace DevExtreme.AspNet.Data {
     class Accessor<T> : ExpressionCompiler {
         IDictionary<string, Func<T, object>> _accessors;
 
+        public Accessor() 
+            : base(true) {
+        }
+
         public object Read(T obj, string selector) {
             if(String.IsNullOrEmpty(selector))
                 return null;

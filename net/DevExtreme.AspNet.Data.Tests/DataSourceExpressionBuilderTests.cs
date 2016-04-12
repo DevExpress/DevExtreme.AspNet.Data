@@ -7,8 +7,14 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceExpressionBuilderTests {
+
+        static DataSourceExpressionBuilder<T> CreateBuilder<T>(DataSourceLoadOptionsBase loadOptions) {
+            return new DataSourceExpressionBuilder<T>(loadOptions, false);
+        }
+
+
         public void Build_SkipTake() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222
             });
@@ -20,7 +26,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Filter() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Filter = new object[] { "this", ">", 123 }
             });
 
@@ -31,7 +37,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_CountQuery() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222,
                 Filter = new object[] { "this", 123 },
@@ -52,7 +58,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Sorting() {
-            var builder = new DataSourceExpressionBuilder<Tuple<int, string>>(new SampleLoadOptions {
+            var builder = CreateBuilder<Tuple<int, string>>(new SampleLoadOptions {
                 Sort = new[] {
                     new SortingInfo {
                         Selector="Item1"
@@ -81,7 +87,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var builder = new DataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
+            var builder = CreateBuilder<Tuple<int, int, int>>(loadOptions);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
@@ -94,7 +100,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void MultiIntervalGroupsSortedOnce() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }

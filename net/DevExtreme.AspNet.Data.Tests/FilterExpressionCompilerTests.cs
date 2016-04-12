@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         LambdaExpression Compile<T>(IList criteria) {
-            return new FilterExpressionCompiler<T>().Compile(criteria);
+            return new FilterExpressionCompiler<T>(false).Compile(criteria);
         }
 
         [Fact]

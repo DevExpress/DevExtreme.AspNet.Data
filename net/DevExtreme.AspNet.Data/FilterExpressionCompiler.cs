@@ -12,6 +12,10 @@ namespace DevExtreme.AspNet.Data {
 
     class FilterExpressionCompiler<T> : ExpressionCompiler {
 
+        public FilterExpressionCompiler(bool guardNulls) 
+            : base(guardNulls) {
+        }
+
         public LambdaExpression Compile(IList criteriaJson) {
             var dataItemExpr = CreateItemParam(typeof(T));
             return Expression.Lambda(CompileCore(dataItemExpr, criteriaJson), dataItemExpr);

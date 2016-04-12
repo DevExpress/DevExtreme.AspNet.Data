@@ -22,7 +22,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         public SortExpressionCompilerTests() {
-            _compiler = new SortExpressionCompiler<DataItem1>();
+            _compiler = new SortExpressionCompiler<DataItem1>(false);
             _targetExpr = Expression.Parameter(typeof(IQueryable<DataItem1>), "data");
         }
 
@@ -91,7 +91,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var targetExpr = Expression.Parameter(typeof(IQueryable<DataItem2>), "data");
-            var expr = new SortExpressionCompiler<DataItem2>().Compile(targetExpr, clientExpr);
+            var expr = new SortExpressionCompiler<DataItem2>(false).Compile(targetExpr, clientExpr);
             Assert.Equal("data.OrderBy(obj => obj.Inner.Prop1)", expr.ToString());
         }
 

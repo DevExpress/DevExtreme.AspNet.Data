@@ -10,16 +10,11 @@ namespace DevExtreme.AspNet.Data.Tests {
     public class ExpressionCompilerTests {
 
         class SampleCompiler : ExpressionCompiler {
-            bool _guardNulls;
 
-            public SampleCompiler(bool guardNulls) {
-                _guardNulls = guardNulls;
+            public SampleCompiler(bool guardNulls) 
+                : base(guardNulls) {
             }
 
-            protected override bool GuardNulls {
-                get { return _guardNulls;  }
-            }
-            
         }
 
         class TargetClassBase {

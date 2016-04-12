@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     abstract class ExpressionCompiler {
+        bool _guardNulls;
 
-        protected virtual bool GuardNulls {
-            get { return false; }
+        public ExpressionCompiler(bool guardNulls) {
+            _guardNulls = guardNulls;
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false) {
@@ -23,7 +24,7 @@ namespace DevExtreme.AspNet.Data {
             foreach(var i in clientExpr.Split('.')) {
                 Expression next = Expression.PropertyOrField(currentTarget, i);
 
-                if(GuardNulls && next.Type == typeof(String))
+                if(_guardNulls && next.Type == typeof(String))
                     next = Expression.Coalesce(next, Expression.Constant(""));
 
                 currentTarget = next;
@@ -40,7 +41,7 @@ namespace DevExtreme.AspNet.Data {
             var last = components.Last();
             var lastType = last.Type;
 
-            if(!GuardNulls)
+            if(!_guardNulls)
                 return last;
 
             Expression allTests = null;
