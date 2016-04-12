@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data {
             get { return false; }
         }
 
-        protected internal Expression CompileAccessorExpression_NEW(Expression target, string clientExpr, bool forceToString = false) {
+        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false) {
             if(clientExpr == "this")
                 return target;
 
@@ -68,37 +68,6 @@ namespace DevExtreme.AspNet.Data {
                 ),
                 last
             );
-        }
-
-
-        protected Expression CompileAccessorExpression(Expression target, string clientExpr) {
-            if(clientExpr == "this")
-                return target;
-
-            var lastDotIndex = clientExpr.LastIndexOf('.');
-            if(lastDotIndex > -1) {
-                target = CompileAccessorExpression(target, clientExpr.Substring(0, lastDotIndex));
-                clientExpr = clientExpr.Substring(1 + lastDotIndex);
-            }
-
-            return Expression.PropertyOrField(target, clientExpr);
-        }
-
-        protected Expression ConvertToType(Expression expr, Type type) {
-            if(type == typeof(String)) {
-                var result = Expression.Call(expr, "ToString", Type.EmptyTypes);
-
-                if(!Utils.CanAssignNull(expr.Type))
-                    return result;
-
-                return Expression.Condition(
-                    Expression.Equal(expr, Expression.Constant(null)),
-                    Expression.Constant(String.Empty),
-                    result
-                );
-            }
-
-            return Expression.Convert(expr, type);
         }
 
         protected ParameterExpression CreateItemParam(Type type) {
