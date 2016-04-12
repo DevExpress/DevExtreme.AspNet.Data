@@ -18,8 +18,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             public DateTime Date { get; set; }
         }
 
-        LambdaExpression Compile<T>(IList criteria) {
-            return new FilterExpressionCompiler<T>(false).Compile(criteria);
+        LambdaExpression Compile<T>(IList criteria, bool guardNulls = false) {
+            return new FilterExpressionCompiler<T>(guardNulls).Compile(criteria);
         }
 
         [Fact]
@@ -73,9 +73,22 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void StringFunctionOnNonNullableNonStringData() {
+        public void StringFunctionOnNonStringData() {
             var expr = Compile<DataItem1>(new[] { "IntProp", "contains", "Abc" });
             Assert.Equal("obj.IntProp.ToString().ToLower().Contains(\"abc\")", expr.Body.ToString());
+        }
+
+        [Fact]
+        public void StringFunctionGuardNulls() {
+            Assert.Equal(
+                @"(IIF((obj == null), null, obj.StringProp) ?? """").ToLower().StartsWith(""abc"")",
+                Compile<DataItem1>(new[] { "StringProp", "startswith", "abc" }, true).Body.ToString()
+            );
+
+            Assert.Equal(
+                @"(IIF((obj == null), null, obj.IntProp.ToString()) ?? """").ToLower().StartsWith(""abc"")",
+                Compile<DataItem1>(new[] { "IntProp", "startswith", "abc" }, true).Body.ToString()
+            );
         }
 
         [Fact]

@@ -13,6 +13,10 @@ namespace DevExtreme.AspNet.Data {
             _guardNulls = guardNulls;
         }
 
+        protected bool GuardNulls {
+            get { return _guardNulls; }
+        }
+
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false) {
             if(clientExpr == "this")
                 return target;
@@ -31,13 +35,8 @@ namespace DevExtreme.AspNet.Data {
                     i--;
                 }
 
-                Expression next = Expression.PropertyOrField(currentTarget, clientExprItem);
-
-                if(_guardNulls && next.Type == typeof(String))
-                    next = Expression.Coalesce(next, Expression.Constant(""));
-
-                currentTarget = next;
-                progression.Add(next);
+                currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);
+                progression.Add(currentTarget);
             }
 
             if(forceToString && currentTarget.Type != typeof(String))
@@ -60,10 +59,6 @@ namespace DevExtreme.AspNet.Data {
                     break;
 
                 var type = i.Type;
-
-                if(type == typeof(String))
-                    break;
-
                 if(!Utils.CanAssignNull(type))
                     continue;
 
@@ -76,10 +71,7 @@ namespace DevExtreme.AspNet.Data {
 
             return Expression.Condition(
                 allTests,
-                Expression.Constant(
-                    lastType == typeof(String) ? "" : Utils.GetDefaultValue(lastType), 
-                    lastType
-                ),
+                Expression.Constant(Utils.GetDefaultValue(lastType), lastType),
                 last
             );
         }

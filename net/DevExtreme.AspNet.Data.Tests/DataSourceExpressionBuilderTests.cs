@@ -115,8 +115,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var builder = CreateBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
                 Filter = new[] {
                     new[] { "Item1", ">", "0" },
-                    new[] { "Item2.Length", ">", "0" },
                     new[] { "Item2", "contains", "z" },
+                    new[] { "Item2.Length", ">", "1" },                    
                     new[] { "Item3.Year", ">", "0" }
                 },
                 Sort = new[] {
@@ -132,14 +132,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             var data = new[] {
                 // filtered out
                 null,
-                Tuple.Create<int?, string, DateTime?>(null, "z", new DateTime(2000, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(null, "zz", new DateTime(2000, 1, 1)),
                 Tuple.Create<int?, string, DateTime?>(1, null, new DateTime(2000, 1, 1)),
-                Tuple.Create<int?, string, DateTime?>(1, "z", null),
+                Tuple.Create<int?, string, DateTime?>(1, "zz", null),
                 
 
                 // kept
-                Tuple.Create<int?, string, DateTime?>(1, "z", new DateTime(2000, 1, 2)),
-                Tuple.Create<int?, string, DateTime?>(1, "z", new DateTime(2000, 1, 1))                
+                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 2)),
+                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 1))                
             };
 
             var result = query(data.AsQueryable()).ToArray();

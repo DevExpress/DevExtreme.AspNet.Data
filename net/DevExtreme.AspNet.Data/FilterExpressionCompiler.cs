@@ -82,6 +82,9 @@ namespace DevExtreme.AspNet.Data {
                 invert = true;
             }
 
+            if(GuardNulls)
+                accessorExpr = Expression.Coalesce(accessorExpr, Expression.Constant(""));
+
             var toLowerMethod = typeof(String).GetMethod("ToLower", Type.EmptyTypes);
             var operationMethod = typeof(String)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public)

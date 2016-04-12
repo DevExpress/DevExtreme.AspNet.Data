@@ -58,7 +58,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor_Guard_String() {
             Assert.Equal(
-                @"IIF((t == null), 0, (t.String ?? """").Length)",
+                "IIF(((t == null) OrElse (t.String == null)), 0, t.String.Length)",
                 CompileAccessor(true, "String.Length")
             );
         }
@@ -92,17 +92,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", true));
 
             Assert.Equal(
-                @"IIF((t == null), """", (t.String ?? """"))", 
+                "IIF((t == null), null, t.String)", 
                 CompileAccessor(true, "String", true)
             );
 
             Assert.Equal(
-                @"IIF((t == null), """", t.Value.ToString())",
+                "IIF((t == null), null, t.Value.ToString())",
                 CompileAccessor(true, "Value", true)
             );
 
             Assert.Equal(
-                @"IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), """", t.Ref.Ref.ToString())",
+                "IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), null, t.Ref.Ref.ToString())",
                 CompileAccessor(true, "Ref.Ref", true)
             );
         }
