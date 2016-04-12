@@ -36,7 +36,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("data.OrderBy(obj => obj.Prop1)", expr.ToString());
         }
 
-
+        [Fact]
         public void SingleSortDesc() {
             var clientExpr = new[] {
                 new SortingInfo {

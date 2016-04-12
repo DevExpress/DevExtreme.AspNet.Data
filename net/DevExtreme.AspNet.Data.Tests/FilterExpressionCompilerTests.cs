@@ -85,6 +85,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         //    Assert.Equal("IIF((obj.NullableProp == null), \"\", obj.NullableProp.ToString()).ToLower().Contains(\"abc\")", expr.Body.ToString());
         //}
 
+        [Fact]
         public void ImplicitAndOfTwo() {
             var crit = new[] {
                 new object[] { "IntProp", ">", 1 },

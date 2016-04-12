@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             return new DataSourceExpressionBuilder<T>(loadOptions, false);
         }
 
-
+        [Fact]
         public void Build_SkipTake() {
             var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
