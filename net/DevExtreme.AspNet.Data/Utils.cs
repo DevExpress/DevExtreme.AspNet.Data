@@ -15,6 +15,12 @@ namespace DevExtreme.AspNet.Data {
             return !type.GetTypeInfo().IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
+        public static object GetDefaultValue(Type type) {
+            if(type.GetTypeInfo().IsValueType)
+                return Activator.CreateInstance(type);
+            return null;
+        }
+
         public static object ConvertClientValue(object value, Type type) {
             value = UnwrapNewtonsoftValue(value);
 

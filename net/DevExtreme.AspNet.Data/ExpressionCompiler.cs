@@ -8,6 +8,59 @@ namespace DevExtreme.AspNet.Data {
 
     abstract class ExpressionCompiler {
 
+        protected virtual bool GuardNulls {
+            get { return false; }
+        }
+
+        protected internal virtual Expression CompileAccessorExpression_NEW(Expression target, string clientExpr) {
+            if(clientExpr == "this")
+                return target;
+
+            var components = clientExpr.Split('.');
+            var componentExpressions = new List<Expression>(1 + components.Length);
+            componentExpressions.Add(target);
+
+            var currentTarget = target;
+            foreach(var i in components) {
+                Expression next = Expression.PropertyOrField(currentTarget, i);
+
+                if(GuardNulls && next.Type == typeof(String))
+                    next = Expression.Coalesce(next, Expression.Constant(""));
+
+                currentTarget = next;
+                componentExpressions.Add(next);
+            }
+
+            var lastComponent = componentExpressions.Last();
+
+            if(!GuardNulls)
+                return lastComponent;
+
+            var resultType = lastComponent.Type;
+            Expression guardCondition = null;
+            foreach(var i in componentExpressions) {
+                if(i == lastComponent)
+                    break;
+
+                var type = i.Type;
+                if(type == typeof(String) || !Utils.CanAssignNull(type))
+                    break;
+
+                var componentCondition = Expression.Equal(i, Expression.Constant(null, type));
+                if(guardCondition == null)
+                    guardCondition = componentCondition;
+                else
+                    guardCondition = Expression.OrElse(guardCondition, componentCondition);
+            }
+
+            return Expression.Condition(
+                guardCondition,
+                Expression.Constant(Utils.GetDefaultValue(lastComponent.Type), lastComponent.Type),
+                lastComponent
+            );
+        }
+
+
         protected virtual Expression CompileAccessorExpression(Expression target, string clientExpr) {
             if(clientExpr == "this")
                 return target;
