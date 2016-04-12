@@ -8,8 +8,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceExpressionBuilderTests {
 
-        static DataSourceExpressionBuilder<T> CreateBuilder<T>(DataSourceLoadOptionsBase loadOptions) {
-            return new DataSourceExpressionBuilder<T>(loadOptions, false);
+        static DataSourceExpressionBuilder<T> CreateBuilder<T>(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false) {
+            return new DataSourceExpressionBuilder<T>(loadOptions, guardNulls);
         }
 
         [Fact]
@@ -108,6 +108,41 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().Body.ToString());
+        }
+
+        [Fact]
+        public void GuardNulls() {
+            var builder = CreateBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
+                Filter = new[] {
+                    new[] { "Item1", ">", "0" },
+                    new[] { "Item2.Length", ">", "0" },
+                    new[] { "Item3.Year", ">", "0" }
+                },
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item1" },
+                    new SortingInfo { Selector = "Item2.Length" },
+                    new SortingInfo { Selector = "Item3.Year" },
+                }
+            }, true);
+
+            var expr = builder.BuildLoadExpr();
+            var query = expr.Compile();
+
+            var data = new[] {
+                // filtered out
+                null,
+                Tuple.Create<int?, string, DateTime?>(null, "123", new DateTime(2016, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, null, new DateTime(2016, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, "123", null),
+                
+
+                // kept
+                Tuple.Create<int?, string, DateTime?>(1, "1", new DateTime(2000, 1, 2)),
+                Tuple.Create<int?, string, DateTime?>(1, "1", new DateTime(2000, 1, 1))                
+            };
+
+            var result = query(data.AsQueryable()).ToArray();
+            Assert.Equal(2, result.Length);
         }
     }
 
