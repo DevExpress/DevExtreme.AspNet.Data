@@ -72,8 +72,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });
 
-            var g1 = (result as IEnumerable<DevExtremeGroup>).First();
-            var g2 = g1.items[0] as DevExtremeGroup;
+            var g1 = (result as IEnumerable<Group>).First();
+            var g2 = g1.items[0] as Group;
 
             Assert.Equal(1, g1.key);
             Assert.Equal(2, g2.key);
@@ -100,7 +100,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(3, result.totalCount);
 
-            var groups = result.data.Cast<DevExtremeGroup>().ToArray();
+            var groups = result.data.Cast<Group>().ToArray();
             Assert.Equal(1, groups.Length);
             Assert.Equal(2, groups[0].items.Count);
             Assert.Same(data[2], groups[0].items[0]);
@@ -114,14 +114,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g1 = 1, g2 = 2 }
             };
 
-            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var groups = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g1", IsExpanded = false },
                     new GroupingInfo { Selector = "g2", IsExpanded = false }
                 }
             });
 
-            var nestedGroup = (groups[0].items[0] as DevExtremeGroup);
+            var nestedGroup = (groups[0].items[0] as Group);
             Assert.Equal(2, nestedGroup.count);
             Assert.Null(nestedGroup.items);
         }
@@ -150,7 +150,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = 2, value = 20 }
             };
 
-            var result = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g" }
                 },
@@ -186,7 +186,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = 1, value = 2 }
             };
 
-            var groups = (IList<DevExtremeGroup>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var groups = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g", IsExpanded = false }
                 },

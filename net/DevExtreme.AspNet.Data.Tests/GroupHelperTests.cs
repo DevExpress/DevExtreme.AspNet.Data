@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Tests {
     public class GroupHelperTests {
 
         static GroupHelper<T> CreateHelper<T>(IEnumerable<T> data) {
-            return new GroupHelper<T>(data);
+            return new GroupHelper<T>(data, new Accessor<T>());
         }
 
         [Fact]
@@ -51,9 +51,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2015, groups[0].key);
             Assert.Equal(2016, groups[1].key);
 
-            var g_2015_1 = groups[0].items[0] as DevExtremeGroup;
-            var g_2015_2 = groups[0].items[1] as DevExtremeGroup;
-            var g_2016_1 = groups[1].items[0] as DevExtremeGroup;
+            var g_2015_1 = groups[0].items[0] as Group;
+            var g_2015_2 = groups[0].items[1] as Group;
+            var g_2016_1 = groups[1].items[0] as Group;
 
             Assert.Equal(1, g_2015_1.key);
             Assert.Equal(2, g_2015_2.key);
@@ -110,13 +110,13 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             var g_year = groups[0];
-            var g_quarter = g_year.items[0] as DevExtremeGroup;
-            var g_month = g_quarter.items[0] as DevExtremeGroup;
-            var g_day = g_month.items[0] as DevExtremeGroup;
-            var g_dayOfWeek = g_day.items[0] as DevExtremeGroup;
-            var g_hour = g_dayOfWeek.items[0] as DevExtremeGroup;
-            var g_minute = g_hour.items[0] as DevExtremeGroup;
-            var g_second = g_minute.items[0] as DevExtremeGroup;
+            var g_quarter = g_year.items[0] as Group;
+            var g_month = g_quarter.items[0] as Group;
+            var g_day = g_month.items[0] as Group;
+            var g_dayOfWeek = g_day.items[0] as Group;
+            var g_hour = g_dayOfWeek.items[0] as Group;
+            var g_minute = g_hour.items[0] as Group;
+            var g_second = g_minute.items[0] as Group;
 
             Assert.Equal(2011, g_year.key);
             Assert.Equal(4, g_quarter.key);
@@ -130,7 +130,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GroupExtraProps_NotSerializedIfEmpty() {
-            var group = new DevExtremeGroup();
+            var group = new Group();
             var json = JsonConvert.SerializeObject(group);
 
             // these must always present

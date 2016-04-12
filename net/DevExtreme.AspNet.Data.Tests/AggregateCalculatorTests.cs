@@ -12,10 +12,10 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Minimal() {
             var data = new[] {
-                new DevExtremeGroup {
+                new Group {
                     items = new object[] { 1, 5 }
                 },
-                new DevExtremeGroup {
+                new Group {
                     items = new object[] { 7 }
                 }
             };
@@ -160,9 +160,9 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void NestedGroups() {
             var data = new[] {
-                new DevExtremeGroup {
+                new Group {
                     items = new[] {
-                        new DevExtremeGroup {
+                        new Group {
                             items = new object[] { 1, 5 }
                         }
                     }
@@ -177,7 +177,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(totals);
 
             Assert.Equal(6M, data[0].summary[0]);
-            Assert.Equal(6M, (data[0].items[0] as DevExtremeGroup).summary[0]);
+            Assert.Equal(6M, (data[0].items[0] as Group).summary[0]);
         }
 
     }

@@ -8,41 +8,34 @@ namespace DevExtreme.AspNet.Data {
     public class DataSourceLoader {
 
         public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
-            var builder = new DataSourceExpressionBuilder<T> {
-                Skip = options.Skip,
-                Take = options.Take,
-                Filter = options.Filter,
-                Sort = options.Sort,
-                Group = options.Group,
-                GroupSummary = options.GroupSummary,
-                TotalSummary = options.TotalSummary
-            };
+            var builder = new DataSourceExpressionBuilder<T>(options);
 
             var queryableSource = source.AsQueryable();
 
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);
 
+            var accessor = new Accessor<T>();
             var result = new DataSourceLoadResult();
             var query = builder.BuildLoadExpr().Compile()(queryableSource);
 
             if(options.RequireTotalCount)
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
-            if(builder.HasGroups) {
-                IEnumerable<DevExtremeGroup> groups = new GroupHelper<T>(query.ToArray()).Group(builder.Group);
+            if(options.HasGroups) {
+                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray(), accessor).Group(options.Group);
 
-                if(builder.HasSummary)
-                    result.summary = new AggregateCalculator<T>(groups, new Accessor<T>(), builder.TotalSummary, builder.GroupSummary).Run();
+                if(options.HasSummary)
+                    result.summary = new AggregateCalculator<T>(groups, accessor, options.TotalSummary, options.GroupSummary).Run();
 
-                groups = Paginate(groups, builder.Skip, builder.Take);
-                CollapseGroups(groups, builder.Group);
+                groups = Paginate(groups, options.Skip, options.Take);
+                CollapseGroups(groups, options.Group);
 
                 result.data = groups;
-            } else if(builder.HasSummary) {
+            } else if(options.HasSummary) {
                 var cached = query.ToArray();
-                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), new Accessor<T>(), builder.TotalSummary, null).Run();
-                result.data = Paginate(cached, builder.Skip, builder.Take);
+                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), accessor, options.TotalSummary, null).Run();
+                result.data = Paginate(cached, options.Skip, options.Take);
             } else {
                 result.data = query;
             }
@@ -63,7 +56,7 @@ namespace DevExtreme.AspNet.Data {
             return data;
         }
 
-        static IEnumerable<DevExtremeGroup> CollapseGroups(IEnumerable<DevExtremeGroup> groups, IEnumerable<GroupingInfo> grouping) {
+        static IEnumerable<Group> CollapseGroups(IEnumerable<Group> groups, IEnumerable<GroupingInfo> grouping) {
 #warning can collapse non-leaf groups?
             var isLeafGroup = grouping.Count() < 2;
             var thisGrouping = grouping.First();
@@ -76,7 +69,7 @@ namespace DevExtreme.AspNet.Data {
                         g.items = null;
                     }
                 } else {
-                    CollapseGroups(g.items.Cast<DevExtremeGroup>(), grouping.Skip(1));
+                    CollapseGroups(g.items.Cast<Group>(), grouping.Skip(1));
                 }
             }
 

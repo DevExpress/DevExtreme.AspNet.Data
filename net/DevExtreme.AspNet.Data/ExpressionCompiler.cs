@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data {
 
     abstract class ExpressionCompiler {
 
-        protected virtual Expression CompileAccessorExpression(Expression target, string clientExpr) {
+        protected Expression CompileAccessorExpression(Expression target, string clientExpr) {
             if(clientExpr == "this")
                 return target;
 
@@ -21,7 +21,7 @@ namespace DevExtreme.AspNet.Data {
             return Expression.PropertyOrField(target, clientExpr);
         }
 
-        protected virtual Expression ConvertToType(Expression expr, Type type) {
+        protected Expression ConvertToType(Expression expr, Type type) {
             if(type == typeof(String)) {
                 var result = Expression.Call(expr, "ToString", Type.EmptyTypes);
 

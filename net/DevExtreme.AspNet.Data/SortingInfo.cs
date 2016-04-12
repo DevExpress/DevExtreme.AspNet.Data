@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     public class SortingInfo {
-        public string Selector { get; set; }
-        public bool Desc { get; set; }
+        public string Selector;
+        public bool Desc;
     }
 
 }

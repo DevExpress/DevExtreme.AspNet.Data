@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-#warning TODO use shared accessor for grouping and aggregation
-
     class Accessor<T> : ExpressionCompiler {
-        IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
+        IDictionary<string, Func<T, object>> _accessors;
 
         public object Read(T obj, string selector) {
             if(String.IsNullOrEmpty(selector))
                 return null;
+
+            if(_accessors == null)
+                _accessors = new Dictionary<string, Func<T, object>>();
 
             if(!_accessors.ContainsKey(selector)) {
                 var param = CreateItemParam(typeof(T));

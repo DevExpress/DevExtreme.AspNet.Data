@@ -8,25 +8,10 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     class DataSourceExpressionBuilder<T> {
+        DataSourceLoadOptionsBase _loadOptions;
 
-        public int Skip { get; set; }
-        public int Take { get; set; }
-        public IList Filter { get; set; }
-        public SortingInfo[] Sort { get; set; }
-        public GroupingInfo[] Group { get; set; }
-        public SummaryInfo[] TotalSummary { get; set; }
-        public SummaryInfo[] GroupSummary { get; set; }
-
-        public bool HasGroups {
-            get { return Group != null && Group.Length > 0; }
-        }
-
-        public bool HasSort {
-            get { return Sort != null && Sort.Length > 0; }
-        }
-
-        public bool HasSummary {
-            get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
+        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions) {
+            _loadOptions = loadOptions;
         }
 
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
@@ -51,19 +36,19 @@ namespace DevExtreme.AspNet.Data {
 
             Expression body = param;
 
-            if(Filter != null)
-                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>().Compile(Filter));
+            if(_loadOptions.Filter != null)
+                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>().Compile(_loadOptions.Filter));
 
             if(!isCountQuery) {
-                if(HasSort || HasGroups)
-                    body = new SortExpressionCompiler<T>().Compile(body, GetFullSort());
+                if(_loadOptions.HasSort || _loadOptions.HasGroups)
+                    body = new SortExpressionCompiler<T>().Compile(body, _loadOptions.GetFullSort());
 
-                if(!HasGroups && !HasSummary) {
-                    if(Skip > 0)
-                        body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(Skip));
+                if(!_loadOptions.HasGroups && !_loadOptions.HasSummary) {
+                    if(_loadOptions.Skip > 0)
+                        body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(_loadOptions.Skip));
 
-                    if(Take > 0)
-                        body = Expression.Call(queryableType, "Take", genericTypeArguments, body, Expression.Constant(Take));
+                    if(_loadOptions.Take > 0)
+                        body = Expression.Call(queryableType, "Take", genericTypeArguments, body, Expression.Constant(_loadOptions.Take));
                 }
             }
 
@@ -73,32 +58,6 @@ namespace DevExtreme.AspNet.Data {
             return body;
         }
 
-        IEnumerable<SortingInfo> GetFullSort() {
-            var memo = new HashSet<string>();
-            var result = new List<SortingInfo>();
-
-            if(HasGroups) {
-                foreach(var g in Group) {
-                    if(memo.Contains(g.Selector))
-                        continue;
-
-                    memo.Add(g.Selector);
-                    result.Add(g);
-                }
-            }
-
-            if(HasSort) {
-                foreach(var s in Sort) {
-                    if(memo.Contains(s.Selector))
-                        continue;
-
-                    memo.Add(s.Selector);
-                    result.Add(s);
-                }
-            }
-
-            return result;
-        }
 
         ParameterExpression CreateParam() {
             return Expression.Parameter(typeof(IQueryable<T>), "data");
