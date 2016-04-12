@@ -16,47 +16,50 @@ namespace DevExtreme.AspNet.Data {
             if(clientExpr == "this")
                 return target;
 
-            var components = clientExpr.Split('.');
-            var componentExpressions = new List<Expression>(1 + components.Length);
-            componentExpressions.Add(target);
+            var components = new List<Expression>();
+            components.Add(target);
 
             var currentTarget = target;
-            foreach(var i in components) {
+            foreach(var i in clientExpr.Split('.')) {
                 Expression next = Expression.PropertyOrField(currentTarget, i);
 
                 if(GuardNulls && next.Type == typeof(String))
                     next = Expression.Coalesce(next, Expression.Constant(""));
 
                 currentTarget = next;
-                componentExpressions.Add(next);
+                components.Add(next);
             }
+            
+            return CompileNullGuard(components);
+        }
 
-            var lastComponent = componentExpressions.Last();
+        Expression CompileNullGuard(IEnumerable<Expression> components) {
+            var last = components.Last();
 
             if(!GuardNulls)
-                return lastComponent;
+                return last;
 
-            var resultType = lastComponent.Type;
-            Expression guardCondition = null;
-            foreach(var i in componentExpressions) {
-                if(i == lastComponent)
+            Expression allTests = null;
+
+            foreach(var i in components) {
+                if(i == last)
                     break;
 
                 var type = i.Type;
                 if(type == typeof(String) || !Utils.CanAssignNull(type))
                     break;
 
-                var componentCondition = Expression.Equal(i, Expression.Constant(null, type));
-                if(guardCondition == null)
-                    guardCondition = componentCondition;
+                var test = Expression.Equal(i, Expression.Constant(null, type));
+                if(allTests == null)
+                    allTests = test;
                 else
-                    guardCondition = Expression.OrElse(guardCondition, componentCondition);
+                    allTests = Expression.OrElse(allTests, test);
             }
 
             return Expression.Condition(
-                guardCondition,
-                Expression.Constant(Utils.GetDefaultValue(lastComponent.Type), lastComponent.Type),
-                lastComponent
+                allTests,
+                Expression.Constant(Utils.GetDefaultValue(last.Type), last.Type),
+                last
             );
         }
 
