@@ -17,23 +17,16 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         }
 
-        class TargetClassBase {
+        class TargetClass {
+            public TargetClass Ref = null;
             public int Value = 0;
             public DateTime? Nullable = DateTime.Now;
             public string String = "";
         }
-
-        class TargetClass1 : TargetClassBase {
-            public TargetClass2 Ref = null;
-        }
-
-        class TargetClass2 : TargetClassBase {
-            public TargetClass1 Ref = null;
-        }
         
         string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
             return new SampleCompiler(guardNulls)
-                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass1), "t"), selector, forceToString)
+                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, forceToString)
                 .ToString();
         }
 
