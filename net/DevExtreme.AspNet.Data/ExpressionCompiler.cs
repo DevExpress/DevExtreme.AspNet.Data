@@ -60,8 +60,12 @@ namespace DevExtreme.AspNet.Data {
                     break;
 
                 var type = i.Type;
-                if(type == typeof(String) || !Utils.CanAssignNull(type))
+
+                if(type == typeof(String))
                     break;
+
+                if(!Utils.CanAssignNull(type))
+                    continue;
 
                 var test = Expression.Equal(i, Expression.Constant(null, type));
                 if(allTests == null)

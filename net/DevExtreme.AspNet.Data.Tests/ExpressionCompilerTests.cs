@@ -22,8 +22,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             public int Value = 0;
             public DateTime? Nullable = DateTime.Now;
             public string String = "";
+            public StructWithRef StructWithRef = new StructWithRef(null);
         }
-        
+
+        struct StructWithRef {
+            public TargetClass Ref;
+
+            public StructWithRef(object any) {
+                Ref = null;
+            }
+        }
+
         string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
             return new SampleCompiler(guardNulls)
                 .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, forceToString)
@@ -66,6 +75,14 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Accessor_Guard_Nullable() {
             Assert.Equal("IIF((t == null), null, t.Nullable)", CompileAccessor(true, "Nullable"));
             Assert.Equal("IIF(((t == null) OrElse (t.Nullable == null)), 0, t.Nullable.Value.Year)", CompileAccessor(true, "Nullable.Year"));
+        }
+
+        [Fact]
+        public void Accessor_Guard_NullInStruct() {
+            Assert.Equal(
+                "IIF(((t == null) OrElse (t.StructWithRef.Ref == null)), 0, t.StructWithRef.Ref.Value)",
+                CompileAccessor(true, "StructWithRef.Ref.Value")
+            );
         }
 
         [Fact]
