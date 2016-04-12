@@ -36,8 +36,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             public TargetClass1 Ref = null;
         }
         
-        string CompileAccessor(bool guardNulls, string selector) {
-            return new SampleCompiler(guardNulls).CompileAccessorExpression_NEW(Expression.Parameter(typeof(TargetClass1), "t"), selector).ToString();
+        string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
+            return new SampleCompiler(guardNulls)
+                .CompileAccessorExpression_NEW(Expression.Parameter(typeof(TargetClass1), "t"), selector, forceToString)
+                .ToString();
         }
 
         [Fact]
@@ -72,6 +74,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(
                 "IIF(((t == null) OrElse (t.Nullable == null)), 0, t.Nullable.Value)", 
                 CompileAccessor(true, "Nullable.Value")
+            );
+        }
+
+        [Fact]
+        public void Accessor_ForceToString() {
+            Assert.Equal("t.String", CompileAccessor(false, "String", true));
+            Assert.Equal("t.Value.ToString()", CompileAccessor(false, "Value", true));
+            Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", true));
+
+            Assert.Equal(
+                @"IIF((t == null), """", (t.String ?? """"))", 
+                CompileAccessor(true, "String", true)
+            );
+
+            Assert.Equal(
+                @"IIF((t == null), """", t.Value.ToString())",
+                CompileAccessor(true, "Value", true)
+            );
+
+            Assert.Equal(
+                @"IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), """", t.Ref.Ref.ToString())",
+                CompileAccessor(true, "Ref.Ref", true)
             );
         }
 

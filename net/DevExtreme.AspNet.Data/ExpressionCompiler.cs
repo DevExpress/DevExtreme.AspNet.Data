@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data {
             get { return false; }
         }
 
-        protected internal Expression CompileAccessorExpression_NEW(Expression target, string clientExpr) {
+        protected internal Expression CompileAccessorExpression_NEW(Expression target, string clientExpr, bool forceToString = false) {
             if(clientExpr == "this")
                 return target;
 
@@ -29,12 +29,16 @@ namespace DevExtreme.AspNet.Data {
                 currentTarget = next;
                 components.Add(next);
             }
+
+            if(forceToString && currentTarget.Type != typeof(String))
+                components.Add(Expression.Call(currentTarget, "ToString", Type.EmptyTypes));            
             
             return CompileNullGuard(components);
         }
 
         Expression CompileNullGuard(IEnumerable<Expression> components) {
             var last = components.Last();
+            var lastType = last.Type;
 
             if(!GuardNulls)
                 return last;
@@ -58,7 +62,10 @@ namespace DevExtreme.AspNet.Data {
 
             return Expression.Condition(
                 allTests,
-                Expression.Constant(Utils.GetDefaultValue(last.Type), last.Type),
+                Expression.Constant(
+                    lastType == typeof(String) ? "" : Utils.GetDefaultValue(lastType), 
+                    lastType
+                ),
                 last
             );
         }
