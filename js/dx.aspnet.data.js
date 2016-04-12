@@ -96,8 +96,11 @@
                 });
             },
 
-            byKey: keyExpr && function(key) {
+            byKey: function(key) {
                 var d = new $.Deferred();
+
+                if(!keyExpr)
+                    return makeMissingKeyPromise("byKey", loadUrl);
 
                 send("load", {
                     url: loadUrl,
@@ -112,6 +115,9 @@
             },
 
             update: updateUrl && function(key, values) {
+                if(!keyExpr)
+                    return makeMissingKeyPromise("update", updateUrl);
+
                 return send("update", {
                     url: updateUrl,
                     type: options.updateMethod || "PUT",
@@ -123,6 +129,9 @@
             },
 
             insert: insertUrl && function(values) {
+                if(!keyExpr)
+                    return makeMissingKeyPromise("insert", insertUrl);
+
                 return send("insert", {
                     url: insertUrl,
                     type: options.insertMethod || "POST",
@@ -131,6 +140,9 @@
             },
 
             remove: deleteUrl && function(key) {
+                if(!keyExpr)
+                    return makeMissingKeyPromise("remove", deleteUrl);
+
                 return send("delete", {
                     url: deleteUrl,
                     type: options.deleteMethod || "DELETE",
@@ -158,6 +170,14 @@
         }
 
         return false;
+    }
+
+    function makeMissingKeyPromise(operation, url) {
+        var text = "Primary key is not specified (operation: '" + operation + "', url: '" + url + "')";
+        
+        return $.Deferred()
+            .reject(new Error(text))
+            .promise();
     }
 
     $.extend(DX.data, {
