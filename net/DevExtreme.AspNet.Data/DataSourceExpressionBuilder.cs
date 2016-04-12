@@ -9,9 +9,11 @@ namespace DevExtreme.AspNet.Data {
 
     class DataSourceExpressionBuilder<T> {
         DataSourceLoadOptionsBase _loadOptions;
+        bool _guardNulls;
 
-        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions) {
+        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls) {
             _loadOptions = loadOptions;
+            _guardNulls = guardNulls;
         }
 
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
@@ -37,11 +39,11 @@ namespace DevExtreme.AspNet.Data {
             Expression body = param;
 
             if(_loadOptions.Filter != null)
-                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>().Compile(_loadOptions.Filter));
+                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
 
             if(!isCountQuery) {
                 if(_loadOptions.HasSort || _loadOptions.HasGroups)
-                    body = new SortExpressionCompiler<T>().Compile(body, _loadOptions.GetFullSort());
+                    body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
 
                 if(!_loadOptions.HasGroups && !_loadOptions.HasSummary) {
                     if(_loadOptions.Skip > 0)

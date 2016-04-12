@@ -12,6 +12,10 @@ namespace DevExtreme.AspNet.Data {
 
     class FilterExpressionCompiler<T> : ExpressionCompiler {
 
+        public FilterExpressionCompiler(bool guardNulls) 
+            : base(guardNulls) {
+        }
+
         public LambdaExpression Compile(IList criteriaJson) {
             var dataItemExpr = CreateItemParam(typeof(T));
             return Expression.Lambda(CompileCore(dataItemExpr, criteriaJson), dataItemExpr);
@@ -30,13 +34,11 @@ namespace DevExtreme.AspNet.Data {
             var clientAccessor = Convert.ToString(criteriaJson[0]);
             var clientOperation = hasExplicitOperation ? Convert.ToString(criteriaJson[1]).ToLower() : "=";
             var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
+            var isStringOperation = clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
 
-            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor);
+            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, isStringOperation);
 
-            if(IsStringFunction(clientOperation)) {
-                if(accessorExpr.Type != typeof(String))
-                    accessorExpr = ConvertToType(accessorExpr, typeof(String));
-
+            if(isStringOperation) {
                 return CompileStringFunction(accessorExpr, clientOperation, Convert.ToString(clientValue));
 
             } else {
@@ -49,7 +51,7 @@ namespace DevExtreme.AspNet.Data {
                     valueExpr = Compat.Workaround_EF3361((DateTime)clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
-                    valueExpr = ConvertToType(valueExpr, accessorExpr.Type);
+                    valueExpr = Expression.Convert(valueExpr, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
                     if(clientValue == null)
@@ -63,10 +65,6 @@ namespace DevExtreme.AspNet.Data {
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
-        }
-
-        bool IsStringFunction(string clientOperation) {
-            return clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
         }
 
         bool IsInequality(ExpressionType type) {

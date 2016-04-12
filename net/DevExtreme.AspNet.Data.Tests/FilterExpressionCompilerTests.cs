@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         LambdaExpression Compile<T>(IList criteria) {
-            return new FilterExpressionCompiler<T>().Compile(criteria);
+            return new FilterExpressionCompiler<T>(false).Compile(criteria);
         }
 
         [Fact]
@@ -79,11 +79,6 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void StringFunctionOnNullableNonStringData() {
-            var expr = Compile<DataItem1>(new[] { "NullableProp", "contains", "Abc" });
-            Assert.Equal("IIF((obj.NullableProp == null), \"\", obj.NullableProp.ToString()).ToLower().Contains(\"abc\")", expr.Body.ToString());
-        }
-
         public void ImplicitAndOfTwo() {
             var crit = new[] {
                 new object[] { "IntProp", ">", 1 },

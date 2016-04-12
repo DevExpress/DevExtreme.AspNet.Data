@@ -8,6 +8,10 @@ namespace DevExtreme.AspNet.Data {
 
     class SortExpressionCompiler<T> : ExpressionCompiler {
 
+        public SortExpressionCompiler(bool guardNulls) 
+            : base(guardNulls) {
+        }
+
         public Expression Compile(Expression target, IEnumerable<SortingInfo> clientExprList) {
             var dataItemExpr = CreateItemParam(typeof(T));
             var first = true;

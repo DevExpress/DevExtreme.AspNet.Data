@@ -7,8 +7,14 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceExpressionBuilderTests {
+
+        static DataSourceExpressionBuilder<T> CreateBuilder<T>(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false) {
+            return new DataSourceExpressionBuilder<T>(loadOptions, guardNulls);
+        }
+
+        [Fact]
         public void Build_SkipTake() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222
             });
@@ -20,7 +26,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Filter() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Filter = new object[] { "this", ">", 123 }
             });
 
@@ -31,7 +37,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_CountQuery() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222,
                 Filter = new object[] { "this", 123 },
@@ -52,7 +58,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Sorting() {
-            var builder = new DataSourceExpressionBuilder<Tuple<int, string>>(new SampleLoadOptions {
+            var builder = CreateBuilder<Tuple<int, string>>(new SampleLoadOptions {
                 Sort = new[] {
                     new SortingInfo {
                         Selector="Item1"
@@ -81,7 +87,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var builder = new DataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
+            var builder = CreateBuilder<Tuple<int, int, int>>(loadOptions);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
@@ -94,7 +100,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void MultiIntervalGroupsSortedOnce() {
-            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }
@@ -102,6 +108,42 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().Body.ToString());
+        }
+
+        [Fact]
+        public void GuardNulls() {
+            var builder = CreateBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
+                Filter = new[] {
+                    new[] { "Item1", ">", "0" },
+                    new[] { "Item2.Length", ">", "0" },
+                    new[] { "Item2", "contains", "z" },
+                    new[] { "Item3.Year", ">", "0" }
+                },
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item1" },
+                    new SortingInfo { Selector = "Item2.Length" },
+                    new SortingInfo { Selector = "Item3.Year" },
+                }
+            }, true);
+
+            var expr = builder.BuildLoadExpr();
+            var query = expr.Compile();
+
+            var data = new[] {
+                // filtered out
+                null,
+                Tuple.Create<int?, string, DateTime?>(null, "z", new DateTime(2000, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, null, new DateTime(2000, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, "z", null),
+                
+
+                // kept
+                Tuple.Create<int?, string, DateTime?>(1, "z", new DateTime(2000, 1, 2)),
+                Tuple.Create<int?, string, DateTime?>(1, "z", new DateTime(2000, 1, 1))                
+            };
+
+            var result = query(data.AsQueryable()).ToArray();
+            Assert.Equal(2, result.Length);
         }
     }
 

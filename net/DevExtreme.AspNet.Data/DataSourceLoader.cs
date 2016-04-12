@@ -8,9 +8,8 @@ namespace DevExtreme.AspNet.Data {
     public class DataSourceLoader {
 
         public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
-            var builder = new DataSourceExpressionBuilder<T>(options);
-
             var queryableSource = source.AsQueryable();
+            var builder = new DataSourceExpressionBuilder<T>(options, queryableSource is EnumerableQuery);
 
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);

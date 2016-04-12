@@ -12,7 +12,18 @@ namespace DevExtreme.AspNet.Data {
     static class Utils {
 
         public static bool CanAssignNull(Type type) {
-            return !type.GetTypeInfo().IsValueType || Nullable.GetUnderlyingType(type) != null;
+            return !type.GetTypeInfo().IsValueType || IsNullable(type);
+        }
+
+        public static bool IsNullable(Type type) {
+            var info = type.GetTypeInfo();
+            return info.IsGenericType && info.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        public static object GetDefaultValue(Type type) {
+            if(type.GetTypeInfo().IsValueType)
+                return Activator.CreateInstance(type);
+            return null;
         }
 
         public static object ConvertClientValue(object value, Type type) {

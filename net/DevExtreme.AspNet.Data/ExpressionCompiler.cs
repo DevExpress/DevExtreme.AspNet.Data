@@ -7,35 +7,81 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     abstract class ExpressionCompiler {
+        bool _guardNulls;
 
-        protected Expression CompileAccessorExpression(Expression target, string clientExpr) {
+        public ExpressionCompiler(bool guardNulls) {
+            _guardNulls = guardNulls;
+        }
+
+        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false) {
             if(clientExpr == "this")
                 return target;
 
-            var lastDotIndex = clientExpr.LastIndexOf('.');
-            if(lastDotIndex > -1) {
-                target = CompileAccessorExpression(target, clientExpr.Substring(0, lastDotIndex));
-                clientExpr = clientExpr.Substring(1 + lastDotIndex);
+            var progression = new List<Expression>();
+            progression.Add(target);
+
+            var clientExprItems = clientExpr.Split('.');
+            var currentTarget = target;
+
+            for(var i = 0; i < clientExprItems.Length; i++) {
+                var clientExprItem = clientExprItems[i];
+
+                if(Utils.IsNullable(currentTarget.Type)) {
+                    clientExprItem = "Value";
+                    i--;
+                }
+
+                Expression next = Expression.PropertyOrField(currentTarget, clientExprItem);
+
+                if(_guardNulls && next.Type == typeof(String))
+                    next = Expression.Coalesce(next, Expression.Constant(""));
+
+                currentTarget = next;
+                progression.Add(next);
             }
 
-            return Expression.PropertyOrField(target, clientExpr);
+            if(forceToString && currentTarget.Type != typeof(String))
+                progression.Add(Expression.Call(currentTarget, "ToString", Type.EmptyTypes));            
+            
+            return CompileNullGuard(progression);
         }
 
-        protected Expression ConvertToType(Expression expr, Type type) {
-            if(type == typeof(String)) {
-                var result = Expression.Call(expr, "ToString", Type.EmptyTypes);
+        Expression CompileNullGuard(IEnumerable<Expression> progression) {
+            var last = progression.Last();
+            var lastType = last.Type;
 
-                if(!Utils.CanAssignNull(expr.Type))
-                    return result;
+            if(!_guardNulls)
+                return last;
 
-                return Expression.Condition(
-                    Expression.Equal(expr, Expression.Constant(null)),
-                    Expression.Constant(String.Empty),
-                    result
-                );
+            Expression allTests = null;
+
+            foreach(var i in progression) {
+                if(i == last)
+                    break;
+
+                var type = i.Type;
+
+                if(type == typeof(String))
+                    break;
+
+                if(!Utils.CanAssignNull(type))
+                    continue;
+
+                var test = Expression.Equal(i, Expression.Constant(null, type));
+                if(allTests == null)
+                    allTests = test;
+                else
+                    allTests = Expression.OrElse(allTests, test);
             }
 
-            return Expression.Convert(expr, type);
+            return Expression.Condition(
+                allTests,
+                Expression.Constant(
+                    lastType == typeof(String) ? "" : Utils.GetDefaultValue(lastType), 
+                    lastType
+                ),
+                last
+            );
         }
 
         protected ParameterExpression CreateItemParam(Type type) {
