@@ -20,9 +20,18 @@ namespace DevExtreme.AspNet.Data {
             var components = new List<Expression>();
             components.Add(target);
 
+            var clientExprItems = clientExpr.Split('.');
             var currentTarget = target;
-            foreach(var i in clientExpr.Split('.')) {
-                Expression next = Expression.PropertyOrField(currentTarget, i);
+
+            for(var i = 0; i < clientExprItems.Length; i++) {
+                var clientExprItem = clientExprItems[i];
+
+                if(Utils.IsNullable(currentTarget.Type)) {
+                    clientExprItem = "Value";
+                    i--;
+                }
+
+                Expression next = Expression.PropertyOrField(currentTarget, clientExprItem);
 
                 if(_guardNulls && next.Type == typeof(String))
                     next = Expression.Coalesce(next, Expression.Constant(""));

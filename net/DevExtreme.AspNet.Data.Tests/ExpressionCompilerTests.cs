@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class TargetClassBase {
             public int Value = 0;
-            public int? Nullable = 0;
+            public DateTime? Nullable = DateTime.Now;
             public string String = "";
         }
 
@@ -40,6 +40,11 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor_NoGuard_RefChain() {
             Assert.Equal("t.Ref.Ref", CompileAccessor(false, "Ref.Ref"));
+        }
+
+        [Fact]
+        public void Accessor_NoGuard_Nullable() {
+            Assert.Equal("t.Nullable.Value.Year", CompileAccessor(false, "Nullable.Year"));
         }
 
         [Fact]
@@ -65,11 +70,9 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void Accessor_Guard_ExplicitNullable() {
-            Assert.Equal(
-                "IIF(((t == null) OrElse (t.Nullable == null)), 0, t.Nullable.Value)", 
-                CompileAccessor(true, "Nullable.Value")
-            );
+        public void Accessor_Guard_Nullable() {
+            Assert.Equal("IIF((t == null), null, t.Nullable)", CompileAccessor(true, "Nullable"));
+            Assert.Equal("IIF(((t == null) OrElse (t.Nullable == null)), 0, t.Nullable.Value.Year)", CompileAccessor(true, "Nullable.Year"));
         }
 
         [Fact]
