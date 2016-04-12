@@ -12,19 +12,19 @@ namespace DevExtreme.AspNet.Data {
 
     class FilterExpressionCompiler<T> : ExpressionCompiler {
 
-        public virtual LambdaExpression Compile(IList criteriaJson) {
+        public LambdaExpression Compile(IList criteriaJson) {
             var dataItemExpr = CreateItemParam(typeof(T));
             return Expression.Lambda(CompileCore(dataItemExpr, criteriaJson), dataItemExpr);
         }
 
-        protected virtual Expression CompileCore(ParameterExpression dataItemExpr, IList criteriaJson) {
+        Expression CompileCore(ParameterExpression dataItemExpr, IList criteriaJson) {
             if(IsCriteria(criteriaJson[0]))
                 return CompileGroup(dataItemExpr, criteriaJson);
 
             return CompileBinary(dataItemExpr, criteriaJson);
         }
 
-        protected virtual Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson) {
+        Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson) {
             var hasExplicitOperation = criteriaJson.Count > 2;
 
             var clientAccessor = Convert.ToString(criteriaJson[0]);
@@ -65,15 +65,15 @@ namespace DevExtreme.AspNet.Data {
 
         }
 
-        protected virtual bool IsStringFunction(string clientOperation) {
+        bool IsStringFunction(string clientOperation) {
             return clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
         }
 
-        protected virtual bool IsInequality(ExpressionType type) {
+        bool IsInequality(ExpressionType type) {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
         }
 
-        protected virtual Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
+        Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
             if(value != null)
                 value = value.ToLower();
 
@@ -101,7 +101,7 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        protected virtual Expression CompileGroup(ParameterExpression dataItemExpr, IList criteriaJson) {
+        Expression CompileGroup(ParameterExpression dataItemExpr, IList criteriaJson) {
             var operands = new List<Expression>();
             var isAnd = true;
             var nextIsAnd = true;
@@ -134,7 +134,7 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        protected virtual ExpressionType TranslateBinaryOperation(string clientOperation) {
+        ExpressionType TranslateBinaryOperation(string clientOperation) {
             switch(clientOperation) {
                 case "=":
                     return ExpressionType.Equal;
@@ -158,7 +158,7 @@ namespace DevExtreme.AspNet.Data {
             throw new NotSupportedException();
         }
 
-        protected virtual bool IsCriteria(object item) {
+        bool IsCriteria(object item) {
             return item is IList && !(item is String);
         }
 

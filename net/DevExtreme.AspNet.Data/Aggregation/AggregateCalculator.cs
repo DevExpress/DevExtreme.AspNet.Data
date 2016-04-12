@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         void ProcessItem(object item) {
-            var group = item as DevExtremeGroup;
+            var group = item as Group;
             if(group != null) {
                 ProcessGroup(group);
             } else {
@@ -58,7 +58,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             }
         }
 
-        void ProcessGroup(DevExtremeGroup group) {
+        void ProcessGroup(Group group) {
             if(_groupAggregatorsStack != null)
                 _groupAggregatorsStack.Push(_groupSummaryTypes.Select(CreateAggregator).ToArray());
             

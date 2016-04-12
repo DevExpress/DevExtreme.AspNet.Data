@@ -7,15 +7,54 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     public abstract class DataSourceLoadOptionsBase {
-        public bool RequireTotalCount { get; set; }
-        public bool IsCountQuery { get; set; }
-        public int Skip { get; set; }
-        public int Take { get; set; }
-        public SortingInfo[] Sort { get; set; }
-        public GroupingInfo[] Group { get; set; }
-        public IList Filter { get; set; }
-        public SummaryInfo[] TotalSummary { get; set; }
-        public SummaryInfo[] GroupSummary { get; set; }
+        public bool RequireTotalCount;
+        public bool IsCountQuery;
+        public int Skip;
+        public int Take;
+        public SortingInfo[] Sort;
+        public GroupingInfo[] Group;
+        public IList Filter;
+        public SummaryInfo[] TotalSummary;
+        public SummaryInfo[] GroupSummary;
+
+        internal bool HasGroups {
+            get { return Group != null && Group.Length > 0; }
+        }
+
+        internal bool HasSort {
+            get { return Sort != null && Sort.Length > 0; }
+        }
+
+        internal bool HasSummary {
+            get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
+        }
+
+        internal IEnumerable<SortingInfo> GetFullSort() {
+            var memo = new HashSet<string>();
+            var result = new List<SortingInfo>();
+
+            if(HasGroups) {
+                foreach(var g in Group) {
+                    if(memo.Contains(g.Selector))
+                        continue;
+
+                    memo.Add(g.Selector);
+                    result.Add(g);
+                }
+            }
+
+            if(HasSort) {
+                foreach(var s in Sort) {
+                    if(memo.Contains(s.Selector))
+                        continue;
+
+                    memo.Add(s.Selector);
+                    result.Add(s);
+                }
+            }
+
+            return result;
+        }
     }
 
 }

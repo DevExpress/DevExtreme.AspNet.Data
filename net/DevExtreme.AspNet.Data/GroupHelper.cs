@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,39 +7,27 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-#warning TODO extract to file
-    class DevExtremeGroup {
-        public object key;
-        public IList<object> items;
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int? count;
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public object[] summary;
-    }
-
-
-    class GroupHelper<T> : ExpressionCompiler {
+    class GroupHelper<T> {
         readonly static object NULL_KEY = new object();
 
-        IDictionary<string, Func<T, object>> _accessors = new Dictionary<string, Func<T, object>>();
         IEnumerable<T> _data;
+        Accessor<T> _accessor;
 
-        public GroupHelper(IEnumerable<T> data) {
+        public GroupHelper(IEnumerable<T> data, Accessor<T> accessor) {
             _data = data;
+            _accessor = accessor;
         }
 
-        public IList<DevExtremeGroup> Group(IEnumerable<GroupingInfo> groupInfo) {
+        public IList<Group> Group(IEnumerable<GroupingInfo> groupInfo) {
             return Group(_data, groupInfo);
         }
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+        IList<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
             var groups = Group(data, groupInfo.First());
 
             if(groupInfo.Count() > 1) {
                 groups = groups
-                    .Select(g => new DevExtremeGroup {
+                    .Select(g => new Group {
                         key = g.key,
                         items = Group(g.items.Cast<T>(), groupInfo.Skip(1))
                             .Cast<object>()
@@ -53,16 +40,16 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        IList<DevExtremeGroup> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
-            var groupsIndex = new Dictionary<object, DevExtremeGroup>();
-            var groups = new List<DevExtremeGroup>();
+        IList<Group> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
+            var groupsIndex = new Dictionary<object, Group>();
+            var groups = new List<Group>();
 
             foreach(var item in data) {
                 var groupKey = GetKey(item, groupInfo);
                 var groupIndexKey = groupKey ?? NULL_KEY;
 
                 if(!groupsIndex.ContainsKey(groupIndexKey)) {
-                    var newGroup = new DevExtremeGroup { key = groupKey };
+                    var newGroup = new Group { key = groupKey };
                     groupsIndex[groupIndexKey] = newGroup;
                     groups.Add(newGroup);
                 }
@@ -77,7 +64,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         object GetKey(T obj, GroupingInfo groupInfo) {
-            var memberValue = GetMember(obj, groupInfo.Selector);
+            var memberValue = _accessor.Read(obj, groupInfo.Selector);
 
             var intervalString = groupInfo.GroupInterval;
             if(String.IsNullOrEmpty(intervalString))
@@ -110,22 +97,6 @@ namespace DevExtreme.AspNet.Data {
 
             throw new NotSupportedException();
         }
-
-
-        object GetMember(T obj, string name) {
-            if(!_accessors.ContainsKey(name)) {
-                var param = CreateItemParam(typeof(T));
-
-                _accessors[name] = Expression.Lambda<Func<T, object>>(
-                    Expression.Convert(CompileAccessorExpression(param, name), typeof(Object)),
-                    param
-                ).Compile();
-            }
-
-            return _accessors[name](obj);
-        }
-
-
     }
 
 }
