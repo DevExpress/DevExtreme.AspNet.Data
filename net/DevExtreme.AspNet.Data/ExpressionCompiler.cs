@@ -17,8 +17,8 @@ namespace DevExtreme.AspNet.Data {
             if(clientExpr == "this")
                 return target;
 
-            var components = new List<Expression>();
-            components.Add(target);
+            var progression = new List<Expression>();
+            progression.Add(target);
 
             var clientExprItems = clientExpr.Split('.');
             var currentTarget = target;
@@ -37,17 +37,17 @@ namespace DevExtreme.AspNet.Data {
                     next = Expression.Coalesce(next, Expression.Constant(""));
 
                 currentTarget = next;
-                components.Add(next);
+                progression.Add(next);
             }
 
             if(forceToString && currentTarget.Type != typeof(String))
-                components.Add(Expression.Call(currentTarget, "ToString", Type.EmptyTypes));            
+                progression.Add(Expression.Call(currentTarget, "ToString", Type.EmptyTypes));            
             
-            return CompileNullGuard(components);
+            return CompileNullGuard(progression);
         }
 
-        Expression CompileNullGuard(IEnumerable<Expression> components) {
-            var last = components.Last();
+        Expression CompileNullGuard(IEnumerable<Expression> progression) {
+            var last = progression.Last();
             var lastType = last.Type;
 
             if(!_guardNulls)
@@ -55,7 +55,7 @@ namespace DevExtreme.AspNet.Data {
 
             Expression allTests = null;
 
-            foreach(var i in components) {
+            foreach(var i in progression) {
                 if(i == last)
                     break;
 
