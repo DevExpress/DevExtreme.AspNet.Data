@@ -1,5 +1,6 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,28 +17,33 @@ namespace DevExtreme.AspNet.Data {
 
             var accessor = new Accessor<T>();
             var result = new DataSourceLoadResult();
-            var query = builder.BuildLoadExpr().Compile()(queryableSource);
+            var emptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
 
             if(options.RequireTotalCount)
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
+          
+            var deferPaging = options.HasGroups || options.HasSummary;
+            var q = builder.BuildLoadExpr().Compile();
 
-            if(options.HasGroups) {
-                IEnumerable<Group> groups = new GroupHelper<T>(accessor).Group(query.ToArray(), options.Group);
+            IEnumerable data = null;
 
-                if(options.HasSummary)
-                    result.summary = new AggregateCalculator<T>(groups, accessor, options.TotalSummary, options.GroupSummary).Run();
+            if(options.HasGroups)
+                data = new GroupHelper<T>(accessor).Group(q(queryableSource), options.Group);
+            else
+                data = q(queryableSource).ToArray();
 
-                groups = Paginate(groups, options.Skip, options.Take);
-                CollapseGroups(groups, options.Group);
+            // at this point, query is executed and data is in memory
 
-                result.data = groups;
-            } else if(options.HasSummary) {
-                var cached = query.ToArray();
-                result.summary = new AggregateCalculator<T>(cached.Cast<object>(), accessor, options.TotalSummary, null).Run();
-                result.data = Paginate(cached, options.Skip, options.Take);
-            } else {
-                result.data = query;
-            }
+            if(options.HasSummary)
+                result.summary = new AggregateCalculator<T>(data, accessor, options.TotalSummary, options.GroupSummary).Run();            
+
+            if(deferPaging)
+                data = Paginate(data, options.Skip, options.Take);
+
+            if(emptyGroups && options.HasGroups)
+                EmptyGroups(data, options.Group.Length);
+
+            result.data = data;
 
             if(result.IsDataOnly())
                 return result.data;
@@ -45,34 +51,30 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        static IEnumerable<T> Paginate<T>(IEnumerable<T> data, int skip, int take) {
+        static IEnumerable Paginate(IEnumerable data, int skip, int take) {
+            if(skip < 1 && take < 1)
+                return data;
+
+            var typed = data.Cast<object>();
+
             if(skip > 0)
-                data = data.Skip(skip);
+                typed = typed.Skip(skip);
 
             if(take > 0)
-                data = data.Take(take);
+                typed = typed.Take(take);
 
-            return data;
+            return typed;
         }
 
-        static IEnumerable<Group> CollapseGroups(IEnumerable<Group> groups, IEnumerable<GroupingInfo> grouping) {
-#warning can collapse non-leaf groups?
-            var isLeafGroup = grouping.Count() < 2;
-            var thisGrouping = grouping.First();
-            var isExpanded = !thisGrouping.IsExpanded.HasValue || thisGrouping.IsExpanded.Value;
-
-            foreach(var g in groups) {
-                if(isLeafGroup) {
-                    if(!isExpanded) {
-                        g.count = g.items.Count;
-                        g.items = null;
-                    }
+        static void EmptyGroups(IEnumerable groups, int level) {
+            foreach(Group g in groups) {
+                if(level < 2) {
+                    g.count = g.items.Count;
+                    g.items = null;
                 } else {
-                    CollapseGroups(g.items.Cast<Group>(), grouping.Skip(1));
+                    EmptyGroups(g.items, level - 1);
                 }
             }
-
-            return groups;
         }
     }
 

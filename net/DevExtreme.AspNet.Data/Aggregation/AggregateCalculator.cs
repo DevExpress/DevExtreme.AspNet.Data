@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class AggregateCalculator<T> {
-        IEnumerable<object> _data;
+        IEnumerable _data;
         Accessor<T> _accessor;
 
         Aggregator<T>[] _totalAggregators;
@@ -17,7 +18,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable<object> data, Accessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, Accessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
