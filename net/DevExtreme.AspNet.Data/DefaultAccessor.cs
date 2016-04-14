@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class Accessor<T> : ExpressionCompiler {
+    class DefaultAccessor<T> : ExpressionCompiler, IAccessor<T> {
         IDictionary<string, Func<T, object>> _accessors;
 
-        public Accessor() 
+        public DefaultAccessor() 
             : base(true) {
         }
 
@@ -31,7 +31,6 @@ namespace DevExtreme.AspNet.Data {
 
             return _accessors[selector](obj);
         }
-
     }
 
 }

@@ -16,10 +16,10 @@ namespace DevExtreme.AspNet.Data {
             _guardNulls = guardNulls;
         }
 
-        public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr() {
+        public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr(bool paginate = true) {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, IQueryable<T>>>(
-                BuildCore(param, false),
+                BuildCore(param, paginate, false),
                 param
             );
         }
@@ -27,12 +27,12 @@ namespace DevExtreme.AspNet.Data {
         public Expression<Func<IQueryable<T>, int>> BuildCountExpr() {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, int>>(
-                BuildCore(param, true),
+                BuildCore(param, false, true),
                 param
             );
         }
 
-        Expression BuildCore(ParameterExpression param, bool isCountQuery) {
+        Expression BuildCore(ParameterExpression param, bool paginate, bool isCountQuery) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
@@ -45,7 +45,7 @@ namespace DevExtreme.AspNet.Data {
                 if(_loadOptions.HasSort || _loadOptions.HasGroups)
                     body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
 
-                if(!_loadOptions.HasGroups && !_loadOptions.HasSummary) {
+                if(paginate) {
                     if(_loadOptions.Skip > 0)
                         body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(_loadOptions.Skip));
 

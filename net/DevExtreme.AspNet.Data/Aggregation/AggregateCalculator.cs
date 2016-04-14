@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,18 +7,18 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class AggregateCalculator<T> {
-        IEnumerable<object> _data;
-        Accessor<T> _accessor;
+        IEnumerable _data;
+        IAccessor<T> _accessor;
 
-        Aggregator[] _totalAggregators;
+        Aggregator<T>[] _totalAggregators;
         string[] _totalSelectors;
 
         string[] _groupSummaryTypes;
         string[] _groupSelectors;
-        Stack<Aggregator[]> _groupAggregatorsStack;
+        Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable<object> data, Accessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
@@ -29,7 +30,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             if(groupSummary != null) {
                 _groupSummaryTypes = groupSummary.Select(i => i.SummaryType).ToArray();
                 _groupSelectors = groupSummary.Select(i => i.Selector).ToArray();
-                _groupAggregatorsStack = new Stack<Aggregator[]>();
+                _groupAggregatorsStack = new Stack<Aggregator<T>[]>();
             }
         }
 
@@ -69,29 +70,29 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 group.summary = Finish(_groupAggregatorsStack.Pop());            
         }
 
-        void Step(object obj, Aggregator[] aggregators, string[] selectors) {
+        void Step(object obj, Aggregator<T>[] aggregators, string[] selectors) {
             var typed = (T)obj;
             for(var i = 0; i < aggregators.Length; i++)
-                aggregators[i].Step(_accessor.Read(typed, selectors[i]));
+                aggregators[i].Step(typed, selectors[i]);
         }
 
-        object[] Finish(Aggregator[] aggregators) {
+        object[] Finish(Aggregator<T>[] aggregators) {
             return aggregators.Select(a => a.Finish()).ToArray();
         }
 
 
-        Aggregator CreateAggregator(string summaryType) {
+        Aggregator<T> CreateAggregator(string summaryType) {
             switch(summaryType) {
                 case "sum":
-                    return new SumAggregator();
+                    return new SumAggregator<T>(_accessor);
                 case "min":
-                    return new MinAggregator();
+                    return new MinAggregator<T>(_accessor);
                 case "max":
-                    return new MaxAggregator();
+                    return new MaxAggregator<T>(_accessor);
                 case "avg":
-                    return new AvgAggregator();
+                    return new AvgAggregator<T>(_accessor);
                 case "count":
-                    return new CountAggregator(false);
+                    return new CountAggregator<T>(_accessor, false);
             }
 
             throw new NotSupportedException();

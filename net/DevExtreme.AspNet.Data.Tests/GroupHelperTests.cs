@@ -9,8 +9,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class GroupHelperTests {
 
-        static GroupHelper<T> CreateHelper<T>(IEnumerable<T> data) {
-            return new GroupHelper<T>(data, new Accessor<T>());
+        static GroupHelper<T> CreateHelper<T>(IEnumerable<T> any) {
+            return new GroupHelper<T>(new DefaultAccessor<T>());
         }
 
         [Fact]
@@ -42,8 +42,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 item_15_1_2
             };
 
-            var helper = CreateHelper(data);
-            var groups = helper.Group(new[] {
+            var groups = CreateHelper(data).Group(data, new[] {
                 new GroupingInfo { Selector = "Year" },
                 new GroupingInfo { Selector = "Q" }
             });
@@ -73,8 +72,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { n = (object)11M },
             };
 
-            var helper = CreateHelper(data);
-            var groups = helper.Group(new[] {
+            var groups = CreateHelper(data).Group(data, new[] {
                 new GroupingInfo { Selector = "n", GroupInterval = "5" }
             });
 
@@ -98,7 +96,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { d = new DateTime(2011, 12, 13, 14, 15, 16) }
             };
 
-            var groups = CreateHelper(data).Group(new[] {
+            var groups = CreateHelper(data).Group(data, new[] {
                 new GroupingInfo { Selector = "d", GroupInterval = "year" },
                 new GroupingInfo { Selector = "d", GroupInterval = "quarter" },
                 new GroupingInfo { Selector = "d", GroupInterval = "month" },
@@ -148,7 +146,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 "not null"
             };
 
-            var groups = CreateHelper(data).Group(new[] { new GroupingInfo { Selector = "this" } });
+            var groups = CreateHelper(data).Group(data, new[] { new GroupingInfo { Selector = "this" } });
             Assert.Null(groups[0].key);
         }
 
