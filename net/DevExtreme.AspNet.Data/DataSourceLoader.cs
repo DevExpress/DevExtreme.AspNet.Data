@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.RemoteGrouping;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,44 +11,72 @@ namespace DevExtreme.AspNet.Data {
 
         public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
             var queryableSource = source.AsQueryable();
-            var builder = new DataSourceExpressionBuilder<T>(options, queryableSource is EnumerableQuery);
+            var isLinqToObjects = queryableSource is EnumerableQuery;
+            var builder = new DataSourceExpressionBuilder<T>(options, isLinqToObjects);
 
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);
 
             var accessor = new DefaultAccessor<T>();
             var result = new DataSourceLoadResult();
+            var emptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
+            var canUseRemoteGrouping = options.RemoteGrouping.HasValue ? options.RemoteGrouping.Value : !isLinqToObjects;
 
-            if(options.RequireTotalCount)
-                result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
-          
-            var deferPaging = options.HasGroups || options.HasSummary;
-            var q = builder.BuildLoadExpr(!deferPaging).Compile();
+            if(canUseRemoteGrouping && emptyGroups) {
+                var groupingResult = ExecRemoteGrouping(queryableSource, builder, options);
 
-            IEnumerable data = null;
+                EmptyGroups(groupingResult.Groups, options.Group.Length);
 
-            if(options.HasGroups)
-                data = new GroupHelper<T>(accessor).Group(q(queryableSource), options.Group);
-            else
-                data = q(queryableSource).ToArray();
+                result.data = Paginate(groupingResult.Groups, options.Skip, options.Take);
+                result.summary = groupingResult.Totals;
+                result.totalCount = groupingResult.TotalCount;
+            } else {
+                var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
+                var q = builder.BuildLoadExpr(!deferPaging).Compile();
 
-            // at this point, query is executed and data is in memory
+                IEnumerable data = null;
 
-            if(options.HasSummary)
-                result.summary = new AggregateCalculator<T>(data, accessor, options.TotalSummary, options.GroupSummary).Run();            
+                if(options.HasGroups)
+                    data = new GroupHelper<T>(accessor).Group(q(queryableSource), options.Group);
+                else
+                    data = q(queryableSource).ToArray();
 
-            if(deferPaging)
-                data = Paginate(data, options.Skip, options.Take);
+                // at this point, query is executed and data is in memory
 
-            if(options.HasGroups && !options.Group.Last().GetIsExpanded())
-                EmptyGroups(data, options.Group.Length);
+                if(canUseRemoteGrouping && options.HasSummary && !options.HasGroups) {
+                    var groupingResult = ExecRemoteGrouping(queryableSource, builder, options);
+                    result.totalCount = groupingResult.TotalCount;
+                    result.summary = groupingResult.Totals;
+                } else {
+                    if(options.RequireTotalCount)
+                        result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
-            result.data = data;
+                    if(options.HasSummary)
+                        result.summary = new AggregateCalculator<T>(data, accessor, options.TotalSummary, options.GroupSummary).Run();
+                }
+
+                if(deferPaging)
+                    data = Paginate(data, options.Skip, options.Take);
+
+                if(emptyGroups)
+                    EmptyGroups(data, options.Group.Length);
+
+                result.data = data;
+            }
 
             if(result.IsDataOnly())
                 return result.data;
 
             return result;
+        }
+
+        static RemoteGroupingResult ExecRemoteGrouping<T>(IQueryable<T> source, DataSourceExpressionBuilder<T> builder, DataSourceLoadOptionsBase options) {
+            return RemoteGroupTransformer.Run(
+                builder.BuildLoadGroupsExpr().Compile()(source).ToArray(),
+                options.HasGroups ? options.Group.Length : 0,
+                options.TotalSummary,
+                options.GroupSummary
+            );
         }
 
         static IEnumerable Paginate(IEnumerable data, int skip, int take) {
@@ -68,7 +97,14 @@ namespace DevExtreme.AspNet.Data {
         static void EmptyGroups(IEnumerable groups, int level) {
             foreach(Group g in groups) {
                 if(level < 2) {
-                    g.count = g.items.Count;
+                    var remoteGroup = g.items[0] as IRemoteGroup;
+
+                    if(remoteGroup != null) {
+                        g.count = remoteGroup.Count;
+                    } else {
+                        g.count = g.items.Count;
+                    }
+
                     g.items = null;
                 } else {
                     EmptyGroups(g.items, level - 1);

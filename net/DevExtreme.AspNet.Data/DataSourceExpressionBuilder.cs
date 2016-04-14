@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.RemoteGrouping;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace DevExtreme.AspNet.Data {
         public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr(bool paginate = true) {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, IQueryable<T>>>(
-                BuildCore(param, paginate, false),
+                BuildCore(param, paginate: paginate),
                 param
             );
         }
@@ -27,12 +28,20 @@ namespace DevExtreme.AspNet.Data {
         public Expression<Func<IQueryable<T>, int>> BuildCountExpr() {
             var param = CreateParam();
             return Expression.Lambda<Func<IQueryable<T>, int>>(
-                BuildCore(param, false, true),
+                BuildCore(param, isCountQuery: true),
                 param
             );
         }
 
-        Expression BuildCore(ParameterExpression param, bool paginate, bool isCountQuery) {
+        public Expression<Func<IQueryable<T>, IQueryable<IRemoteGroup>>> BuildLoadGroupsExpr() {
+            var param = CreateParam();
+            return Expression.Lambda<Func<IQueryable<T>, IQueryable<IRemoteGroup>>>(
+                BuildCore(param, remoteGrouping: true),
+                param
+            );
+        }
+
+        Expression BuildCore(ParameterExpression param, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
@@ -45,6 +54,9 @@ namespace DevExtreme.AspNet.Data {
                 if(_loadOptions.HasSort || _loadOptions.HasGroups)
                     body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
 
+                if(remoteGrouping)
+                    body = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(body);
+
                 if(paginate) {
                     if(_loadOptions.Skip > 0)
                         body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(_loadOptions.Skip));
@@ -56,6 +68,9 @@ namespace DevExtreme.AspNet.Data {
 
             if(isCountQuery)
                 body = Expression.Call(queryableType, "Count", genericTypeArguments, body);
+
+            if(_loadOptions.ExpressionWatcher != null)
+                _loadOptions.ExpressionWatcher(body);
 
             return body;
         }

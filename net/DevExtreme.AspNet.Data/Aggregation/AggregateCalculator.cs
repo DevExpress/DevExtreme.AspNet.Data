@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.RemoteGrouping;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,9 +91,15 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 case "max":
                     return new MaxAggregator<T>(_accessor);
                 case "avg":
-                    return new AvgAggregator<T>(_accessor);
+                    return new AvgAggregator<T>(_accessor, new CountAggregator<T>(_accessor, true));
                 case "count":
                     return new CountAggregator<T>(_accessor, false);
+
+                case "remoteCount":
+                    return new RemoteCountAggregator<T>(_accessor);
+                case "remoteAvg":
+                    return new AvgAggregator<T>(_accessor, new RemoteCountAggregator<T>(_accessor));
+
             }
 
             throw new NotSupportedException();
