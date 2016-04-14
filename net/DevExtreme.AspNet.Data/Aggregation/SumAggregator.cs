@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    class SumAggregator : Aggregator {
+    class SumAggregator<T> : Aggregator<T> {
         decimal? _sum;
 
-        public override void Step(object value) {
+        public SumAggregator(Accessor<T> accessor) 
+            : base(accessor) {
+        }
+
+        public override void Step(T container, string selector) {
+            var value = Accessor.Read(container, selector);
+
             if(value != null) {
                 if(!_sum.HasValue)
                     _sum = 0;

@@ -5,10 +5,16 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    class MinAggregator : Aggregator {
+    class MinAggregator<T> : Aggregator<T> {
         object _min = null;
 
-        public override void Step(object value) {
+        public MinAggregator(Accessor<T> accessor) 
+            : base(accessor) {
+        }
+
+        public override void Step(T container, string selector) {
+            var value = Accessor.Read(container, selector);
+
             if(value is IComparable) {
                 if(_min == null || Comparer<object>.Default.Compare(value, _min) < 0)
                     _min = value;

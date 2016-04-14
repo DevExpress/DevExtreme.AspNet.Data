@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    class CountAggregator : Aggregator {
+    class CountAggregator<T> : Aggregator<T> {
         int _count;
         bool _skipNulls;
 
-        public CountAggregator(bool skipNulls) {
+        public CountAggregator(Accessor<T> accessor, bool skipNulls) 
+            : base(accessor) {
             _skipNulls = skipNulls;
         }
 
-        public override void Step(object value) {
-            if(!_skipNulls || value != null)
+        public override void Step(T container, string selector) {
+            if(!_skipNulls || Accessor.Read(container, selector) != null)
                 _count++;
         }
 
