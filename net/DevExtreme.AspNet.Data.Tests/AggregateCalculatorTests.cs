@@ -180,6 +180,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(6M, (data[0].items[0] as Group).summary[0]);
         }
 
+        [Fact]
+        public void IgnoreGroupSummaryIfNoGroups() {
+            var data = new object[] { 1 };
+
+            var calculator = new AggregateCalculator<int>(data, new Accessor<int>(), null, new[] {
+                new SummaryInfo { Selector = "ignore me", SummaryType = "ignore me" }
+            });
+
+            calculator.Run();
+        }
+
     }
 
 }
