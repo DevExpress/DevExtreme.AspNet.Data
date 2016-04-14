@@ -22,7 +22,7 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
           
             var deferPaging = options.HasGroups || options.HasSummary;
-            var q = builder.BuildLoadExpr().Compile();
+            var q = builder.BuildLoadExpr(!deferPaging).Compile();
 
             IEnumerable data = null;
 
