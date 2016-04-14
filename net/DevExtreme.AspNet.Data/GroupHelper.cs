@@ -80,7 +80,7 @@ namespace DevExtreme.AspNet.Data {
                 case "year":
                     return Convert.ToDateTime(memberValue).Year;
                 case "quarter":
-                    return (int)Math.Ceiling(Convert.ToDateTime(memberValue).Month / 3.0);
+                    return (Convert.ToDateTime(memberValue).Month + 2) / 3;
                 case "month":
                     return Convert.ToDateTime(memberValue).Month ;
                 case "day":
