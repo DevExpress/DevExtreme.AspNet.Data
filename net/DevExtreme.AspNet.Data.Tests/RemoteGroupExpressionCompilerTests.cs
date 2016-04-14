@@ -35,11 +35,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new SummaryInfo { SummaryType = "count" }
                 },
                 new[] {
-                    new SummaryInfo { Selector = "Value", SummaryType = "sum" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "min" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "max" },
+                    new SummaryInfo { SummaryType = "count" },
                     new SummaryInfo { Selector = "Value", SummaryType = "avg" },
-                    new SummaryInfo { SummaryType = "count" }
+                    new SummaryInfo { Selector = "Value", SummaryType = "max" },
+                    new SummaryInfo { Selector = "Value", SummaryType = "min" },
+                    new SummaryInfo { Selector = "Value", SummaryType = "sum" }
                 }
             );
 
@@ -52,16 +52,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                 + "K0 = g.Key.K0, "
                 + "K1 = g.Key.K1, "
                 + "Count = g.Count(), "
-                + "G0 = g.Sum(obj => obj.Value), "
-                + "G1 = g.Min(obj => obj.Value), "
+                + "G1 = g.Sum(obj => obj.Value), "
                 + "G2 = g.Max(obj => obj.Value), "
-                + "G3 = g.Sum(obj => obj.Value), "
-                + "G4 = null, "
+                + "G3 = g.Min(obj => obj.Value), "
+                + "G4 = g.Sum(obj => obj.Value), "
                 + "T0 = g.Sum(obj => obj.Value), "
                 + "T1 = g.Min(obj => obj.Value), "
                 + "T2 = g.Max(obj => obj.Value), "
-                + "T3 = g.Sum(obj => obj.Value), "
-                + "T4 = null"
+                + "T3 = g.Sum(obj => obj.Value)"
                 + "})",
                 expr.ToString()
             );

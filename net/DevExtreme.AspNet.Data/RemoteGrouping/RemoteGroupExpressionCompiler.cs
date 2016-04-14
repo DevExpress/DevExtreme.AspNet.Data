@@ -132,11 +132,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
             ));
 
-            for(var i = 0; i < _groupSummaryExprList.Count; i++)
-                projectionBindings.Add(MakeAggregateBinding("G" + i, param, _groupSummaryParams[i], _groupSummaryTypes[i], _groupSummaryExprList[i]));
-
-            for(var i = 0; i < _totalSummaryExprList.Count; i++)
-                projectionBindings.Add(MakeAggregateBinding("T" + i, param, _totalSummaryParams[i], _totalSummaryTypes[i], _totalSummaryExprList[i]));
+            AddAggregateBindinge(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, "G");
+            AddAggregateBindinge(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, "T");
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
@@ -149,21 +146,26 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return Expression.Call(typeof(Queryable), "Select", new[] { param.Type, _remoteGroupClassType }, target, projectionLambda);
         }
 
-        MemberAssignment MakeAggregateBinding(string bindingFieldName, Expression aggregateTarget, ParameterExpression aggregateParam, string summaryType, Expression summaryExpr) {
-            var field = _remoteGroupClassType.GetTypeInfo().GetDeclaredField(bindingFieldName);
+        void AddAggregateBindinge(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, string bindingFieldPrefix) {
+            for(var i = 0; i < selectorExprList.Count; i++) {
+                var summaryType = summaryTypes[i];
 
-            if(summaryType == "count")
-                return Expression.Bind(field, Expression.Constant(null));
+                if(summaryType == "count")
+                    continue;
 
-            return Expression.Bind(field, 
-                Expression.Call(
-                    typeof(Enumerable),
-                    GetPreAggregateMethodName(summaryType),
-                    new[] { typeof(T) },
-                    aggregateTarget,
-                    Expression.Lambda(summaryExpr, aggregateParam)
-                )
-            );
+                bindingList.Add(
+                    Expression.Bind(
+                        _remoteGroupClassType.GetTypeInfo().GetDeclaredField(bindingFieldPrefix + i),
+                        Expression.Call(
+                            typeof(Enumerable),
+                            GetPreAggregateMethodName(summaryType),
+                            new[] { typeof(T) },
+                            aggregateTarget,
+                            Expression.Lambda(selectorExprList[i], summaryParams[i])
+                        )
+                    )
+                );
+            }
         }
         
         static string GetPreAggregateMethodName(string summaryType) {
