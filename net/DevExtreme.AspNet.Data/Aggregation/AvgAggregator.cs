@@ -9,9 +9,9 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         Aggregator<T> _counter;
         SumAggregator<T> _summator;
 
-        public AvgAggregator(IAccessor<T> accessor) 
+        public AvgAggregator(IAccessor<T> accessor, Aggregator<T> counter) 
             : base(accessor) {
-            _counter = new CountAggregator<T>(accessor, true);
+            _counter = counter;
             _summator = new SumAggregator<T>(accessor);
         }
 

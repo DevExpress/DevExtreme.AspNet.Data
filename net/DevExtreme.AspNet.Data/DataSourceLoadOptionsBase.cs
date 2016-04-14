@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
@@ -16,6 +17,10 @@ namespace DevExtreme.AspNet.Data {
         public IList Filter;
         public SummaryInfo[] TotalSummary;
         public SummaryInfo[] GroupSummary;
+
+        public bool? RemoteGrouping;
+
+        internal Action<Expression> ExpressionWatcher;
 
         internal bool HasGroups {
             get { return Group != null && Group.Length > 0; }
