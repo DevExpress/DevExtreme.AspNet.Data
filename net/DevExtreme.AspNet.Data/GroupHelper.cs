@@ -16,7 +16,7 @@ namespace DevExtreme.AspNet.Data {
             _accessor = accessor;
         }
 
-        public IList<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+        public List<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
             var groups = Group(data, groupInfo.First());
 
             if(groupInfo.Count() > 1) {
@@ -24,17 +24,15 @@ namespace DevExtreme.AspNet.Data {
                     .Select(g => new Group {
                         key = g.key,
                         items = Group(g.items.Cast<T>(), groupInfo.Skip(1))
-                            .Cast<object>()
-                            .ToArray()
                     })
-                    .ToArray();
+                    .ToList();
             }
 
             return groups;
         }
 
 
-        IList<Group> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
+        List<Group> Group(IEnumerable<T> data, GroupingInfo groupInfo) {
             var groupsIndex = new Dictionary<object, Group>();
             var groups = new List<Group>();
 
@@ -50,7 +48,7 @@ namespace DevExtreme.AspNet.Data {
 
                 var group = groupsIndex[groupIndexKey];
                 if(group.items == null)
-                    group.items = new List<object>();
+                    group.items = new List<T>();
                 group.items.Add(item);
             }
 
