@@ -20,7 +20,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var calculator = new AggregateCalculator<int>(data, new Accessor<int>(),
+            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(),
                 new[] { new SummaryInfo { Selector = "this", SummaryType = "sum" } },
                 new[] { new SummaryInfo { Selector = "this", SummaryType = "sum" } }
             );
@@ -64,7 +64,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new SummaryInfo { SummaryType = "count" },
             };
 
-            var totals = new AggregateCalculator<object>(data, new Accessor<object>(), summaries, null).Run();
+            var totals = new AggregateCalculator<object>(data, new DefaultAccessor<object>(), summaries, null).Run();
 
             Assert.Equal(expectedSum, totals[0]);
             Assert.Equal(expectedMin, totals[1]);
@@ -169,7 +169,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var calculator = new AggregateCalculator<int>(data, new Accessor<int>(), null, new[] {
+            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(), null, new[] {
                 new SummaryInfo { Selector = "this", SummaryType = "sum" }
             });
 
@@ -184,7 +184,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void IgnoreGroupSummaryIfNoGroups() {
             var data = new object[] { 1 };
 
-            var calculator = new AggregateCalculator<int>(data, new Accessor<int>(), null, new[] {
+            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(), null, new[] {
                 new SummaryInfo { Selector = "ignore me", SummaryType = "ignore me" }
             });
 

@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     class SumAggregator<T> : Aggregator<T> {
         decimal? _sum;
 
-        public SumAggregator(Accessor<T> accessor) 
+        public SumAggregator(IAccessor<T> accessor) 
             : base(accessor) {
         }
 

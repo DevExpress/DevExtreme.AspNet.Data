@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     class MinAggregator<T> : Aggregator<T> {
         object _min = null;
 
-        public MinAggregator(Accessor<T> accessor) 
+        public MinAggregator(IAccessor<T> accessor) 
             : base(accessor) {
         }
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     abstract class Aggregator<T> {
-        protected readonly Accessor<T> Accessor;
+        protected readonly IAccessor<T> Accessor;
 
-        public Aggregator(Accessor<T> accessor) {
+        public Aggregator(IAccessor<T> accessor) {
             Accessor = accessor;
         }
 

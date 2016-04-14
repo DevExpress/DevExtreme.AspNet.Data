@@ -10,9 +10,9 @@ namespace DevExtreme.AspNet.Data {
     class GroupHelper<T> {
         readonly static object NULL_KEY = new object();
 
-        Accessor<T> _accessor;
+        IAccessor<T> _accessor;
 
-        public GroupHelper(Accessor<T> accessor) {
+        public GroupHelper(IAccessor<T> accessor) {
             _accessor = accessor;
         }
 

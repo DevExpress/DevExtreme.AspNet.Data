@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         int _count;
         bool _skipNulls;
 
-        public CountAggregator(Accessor<T> accessor, bool skipNulls) 
+        public CountAggregator(IAccessor<T> accessor, bool skipNulls) 
             : base(accessor) {
             _skipNulls = skipNulls;
         }

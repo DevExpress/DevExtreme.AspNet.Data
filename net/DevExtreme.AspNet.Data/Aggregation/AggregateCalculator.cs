@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
     class AggregateCalculator<T> {
         IEnumerable _data;
-        Accessor<T> _accessor;
+        IAccessor<T> _accessor;
 
         Aggregator<T>[] _totalAggregators;
         string[] _totalSelectors;
@@ -18,7 +18,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable data, Accessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 

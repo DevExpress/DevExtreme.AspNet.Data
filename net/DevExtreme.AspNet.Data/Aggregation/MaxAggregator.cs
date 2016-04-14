@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     class MaxAggregator<T> : Aggregator<T> {
         object _max = null;
 
-        public MaxAggregator(Accessor<T> accessor) 
+        public MaxAggregator(IAccessor<T> accessor) 
             : base(accessor) {
         }
 

@@ -15,7 +15,7 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);
 
-            var accessor = new Accessor<T>();
+            var accessor = new DefaultAccessor<T>();
             var result = new DataSourceLoadResult();
 
             if(options.RequireTotalCount)
