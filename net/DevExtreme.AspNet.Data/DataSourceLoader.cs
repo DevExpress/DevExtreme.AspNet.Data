@@ -17,7 +17,6 @@ namespace DevExtreme.AspNet.Data {
 
             var accessor = new Accessor<T>();
             var result = new DataSourceLoadResult();
-            var emptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
 
             if(options.RequireTotalCount)
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
@@ -40,7 +39,7 @@ namespace DevExtreme.AspNet.Data {
             if(deferPaging)
                 data = Paginate(data, options.Skip, options.Take);
 
-            if(emptyGroups && options.HasGroups)
+            if(options.HasGroups && !options.Group.Last().GetIsExpanded())
                 EmptyGroups(data, options.Group.Length);
 
             result.data = data;
