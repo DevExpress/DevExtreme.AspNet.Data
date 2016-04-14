@@ -22,7 +22,7 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
             if(options.HasGroups) {
-                IEnumerable<Group> groups = new GroupHelper<T>(query.ToArray(), accessor).Group(options.Group);
+                IEnumerable<Group> groups = new GroupHelper<T>(accessor).Group(query.ToArray(), options.Group);
 
                 if(options.HasSummary)
                     result.summary = new AggregateCalculator<T>(groups, accessor, options.TotalSummary, options.GroupSummary).Run();

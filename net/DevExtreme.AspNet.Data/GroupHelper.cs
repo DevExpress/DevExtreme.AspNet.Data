@@ -10,19 +10,13 @@ namespace DevExtreme.AspNet.Data {
     class GroupHelper<T> {
         readonly static object NULL_KEY = new object();
 
-        IEnumerable<T> _data;
         Accessor<T> _accessor;
 
-        public GroupHelper(IEnumerable<T> data, Accessor<T> accessor) {
-            _data = data;
+        public GroupHelper(Accessor<T> accessor) {
             _accessor = accessor;
         }
 
-        public IList<Group> Group(IEnumerable<GroupingInfo> groupInfo) {
-            return Group(_data, groupInfo);
-        }
-
-        IList<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
+        public IList<Group> Group(IEnumerable<T> data, IEnumerable<GroupingInfo> groupInfo) {
             var groups = Group(data, groupInfo.First());
 
             if(groupInfo.Count() > 1) {
