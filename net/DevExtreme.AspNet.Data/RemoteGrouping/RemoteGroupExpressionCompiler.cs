@@ -132,8 +132,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
             ));
 
-            AddAggregateBindinge(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, "G");
-            AddAggregateBindinge(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, "T");
+            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, "G");
+            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, "T");
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
@@ -146,7 +146,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return Expression.Call(typeof(Queryable), "Select", new[] { param.Type, _remoteGroupClassType }, target, projectionLambda);
         }
 
-        void AddAggregateBindinge(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, string bindingFieldPrefix) {
+        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, string bindingFieldPrefix) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
 
