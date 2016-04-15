@@ -1,7 +1,10 @@
 ﻿// https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
+// jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
+
 (function($, DX) {
+    "use strict";
 
     function createStore(options) {
         var store = new DX.data.CustomStore(createStoreConfig(options));
@@ -186,4 +189,4 @@
         }
     });
 
-})(jQuery, DevExpress);
+})(jQuery, window.DevExpress);
