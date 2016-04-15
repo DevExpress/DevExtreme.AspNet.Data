@@ -51,7 +51,7 @@ namespace DevExtreme.AspNet.Data {
                 body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
 
             if(!isCountQuery) {
-                if(_loadOptions.HasSort || _loadOptions.HasGroups)
+                if(_loadOptions.HasSort || _loadOptions.HasDefaultSort || _loadOptions.HasGroups)
                     body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
 
                 if(remoteGrouping)

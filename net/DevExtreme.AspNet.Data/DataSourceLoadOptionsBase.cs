@@ -19,6 +19,7 @@ namespace DevExtreme.AspNet.Data {
         public SummaryInfo[] GroupSummary;
 
         public bool? RemoteGrouping;
+        public string DefaultSort;
 
         internal Action<Expression> ExpressionWatcher;
 
@@ -28,6 +29,10 @@ namespace DevExtreme.AspNet.Data {
 
         internal bool HasSort {
             get { return Sort != null && Sort.Length > 0; }
+        }
+
+        internal bool HasDefaultSort {
+            get { return !String.IsNullOrEmpty(DefaultSort); }
         }
 
         internal bool HasSummary {
@@ -57,6 +62,9 @@ namespace DevExtreme.AspNet.Data {
                     result.Add(s);
                 }
             }
+
+            if(result.Count < 1 && HasDefaultSort)
+                result.Add(new SortingInfo { Selector = DefaultSort });
 
             return result;
         }

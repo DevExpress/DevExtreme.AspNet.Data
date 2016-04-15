@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.RemoteGrouping;
 using System;
 using System.Collections;
@@ -16,6 +17,11 @@ namespace DevExtreme.AspNet.Data {
 
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(queryableSource);
+
+            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(queryableSource.Provider)) {
+                if(!options.HasDefaultSort)
+                    options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
+            }
 
             var accessor = new DefaultAccessor<T>();
             var result = new DataSourceLoadResult();
