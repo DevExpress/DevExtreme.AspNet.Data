@@ -31,6 +31,10 @@ namespace DevExtreme.AspNet.Data {
             get { return Sort != null && Sort.Length > 0; }
         }
 
+        internal bool HasDefaultSort {
+            get { return !String.IsNullOrEmpty(DefaultSort); }
+        }
+
         internal bool HasSummary {
             get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
         }
@@ -59,7 +63,7 @@ namespace DevExtreme.AspNet.Data {
                 }
             }
 
-            if(result.Count < 1 && !String.IsNullOrEmpty(DefaultSort))
+            if(result.Count < 1 && HasDefaultSort)
                 result.Add(new SortingInfo { Selector = DefaultSort });
 
             return result;

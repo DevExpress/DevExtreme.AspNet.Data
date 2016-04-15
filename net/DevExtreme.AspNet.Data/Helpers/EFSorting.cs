@@ -8,15 +8,16 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
     static class EFSorting {
 
-        static readonly ICollection<Type> LIKELY_KEY_TYPES = new[] {
-            typeof(Int32), typeof(Int64), typeof(Guid)
-        };
-
-        static readonly ICollection<Type> OTHER_SORTABLE_TYPES = new[] {
+        static readonly IEnumerable<Type> ORDERED_SORTABLE_TYPES = new[] {
             // https://msdn.microsoft.com/en-us/library/ee382832(v=vs.110).aspx
-            typeof(String), typeof(Boolean), typeof(DateTime), typeof(Decimal),
-            typeof(Double), typeof(DateTimeOffset), typeof(Byte), typeof(Single),
-            typeof(Int16), typeof(SByte)
+
+            // types usually used for keys
+            typeof(Int32), typeof(Int64), typeof(Guid), typeof(String),
+
+            // other types
+            typeof(Boolean), typeof(Decimal), typeof(Double),
+            typeof(DateTime), typeof(DateTimeOffset),
+            typeof(Byte), typeof(SByte), typeof(Single), typeof(Int16)
         };
 
         class Candidate {
@@ -41,8 +42,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             return (
                 candidates.FirstOrDefault(HasKeyAttr)
-                ?? candidates.FirstOrDefault(i => LIKELY_KEY_TYPES.Contains(i.Type))
-                ?? candidates.FirstOrDefault(i => OTHER_SORTABLE_TYPES.Contains(i.Type))
+                ?? ORDERED_SORTABLE_TYPES.SelectMany(type => candidates.Where(c => c.Type == type)).FirstOrDefault()
             )?.Member.Name;
         }
 

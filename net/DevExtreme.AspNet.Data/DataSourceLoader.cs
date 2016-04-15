@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data {
                 return builder.BuildCountExpr().Compile()(queryableSource);
 
             if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(queryableSource.Provider)) {
-                if(String.IsNullOrEmpty(options.DefaultSort))
+                if(!options.HasDefaultSort)
                     options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
             }
 
