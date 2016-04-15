@@ -145,6 +145,23 @@ namespace DevExtreme.AspNet.Data.Tests {
             var result = query(data.AsQueryable()).ToArray();
             Assert.Equal(2, result.Length);
         }
+
+        [Fact]
+        public void DefaultSort() {
+            var options = new SampleLoadOptions {
+                DefaultSort = "Item1"
+            };
+
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
+
+            options.Sort = new[] {
+                new SortingInfo { Selector = "Item2" }
+            };
+
+            Assert.Equal("data.OrderBy(obj => obj.Item2)", builder.BuildLoadExpr(false).Body.ToString());
+        }
     }
 
 }
