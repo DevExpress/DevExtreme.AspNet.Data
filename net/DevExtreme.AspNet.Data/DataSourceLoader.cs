@@ -38,16 +38,11 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = groupingResult.TotalCount;
             } else {
                 var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
-                var q = builder.BuildLoadExpr(!deferPaging).Compile();
+                var queryResult = ExecQuery(builder.BuildLoadExpr(!deferPaging).Compile(), queryableSource, options);
 
-                IEnumerable data = null;
-
+                IEnumerable data = queryResult;
                 if(options.HasGroups)
-                    data = new GroupHelper<T>(accessor).Group(ExecQuery(q, queryableSource, options), options.Group);
-                else
-                    data = ExecQuery(q, queryableSource, options).ToArray();
-
-                // at this point, query is executed and data is in memory
+                    data = new GroupHelper<T>(accessor).Group(queryResult, options.Group);
 
                 if(canUseRemoteGrouping && options.HasSummary && !options.HasGroups) {
                     var groupingResult = ExecRemoteGrouping(queryableSource, builder, options);
@@ -57,8 +52,10 @@ namespace DevExtreme.AspNet.Data {
                     if(options.RequireTotalCount)
                         result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
-                    if(options.HasSummary)
+                    if(options.HasSummary) {
+                        data = EnsureBuffered<T>(data);
                         result.summary = new AggregateCalculator<T>(data, accessor, options.TotalSummary, options.GroupSummary).Run();
+                    }
                 }
 
                 if(deferPaging)
@@ -76,10 +73,20 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
+        static IEnumerable EnsureBuffered<T>(IEnumerable data) {
+            var q = data as IQueryable<T>;
+            if(q != null)
+                return q.ToArray();
+
+            return data;
+        }
+
         static IQueryable<R> ExecQuery<S, R>(Func<IQueryable<S>, IQueryable<R>> query, IQueryable<S> source, DataSourceLoadOptionsBase options) {
             var result = query(source);
 
 #if DEBUG
+            result = new QueryableOnce<R>(result);
+
             if(options.ExpressionWatcher != null)
                 options.ExpressionWatcher(result.Expression);            
 #endif
@@ -90,7 +97,7 @@ namespace DevExtreme.AspNet.Data {
 
         static RemoteGroupingResult ExecRemoteGrouping<T>(IQueryable<T> source, DataSourceExpressionBuilder<T> builder, DataSourceLoadOptionsBase options) {
             return RemoteGroupTransformer.Run(
-                ExecQuery(builder.BuildLoadGroupsExpr().Compile(), source, options).ToArray(),
+                ExecQuery(builder.BuildLoadGroupsExpr().Compile(), source, options),
                 options.HasGroups ? options.Group.Length : 0,
                 options.TotalSummary,
                 options.GroupSummary
