@@ -1,7 +1,7 @@
 where dnx > dnxpath.txt
 set /p dnxpath=<dnxpath.txt
 
-call dnu build ..\DevExtreme.AspNet.Data.Tests
+call dnu build ..\DevExtreme.AspNet.Data ..\DevExtreme.AspNet.Data.Tests
 
 OpenCover\tools\OpenCover.Console ^
  "-target: %dnxpath%" ^
