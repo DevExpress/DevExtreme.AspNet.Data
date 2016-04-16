@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -145,6 +146,27 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.True(Equals(key1, key2));
             Assert.Equal(key1.GetHashCode(), key2.GetHashCode());
+        }
+
+        [Fact]
+        public void RemoteGroupClass() {
+            var group = new RemoteGroup<object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object>();
+            var type = group.GetType().GetTypeInfo();
+            var accessor = new RemoteGroupAccessor();
+
+            var prefixes = new Dictionary<string, int> {
+                ["K"] = 8,
+                ["T"] = 8,
+                ["G"] = 8
+            };
+
+            foreach(var prefix in prefixes.Keys) {
+                for(var index = 0; index < prefixes[prefix]; index++) {
+                    var value = new Object();
+                    type.GetDeclaredField(prefix + index).SetValue(group, value);
+                    Assert.Same(value, accessor.Read(group, prefix + index));
+                }
+            }
         }
 
     }
