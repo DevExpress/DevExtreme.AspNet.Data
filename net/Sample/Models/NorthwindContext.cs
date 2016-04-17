@@ -4,7 +4,9 @@ using Microsoft.Data.Entity.Metadata;
 namespace Sample.Models {
     public partial class NorthwindContext : DbContext {
         protected override void OnConfiguring(DbContextOptionsBuilder options) {
-            options.UseSqlServer(@"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True");
+            options
+                .UseSqlServer(@"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True")
+                .UseRowNumberForPaging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
