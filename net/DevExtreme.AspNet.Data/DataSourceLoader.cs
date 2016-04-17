@@ -85,7 +85,8 @@ namespace DevExtreme.AspNet.Data {
             var result = query(source);
 
 #if DEBUG
-            result = new QueryableOnce<R>(result);
+            if(options.UseQueryableOnce)
+                result = new QueryableOnce<R>(result);
 
             if(options.ExpressionWatcher != null)
                 options.ExpressionWatcher(result.Expression);            

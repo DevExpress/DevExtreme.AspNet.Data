@@ -23,6 +23,7 @@ namespace DevExtreme.AspNet.Data {
 
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
+        internal bool UseQueryableOnce;
 #endif
 
         internal bool HasGroups {
