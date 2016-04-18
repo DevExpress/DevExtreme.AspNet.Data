@@ -69,9 +69,6 @@ namespace DevExtreme.AspNet.Data {
             if(isCountQuery)
                 body = Expression.Call(queryableType, "Count", genericTypeArguments, body);
 
-            if(_loadOptions.ExpressionWatcher != null)
-                _loadOptions.ExpressionWatcher(body);
-
             return body;
         }
 

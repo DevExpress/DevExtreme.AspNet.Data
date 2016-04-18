@@ -21,7 +21,10 @@ namespace DevExtreme.AspNet.Data {
         public bool? RemoteGrouping;
         public string DefaultSort;
 
+#if DEBUG
         internal Action<Expression> ExpressionWatcher;
+        internal bool UseQueryableOnce;
+#endif
 
         internal bool HasGroups {
             get { return Group != null && Group.Length > 0; }

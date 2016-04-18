@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -56,10 +55,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { G1 = 2, G2 = 2, A = 6, B = 11 },
             };
 
-            var expressionsBuilt = new List<string>();
-
             var loadOptions = new SampleLoadOptions {
-                ExpressionWatcher = x => expressionsBuilt.Add(x.ToString()),
                 RemoteGrouping = true,
                 RequireTotalCount = true,
                 Group = new[] {
@@ -80,8 +76,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
 
-            Assert.Equal(1, expressionsBuilt.Count);
-            Assert.Contains("RemoteGroupKey`8(K0 = obj.G1, K1 = obj.G2)", expressionsBuilt[0]);
+            Assert.Equal(1, loadOptions.ExpressionLog.Count);
+            Assert.Contains("RemoteGroupKey`8(K0 = obj.G1, K1 = obj.G2)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);
@@ -128,10 +124,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { a = 3 }
             };
 
-            var expressionsBuilt = new List<string>();
-
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
-                ExpressionWatcher = x => expressionsBuilt.Add(x.ToString()),
+            var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 RequireTotalCount = true,
                 Filter = new[] { "a", "<>", "2" },
@@ -140,16 +133,18 @@ namespace DevExtreme.AspNet.Data.Tests {
                 },
                 Skip = 1,
                 Take = 1
-            });
+            };
 
-            Assert.Equal(2, expressionsBuilt.Count);
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+
+            Assert.Equal(2, loadOptions.ExpressionLog.Count);
 
             // 1 - load paged data
-            Assert.Contains("Skip", expressionsBuilt[0]);
-            Assert.Contains("Take", expressionsBuilt[0]);
+            Assert.Contains("Skip", loadOptions.ExpressionLog[0]);
+            Assert.Contains("Take", loadOptions.ExpressionLog[0]);
 
             // 2 - load summaries
-            Assert.Contains("RemoteGroupKey`8()", expressionsBuilt[1]);
+            Assert.Contains("RemoteGroupKey`8()", loadOptions.ExpressionLog[1]);
 
             Assert.Equal(4M, result.summary[0]);
             Assert.Equal(1, result.data.Cast<object>().Count());
@@ -191,18 +186,17 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { a = 3 }
             };
 
-            var expressionsBuilt = new List<string>();
-
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
-                ExpressionWatcher = x => expressionsBuilt.Add(x.ToString()),
+            var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 RequireTotalCount = true,
                 Filter = new[] { "a", "<>", "2" },
                 Skip = 1,
                 Take = 1
-            });
+            };
 
-            Assert.False(expressionsBuilt.Any(i => i.Contains("RemoteGroupKey")));
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+
+            Assert.False(loadOptions.ExpressionLog.Any(i => i.Contains("RemoteGroupKey")));
 
             Assert.Equal(2, result.totalCount);
             Assert.Null(result.summary);
