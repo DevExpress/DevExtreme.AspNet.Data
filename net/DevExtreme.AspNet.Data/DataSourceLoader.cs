@@ -11,14 +11,17 @@ namespace DevExtreme.AspNet.Data {
     public class DataSourceLoader {
 
         public static object Load<T>(IEnumerable<T> source, DataSourceLoadOptionsBase options) {
-            var queryableSource = source.AsQueryable();
-            var isLinqToObjects = queryableSource is EnumerableQuery;
+            return Load(source.AsQueryable(), options);
+        }
+
+        public static object Load<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
+            var isLinqToObjects = source is EnumerableQuery;
             var builder = new DataSourceExpressionBuilder<T>(options, isLinqToObjects);
 
             if(options.IsCountQuery)
-                return builder.BuildCountExpr().Compile()(queryableSource);
+                return builder.BuildCountExpr().Compile()(source);
 
-            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(queryableSource.Provider)) {
+            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(source.Provider)) {
                 if(!options.HasDefaultSort)
                     options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
             }
@@ -29,7 +32,7 @@ namespace DevExtreme.AspNet.Data {
             var canUseRemoteGrouping = options.RemoteGrouping.HasValue ? options.RemoteGrouping.Value : !isLinqToObjects;
 
             if(canUseRemoteGrouping && emptyGroups) {
-                var groupingResult = ExecRemoteGrouping(queryableSource, builder, options);
+                var groupingResult = ExecRemoteGrouping(source, builder, options);
 
                 EmptyGroups(groupingResult.Groups, options.Group.Length);
 
@@ -38,19 +41,19 @@ namespace DevExtreme.AspNet.Data {
                 result.totalCount = groupingResult.TotalCount;
             } else {
                 var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
-                var queryResult = ExecQuery(builder.BuildLoadExpr(!deferPaging).Compile(), queryableSource, options);
+                var queryResult = ExecQuery(builder.BuildLoadExpr(!deferPaging).Compile(), source, options);
 
                 IEnumerable data = queryResult;
                 if(options.HasGroups)
                     data = new GroupHelper<T>(accessor).Group(queryResult, options.Group);
 
                 if(canUseRemoteGrouping && options.HasSummary && !options.HasGroups) {
-                    var groupingResult = ExecRemoteGrouping(queryableSource, builder, options);
+                    var groupingResult = ExecRemoteGrouping(source, builder, options);
                     result.totalCount = groupingResult.TotalCount;
                     result.summary = groupingResult.Totals;
                 } else {
                     if(options.RequireTotalCount)
-                        result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
+                        result.totalCount = builder.BuildCountExpr().Compile()(source);
 
                     if(options.HasSummary) {
                         data = Buffer<T>(data);
