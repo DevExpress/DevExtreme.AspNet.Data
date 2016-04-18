@@ -1,0 +1,6 @@
+OpenCover
+ReportGenerator
+report
+coverage.xml
+nuget.exe
+dnxpath.txt

@@ -110,9 +110,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         IEnumerable<string> GroupKeyNames() {
-            if(_groupKeyExprList == null)
-                yield break;
-
             for(var i = 0; i < _groupKeyExprList.Count; i++)
                 yield return "K" + i;
         }

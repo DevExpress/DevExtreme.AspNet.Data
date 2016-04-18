@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
-    class RemoteGroupKey<T0, T1, T2, T3, T4, T5, T6, T7> : IEquatable<RemoteGroupKey<T0, T1, T2, T3, T4, T5, T6, T7>> {
+    class RemoteGroupKey<T0, T1, T2, T3, T4, T5, T6, T7> {
         T0 _k0;
         T1 _k1;
         T2 _k2;
@@ -66,19 +66,19 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         public T6 K6 { get { return _k6; } }
         public T7 K7 { get { return _k7; } }
 
-        public bool Equals(RemoteGroupKey<T0, T1, T2, T3, T4, T5, T6, T7> other) {
-            return Equals(_k0, other._k0)
-                && Equals(_k1, other._k1)
-                && Equals(_k2, other._k2)
-                && Equals(_k3, other._k3)
-                && Equals(_k4, other._k4)
-                && Equals(_k5, other._k5)
-                && Equals(_k6, other._k6)
-                && Equals(_k7, other._k7);
-        }
         public override bool Equals(object obj) {
             var key = obj as RemoteGroupKey<T0, T1, T2, T3, T4, T5, T6, T7>;
-            return key != null && Equals(key);
+            if(key == null)
+                return false;
+
+            return EqualityComparer<T0>.Default.Equals(_k0, key._k0)
+                && EqualityComparer<T1>.Default.Equals(_k1, key._k1)
+                && EqualityComparer<T2>.Default.Equals(_k2, key._k2)
+                && EqualityComparer<T3>.Default.Equals(_k3, key._k3)
+                && EqualityComparer<T4>.Default.Equals(_k4, key._k4)
+                && EqualityComparer<T5>.Default.Equals(_k5, key._k5)
+                && EqualityComparer<T6>.Default.Equals(_k6, key._k6)
+                && EqualityComparer<T7>.Default.Equals(_k7, key._k7);
         }
 
         public override int GetHashCode() {

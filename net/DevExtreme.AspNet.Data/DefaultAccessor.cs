@@ -14,9 +14,6 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public object Read(T obj, string selector) {
-            if(String.IsNullOrEmpty(selector))
-                return null;
-
             if(_accessors == null)
                 _accessors = new Dictionary<string, Func<T, object>>();
 

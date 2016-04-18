@@ -157,6 +157,33 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupSummaryAndTotalCount() {
+            var exprList = new List<string>();
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(
+                new[] {
+                    new { g = 1, v = 1 },
+                    new { g = 1, v = 9 }
+                },
+                new SampleLoadOptions {
+                    ExpressionWatcher = x => exprList.Add(x.ToString()),
+                    RequireTotalCount = true,
+                    RemoteGrouping = true,
+                    Group = new[] {
+                        new GroupingInfo { Selector = "g", IsExpanded = false }
+                    },
+                    GroupSummary = new[] {
+                        new SummaryInfo { Selector = "v", SummaryType="sum" }
+                    }
+                }
+            );
+
+            Assert.Equal(10M, result.data.Cast<Group>().First().summary[0]);
+            Assert.Null(result.summary);
+            Assert.Equal(2, result.totalCount);
+        }
+
+        [Fact]
         public void NotUsedIfTotalCountOnly() {
             var data = new[] {
                 new { a = 1 },

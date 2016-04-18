@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -124,6 +125,48 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("K5 = obj.Hour", expr);
             Assert.Contains("K6 = obj.Minute", expr);
             Assert.Contains("K7 = obj.Second", expr);
+        }
+
+        [Fact]
+        public void RemoteGroupKeyClass() {
+            var key1 = new RemoteGroupKey<int, int, int, int, int, int, int, int>(0, 1, 2, 3, 4, 5, 6, 7);
+
+            Assert.Equal(0, key1.K0);
+            Assert.Equal(1, key1.K1);
+            Assert.Equal(2, key1.K2);
+            Assert.Equal(3, key1.K3);
+            Assert.Equal(4, key1.K4);
+            Assert.Equal(5, key1.K5);
+            Assert.Equal(6, key1.K6);
+            Assert.Equal(7, key1.K7);
+
+            Assert.False(Equals(key1, new object()));
+
+            var key2 = new RemoteGroupKey<int, int, int, int, int, int, int, int>(0, 1, 2, 3, 4, 5, 6, 7);
+
+            Assert.True(Equals(key1, key2));
+            Assert.Equal(key1.GetHashCode(), key2.GetHashCode());
+        }
+
+        [Fact]
+        public void RemoteGroupClass() {
+            var group = new RemoteGroup<object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object>();
+            var type = group.GetType().GetTypeInfo();
+            var accessor = new RemoteGroupAccessor();
+
+            var prefixes = new Dictionary<string, int> {
+                ["K"] = 8,
+                ["T"] = 8,
+                ["G"] = 8
+            };
+
+            foreach(var prefix in prefixes.Keys) {
+                for(var index = 0; index < prefixes[prefix]; index++) {
+                    var value = new Object();
+                    type.GetDeclaredField(prefix + index).SetValue(group, value);
+                    Assert.Same(value, accessor.Read(group, prefix + index));
+                }
+            }
         }
 
     }
