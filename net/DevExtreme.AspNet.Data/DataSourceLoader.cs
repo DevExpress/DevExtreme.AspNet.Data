@@ -53,7 +53,7 @@ namespace DevExtreme.AspNet.Data {
                         result.totalCount = builder.BuildCountExpr().Compile()(queryableSource);
 
                     if(options.HasSummary) {
-                        data = EnsureBuffered<T>(data);
+                        data = Buffer<T>(data);
                         result.summary = new AggregateCalculator<T>(data, accessor, options.TotalSummary, options.GroupSummary).Run();
                     }
                 }
@@ -73,7 +73,7 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        static IEnumerable EnsureBuffered<T>(IEnumerable data) {
+        static IEnumerable Buffer<T>(IEnumerable data) {
             var q = data as IQueryable<T>;
             if(q != null)
                 return q.ToArray();
