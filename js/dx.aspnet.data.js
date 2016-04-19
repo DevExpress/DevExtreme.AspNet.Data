@@ -21,11 +21,26 @@
             deleteUrl = options.deleteUrl,
             onBeforeSend = options.onBeforeSend;
 
-        function send(operation, settings) {
-            if(onBeforeSend)
-                onBeforeSend(operation, settings);
+        function send(operation, ajaxSettings, customSuccessHandler) {
+            var d = $.Deferred();
 
-            return $.ajax(settings);
+            if(operation !== "load" && !keyExpr) {
+                d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
+            } else {
+                if(onBeforeSend)
+                    onBeforeSend(operation, ajaxSettings);
+
+                $.ajax(ajaxSettings)
+                    .done(function(res) {
+                        if(customSuccessHandler)
+                            customSuccessHandler(d, res);
+                        else
+                            d.resolve(res);
+                    })
+                    .fail(d.reject);
+            }
+
+            return d.promise();
         }
 
         function filterByKey(keyValue) {
@@ -75,21 +90,19 @@
             key: keyExpr,
 
             load: function(loadOptions) {
-                var d = new $.Deferred();
-
-                send("load", {
-                    url: loadUrl,
-                    data: loadOptionsToActionParams(loadOptions)
-                }).done(function(res) {
-                    if("data" in res)
-                        d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary });
-                    else
-                        d.resolve(res);
-                }).fail(function(error) {
-                    d.reject(error);
-                });
-
-                return d.promise();
+                return send(
+                    "load", 
+                    {
+                        url: loadUrl,
+                        data: loadOptionsToActionParams(loadOptions)
+                    },
+                    function(d, res) {
+                        if("data" in res)
+                            d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary });
+                        else
+                            d.resolve(res);
+                    }
+                );
             },
 
             totalCount: function(loadOptions) {
@@ -100,27 +113,19 @@
             },
 
             byKey: function(key) {
-                var d = new $.Deferred();
-
-                if(!keyExpr)
-                    return makeMissingKeyPromise("byKey", loadUrl);
-
-                send("load", {
-                    url: loadUrl,
-                    data: loadOptionsToActionParams({ filter: filterByKey(key) })
-                }).done(function(res) {
-                    d.resolve(res[0]);
-                }).fail(function(error) {
-                    d.reject(error);
-                });
-
-                return d.promise();
+                return send(
+                    "load",
+                    {
+                        url: loadUrl,
+                        data: loadOptionsToActionParams({ filter: filterByKey(key) })
+                    },
+                    function(d, res) {
+                        d.resolve(res[0]);
+                    }
+                );
             },
 
             update: updateUrl && function(key, values) {
-                if(!keyExpr)
-                    return makeMissingKeyPromise("update", updateUrl);
-
                 return send("update", {
                     url: updateUrl,
                     type: options.updateMethod || "PUT",
@@ -132,9 +137,6 @@
             },
 
             insert: insertUrl && function(values) {
-                if(!keyExpr)
-                    return makeMissingKeyPromise("insert", insertUrl);
-
                 return send("insert", {
                     url: insertUrl,
                     type: options.insertMethod || "POST",
@@ -143,9 +145,6 @@
             },
 
             remove: deleteUrl && function(key) {
-                if(!keyExpr)
-                    return makeMissingKeyPromise("remove", deleteUrl);
-
                 return send("delete", {
                     url: deleteUrl,
                     type: options.deleteMethod || "DELETE",
@@ -173,14 +172,6 @@
         }
 
         return false;
-    }
-
-    function makeMissingKeyPromise(operation, url) {
-        var text = "Primary key is not specified (operation: '" + operation + "', url: '" + url + "')";
-        
-        return $.Deferred()
-            .reject(new Error(text))
-            .promise();
     }
 
     $.extend(DX.data, {
