@@ -11,7 +11,7 @@ using Microsoft.Data.Entity;
 namespace Sample.Controllers {
 
     [Route("nwind")]
-    public class NorthwindController {
+    public class NorthwindController : Controller {
         NorthwindContext _nwind;
 
         public NorthwindController(NorthwindContext nwind) {
@@ -61,18 +61,30 @@ namespace Sample.Controllers {
         }
 
         [HttpPut("update-order")]
-        public void UpdateOrder(int key, string values) {
+        public IActionResult UpdateOrder(int key, string values) {
             var order = _nwind.Orders.First(o => o.OrderID == key);
             JsonConvert.PopulateObject(values, order);
+
+            if(!TryValidateModel(order))
+                return HttpBadRequest(ModelState.ToFullErrorString());
+
             _nwind.SaveChanges();
+
+            return Ok();
         }
 
         [HttpPost("insert-order")]
-        public void InsertOrder(string values) {
+        public IActionResult InsertOrder(string values) {
             var order = new Order();
             JsonConvert.PopulateObject(values, order);
+
+            if(!TryValidateModel(order))
+                return HttpBadRequest(ModelState.ToFullErrorString());
+
             _nwind.Orders.Add(order);
             _nwind.SaveChanges();
+
+            return Ok();
         }
 
         [HttpDelete("delete-order")]
