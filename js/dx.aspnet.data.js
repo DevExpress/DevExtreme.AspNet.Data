@@ -37,7 +37,13 @@
                         else
                             d.resolve(res);
                     })
-                    .fail(d.reject);
+                    .fail(function(xhr, textStatus) {
+                        var message = getErrorMessageFromXhr(xhr);
+                        if(message)
+                            d.reject(message);
+                        else
+                            d.reject(xhr, textStatus);
+                    });
             }
 
             return d.promise();
@@ -172,6 +178,32 @@
         }
 
         return false;
+    }
+
+    function getErrorMessageFromXhr(xhr) {
+        var mime = xhr.getResponseHeader("Content-Type"),
+            responseText = xhr.responseText;
+
+        if(mime.indexOf("text/plain") === 0)
+            return responseText;
+
+        if(mime.indexOf("application/json") === 0) {
+            var jsonObj = $.parseJSON(responseText);
+
+            if(typeof jsonObj === "string")
+                return jsonObj;
+
+            if($.isPlainObject(jsonObj)) {
+                for(var key in jsonObj) {
+                    if(typeof jsonObj[key] === "string")
+                        return jsonObj[key];
+                }
+            }
+
+            return responseText;
+        }
+
+        return null;
     }
 
     $.extend(DX.data, {
