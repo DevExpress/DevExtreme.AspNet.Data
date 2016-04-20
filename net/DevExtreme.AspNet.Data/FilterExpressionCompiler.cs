@@ -25,7 +25,11 @@ namespace DevExtreme.AspNet.Data {
             if(IsCriteria(criteriaJson[0]))
                 return CompileGroup(dataItemExpr, criteriaJson);
 
-            return CompileBinary(dataItemExpr, criteriaJson);
+            try {
+                return CompileBinary(dataItemExpr, criteriaJson);
+            } catch {
+                return Expression.Constant(false);
+            }
         }
 
         Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson) {
