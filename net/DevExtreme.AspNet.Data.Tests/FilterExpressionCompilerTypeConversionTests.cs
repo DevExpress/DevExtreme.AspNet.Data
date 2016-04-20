@@ -37,7 +37,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             public Guid guid = new Guid(TEST_GUID);
         }
 
-        class NullableSrtucts {
+        class NullableStructs {
             public sbyte? @sbyte = 3;
             public int? @int = 3;
             public long? @long = 3;
@@ -88,7 +88,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void NullableStructFromString() {
-            var obj = new NullableSrtucts();
+            var obj = new NullableStructs();
 
             AssertEvaluation(obj, "sbyte", "3");
             AssertEvaluation(obj, "int", "3");
