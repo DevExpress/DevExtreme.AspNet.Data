@@ -34,11 +34,14 @@ namespace DevExtreme.AspNet.Data {
             
             type = StripNullableType(type);
 
+            if(IsIntegralType(type) && value is String)
+                value = Convert.ToDecimal(value);
+
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
                 return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
 
-            return value;
+            return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
         }
 
         public static Type StripNullableType(Type type) {
@@ -55,6 +58,15 @@ namespace DevExtreme.AspNet.Data {
                 return jValue.Value;
 
             return value;
+        }
+
+        static bool IsIntegralType(Type type) {
+            return type == typeof(int)
+                || type == typeof(long)
+                || type == typeof(byte)
+                || type == typeof(sbyte)
+                || type == typeof(uint)
+                || type == typeof(ulong);
         }
 
     }
