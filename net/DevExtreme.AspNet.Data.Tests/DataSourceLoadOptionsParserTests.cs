@@ -42,6 +42,19 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("max", opts.GroupSummary[0].SummaryType);
         }
 
+        [Fact]
+        public void MustNotParseDates() {
+            var opts = new SampleLoadOptions();
+
+            DataSourceLoadOptionsParser.Parse(opts, key => {
+                if(key == DataSourceLoadOptionsParser.KEY_FILTER)
+                    return @"[ ""d"", ""2011-12-13T14:15:16Z"" ]";
+                return null;
+            });
+
+            Assert.StrictEqual("2011-12-13T14:15:16Z", opts.Filter[1]);
+        }
+
     }
 
 }
