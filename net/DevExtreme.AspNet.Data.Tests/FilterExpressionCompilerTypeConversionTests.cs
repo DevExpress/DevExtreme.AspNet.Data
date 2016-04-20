@@ -30,8 +30,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             public char @char = '3';
             public bool @bool = true;
 
-            public DateTime dateTime = new DateTime(2003, 3, 3);
-            public DateTimeOffset dateTimeOffset = new DateTimeOffset(new DateTime(2003, 3, 3));
+            public DateTime dateTime = new DateTime(2003, 3, 30);
+            public DateTimeOffset dateTimeOffset = new DateTimeOffset(new DateTime(2003, 3, 30));
             public TimeSpan timeSpan = TimeSpan.FromMinutes(3);
 
             public Guid guid = new Guid(TEST_GUID);
@@ -53,8 +53,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             public char? @char = '3';
             public bool? @bool = true;
 
-            public DateTime? dateTime = new DateTime(2003, 3, 3);
-            public DateTimeOffset? dateTimeOffset = new DateTimeOffset(new DateTime(2003, 3, 3));
+            public DateTime? dateTime = new DateTime(2003, 3, 30);
+            public DateTimeOffset? dateTimeOffset = new DateTimeOffset(new DateTime(2003, 3, 30));
             public TimeSpan? timeSpan = TimeSpan.FromMinutes(3);
 
             public Guid? guid = new Guid(TEST_GUID);
@@ -79,8 +79,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertEvaluation(obj, "bool", "true");
             AssertEvaluation(obj, "char", "3");
 
-            AssertEvaluation(obj, "dateTime", "2003/3/3");
-            AssertEvaluation(obj, "dateTimeOffset", "2003/3/3");
+            AssertEvaluation(obj, "dateTime", "3/30/2003");
+            AssertEvaluation(obj, "dateTimeOffset", "3/30/2003");
             AssertEvaluation(obj, "timeSpan", "00:03");
 
             AssertEvaluation(obj, "guid", TEST_GUID);
@@ -105,8 +105,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertEvaluation(obj, "bool", "true");
             AssertEvaluation(obj, "char", "3");
 
-            AssertEvaluation(obj, "dateTime", "2003/3/3");
-            AssertEvaluation(obj, "dateTimeOffset", "2003/3/3");
+            AssertEvaluation(obj, "dateTime", "3/30/2003");
+            AssertEvaluation(obj, "dateTimeOffset", "3/30/2003");
             AssertEvaluation(obj, "timeSpan", "00:03");
 
             AssertEvaluation(obj, "guid", TEST_GUID);
@@ -154,6 +154,20 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("False", compiler.Compile(new[] { "int", "not-int" }).Body.ToString());
         }
 
+
+        [Fact]
+        public void DatesWithTimeComponent() {
+            var testDate = new DateTime(2000, 1, 2, 3, 4, 5, 6);
+            var testDateString = testDate.ToString("M/dd/yyyy HH:mm:ss.fff");
+
+            var obj = new Structs {
+                dateTime = testDate,
+                dateTimeOffset = (DateTimeOffset)testDate
+            };
+
+            AssertEvaluation(obj, "dateTime", testDateString);
+            AssertEvaluation(obj, "dateTimeOffset", testDateString);
+        }
 
     }
 
