@@ -35,7 +35,7 @@ namespace DevExtreme.AspNet.Data {
             type = StripNullableType(type);
 
             if(IsIntegralType(type) && value is String)
-                value = Convert.ToDecimal(value);
+                value = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
 
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
