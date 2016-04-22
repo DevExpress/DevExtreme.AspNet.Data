@@ -52,7 +52,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 return null;
             });
 
-            Assert.StrictEqual("2011-12-13T14:15:16Z", opts.Filter[1]);
+            Assert.IsType<string>(opts.Filter[1]);
         }
 
     }
