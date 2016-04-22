@@ -11,7 +11,7 @@ cache:
 
 install:
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
-  - dnvm install %DNX_VERSION% -r clr
+  - dnvm install %DNX_VERSION% -r coreclr
   - npm install jshint
 
 before_build:
