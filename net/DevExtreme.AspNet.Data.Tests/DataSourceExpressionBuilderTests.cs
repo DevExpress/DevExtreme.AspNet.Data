@@ -53,7 +53,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.DoesNotContain("Skip", text);
             Assert.DoesNotContain("Take", text);
             Assert.DoesNotContain("OrderBy", text);
-            Assert.EndsWith(".Count()", text);
+            Assert.Contains(".Count()", text);
         }
 
         [Fact]

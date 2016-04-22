@@ -48,8 +48,11 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(!String.IsNullOrEmpty(group))
                 loadOptions.Group = JsonConvert.DeserializeObject<GroupingInfo[]>(group);
 
-            if(!String.IsNullOrEmpty(filter))
-                loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter);
+            if(!String.IsNullOrEmpty(filter)) {
+                loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter, new JsonSerializerSettings {
+                    DateParseHandling = DateParseHandling.None
+                });
+            }
 
             if(!String.IsNullOrEmpty(totalSummary))
                 loadOptions.TotalSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(totalSummary);

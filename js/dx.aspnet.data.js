@@ -67,7 +67,8 @@
             };
 
             var normalizeSorting = DX.data.utils.normalizeSortingInfo,
-                group = options.group;
+                group = options.group,
+                filter = options.filter;
 
             if(options.sort)
                 result.sort = JSON.stringify(normalizeSorting(options.sort));
@@ -78,8 +79,11 @@
                 result.group = JSON.stringify(group);
             }
 
-            if($.isArray(options.filter))
-                result.filter = JSON.stringify(options.filter);
+            if($.isArray(filter)) {
+                filter = $.extend(true, [], filter);
+                stringifyDatesInFilter(filter);
+                result.filter = JSON.stringify(filter);
+            }
 
             if(options.totalSummary)
                 result.totalSummary = JSON.stringify(options.totalSummary);
@@ -167,6 +171,40 @@
 
         return key;
     }    
+
+    function serializeDate(date) {
+
+        function zpad(text, len) {
+            text = String(text);
+            while(text.length < len)
+                text = "0" + text;
+            return text;
+        }
+
+        var builder = [1 + date.getMonth(), "/", date.getDate(), "/", date.getFullYear()],
+            h = date.getHours(),
+            m = date.getMinutes(),
+            s = date.getSeconds(),
+            f = date.getMilliseconds();
+
+        if(h + m + s + f > 0)
+            builder.push(" ", zpad(h, 2), ":", zpad(m, 2), ":", zpad(s, 2), ".", zpad(f, 3));        
+
+        return builder.join("");
+    }
+
+    function stringifyDatesInFilter(crit) {
+        $.each(crit, function(k, v) {
+            switch($.type(v)) {
+                case "array":
+                    stringifyDatesInFilter(v);
+                    break;
+                case "date":
+                    crit[k] = serializeDate(v);
+                    break;
+            }
+        });
+    }
 
     function isAdvancedGrouping(expr) {
         if(!$.isArray(expr))

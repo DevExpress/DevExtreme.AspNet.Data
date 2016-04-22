@@ -33,7 +33,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         public static string FindSortableMember(Type entityType) {
             var candidates = Enumerable.Concat(
                 entityType.GetRuntimeProperties()
-                    .Where(i => i.CanRead && i.CanWrite && i.GetMethod.IsPublic && i.SetMethod.IsPublic)
+                    .Where(i => i.CanRead && i.CanWrite && i.GetGetMethod(true).IsPublic && i.GetSetMethod(true).IsPublic)
                     .Select(i => new Candidate(i, i.PropertyType)),
                 entityType.GetRuntimeFields()
                     .Where(i => i.IsPublic)
@@ -47,7 +47,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         }
 
         static bool HasKeyAttr(Candidate candidate) {
-            return candidate.Member.CustomAttributes.Any(i => i.AttributeType.FullName == "System.ComponentModel.DataAnnotations.KeyAttribute");
+            return candidate.Member.GetCustomAttributes(true).Any(i => i.GetType().FullName == "System.ComponentModel.DataAnnotations.KeyAttribute");
         } 
 
     }

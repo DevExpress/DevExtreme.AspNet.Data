@@ -8,11 +8,11 @@
     "projectUrl": "%meta_project_url%",
 
     "dependencies": {
-        "Newtonsoft.Json": "7.0.1"
+        "Newtonsoft.Json": "5.0.1"
     },
 
     "frameworks": {
-        "net45": { },
+        "net40": { },
         "dotnet": {
             "dependencies": {
                 "System.ComponentModel.TypeConverter": "4.0.0",
