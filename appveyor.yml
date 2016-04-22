@@ -20,7 +20,9 @@ before_build:
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
 
 build_script:
-  - msbuild net\DevExtreme.AspNet.Data.sln /v:q
+  - dnu build net\DevExtreme.AspNet.Data --quiet
+  - dnu build net\DevExtreme.AspNet.Data.Tests --quiet  
+  - dnu build net\Sample --quiet  
   - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
 
 test_script:
