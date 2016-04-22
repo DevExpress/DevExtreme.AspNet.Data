@@ -21,10 +21,10 @@
             deleteUrl = options.deleteUrl,
             onBeforeSend = options.onBeforeSend;
 
-        function send(operation, ajaxSettings, customSuccessHandler) {
+        function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
             var d = $.Deferred();
 
-            if(operation !== "load" && !keyExpr) {
+            if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
             } else {
                 if(onBeforeSend)
@@ -101,7 +101,8 @@
 
             load: function(loadOptions) {
                 return send(
-                    "load", 
+                    "load",
+                    false,
                     {
                         url: loadUrl,
                         data: loadOptionsToActionParams(loadOptions)
@@ -116,7 +117,7 @@
             },
 
             totalCount: function(loadOptions) {
-                return send("load", {
+                return send("load", false, {
                     url: loadUrl,
                     data: loadOptionsToActionParams(loadOptions, true)
                 });
@@ -125,6 +126,7 @@
             byKey: function(key) {
                 return send(
                     "load",
+                    true,
                     {
                         url: loadUrl,
                         data: loadOptionsToActionParams({ filter: filterByKey(key) })
@@ -136,7 +138,7 @@
             },
 
             update: updateUrl && function(key, values) {
-                return send("update", {
+                return send("update", true, {
                     url: updateUrl,
                     type: options.updateMethod || "PUT",
                     data: {
@@ -147,7 +149,7 @@
             },
 
             insert: insertUrl && function(values) {
-                return send("insert", {
+                return send("insert", true, {
                     url: insertUrl,
                     type: options.insertMethod || "POST",
                     data: { values: JSON.stringify(values) }
@@ -155,7 +157,7 @@
             },
 
             remove: deleteUrl && function(key) {
-                return send("delete", {
+                return send("delete", true, {
                     url: deleteUrl,
                     type: options.deleteMethod || "DELETE",
                     data: { key: serializeKey(key) }
