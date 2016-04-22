@@ -15,14 +15,17 @@ install:
 
 before_build:
   - dnu restore --quiet
+  - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
 
 build_script:
   - msbuild net\DevExtreme.AspNet.Data.sln /v:q
+  - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
 
 test_script:
   - node_modules\.bin\jshint js
   - dnx -p net\DevExtreme.AspNet.Data.Tests test
+  - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
 
 after_test:
   - dnu pack net\DevExtreme.AspNet.Data --configuration=Release --quiet
