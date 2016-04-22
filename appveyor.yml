@@ -7,12 +7,14 @@ cache:
   - '%USERPROFILE%\.dnx\runtimes -> appveyor.yml'
   - '%USERPROFILE%\.dnx\packages -> appveyor.yml, **\project.json'
   - js-test\node_modules -> js-test\package.json
+  - js-test\bower_components -> js-test\bower.json
   - net\packages -> **\packages.config
 
 install:
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
   - dnvm install %DNX_VERSION% -r coreclr
   - cd js-test && npm install
+  - cd js-test && node_modules\.bin\bower install
 
 before_build:
   - dnu restore --quiet
@@ -27,6 +29,7 @@ build_script:
 
 test_script:
   - js-test\node_modules\.bin\jshint js
+  - js-test\node_modules\.bin\node-qunit-phantomjs js-test\test.html
   - dnx -p net\DevExtreme.AspNet.Data.Tests test
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 

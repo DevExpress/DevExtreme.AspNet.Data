@@ -1,5 +1,7 @@
 {
   "devDependencies": {
-    "jshint": "^2.9.2"
+    "bower": "^1.7.9",
+    "jshint": "^2.9.2",
+    "node-qunit-phantomjs": "^1.4.0"
   }
 }
