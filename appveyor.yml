@@ -26,7 +26,7 @@ build_script:
 test_script:
   - node_modules\.bin\jshint js
   - dnx -p net\DevExtreme.AspNet.Data.Tests test
-  - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
+  - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
 after_test:
   - dnu pack net\DevExtreme.AspNet.Data --configuration=Release --quiet
