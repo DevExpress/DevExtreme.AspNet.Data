@@ -222,6 +222,9 @@
         var mime = xhr.getResponseHeader("Content-Type"),
             responseText = xhr.responseText;
 
+        if(!mime)
+            return null;
+
         if(mime.indexOf("text/plain") === 0)
             return responseText;
 
