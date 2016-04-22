@@ -6,13 +6,13 @@ environment:
 cache:
   - '%USERPROFILE%\.dnx\runtimes -> appveyor.yml'
   - '%USERPROFILE%\.dnx\packages -> appveyor.yml, **\project.json'
-  - node_modules
+  - js-test\node_modules -> js-test\package.json
   - net\packages -> **\packages.config
 
 install:
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
   - dnvm install %DNX_VERSION% -r coreclr
-  - npm install jshint
+  - cd js-test && npm install
 
 before_build:
   - dnu restore --quiet
@@ -26,7 +26,7 @@ build_script:
   - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
 
 test_script:
-  - node_modules\.bin\jshint js
+  - js-test\node_modules\.bin\jshint js
   - dnx -p net\DevExtreme.AspNet.Data.Tests test
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
