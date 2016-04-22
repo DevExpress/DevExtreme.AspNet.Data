@@ -2,6 +2,7 @@ bin/
 obj/
 .vs/
 node_modules/
+net/packages/
 **/wwwroot/lib/
 project.lock.json
 *.suo
