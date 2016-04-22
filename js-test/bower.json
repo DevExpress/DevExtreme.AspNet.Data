@@ -1,0 +1,8 @@
+{
+  "name": "js-test",
+  "private": true,
+  "dependencies": {
+    "qunit": "~1.23.1",
+    "devextreme": "~15.2.9"
+  }
+}
