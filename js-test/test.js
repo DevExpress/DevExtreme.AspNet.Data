@@ -180,4 +180,90 @@
 
     });
 
+    QUnit.module("loading", function() {
+
+        QUnit.test("totalCount", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: "123"
+            });
+
+            createStore({ loadUrl: "/" }).totalCount().done(function(r) {
+                assert.strictEqual(r, 123);
+                done();
+            });
+        });
+
+        QUnit.test("load returns array", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: "[1, 2, 3]"
+            });
+
+            createStore({ loadUrl: "/" }).load().done(function(r) {
+                assert.deepEqual(r, [1, 2, 3]);
+                done();
+            });
+        });
+
+        QUnit.test("load returns structure", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: '{ "data": [1, 2, 3], "totalCount": 123, "summary": [1, 2, 4]}'
+            });
+
+            createStore({ loadUrl: "/" }).load().done(function(data, extra) {
+                assert.deepEqual(data, [1, 2, 3]);
+                assert.deepEqual(extra, {
+                    totalCount: 123,
+                    summary: [1, 2, 4]
+                });
+                done();
+            });
+        });
+
+        QUnit.test("by single key", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                response: function(settings) {
+                    assert.equal(settings.data.filter, '["id",123]');
+                    this.responseText = [ "first", "other" ];
+                }
+            });
+
+            createStore({ key: "id", loadUrl: "/" }).byKey(123).done(function(r) {
+                assert.equal(r, "first");
+                done();
+            });
+        });
+
+        QUnit.test("by compound key", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                response: function(settings) {
+                    assert.equal(settings.data.filter, '[["k1",1],["k2",2]]');
+                    this.responseText = ["first", "other"];
+                }
+            });
+
+            var keyToFind = { k1: 1, k2: 2 };
+
+            createStore({ key: ["k1", "k2"], loadUrl: "/" }).byKey(keyToFind).done(function(r) {
+                assert.equal(r, "first");
+                done();
+            });
+        });
+
+    });
+
 })();
