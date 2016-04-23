@@ -6,6 +6,7 @@
     "karma-coverage": "^0.5.5",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-qunit": "^0.1.9",
+    "phantomjs-prebuilt": "^2.1.7",
     "qunitjs": "^1.23.1"
   }
 }
