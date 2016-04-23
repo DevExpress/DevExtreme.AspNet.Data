@@ -2,6 +2,10 @@
   "devDependencies": {
     "bower": "^1.7.9",
     "jshint": "^2.9.2",
-    "node-qunit-phantomjs": "^1.4.0"
+    "karma": "^0.13.22",
+    "karma-coverage": "^0.5.5",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-qunit": "^0.1.9",
+    "qunitjs": "^1.23.1"
   }
 }

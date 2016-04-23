@@ -1,56 +1,13 @@
-<link rel="stylesheet" href="bower_components/qunit/qunit/qunit.css">
+<script src="test-deps.js"></script>
+<script>
+    TEST_DEPS.forEach(function(i) {
+        document.write("<script src='" + i + "'></scr" + "ipt>");
+    });       
+</script>
 
-<script src="bower_components/globalize/lib/globalize.js"></script>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/devextreme/js/dx.all.js"></script>
-
-<script src="../js/dx.aspnet.data.js"></script>
-
-<script src="bower_components/qunit/qunit/qunit.js"></script>
+<link rel="stylesheet" href="node_modules/qunitjs/qunit/qunit.css">
+<script src="node_modules/qunitjs/qunit/qunit.js"></script>
 
 <div id="qunit"></div>
-<div id="qunit-fixture"></div>
 
-<script>
-    var createStore = DevExpress.data.AspNet.createStore;
-    
-    QUnit.test("test of test", function(assert) {
-        assert.ok("AspNet" in DevExpress.data);
-    });
-    
-    QUnit.test("require key", function(assert) {
-        var done = assert.async(4);
-        
-        var store = createStore({
-            loadUrl: "any",
-            insertUrl: "any",
-            updateUrl: "any",
-            deleteUrl: "any"
-        });
-        
-        function assertError(error) {
-            assert.ok(error.message.indexOf("Primary key") > -1);
-        }
-        
-        store.byKey(123).fail(function(error) {
-            assertError(error);
-            done();
-        });        
-        
-        store.insert({ }).fail(function(error) {
-            assertError(error);
-            done();
-        });
-        
-        store.update(123, { }).fail(function(error) {
-            assertError(error);
-            done();
-        });
-
-        store.remove(1).fail(function(error) {
-            assertError(error);
-            done();
-        });
-    });    
-
-</script>
+<script src="test.js"></script>
