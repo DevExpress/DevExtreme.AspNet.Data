@@ -59,40 +59,43 @@
         }
 
         function loadOptionsToActionParams(options, isCountQuery) {
-            if(!options)
-                return null;
+            var result = {};
 
-            var result = {
-                requireTotalCount: options.requireTotalCount,
-                isCountQuery: isCountQuery,
-                skip: options.skip,
-                take: options.take,
-            };
+            if(isCountQuery)
+                result.isCountQuery = isCountQuery;
 
-            var normalizeSorting = DX.data.utils.normalizeSortingInfo,
-                group = options.group,
-                filter = options.filter;
+            if(options) {
 
-            if(options.sort)
-                result.sort = JSON.stringify(normalizeSorting(options.sort));
+                $.each(["skip", "take", "requireTotalCount"], function() {
+                    if(this in options)
+                        result[this] = options[this];
+                });
 
-            if(group) {
-                if(!isAdvancedGrouping(group))
-                    group = normalizeSorting(group);
-                result.group = JSON.stringify(group);
+                var normalizeSorting = DX.data.utils.normalizeSortingInfo,
+                    group = options.group,
+                    filter = options.filter;
+
+                if(options.sort)
+                    result.sort = JSON.stringify(normalizeSorting(options.sort));
+
+                if(group) {
+                    if(!isAdvancedGrouping(group))
+                        group = normalizeSorting(group);
+                    result.group = JSON.stringify(group);
+                }
+
+                if($.isArray(filter)) {
+                    filter = $.extend(true, [], filter);
+                    stringifyDatesInFilter(filter);
+                    result.filter = JSON.stringify(filter);
+                }
+
+                if(options.totalSummary)
+                    result.totalSummary = JSON.stringify(options.totalSummary);
+
+                if(options.groupSummary)
+                    result.groupSummary = JSON.stringify(options.groupSummary);
             }
-
-            if($.isArray(filter)) {
-                filter = $.extend(true, [], filter);
-                stringifyDatesInFilter(filter);
-                result.filter = JSON.stringify(filter);
-            }
-
-            if(options.totalSummary)
-                result.totalSummary = JSON.stringify(options.totalSummary);
-
-            if(options.groupSummary)
-                result.groupSummary = JSON.stringify(options.groupSummary);
 
             $.extend(result, loadParams);
 

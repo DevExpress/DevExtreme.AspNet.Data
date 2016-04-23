@@ -228,15 +228,12 @@
             });
         });
 
-        QUnit.test("by single key", function(assert) {
+        QUnit.test("byKey", function(assert) {
             var done = assert.async();
 
             $.mockjax({
                 url: "/",
-                response: function(settings) {
-                    assert.equal(settings.data.filter, '["id",123]');
-                    this.responseText = [ "first", "other" ];
-                }
+                responseText: '[ "first", "other" ]'
             });
 
             createStore({ key: "id", loadUrl: "/" }).byKey(123).done(function(r) {
@@ -245,25 +242,143 @@
             });
         });
 
-        QUnit.test("by compound key", function(assert) {
+    });
+
+    QUnit.module("check request data onBeforeSend", function() {
+
+        QUnit.test("load, no arguments", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                response: function(settings) {
-                    assert.equal(settings.data.filter, '[["k1",1],["k2",2]]');
-                    this.responseText = ["first", "other"];
+            $.mockjax({ url: "/load" });
+
+            var store = createStore({
+                loadUrl: "/load",
+                loadParams: { custom: 123 },
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "load");                    
+                    assert.deepEqual(ajax.data, { custom: 123 });
+                    done();
                 }
             });
 
-            var keyToFind = { k1: 1, k2: 2 };
-
-            createStore({ key: ["k1", "k2"], loadUrl: "/" }).byKey(keyToFind).done(function(r) {
-                assert.equal(r, "first");
-                done();
-            });
+            store.load();
         });
 
+        QUnit.test("totalCount, no arguments", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/load" });
+
+            var store = createStore({
+                loadUrl: "/load",
+                loadParams: { custom: 123 },
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "load");
+                    assert.deepEqual(ajax.data, { custom: 123, isCountQuery: true });
+                    done();
+                }
+            });
+
+            store.totalCount();
+        });
+
+        QUnit.test("byKey, single key", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/load" });
+
+            var store = createStore({
+                key: "id",
+                loadUrl: "/load",
+                loadParams: { custom: 123 },
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "load");
+                    assert.deepEqual(ajax.data, { custom: 123, filter: '["id",123]' });
+                    done();
+                }
+            });
+
+            store.byKey(123);
+        });
+
+        QUnit.test("byKey, compound key", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/load" });
+
+            var store = createStore({
+                key: ["k1", "k2"],
+                loadUrl: "/load",
+                loadParams: { custom: 123 },
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "load");
+                    assert.deepEqual(ajax.data, { custom: 123, filter: '[["k1",1],["k2",2]]' });
+                    done();
+                }
+            });
+            store.byKey({ k1: 1, k2: 2 });
+        });
+
+        QUnit.test("insert", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/insert" });
+
+            var store = createStore({
+                key: "id",
+                insertUrl: "/insert",
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "insert");
+                    assert.equal(ajax.type, "POST");
+                    assert.deepEqual(ajax.data, {
+                        values: '{"a":1}'
+                    });
+                    done();
+                }
+            });
+            store.insert({ a: 1 });
+        });
+
+        QUnit.test("update", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/update" });
+
+            var store = createStore({
+                key: "id",
+                updateUrl: "/update",
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "update");
+                    assert.equal(ajax.type, "PUT");
+                    assert.deepEqual(ajax.data, {
+                        key: 123,
+                        values: '{"a":1}'
+                    });
+                    done();
+                }
+            });
+            store.update(123, { a: 1 });
+        });
+
+        QUnit.test("delete", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({ url: "/delete" });
+
+            var store = createStore({
+                key: "id",
+                deleteUrl: "/delete",
+                onBeforeSend: function(op, ajax) {
+                    assert.equal(op, "delete");
+                    assert.equal(ajax.type, "DELETE");
+                    assert.deepEqual(ajax.data, {
+                        key: 123,
+                    });
+                    done();
+                }
+            });
+            store.remove(123);
+        });
     });
 
 })();
