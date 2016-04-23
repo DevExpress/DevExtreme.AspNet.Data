@@ -4,6 +4,7 @@ obj/
 node_modules/
 net/packages/
 /js-test/bower_components/
+/js-test/coverage/
 **/wwwroot/lib/
 project.lock.json
 *.suo
