@@ -59,6 +59,9 @@
         }
 
         function loadOptionsToActionParams(options, isCountQuery) {
+            if(!options)
+                return null;
+
             var result = {
                 requireTotalCount: options.requireTotalCount,
                 isCountQuery: isCountQuery,
@@ -231,7 +234,7 @@
             return responseText;
 
         if(mime.indexOf("application/json") === 0) {
-            var jsonObj = $.parseJSON(responseText);
+            var jsonObj = safeParseJSON(responseText);
 
             if(typeof jsonObj === "string")
                 return jsonObj;
@@ -247,6 +250,14 @@
         }
 
         return null;
+    }
+
+    function safeParseJSON(json) {
+        try {
+            return JSON.parse(json);
+        } catch(x) {
+            return null;
+        }
     }
 
     $.extend(DX.data, {
