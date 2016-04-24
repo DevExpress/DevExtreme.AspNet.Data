@@ -59,37 +59,43 @@
         }
 
         function loadOptionsToActionParams(options, isCountQuery) {
-            var result = {
-                requireTotalCount: options.requireTotalCount,
-                isCountQuery: isCountQuery,
-                skip: options.skip,
-                take: options.take,
-            };
+            var result = {};
 
-            var normalizeSorting = DX.data.utils.normalizeSortingInfo,
-                group = options.group,
-                filter = options.filter;
+            if(isCountQuery)
+                result.isCountQuery = isCountQuery;
 
-            if(options.sort)
-                result.sort = JSON.stringify(normalizeSorting(options.sort));
+            if(options) {
 
-            if(group) {
-                if(!isAdvancedGrouping(group))
-                    group = normalizeSorting(group);
-                result.group = JSON.stringify(group);
+                $.each(["skip", "take", "requireTotalCount"], function() {
+                    if(this in options)
+                        result[this] = options[this];
+                });
+
+                var normalizeSorting = DX.data.utils.normalizeSortingInfo,
+                    group = options.group,
+                    filter = options.filter;
+
+                if(options.sort)
+                    result.sort = JSON.stringify(normalizeSorting(options.sort));
+
+                if(group) {
+                    if(!isAdvancedGrouping(group))
+                        group = normalizeSorting(group);
+                    result.group = JSON.stringify(group);
+                }
+
+                if($.isArray(filter)) {
+                    filter = $.extend(true, [], filter);
+                    stringifyDatesInFilter(filter);
+                    result.filter = JSON.stringify(filter);
+                }
+
+                if(options.totalSummary)
+                    result.totalSummary = JSON.stringify(options.totalSummary);
+
+                if(options.groupSummary)
+                    result.groupSummary = JSON.stringify(options.groupSummary);
             }
-
-            if($.isArray(filter)) {
-                filter = $.extend(true, [], filter);
-                stringifyDatesInFilter(filter);
-                result.filter = JSON.stringify(filter);
-            }
-
-            if(options.totalSummary)
-                result.totalSummary = JSON.stringify(options.totalSummary);
-
-            if(options.groupSummary)
-                result.groupSummary = JSON.stringify(options.groupSummary);
 
             $.extend(result, loadParams);
 
@@ -231,7 +237,7 @@
             return responseText;
 
         if(mime.indexOf("application/json") === 0) {
-            var jsonObj = $.parseJSON(responseText);
+            var jsonObj = safeParseJSON(responseText);
 
             if(typeof jsonObj === "string")
                 return jsonObj;
@@ -247,6 +253,14 @@
         }
 
         return null;
+    }
+
+    function safeParseJSON(json) {
+        try {
+            return JSON.parse(json);
+        } catch(x) {
+            return null;
+        }
     }
 
     $.extend(DX.data, {

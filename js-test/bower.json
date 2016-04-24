@@ -2,6 +2,7 @@
   "name": "js-test",
   "private": true,
   "dependencies": {
-    "devextreme": "~15.2.9"
+    "devextreme": "~15.2.9",
+    "jquery-mockjax": "~2.1.1"
   }
 }
