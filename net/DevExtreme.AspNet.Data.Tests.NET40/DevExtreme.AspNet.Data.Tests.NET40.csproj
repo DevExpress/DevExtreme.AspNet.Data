@@ -46,6 +46,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
@@ -53,7 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DevExtreme.AspNet.Data.Tests\**\*.cs" />
+    <Compile Include="..\DevExtreme.AspNet.Data.Tests\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -72,6 +73,6 @@
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>dnu build $(ProjectDir)\..\DevExtreme.AspNet.Data\project.json --framework net40</PreBuildEvent>
+    <PreBuildEvent>dotnet build $(ProjectDir)\..\DevExtreme.AspNet.Data\project.json --framework net40</PreBuildEvent>
   </PropertyGroup>
 </Project>
