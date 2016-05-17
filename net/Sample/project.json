@@ -2,41 +2,69 @@
     "webroot": "wwwroot",
 
     "dependencies": {
-        "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
-        "Microsoft.Extensions.DependencyInjection": "1.0.0-rc1-final",
-        "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-        "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-        "EntityFramework.Core": "7.0.0-rc1-final",
-        "EntityFramework.Commands": "7.0.0-rc1-final",
-        "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
-        "EntityFramework.MicrosoftSqlServer.Design": "7.0.0-rc1-final",
-        "DevExtreme.AspNet.Data": "",
-        "System.Linq.Expressions": "4.0.11-beta-23516"
-
+        "Microsoft.NETCore.App": {
+            "version": "1.0.0-rc2-*",
+            "type": "platform"
+        },
+        "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Razor.Tools": {
+            "version": "1.0.0-preview1-final",
+            "type": "build"
+        },
+        "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
+        "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
+        "Microsoft.EntityFrameworkCore.SqlServer.Design": "1.0.0-rc2-final",
+        "DevExtreme.AspNet.Data": {
+            "target": "project"
+        }
     },
 
-    "commands": {
-        "web": "Microsoft.AspNet.Server.Kestrel"
+    "tools": {
+        "Microsoft.AspNetCore.Razor.Tools": {
+            "version": "1.0.0-preview1-final",
+            "imports": [ "portable-net45" ]
+        },
+        "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
+            "version": "1.0.0-preview1-final",
+            "imports": [ "portable-net45" ]
+        }
     },
 
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "netcoreapp1.0": {
+            "imports": [ "dnxcore50", "portable-net45" ]
+        }
     },
 
-    "publishExclude": [
-        "node_modules",
-        "bower_components",
-        "**.xproj",
-        "**.user"
-    ],
+    "runtimeOptions": {
+        "gcServer": true
+    },
 
-    "exclude": [
-        "wwwroot",
-        "node_modules",
-        "bower_components"
-    ]
+    "publishOptions": {
+        "include": [
+            "wwwroot",
+            "Views",
+            "appsettings.json",
+            "web.config"
+        ]
+    },
+
+    "buildOptions": {
+        "emitEntryPoint": true,
+        "preserveCompilationContext": true,
+        "compile": {
+            "exclude": [
+                "wwwroot",
+                "node_modules",
+                "bower_components"
+            ]
+        }
+    }
+
 }

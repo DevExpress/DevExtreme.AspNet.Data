@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Sample.Models;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Controllers {
 
@@ -18,13 +18,15 @@ namespace Sample.Controllers {
             _nwind = nwind;
         }
 
+#warning TODO why model binder doesn't work on class?
+
         [HttpGet("orders")]
-        public object Orders(DataSourceLoadOptions loadOptions) {
+        public object Orders([ModelBinder(BinderType = typeof(DataSourceLoadOptionsBinder))] DataSourceLoadOptions loadOptions) {
             return DataSourceLoader.Load(_nwind.Orders, loadOptions);
         }
 
         [HttpGet("order-details")]
-        public object OrderDetails(int orderID, DataSourceLoadOptions options) {
+        public object OrderDetails(int orderID, [ModelBinder(BinderType = typeof(DataSourceLoadOptionsBinder))] DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from i in _nwind.Order_Details
                 where i.OrderID == orderID
@@ -39,7 +41,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("customers-lookup")]
-        public object CustomersLookup(DataSourceLoadOptions options) {
+        public object CustomersLookup([ModelBinder(BinderType = typeof(DataSourceLoadOptionsBinder))] DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from c in _nwind.Customers orderby c.CompanyName select new {
                     Value = c.CustomerID,
@@ -50,7 +52,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("shippers-lookup")]
-        public object ShippersLookup(DataSourceLoadOptions options) {
+        public object ShippersLookup([ModelBinder(BinderType = typeof(DataSourceLoadOptionsBinder))] DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from s in _nwind.Shippers orderby s.CompanyName select new {
                     Value = s.ShipperID,
@@ -66,7 +68,7 @@ namespace Sample.Controllers {
             JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
-                return HttpBadRequest(ModelState.ToFullErrorString());
+                return BadRequest(ModelState.ToFullErrorString());
 
             _nwind.SaveChanges();
 
@@ -79,7 +81,7 @@ namespace Sample.Controllers {
             JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
-                return HttpBadRequest(ModelState.ToFullErrorString());
+                return BadRequest(ModelState.ToFullErrorString());
 
             _nwind.Orders.Add(order);
             _nwind.SaveChanges();
@@ -95,7 +97,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("products")]
-        public object Products(DataSourceLoadOptions loadOptions) {
+        public object Products([ModelBinder(BinderType = typeof(DataSourceLoadOptionsBinder))] DataSourceLoadOptions loadOptions) {
             return DataSourceLoader.Load(
                 _nwind.Products.Include(p => p.Category), 
                 loadOptions

@@ -6,10 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace System.ComponentModel.DataAnnotations {
-    class KeyAttribute : Attribute { }
-}
-
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class EFSortingTests {

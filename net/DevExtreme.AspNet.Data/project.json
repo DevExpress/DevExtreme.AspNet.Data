@@ -4,8 +4,11 @@
     "authors": [ "%meta_company%" ],
     "copyright": "%meta_copyright%",
     "description": "%meta_description%",
-    "licenseUrl": "%meta_license_url%",
-    "projectUrl": "%meta_project_url%",
+
+    "packOptions": {
+        "licenseUrl": "%meta_license_url%",
+        "projectUrl": "%meta_project_url%"
+    },
 
     "dependencies": {
         "Newtonsoft.Json": "5.0.1"
@@ -13,10 +16,11 @@
 
     "frameworks": {
         "net40": { },
-        "dotnet": {
+        "netstandard1.0": {
+            "imports": [ "dnxcore50", "portable-net45" ],
             "dependencies": {
                 "System.ComponentModel.TypeConverter": "4.0.0",
-                "System.Linq.Expressions": "4.0.0",
+                "System.Linq.Expressions": "4.0.10",
                 "System.Linq.Queryable": "4.0.0",
                 "System.Reflection.TypeExtensions": "4.0.0",
                 "System.Text.RegularExpressions": "4.0.0"

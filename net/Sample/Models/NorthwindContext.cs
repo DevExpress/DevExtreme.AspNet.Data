@@ -1,12 +1,12 @@
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Models {
     public partial class NorthwindContext : DbContext {
         protected override void OnConfiguring(DbContextOptionsBuilder options) {
-            options
-                .UseSqlServer(@"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True")
-                .UseRowNumberForPaging();
+            options.UseSqlServer(
+                @"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True",
+                sqlOptions => sqlOptions.UseRowNumberForPaging()
+            );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -23,7 +23,7 @@ namespace Sample.Models {
 
                 entity.Property(e => e.Discount).HasDefaultValue(0f);
 
-                entity.Property(e => e.Quantity).HasDefaultValue(1);
+                entity.Property(e => e.Quantity).HasDefaultValue((short)1);
 
                 entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
             });
@@ -35,13 +35,13 @@ namespace Sample.Models {
             modelBuilder.Entity<Product>(entity => {
                 entity.Property(e => e.Discontinued).HasDefaultValue(false);
 
-                entity.Property(e => e.ReorderLevel).HasDefaultValue(0);
+                entity.Property(e => e.ReorderLevel).HasDefaultValue((short)0);
 
                 entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
 
-                entity.Property(e => e.UnitsInStock).HasDefaultValue(0);
+                entity.Property(e => e.UnitsInStock).HasDefaultValue((short)0);
 
-                entity.Property(e => e.UnitsOnOrder).HasDefaultValue(0);
+                entity.Property(e => e.UnitsOnOrder).HasDefaultValue((short)0);
             });
         }
 
