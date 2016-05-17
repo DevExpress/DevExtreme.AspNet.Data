@@ -1,40 +1,35 @@
 version: '{build}'
 
-environment:
-  DNX_VERSION: '1.0.0-rc1-update1'
-
 cache:
-  - '%USERPROFILE%\.dnx\runtimes -> appveyor.yml'
-  - '%USERPROFILE%\.dnx\packages -> appveyor.yml, **\project.json'
+  - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - js-test\node_modules -> js-test\package.json
   - js-test\bower_components -> js-test\bower.json
   - net\packages -> **\packages.config
 
 install:
-  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
-  - dnvm install %DNX_VERSION% -r coreclr
+  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/dotnet/cli/v1.0.0-rc2/scripts/obtain/install.ps1'))
   - cd js-test && npm install
   - cd js-test && node_modules\.bin\bower install
 
 before_build:
-  - dnu restore --quiet
+  - dotnet restore --quiet
   - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
 
 build_script:
-  - dnu build net\DevExtreme.AspNet.Data --quiet
-  - dnu build net\DevExtreme.AspNet.Data.Tests --quiet  
-  - dnu build net\Sample --quiet  
+  - dotnet build net\DevExtreme.AspNet.Data --quiet
+  - dotnet build net\DevExtreme.AspNet.Data.Tests --quiet  
+  - dotnet build net\Sample --quiet  
   - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
 
 test_script:
   - js-test\node_modules\.bin\jshint js
   - cd js-test && node_modules\.bin\karma start karma.js
-  - dnx -p net\DevExtreme.AspNet.Data.Tests test
+  - dotnet test net\DevExtreme.AspNet.Data.Tests -f netcoreapp1
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
 after_test:
-  - dnu pack net\DevExtreme.AspNet.Data --configuration=Release --quiet
+  - dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
