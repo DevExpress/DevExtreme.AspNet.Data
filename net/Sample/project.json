@@ -20,6 +20,10 @@
         "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final",
         "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
         "Microsoft.EntityFrameworkCore.SqlServer.Design": "1.0.0-rc2-final",
+        "Microsoft.EntityFrameworkCore.Tools": {
+            "version": "1.0.0-preview1-final",            
+            "type": "build"
+        },
         "DevExtreme.AspNet.Data": {
             "target": "project"
         }
@@ -33,6 +37,10 @@
         "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
             "version": "1.0.0-preview1-final",
             "imports": [ "portable-net45" ]
+        },
+        "Microsoft.EntityFrameworkCore.Tools": {
+            "version": "1.0.0-preview1-final",
+            "imports": "portable-net45"
         }
     },
 

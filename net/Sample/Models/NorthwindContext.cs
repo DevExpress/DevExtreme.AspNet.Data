@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Models {
     public partial class NorthwindContext : DbContext {
@@ -21,27 +21,27 @@ namespace Sample.Models {
             modelBuilder.Entity<Order_Details>(entity => {
                 entity.HasKey(e => new { e.OrderID, e.ProductID });
 
-                entity.Property(e => e.Discount).HasDefaultValue(0f);
+                entity.Property(e => e.Discount).HasDefaultValueSql("0");
 
-                entity.Property(e => e.Quantity).HasDefaultValue((short)1);
+                entity.Property(e => e.Quantity).HasDefaultValueSql("1");
 
-                entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
+                entity.Property(e => e.UnitPrice).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<Order>(entity => {
-                entity.Property(e => e.Freight).HasDefaultValue(0m);
+                entity.Property(e => e.Freight).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<Product>(entity => {
-                entity.Property(e => e.Discontinued).HasDefaultValue(false);
+                entity.Property(e => e.Discontinued).HasDefaultValueSql("0");
 
-                entity.Property(e => e.ReorderLevel).HasDefaultValue((short)0);
+                entity.Property(e => e.ReorderLevel).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
+                entity.Property(e => e.UnitPrice).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitsInStock).HasDefaultValue((short)0);
+                entity.Property(e => e.UnitsInStock).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitsOnOrder).HasDefaultValue((short)0);
+                entity.Property(e => e.UnitsOnOrder).HasDefaultValueSql("0");
             });
         }
 
