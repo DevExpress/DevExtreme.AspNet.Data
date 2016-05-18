@@ -1,6 +1,7 @@
 version: '{build}'
 
 cache:
+  - '%ProgramFiles%\dotnet -> appveyor.yml'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - js-test\node_modules -> js-test\package.json
   - js-test\bower_components -> js-test\bower.json
