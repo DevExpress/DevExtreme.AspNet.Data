@@ -13,7 +13,7 @@ install:
   - cd js-test && node_modules\.bin\bower install
 
 before_build:
-  - dotnet restore --quiet
+  - dotnet restore -v minimal
   - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
 
