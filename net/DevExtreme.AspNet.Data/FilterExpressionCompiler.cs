@@ -51,9 +51,6 @@ namespace DevExtreme.AspNet.Data {
                 clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
                 Expression valueExpr = Expression.Constant(clientValue);
 
-                if(Compat.EF3361 && clientValue is DateTime)
-                    valueExpr = Compat.Workaround_EF3361((DateTime)clientValue);
-
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
                     valueExpr = Expression.Convert(valueExpr, accessorExpr.Type);
 

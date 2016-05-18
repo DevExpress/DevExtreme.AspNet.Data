@@ -9,4 +9,3 @@ net/packages/
 project.lock.json
 *.suo
 *.*proj.user
-launchSettings.json

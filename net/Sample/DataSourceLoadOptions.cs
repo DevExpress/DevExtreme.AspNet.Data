@@ -1,7 +1,7 @@
 ﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.Helpers;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -17,10 +17,20 @@ namespace Sample {
 
     public class DataSourceLoadOptionsBinder : IModelBinder {
 
-        public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext) {
+        public Task BindModelAsync(ModelBindingContext bindingContext) {
             var loadOptions = new DataSourceLoadOptions();
             DataSourceLoadOptionsParser.Parse(loadOptions, key => bindingContext.ValueProvider.GetValue(key).FirstOrDefault());
-            return ModelBindingResult.SuccessAsync(bindingContext.ModelName, loadOptions);
+            bindingContext.Result = ModelBindingResult.Success(bindingContext.ModelName, loadOptions);
+            return Task.CompletedTask;
+        }
+
+    }
+
+    // Temporary workaround for https://github.com/aspnet/Mvc/issues/4652
+    public class DataSourceLoadOptionsAttribute : ModelBinderAttribute {
+
+        public DataSourceLoadOptionsAttribute() {
+            BinderType = typeof(DataSourceLoadOptionsBinder);
         }
 
     }

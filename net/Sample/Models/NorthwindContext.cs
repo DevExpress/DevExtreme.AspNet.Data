@@ -1,12 +1,12 @@
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Models {
     public partial class NorthwindContext : DbContext {
         protected override void OnConfiguring(DbContextOptionsBuilder options) {
-            options
-                .UseSqlServer(@"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True")
-                .UseRowNumberForPaging();
+            options.UseSqlServer(
+                @"data source=.\SQLEXPRESS;initial catalog=Northwind;integrated security=True",
+                sqlOptions => sqlOptions.UseRowNumberForPaging()
+            );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -21,27 +21,27 @@ namespace Sample.Models {
             modelBuilder.Entity<Order_Details>(entity => {
                 entity.HasKey(e => new { e.OrderID, e.ProductID });
 
-                entity.Property(e => e.Discount).HasDefaultValue(0f);
+                entity.Property(e => e.Discount).HasDefaultValueSql("0");
 
-                entity.Property(e => e.Quantity).HasDefaultValue(1);
+                entity.Property(e => e.Quantity).HasDefaultValueSql("1");
 
-                entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
+                entity.Property(e => e.UnitPrice).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<Order>(entity => {
-                entity.Property(e => e.Freight).HasDefaultValue(0m);
+                entity.Property(e => e.Freight).HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<Product>(entity => {
-                entity.Property(e => e.Discontinued).HasDefaultValue(false);
+                entity.Property(e => e.Discontinued).HasDefaultValueSql("0");
 
-                entity.Property(e => e.ReorderLevel).HasDefaultValue(0);
+                entity.Property(e => e.ReorderLevel).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitPrice).HasDefaultValue(0m);
+                entity.Property(e => e.UnitPrice).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitsInStock).HasDefaultValue(0);
+                entity.Property(e => e.UnitsInStock).HasDefaultValueSql("0");
 
-                entity.Property(e => e.UnitsOnOrder).HasDefaultValue(0);
+                entity.Property(e => e.UnitsOnOrder).HasDefaultValueSql("0");
             });
         }
 
