@@ -1,7 +1,7 @@
 version: '{build}'
 
 cache:
-  - '%ProgramFiles%\dotnet -> appveyor.yml'
+  - '%LOCALAPPDATA%\Microsoft\dotnet -> appveyor.yml'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - js-test\node_modules -> js-test\package.json
   - js-test\bower_components -> js-test\bower.json
@@ -9,6 +9,7 @@ cache:
 
 install:
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/dotnet/cli/v1.0.0-rc2/scripts/obtain/install.ps1'))
+  - set PATH=%PATH%;%LOCALAPPDATA%\Microsoft\dotnet
   - cd js-test && npm install
   - cd js-test && node_modules\.bin\bower install
 
