@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroup<TK0, TK1, TK2, TK3, TK4, TK5, TK6, TK7, TT0, TT1, TT2, TT3, TT4, TT5, TT6, TT7, TG0, TG1, TG2, TG3, TG4, TG5, TG6, TG7> : IRemoteGroup {
+
+        #pragma warning disable CS0649
+
         public TK0 K0;
         public TK1 K1;
         public TK2 K2;
@@ -33,6 +36,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         public TG5 G5;
         public TG6 G6;
         public TG7 G7;
+
+        #pragma warning restore CS0649
 
         public int Count { get; set; }
 

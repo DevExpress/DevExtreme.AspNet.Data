@@ -1,5 +1,9 @@
 version: '{build}'
 
+environment:
+  RELEASE_KEY_SECRET:
+    secure: qK/vt4/ihLipeamB7l+Dng==
+
 cache:
   - '%LOCALAPPDATA%\Microsoft\dotnet -> appveyor.yml'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
@@ -17,6 +21,7 @@ before_build:
   - dotnet restore -v minimal
   - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
+  - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
 
 build_script:
   - dotnet build net\DevExtreme.AspNet.Data
@@ -31,7 +36,7 @@ test_script:
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
 after_test:
-  - dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
+  - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
