@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 #if DEBUG
@@ -10,6 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("%meta_copyright%")]
 [assembly: AssemblyDescription("%meta_description%")]
 [assembly: AssemblyProduct("DevExtreme.AspNet.Data")]
+[assembly: CLSCompliant(true)]
 
 #if !DEBUG
 [assembly: AssemblyKeyFile("release.snk")]
