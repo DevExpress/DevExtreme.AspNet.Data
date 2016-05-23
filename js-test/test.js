@@ -381,4 +381,31 @@
         });
     });
 
+    QUnit.module("cache-busting", function() {
+
+        function testCacheBusting(testName, action) {
+
+            QUnit.test(testName, function(assert) {
+                var done = assert.async();
+
+                $.mockjax({
+                    url: "/",
+                    response: function(settings) {
+                        assert.strictEqual(settings.cache, false);
+                        done();
+                    }
+                });
+
+                action(createStore({
+                    loadUrl: "/",
+                    key: "id"
+                }));
+            });
+
+        }
+
+        testCacheBusting("load", function(store) { store.load(); });
+        testCacheBusting("totalCount", function(store) { store.totalCount(); });
+        testCacheBusting("byKey", function(store) { store.byKey(123); });
+    });
 })();

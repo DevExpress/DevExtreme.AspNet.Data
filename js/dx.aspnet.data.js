@@ -27,6 +27,9 @@
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
             } else {
+                if(operation === "load")
+                    ajaxSettings.cache = false;
+
                 if(onBeforeSend)
                     onBeforeSend(operation, ajaxSettings);
 
