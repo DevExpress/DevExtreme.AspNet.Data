@@ -26,7 +26,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var compiler = new RemoteGroupExpressionCompiler<DataItem>(
                 new[] {
                     new GroupingInfo { Selector = "G1" },
-                    new GroupingInfo { Selector = "G2" }
+                    new GroupingInfo { Selector = "G2", Desc = true }
                 },
                 new[] {
                     new SummaryInfo { Selector = "Value", SummaryType = "sum" },
@@ -49,6 +49,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(
                 "data"
                 + ".GroupBy(obj => new RemoteGroupKey`8(K0 = obj.G1, K1 = obj.G2))"
+                + ".OrderBy(g => g.Key.K0)"
+                + ".ThenByDescending(g => g.Key.K1)"
                 + ".Select(g => new RemoteGroup`24() {"
                 + "K0 = g.Key.K0, "
                 + "K1 = g.Key.K1, "

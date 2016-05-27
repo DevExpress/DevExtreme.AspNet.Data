@@ -51,11 +51,12 @@ namespace DevExtreme.AspNet.Data {
                 body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
 
             if(!isCountQuery) {
-                if(_loadOptions.HasSort || _loadOptions.HasDefaultSort || _loadOptions.HasGroups)
-                    body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
-
-                if(remoteGrouping)
+                if(!remoteGrouping) {
+                    if(_loadOptions.HasSort || _loadOptions.HasDefaultSort || _loadOptions.HasGroups)
+                        body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
+                } else {
                     body = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(body);
+                }
 
                 if(paginate) {
                     if(_loadOptions.Skip > 0)

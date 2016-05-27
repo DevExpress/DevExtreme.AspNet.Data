@@ -18,6 +18,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummaryExprList = new List<Expression>(),
             _groupSummaryExprList = new List<Expression>();
 
+        IList<bool>
+            _descendingList = new List<bool>();
+
         IList<string>
             _totalSummaryTypes = new List<string>(),
             _groupSummaryTypes = new List<string>();
@@ -39,6 +42,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     if(!String.IsNullOrEmpty(i.GroupInterval))
                         selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
                     _groupKeyExprList.Add(selectorExpr);
+                    _descendingList.Add(i.Desc);
                 }
             }
 
@@ -103,8 +107,24 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 _groupByParam
             );
 
+            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
+
             target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, groupKeyLambda);
-            target = MakeAggregatingProjection(target, Expression.Parameter(typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T)), "g"));
+
+            for(var i = 0; i < groupKeyProps.Length; i++) {
+                var orderParam = Expression.Parameter(groupingType, "g");
+                var orderAccessor = CompileAccessorExpression(orderParam, "Key." + groupKeyProps[i].Name);
+
+                target = Expression.Call(
+                    typeof(Queryable),
+                    Utils.GetSortMethod(i == 0, _descendingList[i]),
+                    new[] { groupingType, orderAccessor.Type },
+                    target,
+                    Expression.Lambda(orderAccessor, orderParam)
+                );
+            }
+
+            target = MakeAggregatingProjection(target, Expression.Parameter(groupingType, "g"));
 
             return target;
         }
