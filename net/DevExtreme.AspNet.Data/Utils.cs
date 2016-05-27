@@ -52,6 +52,12 @@ namespace DevExtreme.AspNet.Data {
             return type;
         }
 
+        public static string GetSortMethod(bool first, bool desc) {
+            return first
+                ? (desc ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy))
+                : (desc ? nameof(Queryable.ThenByDescending) : nameof(Queryable.ThenBy));
+        }
+
         static object UnwrapNewtonsoftValue(object value) {
             var jValue = value as JValue;
             if(jValue != null)

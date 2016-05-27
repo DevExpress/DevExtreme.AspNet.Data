@@ -21,13 +21,9 @@ namespace DevExtreme.AspNet.Data {
                 if(String.IsNullOrEmpty(selector))
                     continue;
 
-                var methodName = first
-                    ? (item.Desc ? "OrderByDescending" : "OrderBy")
-                    : (item.Desc ? "ThenByDescending" : "ThenBy");
-
                 var accessorExpr = CompileAccessorExpression(dataItemExpr, selector);
 
-                target = Expression.Call(typeof(Queryable), methodName, new[] { typeof(T), accessorExpr.Type }, target, Expression.Lambda(accessorExpr, dataItemExpr));
+                target = Expression.Call(typeof(Queryable), Utils.GetSortMethod(first, item.Desc), new[] { typeof(T), accessorExpr.Type }, target, Expression.Lambda(accessorExpr, dataItemExpr));
                 first = false;
             }
 
