@@ -162,6 +162,24 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal("data.OrderBy(obj => obj.Item2)", builder.BuildLoadExpr(false).Body.ToString());
         }
+
+        [Fact]
+        public void NoUnnecessaryOrderingForRemoteGroups() {
+            var options = new SampleLoadOptions {
+                RemoteGrouping = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "Item1" }
+                },
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item2" }
+                }
+            };
+
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var expr = builder.BuildLoadGroupsExpr().Body.ToString();
+
+            Assert.True(expr.StartsWith("data.GroupBy"));
+        }
     }
 
 }
