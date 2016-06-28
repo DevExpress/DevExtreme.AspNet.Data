@@ -11,19 +11,23 @@
     },
 
     "dependencies": {
-        "Newtonsoft.Json": "5.0.1"
+        "Newtonsoft.Json": "5.0.1",
+        "NETStandard.Library": "1.6.0"
     },
 
     "frameworks": {
         "net40": { },
-        "netstandard1.0": {
-            "imports": [ "dnxcore50", "portable-net45" ],
+        "netstandard1.6": {
+            "imports": [
+                "dnxcore50",
+                "portable-net45+win8"
+            ],
             "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.0.0",
-                "System.Linq.Expressions": "4.0.10",
-                "System.Linq.Queryable": "4.0.0",
-                "System.Reflection.TypeExtensions": "4.0.0",
-                "System.Text.RegularExpressions": "4.0.0"
+                "System.ComponentModel.TypeConverter": "4.1.0",
+                "System.Linq.Expressions": "4.1.0",
+                "System.Linq.Queryable": "4.0.1",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Text.RegularExpressions": "4.1.0"
             }
         }
     }
