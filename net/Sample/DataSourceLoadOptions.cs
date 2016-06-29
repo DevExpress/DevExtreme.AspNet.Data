@@ -26,13 +26,4 @@ namespace Sample {
 
     }
 
-    // Temporary workaround for https://github.com/aspnet/Mvc/issues/4652
-    public class DataSourceLoadOptionsAttribute : ModelBinderAttribute {
-
-        public DataSourceLoadOptionsAttribute() {
-            BinderType = typeof(DataSourceLoadOptionsBinder);
-        }
-
-    }
-
 }

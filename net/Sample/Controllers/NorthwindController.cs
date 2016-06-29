@@ -19,12 +19,12 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("orders")]
-        public object Orders([DataSourceLoadOptions] DataSourceLoadOptions loadOptions) {
+        public object Orders(DataSourceLoadOptions loadOptions) {
             return DataSourceLoader.Load(_nwind.Orders, loadOptions);
         }
 
         [HttpGet("order-details")]
-        public object OrderDetails(int orderID, [DataSourceLoadOptions] DataSourceLoadOptions options) {
+        public object OrderDetails(int orderID, DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from i in _nwind.Order_Details
                 where i.OrderID == orderID
@@ -39,7 +39,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("customers-lookup")]
-        public object CustomersLookup([DataSourceLoadOptions] DataSourceLoadOptions options) {
+        public object CustomersLookup(DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from c in _nwind.Customers orderby c.CompanyName select new {
                     Value = c.CustomerID,
@@ -50,7 +50,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("shippers-lookup")]
-        public object ShippersLookup([DataSourceLoadOptions] DataSourceLoadOptions options) {
+        public object ShippersLookup(DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from s in _nwind.Shippers orderby s.CompanyName select new {
                     Value = s.ShipperID,
@@ -95,7 +95,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("products")]
-        public object Products([DataSourceLoadOptions] DataSourceLoadOptions loadOptions) {
+        public object Products(DataSourceLoadOptions loadOptions) {
             return DataSourceLoader.Load(
                 _nwind.Products.Include(p => p.Category), 
                 loadOptions
