@@ -19,7 +19,7 @@
         "Microsoft.EntityFrameworkCore": "1.0.0",
         "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
         "Microsoft.EntityFrameworkCore.SqlServer.Design": "1.0.0",
-        "Microsoft.EntityFrameworkCore.Tools": { 
+        "Microsoft.EntityFrameworkCore.Tools": {
             "version": "1.0.0-preview2-final",
             "type": "build"
         },
@@ -34,12 +34,7 @@
     },
 
     "frameworks": {
-        "netcoreapp1.0": {
-            "imports": [
-                "dotnet5.6",
-                "portable-net45+win8"
-            ]
-        }
+        "netcoreapp1.0": { }
     },
 
     "runtimeOptions": {
@@ -67,10 +62,5 @@
                 "bower_components"
             ]
         }
-    },
-
-    "scripts": {
-        "prepublish": [ "bower install", "dotnet bundle" ],
-        "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
     }
 }
