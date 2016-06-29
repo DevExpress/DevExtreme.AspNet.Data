@@ -10,14 +10,14 @@
                 store: DevExpress.data.AspNet.createStore({
                     loadUrl: "@Url.Action("Products", "Northwind")"
                 }),
-                group: "Category.CategoryName",
-                sort: "ProductName",
+                group: "category.categoryName",
+                sort: "productName",
                 paginate: true,
                 pageSize: 1 // group
             },
             grouped: true,
             itemTemplate: function(product) {
-                return product.ProductName;
+                return product.productName;
             }
         });
     });

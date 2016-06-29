@@ -13,11 +13,11 @@
             "dependencies": {
                 "Microsoft.NETCore.App": {
                     "type": "platform",
-                    "version": "1.0.0-rc2-*"
+                    "version": "1.0.0"
                 },
-                "System.ComponentModel": "4.0.1-rc2-*",
+                "System.ComponentModel": "4.0.1",
                 "xunit": "2.1.0",
-                "dotnet-test-xunit": "1.0.0-rc2-*"
+                "dotnet-test-xunit": "2.2.0-preview2-*"
             }
         },
         "net40": {

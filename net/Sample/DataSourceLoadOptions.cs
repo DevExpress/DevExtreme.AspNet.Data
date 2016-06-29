@@ -20,7 +20,7 @@ namespace Sample {
         public Task BindModelAsync(ModelBindingContext bindingContext) {
             var loadOptions = new DataSourceLoadOptions();
             DataSourceLoadOptionsParser.Parse(loadOptions, key => bindingContext.ValueProvider.GetValue(key).FirstOrDefault());
-            bindingContext.Result = ModelBindingResult.Success(bindingContext.ModelName, loadOptions);
+            bindingContext.Result = ModelBindingResult.Success(loadOptions);
             return Task.CompletedTask;
         }
 
