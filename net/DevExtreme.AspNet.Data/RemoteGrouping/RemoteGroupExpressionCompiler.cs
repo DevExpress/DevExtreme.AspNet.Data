@@ -36,6 +36,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             _groupByParam = CreateItemParam(typeof(T));
 
+            if (grouping == null) {
+                var dummyPropertyName = "ConstantDummyValue";
+
+                if (typeof(T).GetProperty(dummyPropertyName) != null)
+                    grouping = new[] { new GroupingInfo() { Selector = dummyPropertyName } };
+            }
+
             if(grouping != null) {
                 foreach(var i in grouping) {
                     var selectorExpr = CompileAccessorExpression(_groupByParam, i.Selector);
