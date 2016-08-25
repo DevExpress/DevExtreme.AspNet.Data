@@ -41,6 +41,9 @@ namespace DevExtreme.AspNet.Data {
             if(converter != null && converter.CanConvertFrom(value.GetType()))
                 return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
 
+            if(type.GetTypeInfo().IsEnum)
+                return Enum.Parse(type, Convert.ToString(value), true);
+
             return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
         }
 

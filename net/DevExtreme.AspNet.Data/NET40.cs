@@ -43,6 +43,10 @@ namespace DevExtreme.AspNet.Data {
             get { return _type.IsGenericType; }
         }
 
+        public bool IsEnum {
+            get { return _type.IsEnum; }
+        }
+
         public FieldInfo GetDeclaredField(String name) {
             return _type.GetField(name, TypeExtensions.DECLARED_ONLY);
         }
