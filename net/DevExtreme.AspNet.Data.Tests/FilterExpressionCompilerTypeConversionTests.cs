@@ -35,6 +35,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             public TimeSpan timeSpan = TimeSpan.FromMinutes(3);
 
             public Guid guid = new Guid(TEST_GUID);
+
+            public DayOfWeek @enum = DayOfWeek.Wednesday;
         }
 
         class NullableStructs {
@@ -58,6 +60,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             public TimeSpan? timeSpan = TimeSpan.FromMinutes(3);
 
             public Guid? guid = new Guid(TEST_GUID);
+
+            public DayOfWeek? @enum = DayOfWeek.Wednesday;
         }
 
         [Fact]
@@ -167,6 +171,19 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             AssertEvaluation(obj, "dateTime", testDateString);
             AssertEvaluation(obj, "dateTimeOffset", testDateString);
+        }
+
+        [Fact]
+        public void FilterByEnumField() {
+            var structObj = new Structs();
+            AssertEvaluation(structObj, "enum", "=", 3);
+            AssertEvaluation(structObj, "enum", "=", "3");
+            AssertEvaluation(structObj, "enum", "=", "wednesday");
+
+            var nullableObj = new NullableStructs();
+            AssertEvaluation(nullableObj, "enum", "=", 3);
+            AssertEvaluation(nullableObj, "enum", "=", "3");
+            AssertEvaluation(nullableObj, "enum", "=", "wednesday");
         }
 
     }
