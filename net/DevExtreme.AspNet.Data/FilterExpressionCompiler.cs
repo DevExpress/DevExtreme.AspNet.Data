@@ -141,9 +141,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Expression CompileUnary(ParameterExpression dataItemExpr, IList criteriaJson) {
-            var result = CompileCore(dataItemExpr, (IList)criteriaJson[1]);
-
-            return Expression.Not(result);
+            return Expression.Not(CompileCore(dataItemExpr, (IList)criteriaJson[1]));
         }
 
         ExpressionType TranslateBinaryOperation(string clientOperation) {
