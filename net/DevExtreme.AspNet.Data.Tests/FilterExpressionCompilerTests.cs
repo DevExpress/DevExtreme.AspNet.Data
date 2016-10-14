@@ -128,6 +128,21 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void Not() {
+            var crit = new object[] {
+                "!",
+                new object[] {
+                    new object[] { "IntProp", ">", 1 },
+                    "and",
+                    new object[] { "IntProp", "<", 10 }
+                }
+            };
+
+            var expr = Compile<DataItem1>(crit);
+            Assert.Equal("Not(((obj.IntProp > 1) AndAlso (obj.IntProp < 10)))", expr.Body.ToString());
+        }
+
+        [Fact]
         public void GroupOfMany() {
             var crit = new object[] {
                 new object[] { "IntProp", ">", 1 },

@@ -26,6 +26,10 @@ namespace DevExtreme.AspNet.Data {
                 return CompileGroup(dataItemExpr, criteriaJson);
 
             try {
+                if(IsUnary(criteriaJson)) {
+                    return CompileUnary(dataItemExpr, criteriaJson);
+                } 
+
                 return CompileBinary(dataItemExpr, criteriaJson);
             } catch {
                 return Expression.Constant(false);
@@ -136,6 +140,10 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
+        Expression CompileUnary(ParameterExpression dataItemExpr, IList criteriaJson) {
+            return Expression.Not(CompileCore(dataItemExpr, (IList)criteriaJson[1]));
+        }
+
         ExpressionType TranslateBinaryOperation(string clientOperation) {
             switch(clientOperation) {
                 case "=":
@@ -162,6 +170,10 @@ namespace DevExtreme.AspNet.Data {
 
         bool IsCriteria(object item) {
             return item is IList && !(item is String);
+        }
+
+        bool IsUnary(IList criteriaJson) {
+            return Equals(criteriaJson[0], "!");
         }
 
     }
