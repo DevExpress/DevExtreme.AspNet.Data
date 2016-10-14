@@ -28,9 +28,9 @@ namespace DevExtreme.AspNet.Data {
             try {
                 if(IsUnary(criteriaJson)) {
                     return CompileUnary(dataItemExpr, criteriaJson);
-                } else {
-                    return CompileBinary(dataItemExpr, criteriaJson);
-                }
+                } 
+
+                return CompileBinary(dataItemExpr, criteriaJson);
             } catch {
                 return Expression.Constant(false);
             }
@@ -143,11 +143,7 @@ namespace DevExtreme.AspNet.Data {
         Expression CompileUnary(ParameterExpression dataItemExpr, IList criteriaJson) {
             var result = CompileCore(dataItemExpr, (IList)criteriaJson[1]);
 
-            if((string)criteriaJson[0] == "!") {
-                return Expression.Not(result);
-            }
-
-            throw new NotSupportedException();
+            return Expression.Not(result);
         }
 
         ExpressionType TranslateBinaryOperation(string clientOperation) {
@@ -178,8 +174,8 @@ namespace DevExtreme.AspNet.Data {
             return item is IList && !(item is String);
         }
 
-        bool IsUnary(IList criteria) {
-            return Convert.ToString(criteria[0]) == "!";
+        bool IsUnary(IList criteriaJson) {
+            return Equals(criteriaJson[0], "!");
         }
 
     }
