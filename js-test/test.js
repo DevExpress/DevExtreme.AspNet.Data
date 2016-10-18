@@ -149,6 +149,28 @@
             });
         });
 
+        QUnit.test("skip, take, requireTotalCount, requireGroupCount are passed in the request data", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                response: function(settings) {
+                    assert.strictEqual(settings.data.requireGroupCount, true);
+                    assert.strictEqual(settings.data.skip, 0);
+                    assert.strictEqual(settings.data.take, 10);
+                    assert.strictEqual(settings.data.requireTotalCount, false);
+                    done();
+                }
+            });
+
+            createStore({ loadUrl: "/" }).load({
+                requireGroupCount: true,
+                skip: 0,
+                take: 10,
+                requireTotalCount: false
+            });
+        });
+
         QUnit.module("sort/group normalization", function() {
 
             function testCase(optionName, rawValue, normalizedValue) {
@@ -215,14 +237,15 @@
 
             $.mockjax({
                 url: "/",
-                responseText: '{ "data": [1, 2, 3], "totalCount": 123, "summary": [1, 2, 4]}'
+                responseText: '{ "data": [1, 2, 3], "totalCount": 123, "summary": [1, 2, 4], "groupCount": 11 }'
             });
 
             createStore({ loadUrl: "/" }).load().done(function(data, extra) {
                 assert.deepEqual(data, [1, 2, 3]);
                 assert.deepEqual(extra, {
                     totalCount: 123,
-                    summary: [1, 2, 4]
+                    summary: [1, 2, 4],
+                    groupCount: 11
                 });
                 done();
             });

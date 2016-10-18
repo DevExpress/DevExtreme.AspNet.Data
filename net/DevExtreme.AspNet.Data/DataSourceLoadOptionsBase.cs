@@ -9,6 +9,7 @@ namespace DevExtreme.AspNet.Data {
 
     public abstract class DataSourceLoadOptionsBase {
         public bool RequireTotalCount;
+        public bool RequireGroupCount;
         public bool IsCountQuery;
         public int Skip;
         public int Take;

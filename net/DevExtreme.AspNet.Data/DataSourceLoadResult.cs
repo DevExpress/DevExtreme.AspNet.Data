@@ -11,10 +11,12 @@ namespace DevExtreme.AspNet.Data {
 
         public int totalCount = -1;
 
+        public int groupCount = -1;
+
         public object[] summary;
 
         internal bool IsDataOnly() {
-            return totalCount == -1 && summary == null;
+            return totalCount == -1 && summary == null && groupCount == -1;
         }
     }
 

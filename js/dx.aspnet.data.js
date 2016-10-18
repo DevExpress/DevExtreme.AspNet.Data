@@ -69,7 +69,7 @@
 
             if(options) {
 
-                $.each(["skip", "take", "requireTotalCount"], function() {
+                $.each(["skip", "take", "requireTotalCount", "requireGroupCount"], function() {
                     if(this in options)
                         result[this] = options[this];
                 });
@@ -118,7 +118,7 @@
                     },
                     function(d, res) {
                         if("data" in res)
-                            d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary });
+                            d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary, groupCount: res.groupCount });
                         else
                             d.resolve(res);
                     }

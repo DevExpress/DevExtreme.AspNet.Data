@@ -81,6 +81,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);
+            Assert.Equal(-1, result.groupCount);
 
             var groups = result.data.Cast<Group>().ToArray();
 
@@ -200,8 +201,38 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(2, result.totalCount);
             Assert.Null(result.summary);
+            Assert.Equal(-1, result.groupCount);
         }
 
+        [Fact]
+        public void RequireGroupCount() {
+            var data = new[] {
+                new { G = 1 },
+                new { G = 1 },
+                new { G = 2 },
+                new { G = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                RequireTotalCount = true,
+                RequireGroupCount = true,
+                Skip = 0,
+                Take = 1,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                }
+            };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            
+            Assert.Equal(4, result.totalCount);
+
+            var groups = result.data.Cast<Group>().ToArray();
+
+            Assert.Equal(1, groups.Count());
+            Assert.Equal(2, result.groupCount);
+        }
     }
 
 }

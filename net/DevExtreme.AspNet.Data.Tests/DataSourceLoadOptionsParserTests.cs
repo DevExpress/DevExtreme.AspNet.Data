@@ -15,6 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var values = new Dictionary<string, string> {
                 { DataSourceLoadOptionsParser.KEY_IS_COUNT_QUERY, "true" },
                 { DataSourceLoadOptionsParser.KEY_REQUIRE_TOTAL_COUNT, "true" },
+                { DataSourceLoadOptionsParser.KEY_REQUIRE_GROUP_COUNT, "true" },
                 { DataSourceLoadOptionsParser.KEY_SKIP, "42" },
                 { DataSourceLoadOptionsParser.KEY_TAKE, "43" },
                 { DataSourceLoadOptionsParser.KEY_SORT, @"[ { ""selector"": ""foo"", ""desc"": true } ]" },
@@ -28,6 +29,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.True(opts.IsCountQuery);
             Assert.True(opts.RequireTotalCount);
+            Assert.True(opts.RequireGroupCount);
             Assert.Equal(42, opts.Skip);
             Assert.Equal(43, opts.Take);
             Assert.Equal("foo", opts.Sort[0].Selector);

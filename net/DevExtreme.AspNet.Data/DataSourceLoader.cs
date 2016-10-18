@@ -39,13 +39,22 @@ namespace DevExtreme.AspNet.Data {
                 result.data = Paginate(groupingResult.Groups, options.Skip, options.Take);
                 result.summary = groupingResult.Totals;
                 result.totalCount = groupingResult.TotalCount;
+
+                if(options.RequireGroupCount)
+                    result.groupCount = groupingResult.Groups.Count();
+
             } else {
                 var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
                 var queryResult = ExecQuery(builder.BuildLoadExpr(!deferPaging).Compile(), source, options);
 
                 IEnumerable data = queryResult;
-                if(options.HasGroups)
+
+                if(options.HasGroups) {
                     data = new GroupHelper<T>(accessor).Group(queryResult, options.Group);
+                    if(options.RequireGroupCount) {
+                        result.groupCount = (data as IList).Count;
+                    }
+                }
 
                 if(canUseRemoteGrouping && options.HasSummary && !options.HasGroups) {
                     var groupingResult = ExecRemoteGrouping(source, builder, options);

@@ -10,6 +10,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
     public static class DataSourceLoadOptionsParser {
         public const string
             KEY_REQUIRE_TOTAL_COUNT = "requireTotalCount",
+            KEY_REQUIRE_GROUP_COUNT = "requireGroupCount",
             KEY_IS_COUNT_QUERY = "isCountQuery",
             KEY_SKIP = "skip",
             KEY_TAKE = "take",
@@ -21,6 +22,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
+            var requireGroupCount = valueSource(KEY_REQUIRE_GROUP_COUNT);
             var isCountQuery = valueSource(KEY_IS_COUNT_QUERY);
             var skip = valueSource(KEY_SKIP);
             var take = valueSource(KEY_TAKE);
@@ -33,7 +35,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(!String.IsNullOrEmpty(requireTotalCount))
                 loadOptions.RequireTotalCount = Convert.ToBoolean(requireTotalCount);
 
-            if(!String.IsNullOrEmpty(isCountQuery))
+            if(!String.IsNullOrEmpty(requireGroupCount))
+                loadOptions.RequireGroupCount = Convert.ToBoolean(requireGroupCount);
+
+            if (!String.IsNullOrEmpty(isCountQuery))
                 loadOptions.IsCountQuery = Convert.ToBoolean(isCountQuery);
 
             if(!String.IsNullOrEmpty(skip))
