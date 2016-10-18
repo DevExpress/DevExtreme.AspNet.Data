@@ -199,6 +199,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(groups[0].items);
             Assert.Equal(2, groups[0].count);
         }
+
+        [Fact]
+        public void RequireGroupCountWhenGroupsAreExpanded() {
+            var data = new[] {
+                new { a = 1 },
+                new { a = 2 },
+                new { a = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RequireGroupCount = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "a", IsExpanded = true }
+                },
+                Skip = 1,
+                Take = 1
+            };
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+
+            Assert.Equal(2, result.groupCount);
+        }
     }
 
 }
