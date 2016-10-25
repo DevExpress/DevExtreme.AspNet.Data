@@ -172,8 +172,8 @@ namespace DevExtreme.AspNet.Data {
             return item is IList && !(item is String);
         }
 
-        bool IsUnary(IList criteriaJson) {
-            return Equals(criteriaJson[0], "!");
+        internal bool IsUnary(IList criteriaJson) {
+            return Convert.ToString(criteriaJson[0]) == "!";
         }
 
     }
