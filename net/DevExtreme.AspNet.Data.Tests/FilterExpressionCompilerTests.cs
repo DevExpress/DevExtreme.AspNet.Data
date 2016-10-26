@@ -143,6 +143,13 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void IsUnaryWithJsonCriteria() {
+            var crit = JsonConvert.DeserializeObject<IList>("[\"!\", []]");
+            var compiler = new FilterExpressionCompiler<object>(false);
+            Assert.True(compiler.IsUnary(crit));
+        }
+
+        [Fact]
         public void GroupOfMany() {
             var crit = new object[] {
                 new object[] { "IntProp", ">", 1 },
