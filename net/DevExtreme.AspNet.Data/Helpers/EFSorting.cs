@@ -40,15 +40,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
                     .Select(i => new Candidate(i, i.FieldType))
             );
 
-            return (
-                candidates.FirstOrDefault(HasKeyAttr)
-                ?? ORDERED_SORTABLE_TYPES.SelectMany(type => candidates.Where(c => c.Type == type)).FirstOrDefault()
-            )?.Member.Name;
+            return ORDERED_SORTABLE_TYPES.SelectMany(type => candidates.Where(c => c.Type == type)).FirstOrDefault()?.Member.Name;
         }
-
-        static bool HasKeyAttr(Candidate candidate) {
-            return candidate.Member.GetCustomAttributes(true).Any(i => i.GetType().FullName == "System.ComponentModel.DataAnnotations.KeyAttribute");
-        } 
 
     }
 

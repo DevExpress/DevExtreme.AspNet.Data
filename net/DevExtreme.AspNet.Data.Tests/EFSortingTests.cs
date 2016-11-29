@@ -21,13 +21,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             public object Bad6 { get; set; }
         }
 
-        class TestClass_KeyAttr : TestClass_Base {
-            public int Skip { get; set; }
-
-            [System.ComponentModel.DataAnnotations.Key]
-            public int Key { get; set; }
-        }
-
         class TestClass_LikelyKey : TestClass_Base {
             public DateTime Skip { get; set; }
             public Guid Key { get; set; }
@@ -49,7 +42,6 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void FindSortableMember() {
             Assert.Null(EFSorting.FindSortableMember(typeof(TestClass_Base)));
-            Assert.Equal("Key", EFSorting.FindSortableMember(typeof(TestClass_KeyAttr)));
             Assert.Equal("Key", EFSorting.FindSortableMember(typeof(TestClass_LikelyKey)));
             Assert.Equal("Key", EFSorting.FindSortableMember(typeof(TestClass_Field)));
             Assert.Equal("Sortable", EFSorting.FindSortableMember(typeof(TestClass_OtherSortable)));
