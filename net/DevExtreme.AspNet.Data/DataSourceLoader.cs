@@ -22,8 +22,8 @@ namespace DevExtreme.AspNet.Data {
                 return builder.BuildCountExpr().Compile()(source);
 
             if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(source.Provider)) {
-                if(!options.HasDefaultSort)
-                    options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
+                if(!options.HasObsoleteDefaultSort)
+                    options.ObsoleteDefaultSort = EFSorting.FindSortableMember(typeof(T));
             }
 
             var accessor = new DefaultAccessor<T>();

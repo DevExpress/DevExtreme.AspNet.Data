@@ -20,7 +20,7 @@ namespace DevExtreme.AspNet.Data {
         public SummaryInfo[] GroupSummary;
 
         public bool? RemoteGrouping;
-        public string DefaultSort;
+
 
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
@@ -33,10 +33,6 @@ namespace DevExtreme.AspNet.Data {
 
         internal bool HasSort {
             get { return Sort != null && Sort.Length > 0; }
-        }
-
-        internal bool HasDefaultSort {
-            get { return !String.IsNullOrEmpty(DefaultSort); }
         }
 
         internal bool HasSummary {
@@ -67,11 +63,27 @@ namespace DevExtreme.AspNet.Data {
                 }
             }
 
-            if(result.Count < 1 && HasDefaultSort)
-                result.Add(new SortingInfo { Selector = DefaultSort });
+            if(result.Count < 1 && HasObsoleteDefaultSort)
+                result.Add(new SortingInfo { Selector = ObsoleteDefaultSort });
 
             return result;
         }
+
+        #region Obsolete
+
+        [Obsolete("DefaultSort is obsolete. Use PrimaryKey instead.")]
+        public string DefaultSort {
+            get { return ObsoleteDefaultSort; }
+            set { ObsoleteDefaultSort = value; }
+        }
+
+        internal string ObsoleteDefaultSort;
+
+        internal bool HasObsoleteDefaultSort {
+            get { return !String.IsNullOrEmpty(ObsoleteDefaultSort); }
+        }
+
+        #endregion
     }
 
 }

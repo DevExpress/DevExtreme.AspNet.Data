@@ -149,7 +149,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void DefaultSort() {
             var options = new SampleLoadOptions {
-                DefaultSort = "Item1"
+                ObsoleteDefaultSort = "Item1"
             };
 
             var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);

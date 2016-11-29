@@ -52,7 +52,7 @@ namespace DevExtreme.AspNet.Data {
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
-                    if(_loadOptions.HasSort || _loadOptions.HasDefaultSort || _loadOptions.HasGroups)
+                    if(_loadOptions.HasSort || _loadOptions.HasObsoleteDefaultSort || _loadOptions.HasGroups)
                         body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
                 } else {
                     body = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(body);
