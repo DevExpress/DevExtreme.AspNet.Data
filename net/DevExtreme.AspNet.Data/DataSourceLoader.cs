@@ -21,7 +21,7 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(source);
 
-            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFrramework(source.Provider)) {
+            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFramework(source.Provider)) {
                 if(!options.HasObsoleteDefaultSort)
                     options.ObsoleteDefaultSort = EFSorting.FindSortableMember(typeof(T));
             }
