@@ -61,6 +61,18 @@ namespace DevExtreme.AspNet.Data {
                 : (desc ? nameof(Queryable.ThenByDescending) : nameof(Queryable.ThenBy));
         }
 
+        public static IEnumerable<SortingInfo> AddRequiredSort(IEnumerable<SortingInfo> sort, IEnumerable<string> requiredSelectors) {
+            sort = sort ?? new SortingInfo[0];
+            requiredSelectors = requiredSelectors.Except(sort.Select(i => i.Selector));
+
+            var desc = sort.LastOrDefault()?.Desc;
+
+            return sort.Concat(requiredSelectors.Select(i => new SortingInfo {
+                Selector = i,
+                Desc = desc != null && desc.Value
+            }));
+        }
+
         static object UnwrapNewtonsoftValue(object value) {
             var jValue = value as JValue;
             if(jValue != null)
