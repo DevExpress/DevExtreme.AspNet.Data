@@ -73,6 +73,16 @@ namespace DevExtreme.AspNet.Data {
             }));
         }
 
+        public static string[] GetPrimaryKey(Type type) {
+            return new MemberInfo[0]
+                .Concat(type.GetRuntimeProperties())
+                .Concat(type.GetRuntimeFields())
+                .Where(m => m.GetCustomAttributes(true).Any(i => i.GetType().Name == "KeyAttribute"))
+                .Select(m => m.Name)
+                .OrderBy(i => i)
+                .ToArray();
+        }
+
         static object UnwrapNewtonsoftValue(object value) {
             var jValue = value as JValue;
             if(jValue != null)

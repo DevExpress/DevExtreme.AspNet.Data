@@ -21,9 +21,16 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(source);
 
-            if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFramework(source.Provider)) {
-                if(!options.HasObsoleteDefaultSort)
-                    options.ObsoleteDefaultSort = EFSorting.FindSortableMember(typeof(T));
+            if(Compat.IsEntityFramework(source.Provider)) {
+                if(!options.HasPrimaryKey)
+                    options.PrimaryKey = Utils.GetPrimaryKey(typeof(T));
+
+                if(!options.HasPrimaryKey) {
+                    if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0)) {
+                        if(!options.HasObsoleteDefaultSort)
+                            options.ObsoleteDefaultSort = EFSorting.FindSortableMember(typeof(T));
+                    }
+                }
             }
 
             var accessor = new DefaultAccessor<T>();
