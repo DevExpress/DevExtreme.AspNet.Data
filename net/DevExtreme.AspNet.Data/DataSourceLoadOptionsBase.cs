@@ -76,15 +76,15 @@ namespace DevExtreme.AspNet.Data {
                 }
             }
 
-            if(HasDefaultSort) {
-                if(!result.Any(i => i.Selector == DefaultSort))
-                    result.Add(new SortingInfo { Selector = DefaultSort });
-            }
+            IEnumerable<string> requiredSort = new string[0];
+
+            if(HasDefaultSort)
+                requiredSort = requiredSort.Concat(new[] { DefaultSort });
 
             if(HasPrimaryKey)
-                return Utils.AddRequiredSort(result, PrimaryKey);
+                requiredSort = requiredSort.Concat(PrimaryKey);
 
-            return result;
+            return Utils.AddRequiredSort(result, requiredSort);
         }
     }
 
