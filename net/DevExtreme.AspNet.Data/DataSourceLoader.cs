@@ -27,8 +27,8 @@ namespace DevExtreme.AspNet.Data {
 
                 if(!options.HasPrimaryKey) {
                     if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0)) {
-                        if(!options.HasObsoleteDefaultSort)
-                            options.ObsoleteDefaultSort = EFSorting.FindSortableMember(typeof(T));
+                        if(!options.HasDefaultSort)
+                            options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
                     }
                 }
             }
