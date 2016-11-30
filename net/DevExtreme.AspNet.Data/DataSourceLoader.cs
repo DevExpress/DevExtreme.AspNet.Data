@@ -21,17 +21,6 @@ namespace DevExtreme.AspNet.Data {
             if(options.IsCountQuery)
                 return builder.BuildCountExpr().Compile()(source);
 
-            if(Compat.IsEntityFramework(source.Provider)) {
-                if(!options.HasPrimaryKey)
-                    options.PrimaryKey = Utils.GetPrimaryKey(typeof(T));
-
-                if(!options.HasAnySort) {
-                    if(options.Skip > 0 || options.Take > 0) {
-                        options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
-                    }
-                }
-            }
-
             var accessor = new DefaultAccessor<T>();
             var result = new DataSourceLoadResult();
             var emptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
@@ -50,6 +39,12 @@ namespace DevExtreme.AspNet.Data {
                     result.groupCount = groupingResult.Groups.Count();
 
             } else {
+                if(!options.HasPrimaryKey)
+                    options.PrimaryKey = Utils.GetPrimaryKey(typeof(T));
+
+                if((options.Skip > 0 || options.Take > 0) && !options.HasAnySort && Compat.IsEntityFramework(source.Provider))
+                    options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
+
                 var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
                 var queryResult = ExecQuery(builder.BuildLoadExpr(!deferPaging).Compile(), source, options);
 
