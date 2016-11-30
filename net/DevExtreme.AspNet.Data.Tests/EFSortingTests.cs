@@ -38,6 +38,20 @@ namespace DevExtreme.AspNet.Data.Tests {
             public int? Sortable { get; set; }
         }
 
+        class TestClass_CodeFirstConv1 {
+            public int NotAKey { get; set; }
+            public int ID { get; set; }
+        }
+
+        class TestClass_CodeFirstConv2 {
+            public int NotAKey { get; set; }
+            public int TestClass_CodeFirstConv2Id { get; set; }
+        }
+
+        class TestClass_CodeFirstConv_InvalidType {
+            public byte[] ID { get; set; }
+        }
+
 
         [Fact]
         public void FindSortableMember() {
@@ -46,6 +60,11 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("Key", EFSorting.FindSortableMember(typeof(TestClass_Field)));
             Assert.Equal("Sortable", EFSorting.FindSortableMember(typeof(TestClass_OtherSortable)));
             Assert.Equal("Sortable", EFSorting.FindSortableMember(typeof(TestClass_Nullable)));
+
+            // see https://msdn.microsoft.com/en-us/library/jj679962(v=vs.113).aspx#Anchor_1
+            Assert.Equal("ID", EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv1)));
+            Assert.Equal("TestClass_CodeFirstConv2Id", EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv2)));
+            Assert.Null(EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv_InvalidType)));
         }
 
 

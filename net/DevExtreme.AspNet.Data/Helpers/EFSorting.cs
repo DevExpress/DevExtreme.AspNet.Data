@@ -40,7 +40,21 @@ namespace DevExtreme.AspNet.Data.Helpers {
                     .Select(i => new Candidate(i, i.FieldType))
             );
 
+            var codeFirstId = candidates.FirstOrDefault(IsEFCodeFirstConventionalKey);
+            if(codeFirstId != null)
+                return codeFirstId.Member.Name;
+
             return ORDERED_SORTABLE_TYPES.SelectMany(type => candidates.Where(c => c.Type == type)).FirstOrDefault()?.Member.Name;
+        }
+
+        static bool IsEFCodeFirstConventionalKey(Candidate candidate) {
+            var member = candidate.Member;
+            var memberName = member.Name;
+
+            if(String.Compare(memberName, "id", true) != 0 && String.Compare(memberName, member.DeclaringType.Name + "id", true) != 0)
+                return false;
+
+            return ORDERED_SORTABLE_TYPES.Contains(candidate.Type);
         }
 
     }
