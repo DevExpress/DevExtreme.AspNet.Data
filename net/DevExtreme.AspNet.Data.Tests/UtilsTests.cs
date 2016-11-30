@@ -6,10 +6,12 @@ using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    public class AddRequiredSortTests {
+    public class UtilsTests {
+
+        // AddRequiredSort
 
         [Fact]
-        public void Deduplicate() {
+        public void AddRequiredSort_Deduplicate() {
             var sort = Utils.AddRequiredSort(
                 new[] {
                     new SortingInfo { Selector = "A" },
@@ -22,7 +24,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void Desc() {
+        public void AddRequiredSort_Desc() {
             var initalSort = new[] {
                 new SortingInfo {
                     Selector = "A",
@@ -42,11 +44,33 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void InitialSortIsNull() {
+        public void AddRequiredSort_InitialSortIsNull() {
             var sort = Utils.AddRequiredSort(null, new[] { "R" });
             Assert.Equal("R", sort.First().Selector);
         }
 
+        // GetPrimaryKey
+
+        class ClassWithMultiplePK {
+            [System.ComponentModel.DataAnnotations.Key]
+            public int Z;
+
+            [System.ComponentModel.DataAnnotations.Key]
+            public int A { get; set; }
+        }
+
+        [Fact]
+        public void GetPrimaryKey_NoKey() {
+            Assert.Empty(Utils.GetPrimaryKey(typeof(int)));
+        }
+
+        [Fact]
+        public void GetPrimaryKey_MultiKey() {
+            Assert.Equal(
+                new[] { "A", "Z" },
+                Utils.GetPrimaryKey(typeof(ClassWithMultiplePK))
+            );
+        }
 
     }
 
