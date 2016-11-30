@@ -79,8 +79,10 @@ namespace DevExtreme.AspNet.Data {
             if(HasPrimaryKey)
                 return Utils.AddRequiredSort(result, PrimaryKey);
 
-            if(result.Count < 1 && HasDefaultSort)
-                result.Add(new SortingInfo { Selector = DefaultSort });
+            if(HasDefaultSort) {
+                if(!result.Any(i => i.Selector == DefaultSort))
+                    result.Add(new SortingInfo { Selector = DefaultSort });
+            }
 
             return result;
         }

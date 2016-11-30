@@ -160,7 +160,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new SortingInfo { Selector = "Item2" }
             };
 
-            Assert.Equal("data.OrderBy(obj => obj.Item2)", builder.BuildLoadExpr(false).Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
+
+            options.Sort[0].Selector = "Item1";
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
         }
 
         [Fact]
