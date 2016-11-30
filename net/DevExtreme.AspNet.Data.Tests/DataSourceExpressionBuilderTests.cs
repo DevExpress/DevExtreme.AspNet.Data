@@ -197,6 +197,30 @@ namespace DevExtreme.AspNet.Data.Tests {
                 builder.BuildLoadExpr().Body.ToString()
             );
         }
+
+        [Fact]
+        public void DefaultSortAndPrimaryKey() {
+            var options = new SampleLoadOptions {
+                PrimaryKey = new[] { "Item1" },
+                DefaultSort = "Item1",
+                Sort = new[] { new SortingInfo { Selector = "Item1" } }
+            };
+
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int, int>>(options, false);
+
+            Assert.Equal(
+                "data.OrderBy(obj => obj.Item1)",
+                builder.BuildLoadExpr().Body.ToString()
+            );
+
+            options.DefaultSort = "Item2";
+            options.Sort[0].Selector = "Item3";
+
+            Assert.Equal(
+                "data.OrderBy(obj => obj.Item3).ThenBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
+                builder.BuildLoadExpr().Body.ToString()
+            );
+        }
     }
 
 }
