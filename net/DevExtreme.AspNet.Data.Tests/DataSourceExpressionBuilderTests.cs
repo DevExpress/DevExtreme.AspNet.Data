@@ -180,6 +180,20 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.True(expr.StartsWith("data.GroupBy"));
         }
+
+        [Fact]
+        public void AlwaysOrderDataByPrimaryKey() {
+            var options = new SampleLoadOptions {
+                PrimaryKey = new[] { "Item2", "Item1" }
+            };
+
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+
+            Assert.Equal(
+                "data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
+                builder.BuildLoadExpr().Body.ToString()
+            );
+        }
     }
 
 }
