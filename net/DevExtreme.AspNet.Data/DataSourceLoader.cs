@@ -42,7 +42,7 @@ namespace DevExtreme.AspNet.Data {
                 if(!options.HasPrimaryKey)
                     options.PrimaryKey = Utils.GetPrimaryKey(typeof(T));
 
-                if((options.Skip > 0 || options.Take > 0) && !options.HasAnySort && Compat.IsEntityFramework(source.Provider))
+                if(!options.HasPrimaryKey && (options.Skip > 0 || options.Take > 0) && Compat.IsEntityFramework(source.Provider))
                     options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
 
                 var deferPaging = options.HasGroups || options.HasSummary && !canUseRemoteGrouping;
