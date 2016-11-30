@@ -48,6 +48,10 @@ namespace DevExtreme.AspNet.Data {
             get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
         }
 
+        internal bool HasAnySort {
+            get { return HasGroups || HasSort || HasPrimaryKey || HasDefaultSort; }
+        }
+
         internal IEnumerable<SortingInfo> GetFullSort() {
             var memo = new HashSet<string>();
             var result = new List<SortingInfo>();

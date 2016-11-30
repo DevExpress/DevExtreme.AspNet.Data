@@ -25,10 +25,9 @@ namespace DevExtreme.AspNet.Data {
                 if(!options.HasPrimaryKey)
                     options.PrimaryKey = Utils.GetPrimaryKey(typeof(T));
 
-                if(!options.HasPrimaryKey) {
-                    if(!options.HasSort && !options.HasGroups && (options.Skip > 0 || options.Take > 0)) {
-                        if(!options.HasDefaultSort)
-                            options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
+                if(!options.HasAnySort) {
+                    if(options.Skip > 0 || options.Take > 0) {
+                        options.DefaultSort = EFSorting.FindSortableMember(typeof(T));
                     }
                 }
             }
