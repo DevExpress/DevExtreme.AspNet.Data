@@ -20,6 +20,7 @@ namespace DevExtreme.AspNet.Data {
         public SummaryInfo[] GroupSummary;
 
         public bool? RemoteGrouping;
+        public string[] PrimaryKey;
         public string DefaultSort;
 
 #if DEBUG
@@ -35,12 +36,20 @@ namespace DevExtreme.AspNet.Data {
             get { return Sort != null && Sort.Length > 0; }
         }
 
+        internal bool HasPrimaryKey {
+            get { return PrimaryKey != null && PrimaryKey.Length > 0; }
+        }
+
         internal bool HasDefaultSort {
             get { return !String.IsNullOrEmpty(DefaultSort); }
         }
 
         internal bool HasSummary {
             get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
+        }
+
+        internal bool HasAnySort {
+            get { return HasGroups || HasSort || HasPrimaryKey || HasDefaultSort; }
         }
 
         internal IEnumerable<SortingInfo> GetFullSort() {
@@ -67,10 +76,15 @@ namespace DevExtreme.AspNet.Data {
                 }
             }
 
-            if(result.Count < 1 && HasDefaultSort)
-                result.Add(new SortingInfo { Selector = DefaultSort });
+            IEnumerable<string> requiredSort = new string[0];
 
-            return result;
+            if(HasDefaultSort)
+                requiredSort = requiredSort.Concat(new[] { DefaultSort });
+
+            if(HasPrimaryKey)
+                requiredSort = requiredSort.Concat(PrimaryKey);
+
+            return Utils.AddRequiredSort(result, requiredSort);
         }
     }
 
