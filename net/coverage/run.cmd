@@ -1,13 +1,13 @@
-where dnx > dnxpath.txt
-set /p dnxpath=<dnxpath.txt
+@echo off
+cd %~dp0
 
-call dnu build ..\DevExtreme.AspNet.Data ..\DevExtreme.AspNet.Data.Tests
+call dotnet build ..\DevExtreme.AspNet.Data ..\DevExtreme.AspNet.Data.Tests
 
 OpenCover\tools\OpenCover.Console ^
- "-target: %dnxpath%" ^
- "-targetargs: --lib %~dp0\..\DevExtreme.AspNet.Data\bin\Debug\net40 -p ..\DevExtreme.AspNet.Data.Tests test" ^
- "-filter:+[DevExtreme*]*" ^
- -hideskipped:All -output:coverage.xml -register:user
+ "-target: %programfiles%\dotnet\dotnet.exe" ^
+ "-targetargs: test -f netcoreapp1.0 %~dp0\..\DevExtreme.AspNet.Data.Tests" ^
+ "-filter:+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*" ^
+ -hideskipped:All -output:coverage.xml -register:user -oldstyle
 
 rd /s /q report
 ReportGenerator\tools\ReportGenerator -reports:coverage.xml -targetdir:report
