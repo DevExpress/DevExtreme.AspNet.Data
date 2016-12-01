@@ -13,7 +13,7 @@ if ($tag -match '^v?(([.\d]+)[\w-]*)$') {
 
 $meta_company = "Developer Express Inc."
 $meta_copyright = "Copyright (c) $meta_company"
-$meta_description = "DevExtreme data layer extension for ASP.NET MVC"
+$meta_description = "DevExtreme data layer extension for ASP.NET"
 $meta_license_url = "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE"
 $meta_project_url = "https://github.com/DevExpress/DevExtreme.AspNet.Data"
 
