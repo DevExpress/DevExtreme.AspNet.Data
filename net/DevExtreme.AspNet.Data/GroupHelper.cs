@@ -59,7 +59,7 @@ namespace DevExtreme.AspNet.Data {
             var memberValue = _accessor.Read(obj, groupInfo.Selector);
 
             var intervalString = groupInfo.GroupInterval;
-            if(String.IsNullOrEmpty(intervalString))
+            if(String.IsNullOrEmpty(intervalString) || memberValue == null)
                 return memberValue;
 
             if(Char.IsDigit(intervalString[0])) {
