@@ -127,7 +127,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void GroupWithNullValues() {
+        public void GroupInterval_NullDates() {
             var data = new[] {
                 new { d = new DateTime?() },
                 new { d = new DateTime?() }
