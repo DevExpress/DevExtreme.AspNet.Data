@@ -136,7 +136,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var groups = CreateHelper(data).Group(data, new[] {
                 new GroupingInfo { Selector = "d", GroupInterval = "year", IsExpanded = false },
                 new GroupingInfo { Selector = "d", GroupInterval = "month", IsExpanded = false },
-                new GroupingInfo { Selector = "d", GroupInterval = "day", IsExpanded = true }
+                new GroupingInfo { Selector = "d", GroupInterval = "day", IsExpanded = false }
             });
 
             var g_year = groups[0];
@@ -145,10 +145,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(groups.Count, 1);
             Assert.Equal(null, g_year.key);
-            Assert.Equal(1, g_year.items.Count);
             Assert.Equal(null, g_month.key);
             Assert.Equal(null, g_day.key);
-            Assert.Equal(2, g_day.items.Count);
         }
 
         [Fact]
