@@ -233,7 +233,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, groups.Count());
             Assert.Equal(2, result.groupCount);
         }
-        
     }
 
 }
