@@ -233,6 +233,29 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, groups.Count());
             Assert.Equal(2, result.groupCount);
         }
+
+        [Fact]
+        public void GroupDateTime_NullDates() {
+            var data = new[] {
+                new { d = new DateTime?(new DateTime(1996, 7, 4)) },
+                new { d = new DateTime?() }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "d", GroupInterval = "year", IsExpanded = false }
+                }
+            };
+            
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            
+            var groups = result.data.Cast<Group>().ToArray();
+
+            Assert.Equal(2, groups.Count());
+            Assert.Equal(null, groups[0].key);
+            Assert.Equal(1996, groups[1].key);
+        }
     }
 
 }
