@@ -43,9 +43,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                         var groupIntervalExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
 
                         if(Utils.CanAssignNull(selectorExpr.Type)) {
-                            var test = Expression.Equal(selectorExpr, Expression.Constant(null));
-                            groupIntervalExpr = Expression.Convert(groupIntervalExpr, typeof(int?));
-                            selectorExpr = Expression.Condition(test, Expression.Constant(null, typeof(int?)), groupIntervalExpr);
+                            var nullableType = typeof(Nullable<>).MakeGenericType(groupIntervalExpr.Type);
+                            var nullConst = Expression.Constant(null, nullableType);
+                            var test = Expression.Equal(selectorExpr, nullConst);
+
+                            groupIntervalExpr = Expression.Convert(groupIntervalExpr, nullableType);
+                            selectorExpr = Expression.Condition(test, nullConst, groupIntervalExpr);
                         } else {
                             selectorExpr = groupIntervalExpr;
                         }
