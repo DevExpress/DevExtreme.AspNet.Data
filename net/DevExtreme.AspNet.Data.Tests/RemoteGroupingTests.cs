@@ -235,26 +235,32 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void GroupDateTime_NullDates() {
+        public void GroupInterval_NullDates() {
             var data = new[] {
-                new { d = new DateTime?(new DateTime(1996, 7, 4)) },
+                new { d = new DateTime?() },
                 new { d = new DateTime?() }
             };
 
             var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 Group = new[] {
-                    new GroupingInfo { Selector = "d", GroupInterval = "year", IsExpanded = false }
+                    new GroupingInfo { Selector = "d", GroupInterval = "year", IsExpanded = false },
+                    new GroupingInfo { Selector = "d", GroupInterval = "month", IsExpanded = false },
+                    new GroupingInfo { Selector = "d", GroupInterval = "day", IsExpanded = false }
                 }
             };
             
             var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
             
             var groups = result.data.Cast<Group>().ToArray();
+            
+            var g_year = groups[0];
+            var g_month = g_year.items[0] as Group;
+            var g_day = g_month.items[0] as Group;
 
-            Assert.Equal(2, groups.Count());
-            Assert.Equal(null, groups[0].key);
-            Assert.Equal(1996, groups[1].key);
+            Assert.Equal(null, g_year.key);
+            Assert.Equal(null, g_month.key);
+            Assert.Equal(null, g_day.key);
         }
     }
 

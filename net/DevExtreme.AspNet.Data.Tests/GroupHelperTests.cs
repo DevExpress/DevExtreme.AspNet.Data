@@ -143,7 +143,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             var g_month = g_year.items[0] as Group;
             var g_day = g_month.items[0] as Group;
 
-            Assert.Equal(groups.Count, 1);
             Assert.Equal(null, g_year.key);
             Assert.Equal(null, g_month.key);
             Assert.Equal(null, g_day.key);
