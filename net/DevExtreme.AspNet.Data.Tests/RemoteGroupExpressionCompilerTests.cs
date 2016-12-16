@@ -130,6 +130,20 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupInterval_NullableDate() {
+            var compiler = new RemoteGroupExpressionCompiler<Nullable<DateTime>>(
+                new[] {
+                    new GroupingInfo { Selector = "this", GroupInterval = "year" }
+                },
+                null, null
+            );
+
+            var expr = compiler.Compile(CreateTargetParam<Nullable<DateTime>>()).ToString();
+
+            Assert.Contains("K0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
+        }
+
+        [Fact]
         public void RemoteGroupKeyClass() {
             var key1 = new RemoteGroupKey<int, int, int, int, int, int, int, int>(0, 1, 2, 3, 4, 5, 6, 7);
 

@@ -127,6 +127,28 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupInterval_NullDates() {
+            var data = new[] {
+                new { d = new DateTime?() },
+                new { d = new DateTime?() }
+            };
+
+            var groups = CreateHelper(data).Group(data, new[] {
+                new GroupingInfo { Selector = "d", GroupInterval = "year", IsExpanded = false },
+                new GroupingInfo { Selector = "d", GroupInterval = "month", IsExpanded = false },
+                new GroupingInfo { Selector = "d", GroupInterval = "day", IsExpanded = false }
+            });
+
+            var g_year = groups[0];
+            var g_month = g_year.items[0] as Group;
+            var g_day = g_month.items[0] as Group;
+
+            Assert.Null(g_year.key);
+            Assert.Null(g_month.key);
+            Assert.Null(g_day.key);
+        }
+
+        [Fact]
         public void GroupExtraProps_NotSerializedIfEmpty() {
             var group = new Group();
             var json = JsonConvert.SerializeObject(group);
