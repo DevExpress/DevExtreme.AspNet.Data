@@ -143,9 +143,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             var g_month = g_year.items[0] as Group;
             var g_day = g_month.items[0] as Group;
 
-            Assert.Equal(null, g_year.key);
-            Assert.Equal(null, g_month.key);
-            Assert.Equal(null, g_day.key);
+            Assert.Null(g_year.key);
+            Assert.Null(g_month.key);
+            Assert.Null(g_day.key);
         }
 
         [Fact]
