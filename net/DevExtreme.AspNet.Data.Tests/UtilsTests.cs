@@ -53,7 +53,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class ClassWithMultiplePK {
             [System.ComponentModel.DataAnnotations.Key]
-            public int Z;
+            public int Z = 0;
 
             [System.ComponentModel.DataAnnotations.Key]
             public int A { get; set; }
