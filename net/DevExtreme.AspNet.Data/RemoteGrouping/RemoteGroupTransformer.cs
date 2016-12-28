@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,15 +10,21 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupTransformer {
 
-        public static RemoteGroupingResult Run(IEnumerable<IRemoteGroup> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
-            var accessor = new RemoteGroupAccessor();
+        public static RemoteGroupingResult Run(IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
+            var accessor = new AnonTypeAccessor();
+
+            var markup = new RemoteGroupTypeMarkup(
+                groupCount,
+                totalSummary != null ? totalSummary.Length : 0,
+                groupSummary != null ? groupSummary.Length : 0
+            );
 
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
-                hierGroups = new GroupHelper<IRemoteGroup>(accessor).Group(
+                hierGroups = new GroupHelper<AnonType>(accessor).Group(
                     flatGroups,
-                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = "K" + i }).ToArray()
+                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (RemoteGroupTypeMarkup.KeysStartIndex + i) }).ToArray()
                 );
             }
 
@@ -25,12 +32,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(dataToAggregate == null)
                 dataToAggregate = flatGroups;
 
-            var transformedTotalSummary = TransformSummary(totalSummary, "T");
-            var transformedGroupSummary = TransformSummary(groupSummary, "G");
+            var transformedTotalSummary = TransformSummary(totalSummary, markup.TotalSummaryStartIndex);
+            var transformedGroupSummary = TransformSummary(groupSummary, markup.GroupSummaryStartIndex);
 
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = "remoteCount" });
 
-            var totals = new AggregateCalculator<IRemoteGroup>(dataToAggregate, accessor, transformedTotalSummary, transformedGroupSummary).Run();
+            var totals = new AggregateCalculator<AnonType>(dataToAggregate, accessor, transformedTotalSummary, transformedGroupSummary).Run();
             var totalCount = (int)totals.Last();
 
             totals = totals.Take(totals.Length - 1).ToArray();
@@ -44,13 +51,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
         }
 
-        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, string fieldPrefix) {
+        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, int fieldStartIndex) {
             var result = new List<SummaryInfo>();
 
             if(original != null) {
                 for(var i = 0; i < original.Length; i++) {
                     result.Add(new SummaryInfo {
-                        Selector = fieldPrefix + i,
+                        Selector = AnonType.ITEM_PREFIX + (fieldStartIndex + i),
                         SummaryType = TransformSummaryType(original[i].SummaryType)
                     });
                 }

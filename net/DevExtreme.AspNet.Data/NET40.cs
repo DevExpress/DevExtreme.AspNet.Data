@@ -11,8 +11,7 @@ namespace DevExtreme.AspNet.Data {
 
     static class TypeExtensions {
         internal const BindingFlags 
-            EVERYTHING = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static,
-            DECLARED_ONLY = EVERYTHING | BindingFlags.DeclaredOnly;
+            EVERYTHING = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 
         public static TypeInfo GetTypeInfo(this Type type) {
             return new TypeInfo(type);
@@ -45,14 +44,6 @@ namespace DevExtreme.AspNet.Data {
 
         public bool IsEnum {
             get { return _type.IsEnum; }
-        }
-
-        public FieldInfo GetDeclaredField(String name) {
-            return _type.GetField(name, TypeExtensions.DECLARED_ONLY);
-        }
-
-        public PropertyInfo GetDeclaredProperty(string name) {
-            return _type.GetProperty(name, TypeExtensions.DECLARED_ONLY);
         }
 
         public Type GetGenericTypeDefinition() {

@@ -77,7 +77,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(1, loadOptions.ExpressionLog.Count);
-            Assert.Contains("RemoteGroupKey`8(K0 = obj.G1, K1 = obj.G2)", loadOptions.ExpressionLog[0]);
+            Assert.Contains("AnonType`2(I0 = obj.G1, I1 = obj.G2)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);
@@ -145,7 +145,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("Take", loadOptions.ExpressionLog[0]);
 
             // 2 - load summaries
-            Assert.Contains("RemoteGroupKey`8()", loadOptions.ExpressionLog[1]);
+            Assert.Contains("AnonType()", loadOptions.ExpressionLog[1]);
 
             Assert.Equal(4M, result.summary[0]);
             Assert.Equal(1, result.data.Cast<object>().Count());

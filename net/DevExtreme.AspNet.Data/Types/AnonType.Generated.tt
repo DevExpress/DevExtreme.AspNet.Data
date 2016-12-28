@@ -1,0 +1,77 @@
+﻿// WARNING! GENERATED CODE!
+<#@ output extension=".cs" #> 
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+using System;
+
+namespace DevExtreme.AspNet.Data.Types {
+<# foreach(var size in SIZES) { #>
+
+    class AnonType<#= FormatTypeArgs(size) #> : AnonType {
+<# for(var i = 0; i < size; i++)  { #>
+        public T<#= i #> I<#= i #>;
+<# } #>
+
+        public AnonType() {
+        }
+
+        public AnonType(<#= FormatCtorArgs(size) #>) {
+<# for(var i = 0; i < size; i++)  { #>
+            I<#= i #> = i<#= i #>;
+<# } #>
+        }
+
+        public override int Size {
+            get { return <#= size #>; }
+        }
+
+        public override object this[int index] {
+            get {
+<# for(var i = 0; i < size; i++)  { #>
+                if(index == <#= i #>) return I<#= i #>;
+<# } #>
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+    }
+<# } #>
+
+    partial class AnonType {
+        const int MAX_SIZE = <#= SIZES.Max() #>;
+
+        static Type GetTemplate(int size) {
+<# foreach(var size in SIZES) { #>
+            if(size == <#= size #>) return typeof(AnonType<<#= "".PadLeft(size - 1, ',') #>>);
+<# } #>
+            throw new ArgumentOutOfRangeException();
+        }
+
+        static int SnapSize(int size) {
+            if(size <= 2) return size;
+<# foreach(var size in SIZES.Take(SIZES.Length - 1).Where(i => i > 2)) { #>
+            if(size <= <#= size #>) return <#= size #>;
+<# } #>
+            return MAX_SIZE;
+        }
+
+    }
+}
+<#+
+    static readonly int[] SIZES = new[] { 1, 2, 4, 8, 16, 32 };
+
+    public string FormatTypeArgs(int count) {
+        if(count < 1)
+            return "";
+        return "<" + FormatList(count, "T{0}") + ">";
+    }
+
+    public string FormatCtorArgs(int count) {
+        return FormatList(count, "T{0} i{0}");
+    }
+
+    string FormatList(int count, string format) {
+        return String.Join(", ", Enumerable.Range(0, count).Select(i => String.Format(format, i)));
+    }
+
+#>
