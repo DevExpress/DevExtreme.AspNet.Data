@@ -6,10 +6,10 @@ environment:
 
 cache:
   - '%LOCALAPPDATA%\Microsoft\dotnet -> appveyor.yml'
+  - '%LOCALAPPDATA%\NuGet -> **\packages.config'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - js-test\node_modules -> js-test\package.json
   - js-test\bower_components -> js-test\bower.json
-  - net\packages -> **\packages.config
 
 install:
   - appveyor DownloadFile https://raw.githubusercontent.com/dotnet/cli/v1.0.0-preview2/scripts/obtain/dotnet-install.ps1
