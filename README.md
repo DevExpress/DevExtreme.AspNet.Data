@@ -6,13 +6,13 @@ This extension enables [DevExtreme client-side widgets](https://js.devexpress.co
 
 The server-side part of the extension is the `DevExtreme.AspNet.Data.dll` assembly. Install it [from NuGet](http://www.nuget.org/packages/DevExtreme.AspNet.Data/) with the following command.
 
-    `Install-Package DevExtreme.AspNet.Data`
+    Install-Package DevExtreme.AspNet.Data
 
 The client-side part is the `dx.aspnet.data.js` script. Install it [using bower](https://libraries.io/bower/devextreme-aspnet-data) in one of the following ways.
 
 * With the following command in the bower command line.
 
-    `bower install devextreme-aspnet-data`
+        bower install devextreme-aspnet-data
 
 * By adding `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
 
@@ -36,7 +36,7 @@ The server needs a custom model binder that will receive data loading options fr
 - [Web API](https://www.devexpress.com/Support/Center/Example/Details/T334360) - see the `WebApiDataSourceLoadOptions.cs` file;
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/DataSourceLoadOptions.cs)
 
-[note]If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Wrappers](https://js.devexpress.com/Documentation/16_2/Guide/ASP.NET_MVC_Wrappers/Prerequisites_and_Installation/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Wrappers library.
+**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Wrappers](https://js.devexpress.com/Documentation/16_2/Guide/ASP.NET_MVC_Wrappers/Prerequisites_and_Installation/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Wrappers library.
 
 ## Controller Example
 
@@ -47,15 +47,15 @@ The server needs a custom model binder that will receive data loading options fr
 
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
-`key` - the key property;
-`loadUrl` - the URL to the GET method;
-`loadParams` - parameters that should be passed to the GET method (if there are any);
-`updateUrl` - the URL to the POST method;
-`insertUrl` - the URL to the PUT method;
-`deleteUrl` - the URL to the DELETE method;
+`key` - the key property;       
+`loadUrl` - the URL to the GET method;      
+`loadParams` - parameters that should be passed to the GET method (if there are any);       
+`updateUrl` - the URL to the POST method;       
+`insertUrl` - the URL to the PUT method;        
+`deleteUrl` - the URL to the DELETE method;     
 `onBeforeSend` - a function that customizes the query before it is sent.
 
-You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml#L9).
+You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
 DevExtreme ASP.NET MVC Wrappers call the `DevExpress.data.AspNet.createStore` method internally. To configure the parameters, use the lambda expression of the `DataSource()` method.
 
