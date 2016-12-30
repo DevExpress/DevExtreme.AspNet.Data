@@ -47,13 +47,13 @@ The server needs a custom model binder that will receive data loading options fr
 
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
-`key` - the key property;       
-`loadUrl` - the URL to the GET method;      
-`loadParams` - parameters that should be passed to the GET method (if there are any);       
-`updateUrl` - the URL to the POST method;       
-`insertUrl` - the URL to the PUT method;        
-`deleteUrl` - the URL to the DELETE method;     
-`onBeforeSend` - a function that customizes the query before it is sent.
+- `key` - the key property;       
+- `loadUrl` - the URL to the GET method;      
+- `loadParams` - parameters that should be passed to the GET method (if there are any);       
+- `updateUrl` - the URL to the POST method;       
+- `insertUrl` - the URL to the PUT method;        
+- `deleteUrl` - the URL to the DELETE method;     
+- `onBeforeSend` - a function that customizes the query before it is sent.
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
