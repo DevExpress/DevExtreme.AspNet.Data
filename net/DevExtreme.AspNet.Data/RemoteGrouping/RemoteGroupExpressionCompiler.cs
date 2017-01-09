@@ -162,7 +162,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
                 bindingList.Add(
                     Expression.Bind(
-                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex+ i)),
+                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
                         Expression.Call(
                             typeof(Enumerable),
                             GetPreAggregateMethodName(summaryType),
