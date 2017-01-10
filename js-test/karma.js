@@ -1,22 +1,28 @@
-var files = require("./test-deps.js");
-files.push("test.js"); 
-
 module.exports = function(config) {
-  config.set({
-    basePath: "",
-    frameworks: ["qunit"],
-    files: files,
-    preprocessors: {
-        "../js/*.js": "coverage"
-    },
-    reporters: ["dots", "coverage"],
-    coverageReporter: {
-      reporters: [
-        { type: "html" },
-        { type: "text-summary" },
-      ]
-    },    
-    browsers: ["PhantomJS"],
-    singleRun: true
-  })
-}
+    var options = {
+        basePath: "",
+        frameworks: [ "qunit" ],
+        reporters: [ "dots" ],
+        browsers: [ "PhantomJS" ],
+        singleRun: true
+    };
+
+    if(config.bundled) {
+        options.files = [ "test-bundle.js" ];
+    } else {
+        options.files = require("./test-deps.js");
+        options.files.push("test.js");
+        options.preprocessors = {
+            "../js/*.js": "coverage"
+        };
+        options.reporters.push("coverage");
+        options.coverageReporter = {
+            reporters: [
+                { type: "html" },
+                { type: "text-summary" },
+            ]
+        };
+    }
+
+    config.set(options);
+};

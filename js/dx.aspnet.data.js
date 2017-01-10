@@ -2,12 +2,32 @@
 // Copyright (c) Developer Express Inc.
 
 // jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
+/* global DevExpress, define */
 
-(function($, DX) {
+(function(factory) {
+    "use strict";
+
+    if(typeof define === "function" && define.amd) {
+        define(function(require, exports, module) {
+            module.exports = factory(
+                require("jquery"),
+                require("devextreme/data/custom_store"),
+                require("devextreme/data/utils")
+            );
+        });
+    } else {
+        DevExpress.data.AspNet = factory(
+            jQuery,
+            DevExpress.data.CustomStore,
+            DevExpress.data.utils
+        );
+    }
+
+})(function($, CustomStore, dataUtils) {
     "use strict";
 
     function createStore(options) {
-        var store = new DX.data.CustomStore(createStoreConfig(options));
+        var store = new CustomStore(createStoreConfig(options));
         store._useDefaultSearch = true;
         return store;
     }
@@ -74,7 +94,7 @@
                         result[this] = options[this];
                 });
 
-                var normalizeSorting = DX.data.utils.normalizeSortingInfo,
+                var normalizeSorting = dataUtils.normalizeSortingInfo,
                     group = options.group,
                     filter = options.filter;
 
@@ -266,10 +286,7 @@
         }
     }
 
-    $.extend(DX.data, {
-        AspNet: {
-            createStore: createStore
-        }
-    });
-
-})(jQuery, window.DevExpress);
+    return {
+        createStore: createStore
+    };
+});

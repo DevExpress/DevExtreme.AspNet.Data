@@ -27,10 +27,12 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.Tests
   - dotnet build net\Sample
   - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
+  - js-test\node_modules\.bin\webpack --config js-test\test-bundle-webpack-config.js
 
 test_script:
   - js-test\node_modules\.bin\jshint js
   - cd js-test && node_modules\.bin\karma start karma.js
+  - cd js-test && node_modules\.bin\karma start karma.js --bundled
   - dotnet test net\DevExtreme.AspNet.Data.Tests -f netcoreapp1
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 

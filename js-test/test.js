@@ -1,7 +1,32 @@
-(function() {
+// jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
+/* global DevExpress, define */
+
+(function(factory) {
     "use strict";
 
-    var createStore = DevExpress.data.AspNet.createStore;
+    if(typeof define === "function" && define.amd) {
+        define(function(require) {
+            var $ = require("jquery");
+            require("mockjax")($, window);
+            factory(
+                $,
+                require("devextreme/data/data_source"),
+                require("../js/dx.aspnet.data.js")
+            );
+        });
+    } else {
+        factory(
+            jQuery,
+            DevExpress.data.DataSource,
+            DevExpress.data.AspNet
+        );
+    }
+
+})(function($, DataSource, AspNet) {
+    "use strict";
+
+    var QUnit = window.QUnit,
+        createStore = AspNet.createStore;
 
     $.extend($.mockjaxSettings, {
         contentType: "application/json",
@@ -124,7 +149,7 @@
                 }
             });
 
-            var dataSource = new DevExpress.data.DataSource({
+            var dataSource = new DataSource({
                 store: createStore({ loadUrl: "/" }),
                 searchExpr: "haystack",
                 searchValue: "needle"
@@ -431,4 +456,4 @@
         testCacheBusting("totalCount", function(store) { store.totalCount(); });
         testCacheBusting("byKey", function(store) { store.byKey(123); });
     });
-})();
+});
