@@ -4,7 +4,6 @@ obj/
 node_modules/
 net/packages/
 net/DevExtreme.AspNet.Data/release.snk
-/js-test/bower_components/
 /js-test/coverage/
 **/wwwroot/lib/
 project.lock.json

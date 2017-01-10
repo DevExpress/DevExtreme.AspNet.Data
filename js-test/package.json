@@ -1,6 +1,8 @@
 {
   "devDependencies": {
-    "bower": "^1.7.9",
+    "devextreme": "^16.2.3",
+    "jquery": "^2.2.4",
+    "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
     "karma": "^0.13.22",
     "karma-coverage": "^0.5.5",

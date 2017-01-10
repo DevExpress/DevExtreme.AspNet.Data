@@ -1,8 +1,0 @@
-{
-  "name": "js-test",
-  "private": true,
-  "dependencies": {
-    "devextreme": "~16.1.4",
-    "jquery-mockjax": "~2.2.0"
-  }
-}
