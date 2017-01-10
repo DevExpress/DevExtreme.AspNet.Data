@@ -15,7 +15,6 @@ install:
   - powershell -File dotnet-install.ps1
   - set PATH=%PATH%;%LOCALAPPDATA%\Microsoft\dotnet
   - cd js-test && npm install
-  - cd js-test && node_modules\.bin\bower install
 
 before_build:
   - dotnet restore -v minimal
