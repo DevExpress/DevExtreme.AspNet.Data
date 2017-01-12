@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,9 +9,6 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
-        const int MAX_GROUPS = 8;
-        const int MAX_AGGREGATES = 8;
-
         ParameterExpression _groupByParam;
 
         IList<Expression>
@@ -29,7 +27,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummaryParams = new List<ParameterExpression>(),
             _groupSummaryParams = new List<ParameterExpression>();
 
-        Type _remoteGroupClassType;
+        Type _remoteGroupType;
+        RemoteGroupTypeMarkup _remoteGroupTypeMarkup;
 
         public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) 
             : base(false) {
@@ -65,27 +64,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(_groupKeyExprList.Any() && groupSummary != null)
                 InitSummary(groupSummary, _groupSummaryExprList, _groupSummaryTypes, _groupSummaryParams);
 
-            if(_groupKeyExprList.Count > MAX_GROUPS)
-                throw new NotSupportedException($"Maximum number of groups ({MAX_GROUPS}) exceeded");
+            var typeArguments = new[] { typeof(int) }
+                .Concat(_groupKeyExprList.Concat(_totalSummaryExprList).Concat(_groupSummaryExprList).Select(i => i.Type))
+                .ToArray();
 
-            if(_totalSummaryExprList.Count > MAX_AGGREGATES)
-                throw new NotSupportedException($"Maximum number of total-summary aggregates ({MAX_AGGREGATES}) exceeded");
-
-            if(_groupSummaryExprList.Count > MAX_AGGREGATES)
-                throw new NotSupportedException($"Maximum number of group-summary aggregates ({MAX_AGGREGATES}) exceeded");
-
-            var typeArguments = new List<Type>(MAX_GROUPS + 2 * MAX_AGGREGATES);
-
-            for(var i = 0; i < MAX_GROUPS; i++)
-                typeArguments.Add(i < _groupKeyExprList.Count ? _groupKeyExprList[i].Type : typeof(Object));
-
-            for(var i = 0; i < MAX_AGGREGATES; i++)
-                typeArguments.Add(i < _totalSummaryExprList.Count ? _totalSummaryExprList[i].Type : typeof(Object));
-
-            for(var i = 0; i < MAX_AGGREGATES; i++)
-                typeArguments.Add(i < _groupSummaryExprList.Count ? _groupSummaryExprList[i].Type : typeof(Object));
-            
-            _remoteGroupClassType = typeof(RemoteGroup<,,,,,,,,,,,,,,,,,,,,,,,>).MakeGenericType(typeArguments.ToArray());
+            _remoteGroupType = AnonType.Get(typeArguments);
+            _remoteGroupTypeMarkup = new RemoteGroupTypeMarkup(_groupKeyExprList.Count, _totalSummaryExprList.Count, _groupSummaryExprList.Count);
         }
 
         void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
@@ -103,13 +87,11 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
         public Expression Compile(Expression target) {
             var groupKeySelectorTypes = _groupKeyExprList.Select(i => i.Type).ToArray();
+            var groupKeyType = AnonType.Get(groupKeySelectorTypes);
 
-            var groupKeyTypeArguments = new Type[MAX_GROUPS];
-            for(var i = 0; i < MAX_GROUPS; i++)
-                groupKeyTypeArguments[i] = i < groupKeySelectorTypes.Length ? groupKeySelectorTypes[i] : typeof(Object);
-
-            var groupKeyType = typeof(RemoteGroupKey<,,,,,,,>).MakeGenericType(groupKeyTypeArguments);
-            var groupKeyProps = GroupKeyNames().Select(i => groupKeyType.GetTypeInfo().GetDeclaredProperty(i)).ToArray();
+            var groupKeyProps = Enumerable.Range(0, _groupKeyExprList.Count)
+                .Select(i => groupKeyType.GetField(AnonType.ITEM_PREFIX + i))
+                .ToArray();
 
             var groupKeyLambda = Expression.Lambda(
                 Expression.New(
@@ -142,41 +124,36 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return target;
         }
 
-        IEnumerable<string> GroupKeyNames() {
-            for(var i = 0; i < _groupKeyExprList.Count; i++)
-                yield return "K" + i;
-        }
-
         Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
             var projectionBindings = new List<MemberAssignment>();
 
-            foreach(var name in GroupKeyNames()) {
-                projectionBindings.Add(Expression.Bind(
-                    _remoteGroupClassType.GetTypeInfo().GetDeclaredField(name),
-                    Expression.Property(Expression.Property(param, "Key"), name)
-                ));
-            }
-
             projectionBindings.Add(Expression.Bind(
-                _remoteGroupClassType.GetTypeInfo().GetDeclaredProperty("Count"),
+                _remoteGroupType.GetField(AnonType.ITEM_PREFIX + RemoteGroupTypeMarkup.CountIndex),
                 Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
             ));
 
-            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, "G");
-            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, "T");
+            for(var i = 0; i < _groupKeyExprList.Count; i++) {
+                projectionBindings.Add(Expression.Bind(
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (RemoteGroupTypeMarkup.KeysStartIndex + i)),
+                    Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i)
+                ));
+            }
+
+            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, _remoteGroupTypeMarkup.TotalSummaryStartIndex);
+            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, _remoteGroupTypeMarkup.GroupSummaryStartIndex);            
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
-                    Expression.New(_remoteGroupClassType.GetConstructor(Type.EmptyTypes)),
+                    Expression.New(_remoteGroupType.GetConstructor(Type.EmptyTypes)),
                     projectionBindings
                 ),
                 param
             );
 
-            return Expression.Call(typeof(Queryable), "Select", new[] { param.Type, _remoteGroupClassType }, target, projectionLambda);
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, projectionLambda);
         }
 
-        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, string bindingFieldPrefix) {
+        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, int bindingFieldStartIndex) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
 
@@ -185,7 +162,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
                 bindingList.Add(
                     Expression.Bind(
-                        _remoteGroupClassType.GetTypeInfo().GetDeclaredField(bindingFieldPrefix + i),
+                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
                         Expression.Call(
                             typeof(Enumerable),
                             GetPreAggregateMethodName(summaryType),

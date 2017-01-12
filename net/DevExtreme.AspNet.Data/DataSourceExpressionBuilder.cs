@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.RemoteGrouping;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,9 +34,9 @@ namespace DevExtreme.AspNet.Data {
             );
         }
 
-        public Expression<Func<IQueryable<T>, IQueryable<IRemoteGroup>>> BuildLoadGroupsExpr() {
+        public Expression<Func<IQueryable<T>, IQueryable<AnonType>>> BuildLoadGroupsExpr() {
             var param = CreateParam();
-            return Expression.Lambda<Func<IQueryable<T>, IQueryable<IRemoteGroup>>>(
+            return Expression.Lambda<Func<IQueryable<T>, IQueryable<AnonType>>>(
                 BuildCore(param, remoteGrouping: true),
                 param
             );

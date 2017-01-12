@@ -1,6 +1,7 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.RemoteGrouping;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -136,10 +137,10 @@ namespace DevExtreme.AspNet.Data {
         static void EmptyGroups(IEnumerable groups, int level) {
             foreach(Group g in groups) {
                 if(level < 2) {
-                    var remoteGroup = g.items[0] as IRemoteGroup;
+                    var remoteGroup = g.items[0] as AnonType;
 
                     if(remoteGroup != null) {
-                        g.count = remoteGroup.Count;
+                        g.count = (int)remoteGroup[RemoteGroupTypeMarkup.CountIndex];
                     } else {
                         g.count = g.items.Count;
                     }

@@ -48,21 +48,31 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data"
-                + ".GroupBy(obj => new RemoteGroupKey`8(K0 = obj.G1, K1 = obj.G2))"
-                + ".OrderBy(g => g.Key.K0)"
-                + ".ThenByDescending(g => g.Key.K1)"
-                + ".Select(g => new RemoteGroup`24() {"
-                + "K0 = g.Key.K0, "
-                + "K1 = g.Key.K1, "
-                + "Count = g.Count(), "
-                + "G1 = g.Sum(obj => obj.Value), "
-                + "G2 = g.Max(obj => obj.Value), "
-                + "G3 = g.Min(obj => obj.Value), "
-                + "G4 = g.Sum(obj => obj.Value), "
-                + "T0 = g.Sum(obj => obj.Value), "
-                + "T1 = g.Min(obj => obj.Value), "
-                + "T2 = g.Max(obj => obj.Value), "
-                + "T3 = g.Sum(obj => obj.Value)"
+                + ".GroupBy(obj => new AnonType`2(I0 = obj.G1, I1 = obj.G2))"
+                + ".OrderBy(g => g.Key.I0)"
+                + ".ThenByDescending(g => g.Key.I1)"
+                + ".Select(g => new AnonType`16() {"
+
+                // count
+                + "I0 = g.Count(), "
+
+                // keys
+                + "I1 = g.Key.I0, "
+                + "I2 = g.Key.I1, "
+
+                // total summary
+                + "I3 = g.Sum(obj => obj.Value), "
+                + "I4 = g.Min(obj => obj.Value), "
+                + "I5 = g.Max(obj => obj.Value), "
+                + "I6 = g.Sum(obj => obj.Value), "
+                // I7 - skipped count
+
+                // group summary
+                // I8 - skipped count
+                + "I9 = g.Sum(obj => obj.Value), "
+                + "I10 = g.Max(obj => obj.Value), "
+                + "I11 = g.Min(obj => obj.Value), "
+                + "I12 = g.Sum(obj => obj.Value)"
                 + "})",
                 expr.ToString()
             );
@@ -73,8 +83,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = new RemoteGroupExpressionCompiler<DataItem>(null, null, null).Compile(CreateTargetParam<DataItem>());
             Assert.Equal(
                 "data"
-                    + ".GroupBy(obj => new RemoteGroupKey`8())"
-                    + ".Select(g => new RemoteGroup`24() {Count = g.Count()})",
+                    + ".GroupBy(obj => new AnonType())"
+                    + ".Select(g => new AnonType`1() {I0 = g.Count()})",
                 expr.ToString()
             );
         }
@@ -98,7 +108,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var expr = compiler.Compile(CreateTargetParam<double>()).ToString();
-            Assert.Contains("K0 = (obj - (obj % Convert(123))", expr);
+            Assert.Contains("I0 = (obj - (obj % Convert(123))", expr);
         }
 
         [Fact]
@@ -119,14 +129,14 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = compiler.Compile(CreateTargetParam<DateTime>()).ToString();
 
-            Assert.Contains("K0 = obj.Year", expr);
-            Assert.Contains("K1 = ((obj.Month + 2) / 3)", expr);
-            Assert.Contains("K2 = obj.Month", expr);
-            Assert.Contains("K3 = obj.Day", expr);
-            Assert.Contains("K4 = Convert(obj.DayOfWeek)", expr);
-            Assert.Contains("K5 = obj.Hour", expr);
-            Assert.Contains("K6 = obj.Minute", expr);
-            Assert.Contains("K7 = obj.Second", expr);
+            Assert.Contains("I0 = obj.Year", expr);
+            Assert.Contains("I1 = ((obj.Month + 2) / 3)", expr);
+            Assert.Contains("I2 = obj.Month", expr);
+            Assert.Contains("I3 = obj.Day", expr);
+            Assert.Contains("I4 = Convert(obj.DayOfWeek)", expr);
+            Assert.Contains("I5 = obj.Hour", expr);
+            Assert.Contains("I6 = obj.Minute", expr);
+            Assert.Contains("I7 = obj.Second", expr);
         }
 
         [Fact]
@@ -140,49 +150,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = compiler.Compile(CreateTargetParam<Nullable<DateTime>>()).ToString();
 
-            Assert.Contains("K0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
-        }
-
-        [Fact]
-        public void RemoteGroupKeyClass() {
-            var key1 = new RemoteGroupKey<int, int, int, int, int, int, int, int>(0, 1, 2, 3, 4, 5, 6, 7);
-
-            Assert.Equal(0, key1.K0);
-            Assert.Equal(1, key1.K1);
-            Assert.Equal(2, key1.K2);
-            Assert.Equal(3, key1.K3);
-            Assert.Equal(4, key1.K4);
-            Assert.Equal(5, key1.K5);
-            Assert.Equal(6, key1.K6);
-            Assert.Equal(7, key1.K7);
-
-            Assert.False(Equals(key1, new object()));
-
-            var key2 = new RemoteGroupKey<int, int, int, int, int, int, int, int>(0, 1, 2, 3, 4, 5, 6, 7);
-
-            Assert.True(Equals(key1, key2));
-            Assert.Equal(key1.GetHashCode(), key2.GetHashCode());
-        }
-
-        [Fact]
-        public void RemoteGroupClass() {
-            var group = new RemoteGroup<object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object, object>();
-            var type = group.GetType().GetTypeInfo();
-            var accessor = new RemoteGroupAccessor();
-
-            var prefixes = new Dictionary<string, int> {
-                ["K"] = 8,
-                ["T"] = 8,
-                ["G"] = 8
-            };
-
-            foreach(var prefix in prefixes.Keys) {
-                for(var index = 0; index < prefixes[prefix]; index++) {
-                    var value = new Object();
-                    type.GetDeclaredField(prefix + index).SetValue(group, value);
-                    Assert.Same(value, accessor.Read(group, prefix + index));
-                }
-            }
+            Assert.Contains("I0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
         }
 
     }
