@@ -1,6 +1,6 @@
 param ([string]$build_number, [string]$tag)
 
-$meta_version_numeric = "99.0"
+$meta_version_numeric = "99.0.0"
 
 if ($tag -match '^v?(([.\d]+)[\w-]*)$') {
     $meta_version_full = $matches[1]
@@ -17,7 +17,7 @@ $meta_description = "DevExtreme data layer extension for ASP.NET"
 $meta_license_url = "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE"
 $meta_project_url = "https://github.com/DevExpress/DevExtreme.AspNet.Data"
 
-$targets = ("..\net\DevExtreme.AspNet.Data\AssemblyInfo.cs", "..\net\DevExtreme.AspNet.Data\project.json")
+$targets = ("..\net\DevExtreme.AspNet.Data\AssemblyInfo.cs", "..\net\DevExtreme.AspNet.Data\project.json", "..\package.json")
 
 $targets | %{
     $path = "$PSScriptRoot\$_"

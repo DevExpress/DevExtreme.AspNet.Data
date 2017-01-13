@@ -8,7 +8,7 @@ cache:
   - '%LOCALAPPDATA%\Microsoft\dotnet -> appveyor.yml'
   - '%LOCALAPPDATA%\NuGet -> **\packages.config'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
-  - js-test\node_modules -> js-test\package.json
+  - node_modules -> package.json
 
 install:
   - appveyor DownloadFile https://raw.githubusercontent.com/dotnet/cli/v1.0.0-preview2/scripts/obtain/dotnet-install.ps1
@@ -27,17 +27,19 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.Tests
   - dotnet build net\Sample
   - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
-  - js-test\node_modules\.bin\webpack --config js-test\test-bundle-webpack-config.js
+  - node_modules\.bin\webpack --config js-test\test-bundle-webpack-config.js
 
 test_script:
-  - js-test\node_modules\.bin\jshint js
-  - cd js-test && node_modules\.bin\karma start karma.js
-  - cd js-test && node_modules\.bin\karma start karma.js --bundled
+  - node_modules\.bin\jshint js
+  - node_modules\.bin\karma start js-test\karma.js
+  - node_modules\.bin\karma start js-test\karma.js --bundled
   - dotnet test net\DevExtreme.AspNet.Data.Tests -f netcoreapp1
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
 after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
+  - npm pack
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
+  - path: devextreme-aspnet-data-*.tgz 
