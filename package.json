@@ -25,5 +25,9 @@
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.1.1",
     "webpack": "^1.14.0"
+  },
+  "scripts": {
+    "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
+    "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled"
   }
 }
