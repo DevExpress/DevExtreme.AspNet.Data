@@ -2,10 +2,11 @@
   "name": "devextreme-aspnet-data",
   "title": "DevExtreme.AspNet.Data",
   "version": "99.0.0",
-  "description": "DevExtreme data layer extension for ASP.NET",
+  "description": "%meta_description%",
+  "homepage": "%meta_project_url%",
   "license": "MIT",
   "author": {
-    "name": "Developer Express Inc."
+    "name": "%meta_company%"
   },
   "repository": {
     "type": "git",
