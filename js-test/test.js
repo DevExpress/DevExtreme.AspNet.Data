@@ -7,7 +7,7 @@
     if(typeof define === "function" && define.amd) {
         define(function(require) {
             var $ = require("jquery");
-            require("mockjax")($, window);
+            require("jquery-mockjax")($, window);
             factory(
                 $,
                 require("devextreme/data/data_source"),
