@@ -14,7 +14,7 @@ install:
   - appveyor DownloadFile https://raw.githubusercontent.com/dotnet/cli/v1.0.0-preview2/scripts/obtain/dotnet-install.ps1
   - powershell -File dotnet-install.ps1
   - set PATH=%PATH%;%LOCALAPPDATA%\Microsoft\dotnet
-  - cd js-test && npm install
+  - npm install
 
 before_build:
   - dotnet restore -v minimal
