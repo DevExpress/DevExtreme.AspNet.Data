@@ -1,6 +1,9 @@
 # DevExtreme ASP.NET Data
 
 [![Build status](https://ci.appveyor.com/api/projects/status/6jyq7ocmvbuhvypo/branch/master?svg=true)](https://ci.appveyor.com/project/dxrobot/devextreme-aspnet-data/branch/master)
+[![NuGet](https://img.shields.io/nuget/v/DevExtreme.AspNet.Data.svg)](https://www.nuget.org/packages/DevExtreme.AspNet.Data)
+[![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg)](https://www.npmjs.com/package/devextreme-aspnet-data)
+[![Bower](https://img.shields.io/bower/v/devextreme-aspnet-data.svg)](https://libraries.io/bower/devextreme-aspnet-data)
 
 This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with their [server-side wrappers](https://js.devexpress.com/Documentation/16_2/Guide/ASP.NET_MVC_Wrappers/Prerequisites_and_Installation/).
 
