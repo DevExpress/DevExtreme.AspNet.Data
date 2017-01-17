@@ -19,24 +19,26 @@ The server-side part of the extension is the `DevExtreme.AspNet.Data.dll` assemb
 
 The client-side part is the `dx.aspnet.data.js` script. You can install it in one of the following ways.
 
-* Using [npm](https://www.npmjs.com/package/devextreme-aspnet-data).     
-Run the following command in the command line.
+* Using [npm](https://www.npmjs.com/package/devextreme-aspnet-data). 
 
-    npm install devextreme-aspnet-data
+    Run the following command in the command line.
 
-* Using [bower](https://libraries.io/bower/devextreme-aspnet-data).
-Run the following command in the command line...
+        npm install devextreme-aspnet-data
 
-    bower install devextreme-aspnet-data
+* Using [bower](https://libraries.io/bower/devextreme-aspnet-data).     
 
-... or add `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
+    Run the following command in the command line...
 
-    ```
-    "dependencies": {
-        ...
-        "devextreme-aspnet-data": "^1"
-    }
-    ```
+        bower install devextreme-aspnet-data
+
+    ... or add `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
+
+        ```
+        "dependencies": {
+            ...
+            "devextreme-aspnet-data": "^1"
+        }
+        ```
 
 After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme scripts on your page.
 
