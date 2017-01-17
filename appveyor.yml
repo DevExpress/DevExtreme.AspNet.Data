@@ -5,15 +5,14 @@ environment:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 cache:
-  - '%LOCALAPPDATA%\Microsoft\dotnet -> appveyor.yml'
+  - 'netcoredist.exe -> appveyor.yml'
   - '%LOCALAPPDATA%\NuGet -> **\packages.config'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - node_modules -> package.json
 
 install:
-  - appveyor DownloadFile https://raw.githubusercontent.com/dotnet/cli/v1.0.0-preview2/scripts/obtain/dotnet-install.ps1
-  - powershell -File dotnet-install.ps1
-  - set PATH=%PATH%;%LOCALAPPDATA%\Microsoft\dotnet
+  - if not exist netcoredist.exe appveyor DownloadFile https://go.microsoft.com/fwlink/?LinkID=836281 -FileName netcoredist.exe
+  - netcoredist /install /quiet
   - npm install
 
 before_build:
