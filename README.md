@@ -33,12 +33,12 @@ The client-side part is the `dx.aspnet.data.js` script. You can install it in on
 
     ... or add `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
 
-        ```
-        "dependencies": {
-            ...
-            "devextreme-aspnet-data": "^1"
-        }
-        ```
+    ```
+    "dependencies": {
+        ...
+        "devextreme-aspnet-data": "^1"
+    }
+    ```
 
 After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme scripts on your page.
 
