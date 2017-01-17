@@ -9,17 +9,29 @@ This extension enables [DevExtreme client-side widgets](https://js.devexpress.co
 
 ## Installation
 
+### Server-Side
+
 The server-side part of the extension is the `DevExtreme.AspNet.Data.dll` assembly. Install it [from NuGet](http://www.nuget.org/packages/DevExtreme.AspNet.Data/) with the following command.
 
     Install-Package DevExtreme.AspNet.Data
 
-The client-side part is the `dx.aspnet.data.js` script. Install it [using bower](https://libraries.io/bower/devextreme-aspnet-data) in one of the following ways.
+### Client-Side
 
-* With the following command in the bower command line.
+The client-side part is the `dx.aspnet.data.js` script. You can install it in one of the following ways.
+
+* Using [npm](https://www.npmjs.com/package/devextreme-aspnet-data). 
+
+    Run the following command in the command line.
+
+        npm install devextreme-aspnet-data
+
+* Using [bower](https://libraries.io/bower/devextreme-aspnet-data).     
+
+    Run the following command in the command line...
 
         bower install devextreme-aspnet-data
 
-* By adding `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
+    ... or add `devextreme-aspnet-data` to the *bower.json* file into the `dependencies` section.
 
     ```
     "dependencies": {
@@ -28,11 +40,18 @@ The client-side part is the `dx.aspnet.data.js` script. Install it [using bower]
     }
     ```
 
-After installation, link the `dx.aspnet.data.js` script *after* the [DevExtreme scripts](https://js.devexpress.com/Documentation/16_2/Guide/Getting_Started/Installation/Bower_Package/) on your page.
+After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme scripts on your page.
 
 ```HTML
-<script src="bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
+<!-- if you have used npm -->
+<script src="/node_modules/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
+<!-- if you have used bower -->
+<script src="/bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
 ```
+
+#### See Also
+- [Install DevExtreme Using npm](https://js.devexpress.com/Documentation/Guide/Getting_Started/Installation/npm_Package/)
+- [Install DevExtreme Using Bower](https://js.devexpress.com/Documentation/Guide/Getting_Started/Installation/Bower_Package/)
 
 ## Custom Model Binder
 
