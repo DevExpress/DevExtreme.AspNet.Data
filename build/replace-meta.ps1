@@ -6,7 +6,10 @@ if ($tag -match '^v?(([.\d]+)[\w-]*)$') {
     $meta_version_full = $matches[1]
     $meta_version_numeric = $matches[2]
 } elseif ($build_number) {
-    $meta_version_full = "$meta_version_numeric-ci-build$build_number"
+    while ($build_number.length -lt 6) {
+        $build_number = "0$build_number"
+    }
+    $meta_version_full = "$meta_version_numeric-ci-$build_number"
 } else {
     $meta_version_full = $meta_version_numeric
 }
