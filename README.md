@@ -9,13 +9,13 @@ This extension enables [DevExtreme client-side widgets](https://js.devexpress.co
 
 ## Installation
 
-### Server-Side
+### Server Side
 
 The server-side part of the extension is the `DevExtreme.AspNet.Data.dll` assembly. Install it [from NuGet](http://www.nuget.org/packages/DevExtreme.AspNet.Data/) with the following command.
 
     Install-Package DevExtreme.AspNet.Data
 
-### Client-Side
+### Client Side
 
 The client-side part is the `dx.aspnet.data.js` script. You can install it in one of the following ways.
 
