@@ -6,6 +6,7 @@ net/packages/
 net/DevExtreme.AspNet.Data/release.snk
 /js-test/coverage/
 /js-test/test-bundle.js
+/js-test/check-ts-compilation.js
 **/wwwroot/lib/
 project.lock.json
 *.suo
