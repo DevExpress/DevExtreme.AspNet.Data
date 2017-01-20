@@ -15,10 +15,10 @@
   "main": "js/dx.aspnet.data.js",
   "types": "js/dx.aspnet.data.d.ts",
   "dependencies": {
-    "@types/jquery": "^2.0.39",
     "devextreme": ">=16.1.0"
   },
   "devDependencies": {
+    "@types/jquery": "^2.0.39",
     "jquery": "^2.2.4",
     "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
