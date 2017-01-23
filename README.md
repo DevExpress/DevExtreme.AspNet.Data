@@ -74,10 +74,13 @@ To reach the controller from the client side, use the `DevExpress.data.AspNet.cr
 - `key` - the key property;       
 - `loadUrl` - the URL to the GET method;      
 - `loadParams` - parameters that should be passed to the GET method (if there are any);       
-- `updateUrl` - the URL to the POST method;       
-- `insertUrl` - the URL to the PUT method;        
+- `updateUrl` - the URL to the PUT method;       
+- `insertUrl` - the URL to the POST method;        
 - `deleteUrl` - the URL to the DELETE method;     
-- `onBeforeSend` - a function that customizes the query before it is sent.
+- `onBeforeSend` - a function that customizes the query before it is sent;
+- `updateMethod` - defines the HTTP verb for the `updateUrl` method; "PUT" by default;
+- `insertMethod` - defines the HTTP verb for the `insertUrl` method; "POST" by default;
+- `deleteMethod` - defines the HTTP verb for the `deleteUrl` method; "DELETE" by default.
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
