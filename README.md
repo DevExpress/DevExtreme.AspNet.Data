@@ -73,18 +73,18 @@ To reach the controller from the client side, use the `DevExpress.data.AspNet.cr
 
 - `key` - the key property;       
 - `loadUrl` - the URL used to load data;      
-- `loadParams` - parameters that should be passed to `loadUrl` (if there are any);       
+- `loadParams` - additional parameters that should be passed to `loadUrl`;       
 - `updateUrl` - the URL used to update data;       
 - `insertUrl` - the URL used to insert data;        
 - `deleteUrl` - the URL used to delete data;     
+- `updateMethod` - the HTTP method for update requests; "PUT" by default;
+- `insertMethod` - the HTTP method for insert requests; "POST" by default;
+- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default;
 - `onBeforeSend` - a function that customizes the request before it is sent; accepts the following parameters:
     - `operation`: string       
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
     - `jQueryAjaxSettings`: object      
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
-- `updateMethod` - the HTTP method for update requests; "PUT" by default;
-- `insertMethod` - the HTTP method for insert requests; "POST" by default;
-- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default.
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
