@@ -72,11 +72,11 @@ The server needs a custom model binder that will receive data loading options fr
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
 - `key` - the key property;       
-- `loadUrl` - the URL of the resource that processes load requests;      
+- `loadUrl` - the URL used to load data;      
 - `loadParams` - parameters that should be passed to `loadUrl` (if there are any);       
-- `updateUrl` - the URL of the resource that processes update requests;       
-- `insertUrl` - the URL of the resource that processes insert requests;        
-- `deleteUrl` - the URL of the resource that processes delete requests;     
+- `updateUrl` - the URL used to update data;       
+- `insertUrl` - the URL used to insert data;        
+- `deleteUrl` - the URL used to delete data;     
 - `onBeforeSend` - a function that customizes the request before it is sent; accepts the following parameters:
     - `operation`: string       
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
