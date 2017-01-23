@@ -72,19 +72,19 @@ The server needs a custom model binder that will receive data loading options fr
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
 - `key` - the key property;       
-- `loadUrl` - the URL to the method that processes load requests;      
-- `loadParams` - parameters that should be passed to the `loadUrl` method (if there are any);       
-- `updateUrl` - the URL to the method that processes update requests;       
-- `insertUrl` - the URL to the method that processes insert requests;        
-- `deleteUrl` - the URL to the method that processes delete requests;     
+- `loadUrl` - the URL of the resource that processes load requests;      
+- `loadParams` - parameters that should be passed to `loadUrl` (if there are any);       
+- `updateUrl` - the URL of the resource that processes update requests;       
+- `insertUrl` - the URL of the resource that processes insert requests;        
+- `deleteUrl` - the URL of the resource that processes delete requests;     
 - `onBeforeSend` - a function that customizes the request before it is sent; accepts the following parameters:
     - `operation`: string       
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
     - `jQueryAjaxSettings`: object      
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
-- `updateMethod` - defines the HTTP verb for the `updateUrl` method; "PUT" by default;
-- `insertMethod` - defines the HTTP verb for the `insertUrl` method; "POST" by default;
-- `deleteMethod` - defines the HTTP verb for the `deleteUrl` method; "DELETE" by default.
+- `updateMethod` - the HTTP method for update requests; "PUT" by default;
+- `insertMethod` - the HTTP method for insert requests; "POST" by default;
+- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default.
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
