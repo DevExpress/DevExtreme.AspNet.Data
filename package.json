@@ -13,10 +13,12 @@
     "url": "https://github.com/DevExpress/DevExtreme.AspNet.Data.git"
   },
   "main": "js/dx.aspnet.data.js",
+  "types": "js/dx.aspnet.data.d.ts",
   "dependencies": {
     "devextreme": ">=16.1.0"
   },
   "devDependencies": {
+    "@types/jquery": "^2.0.39",
     "jquery": "^2.2.4",
     "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
@@ -25,10 +27,11 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.1.1",
+    "typescript": "^2.0.10",
     "webpack": "^1.14.0"
   },
   "scripts": {
     "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
-    "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled"
+    "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled && tsc js-test/check-ts-compilation"
   }
 }
