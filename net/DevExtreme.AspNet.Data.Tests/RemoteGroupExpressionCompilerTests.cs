@@ -153,6 +153,27 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("I0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
         }
 
+        [Fact]
+        public void Bug100() {
+            Bug100<Tuple<int, int, int>>("Item1", "Item2", "Item3");
+            Bug100<Tuple<int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5");
+            Bug100<Tuple<int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6");
+            Bug100<Tuple<int, int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6", "Item7");
+        }
+
+        void Bug100<T>(params string[] memberNames) {
+            var compiler = new RemoteGroupExpressionCompiler<T>(
+                memberNames.Select(i => new GroupingInfo { Selector = i }).ToArray(),
+                null,
+                null
+            );
+
+            Assert.Contains(
+                "(" + String.Join(", ", memberNames.Select((i, index) => $"I{index} = obj.{i}")) + ")",
+                compiler.Compile(CreateTargetParam<T>()).ToString()
+            );
+        }
+
     }
 
 }

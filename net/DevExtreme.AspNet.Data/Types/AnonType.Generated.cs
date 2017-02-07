@@ -62,6 +62,10 @@ namespace DevExtreme.AspNet.Data.Types {
         public AnonType() {
         }
 
+        public AnonType(T0 i0, T1 i1, T2 i2)
+            : this(i0, i1, i2, default(T3)) {
+        }
+
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3) {
             I0 = i0;
             I1 = i1;
@@ -96,6 +100,18 @@ namespace DevExtreme.AspNet.Data.Types {
         public T7 I7;
 
         public AnonType() {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4)
+            : this(i0, i1, i2, i3, i4, default(T5)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5)
+            : this(i0, i1, i2, i3, i4, i5, default(T6)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6)
+            : this(i0, i1, i2, i3, i4, i5, i6, default(T7)) {
         }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7) {
@@ -148,6 +164,34 @@ namespace DevExtreme.AspNet.Data.Types {
         public T15 I15;
 
         public AnonType() {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, default(T9)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, default(T10)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, default(T11)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, default(T12)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, default(T13)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, default(T14)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, default(T15)) {
         }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15) {
@@ -232,6 +276,66 @@ namespace DevExtreme.AspNet.Data.Types {
         public T31 I31;
 
         public AnonType() {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, default(T17)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, default(T18)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, default(T19)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, default(T20)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, default(T21)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, default(T22)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, default(T23)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, default(T24)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, default(T25)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, default(T26)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, default(T27)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26, T27 i27)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, default(T28)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26, T27 i27, T28 i28)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, default(T29)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26, T27 i27, T28 i28, T29 i29)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, default(T30)) {
+        }
+
+        public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26, T27 i27, T28 i28, T29 i29, T30 i30)
+            : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, default(T31)) {
         }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16, T17 i17, T18 i18, T19 i19, T20 i20, T21 i21, T22 i22, T23 i23, T24 i24, T25 i25, T26 i26, T27 i27, T28 i28, T29 i29, T30 i30, T31 i31) {

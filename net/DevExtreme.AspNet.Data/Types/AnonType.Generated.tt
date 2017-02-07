@@ -5,6 +5,7 @@
 using System;
 
 namespace DevExtreme.AspNet.Data.Types {
+<# var prevSize = 0; #>
 <# foreach(var size in SIZES) { #>
 
     class AnonType<#= FormatTypeArgs(size) #> : AnonType {
@@ -15,6 +16,12 @@ namespace DevExtreme.AspNet.Data.Types {
         public AnonType() {
         }
 
+<# for(var i = 1 + prevSize; i < size; i++) {#>
+        public AnonType(<#= FormatCtorArgs(i) #>)
+            : this(<#= FormatList(i, "i{0}") #>, default(T<#= i #>)) {
+        }
+
+<# } #>
         public AnonType(<#= FormatCtorArgs(size) #>) {
 <# for(var i = 0; i < size; i++)  { #>
             I<#= i #> = i<#= i #>;
@@ -35,6 +42,7 @@ namespace DevExtreme.AspNet.Data.Types {
         }
 
     }
+<# prevSize = size; #>
 <# } #>
 
     partial class AnonType {
