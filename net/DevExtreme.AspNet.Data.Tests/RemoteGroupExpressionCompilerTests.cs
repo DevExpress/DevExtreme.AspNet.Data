@@ -155,13 +155,13 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Bug100() {
-            Bug100<Tuple<int, int, int>>("Item1", "Item2", "Item3");
-            Bug100<Tuple<int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5");
-            Bug100<Tuple<int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6");
-            Bug100<Tuple<int, int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6", "Item7");
+            Bug100Core<Tuple<int, int, int>>("Item1", "Item2", "Item3");
+            Bug100Core<Tuple<int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5");
+            Bug100Core<Tuple<int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6");
+            Bug100Core<Tuple<int, int, int, int, int, int, int>>("Item1", "Item2", "Item3", "Item4", "Item5", "Item6", "Item7");
         }
 
-        void Bug100<T>(params string[] memberNames) {
+        void Bug100Core<T>(params string[] memberNames) {
             var compiler = new RemoteGroupExpressionCompiler<T>(
                 memberNames.Select(i => new GroupingInfo { Selector = i }).ToArray(),
                 null,
