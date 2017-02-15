@@ -48,7 +48,7 @@ namespace DevExtreme.AspNet.Data {
 
             Expression body = param;
 
-            if(_loadOptions.Filter != null)
+            if(_loadOptions.HasFilter)
                 body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
 
             if(!isCountQuery) {

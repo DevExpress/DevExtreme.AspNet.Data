@@ -28,6 +28,10 @@ namespace DevExtreme.AspNet.Data {
         internal bool UseQueryableOnce;
 #endif
 
+        internal bool HasFilter {
+            get { return Filter != null && Filter.Count > 0; }
+        }
+
         internal bool HasGroups {
             get { return Group != null && Group.Length > 0; }
         }
