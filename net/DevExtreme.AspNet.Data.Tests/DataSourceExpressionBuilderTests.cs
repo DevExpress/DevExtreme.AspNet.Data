@@ -36,6 +36,17 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void Build_FilterAsEmptyList() {
+            // To mitigate cases like https://devexpress.com/issue=T483154
+
+            var builder = CreateBuilder<int>(new SampleLoadOptions {
+                Filter = new object[0]
+            });
+
+            Assert.DoesNotContain(".Where", builder.BuildLoadExpr().ToString());
+        }
+
+        [Fact]
         public void Build_CountQuery() {
             var builder = CreateBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
