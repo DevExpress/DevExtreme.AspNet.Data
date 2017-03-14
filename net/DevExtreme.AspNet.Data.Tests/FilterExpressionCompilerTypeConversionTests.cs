@@ -174,6 +174,22 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void DatesFromIsoFormatWithUtc()
+        {
+            var testDate = new DateTime(2000, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+            var testDateString = "2000-01-02T03:04:05Z";
+
+            var obj = new Structs
+            {
+                dateTime = testDate,
+                dateTimeOffset = (DateTimeOffset)testDate
+            };
+
+            AssertEvaluation(obj, "dateTime", testDateString);
+            AssertEvaluation(obj, "dateTimeOffset", testDateString);
+        }
+
+        [Fact]
         public void FilterByEnumField() {
             var structObj = new Structs();
             AssertEvaluation(structObj, "enum", "=", 3);
