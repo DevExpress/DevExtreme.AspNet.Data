@@ -37,6 +37,9 @@ namespace DevExtreme.AspNet.Data {
             if(IsIntegralType(type) && value is String)
                 value = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
 
+            if(type == typeof(DateTime) && value is String)
+                return DateTime.Parse((string)value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
                 return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
