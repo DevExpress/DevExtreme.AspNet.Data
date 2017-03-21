@@ -5,18 +5,20 @@ environment:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 cache:
-  - 'netcoredist.exe -> appveyor.yml'
+#  - 'netcoredist.exe -> appveyor.yml'
   - '%LOCALAPPDATA%\NuGet -> **\packages.config'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - node_modules -> package.json
 
 install:
-  - if not exist netcoredist.exe appveyor DownloadFile https://go.microsoft.com/fwlink/?LinkID=836281 -FileName netcoredist.exe
-  - netcoredist /install /quiet
+#  - if not exist netcoredist.exe appveyor DownloadFile https://go.microsoft.com/fwlink/?LinkID=836281 -FileName netcoredist.exe
+#  - netcoredist /install /quiet
   - npm install
 
 before_build:
-  - dotnet restore -v minimal
+  - dotnet restore -v minimal net\DevExtreme.AspNet.Data
+  - dotnet restore -v minimal net\DevExtreme.AspNet.Data.Tests
+  - dotnet restore -v minimal net\Sample
   - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)

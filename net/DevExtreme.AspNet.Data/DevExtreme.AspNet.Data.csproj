@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>99.0</Version>
+    <PackageId>DevExtreme.AspNet.Data</PackageId>
+    <Description>%meta_description%</Description>
+    <Authors>%meta_company%</Authors>
+    <Copyright>%meta_copyright%</Copyright>
+    <PackageProjectUrl>%meta_project_url%</PackageProjectUrl>
+    <PackageLicenseUrl>%meta_license_url%</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>DevExtreme.AspNet.Data</AssemblyName>
+    <AssemblyVersion>99.0</AssemblyVersion>
+    <TargetFrameworks>net40;netstandard1.0</TargetFrameworks>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.0' ">$(PackageTargetFallback);dnxcore50;portable-net45</PackageTargetFallback>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.0.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.0.10" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.0.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.0.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <None Update="Types\AnonType.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AnonType.Generated.cs</LastGenOutput>
+    </None>
+    <Compile Update="Types\AnonType.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AnonType.Generated.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+
+</Project>
