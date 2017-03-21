@@ -5,14 +5,11 @@ environment:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 cache:
-#  - 'netcoredist.exe -> appveyor.yml'
   - '%LOCALAPPDATA%\NuGet -> **\packages.config'
   - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
   - node_modules -> package.json
 
 install:
-#  - if not exist netcoredist.exe appveyor DownloadFile https://go.microsoft.com/fwlink/?LinkID=836281 -FileName netcoredist.exe
-#  - netcoredist /install /quiet
   - npm install
 
 before_build:
@@ -31,7 +28,7 @@ build_script:
 
 test_script:
   - npm test
-  - dotnet test net\DevExtreme.AspNet.Data.Tests -f netcoreapp1
+  - dotnet test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj
   - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
 
 after_test:
