@@ -21,10 +21,11 @@ before_build:
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
 
 build_script:
-  - dotnet build net\DevExtreme.AspNet.Data
-  - dotnet build net\DevExtreme.AspNet.Data.Tests
-  - dotnet build net\Sample
-  - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
+  - msbuild DevExtreme.AspNet.Data.sln /v:q
+#  - dotnet build net\DevExtreme.AspNet.Data
+#  - dotnet build net\DevExtreme.AspNet.Data.Tests
+#  - dotnet build net\Sample
+#  - msbuild net\DevExtreme.AspNet.Data.Tests.NET40\DevExtreme.AspNet.Data.Tests.NET40.sln /v:q
 
 test_script:
   - npm test
