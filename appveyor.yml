@@ -10,14 +10,12 @@ cache:
   - node_modules -> package.json
 
 install:
+  - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
   - npm install
 
 before_build:
-  - dotnet restore -v minimal net\DevExtreme.AspNet.Data
-  - dotnet restore -v minimal net\DevExtreme.AspNet.Data.Tests
-  - dotnet restore -v minimal net\Sample
-  - nuget restore net\DevExtreme.AspNet.Data.Tests.NET40
-  - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
+  - dotnet restore net\DevExtreme.AspNet.Data.sln
+  - nuget restore net\DevExtreme.AspNet.Data.sln
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
 
 build_script:
