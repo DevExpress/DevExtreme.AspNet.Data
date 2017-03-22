@@ -20,13 +20,14 @@ $meta_description = "DevExtreme data layer extension for ASP.NET"
 $meta_license_url = "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE"
 $meta_project_url = "https://github.com/DevExpress/DevExtreme.AspNet.Data"
 
-$targets = ("..\net\DevExtreme.AspNet.Data\AssemblyInfo.cs", "..\net\DevExtreme.AspNet.Data\project.json", "..\package.json")
+$targets = ("..\net\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj", "..\package.json")
 
 $targets | %{
     $path = "$PSScriptRoot\$_"
 
     (Get-Content $path) | %{
-        $_  -replace '(AssemblyVersion.+?")[^"]+', "`${1}$meta_version_numeric" `
+        $_  -replace '(<AssemblyVersion>)[^<]+', "`${1}$meta_version_numeric" `
+            -replace '(<Version>)[^<]+', "`${1}$meta_version_full" `
             -replace '("version":.+?")[^"]+', "`${1}$meta_version_full" `
             -replace '%meta_company%', $meta_company `
             -replace '%meta_copyright%', $meta_copyright `

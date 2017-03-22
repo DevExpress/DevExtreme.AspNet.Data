@@ -38,9 +38,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExtreme.AspNet.Data">
-      <HintPath>..\DevExtreme.AspNet.Data\bin\Debug\net40\DevExtreme.AspNet.Data.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj">
+      <Project>{f91204f2-1f3a-433f-871d-5f31b769fa90}</Project>
+      <Name>DevExtreme.AspNet.Data</Name>
+    </ProjectReference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -72,7 +73,4 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>dotnet build $(ProjectDir)\..\DevExtreme.AspNet.Data\project.json --framework net40</PreBuildEvent>
-  </PropertyGroup>
 </Project>
