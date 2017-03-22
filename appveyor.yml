@@ -4,10 +4,10 @@ environment:
   RELEASE_KEY_SECRET:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
-cache:
-  - '%LOCALAPPDATA%\NuGet -> **\packages.config'
-  - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
-  - node_modules -> package.json
+#cache:
+#  - '%LOCALAPPDATA%\NuGet -> **\packages.config'
+#  - '%USERPROFILE%\.nuget\packages -> appveyor.yml, **\project.json'
+#  - node_modules -> package.json
 
 install:
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
