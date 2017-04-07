@@ -28,7 +28,7 @@ test_script:
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user 
     -target:xunit.console.clr4.exe
-    -targetargs:"net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll -noshadow -appveyor"
+    -targetargs:"net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /noshadow"
     -output:coverage_netfx.xml
 
 after_test:
