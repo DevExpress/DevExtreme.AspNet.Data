@@ -37,6 +37,9 @@ after_test:
   - npm pack
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
+on_success:
+  - codecov -f coverage_netcore.xml coverage_netfx.xml
+
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
   - path: devextreme-aspnet-data-*.tgz 
