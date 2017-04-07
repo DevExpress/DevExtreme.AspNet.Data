@@ -18,7 +18,11 @@ module.exports = function(config) {
         options.reporters.push("coverage");
         options.coverageReporter = {
             reporters: [
-                { type: "html" },
+                {
+                    type: "lcovonly",
+                    dir: "coverage",
+                    subdir: "."
+                },
                 { type: "text-summary" },
             ]
         };
