@@ -6,6 +6,8 @@ environment:
 
 install:
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
+  - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
+  - pip install -q codecov
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
   - npm install
   - dotnet restore net\DevExtreme.AspNet.Data.sln
@@ -16,12 +18,27 @@ build_script:
 
 test_script:
   - npm test
-  - dotnet test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj
-  - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
+
+  - >-
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
+    -target:dotnet.exe
+    -targetargs:"test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj"
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
+    -output:coverage_netcore.xml
+
+  - >-
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user
+    -target:xunit.console.clr4.exe
+    -targetargs:"net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /noshadow"
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
+    -output:coverage_netfx.xml
 
 after_test:
   - npm pack
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
+
+on_success:
+  - codecov -X gcov -f coverage_netcore.xml coverage_netfx.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg

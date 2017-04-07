@@ -17,6 +17,7 @@
     <TargetFrameworks>net40;netstandard1.0</TargetFrameworks>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.0' ">$(PackageTargetFallback);dnxcore50;portable-net45</PackageTargetFallback>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
