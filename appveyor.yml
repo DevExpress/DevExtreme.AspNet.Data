@@ -23,12 +23,14 @@ test_script:
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
     -target:dotnet.exe
     -targetargs:"test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj"
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
     -output:coverage_netcore.xml
 
   - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user 
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user
     -target:xunit.console.clr4.exe
     -targetargs:"net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /noshadow"
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
     -output:coverage_netfx.xml
 
 after_test:
