@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^2.0.39",
+    "codecov": "^2.1.0",
     "jquery": "^2.2.4",
     "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
