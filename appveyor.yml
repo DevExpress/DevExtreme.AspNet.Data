@@ -18,8 +18,18 @@ build_script:
 
 test_script:
   - npm test
-  - dotnet test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj
-  - xunit.console.clr4 net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll /appveyor
+
+  - >-
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
+    -target:dotnet.exe
+    -targetargs:"test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj"
+    -output:coverage_netcore.xml
+
+  - >-
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user 
+    -target:xunit.console.clr4.exe
+    -targetargs:"net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll -noshadow -appveyor"
+    -output:coverage_netfx.xml
 
 after_test:
   - npm pack
