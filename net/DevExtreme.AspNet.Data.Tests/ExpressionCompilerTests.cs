@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor_Guard_RefChain() {
             Assert.Equal(
-                "IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), null, t.Ref.Ref.Ref)",
+                "IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), null, t.Ref.Ref.Ref1)",
                 CompileAccessor(true, "Ref.Ref.Ref")
             );
         }
