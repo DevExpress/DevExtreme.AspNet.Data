@@ -52,7 +52,13 @@ namespace DevExtreme.AspNet.Data {
             } else {
                 var expressionType = TranslateBinaryOperation(clientOperation);
 
-                clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+                if(accessorExpr.Type == typeof(object)) {
+                    if(clientValue != null)
+                        accessorExpr = Expression.Convert(accessorExpr, clientValue.GetType());
+                } else {
+                    clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+                }
+
                 Expression valueExpr = Expression.Constant(clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
