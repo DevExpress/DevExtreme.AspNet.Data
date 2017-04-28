@@ -66,8 +66,7 @@ namespace DevExtreme.AspNet.Data {
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
-
-                if(clientValue != null && (accessorExpr.Type == typeof(Object) || valueExpr.Type == typeof(Object))) {
+                else if(clientValue != null && (accessorExpr.Type == typeof(Object) || valueExpr.Type == typeof(Object))) {
                     accessorExpr = Expression.Call(Expression.Constant(Comparer<Object>.Default), "Compare", Type.EmptyTypes, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
