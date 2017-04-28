@@ -52,13 +52,7 @@ namespace DevExtreme.AspNet.Data {
             } else {
                 var expressionType = TranslateBinaryOperation(clientOperation);
 
-                if(accessorExpr.Type == typeof(object)) {
-                    if(clientValue != null)
-                        accessorExpr = Expression.Convert(accessorExpr, clientValue.GetType());
-                } else {
-                    clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
-                }
-
+                clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
                 Expression valueExpr = Expression.Constant(clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
@@ -70,6 +64,11 @@ namespace DevExtreme.AspNet.Data {
 
                     var compareMethod = typeof(String).GetMethod("Compare", new[] { typeof(String), typeof(String) });
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
+                    valueExpr = Expression.Constant(0);
+                }
+
+                if(clientValue != null && (accessorExpr.Type == typeof(Object) || valueExpr.Type == typeof(Object))) {
+                    accessorExpr = Expression.Call(Expression.Constant(Comparer<Object>.Default), "Compare", Type.EmptyTypes, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
 

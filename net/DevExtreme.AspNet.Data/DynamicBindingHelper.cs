@@ -11,15 +11,17 @@ using DynamicBinder = Microsoft.CSharp.RuntimeBinder.Binder;
 namespace DevExtreme.AspNet.Data {
 
     static class DynamicBindingHelper {
+        static IEnumerable<CSharpArgumentInfo> EMPTY_ARGUMENT_INFO;
 
         public static bool ShouldUseDynamicBinding(Type type) {
             return type == typeof(object) || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type);
         }
 
         public static Expression CompileGetMember(Expression target, string clientExpr) {
-            var binder = DynamicBinder.GetMember(CSharpBinderFlags.None, clientExpr, typeof(DynamicBindingHelper), new[] {
-                CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)
-            });
+            if(EMPTY_ARGUMENT_INFO == null)
+                EMPTY_ARGUMENT_INFO = new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) };
+
+            var binder = DynamicBinder.GetMember(CSharpBinderFlags.None, clientExpr, typeof(DynamicBindingHelper), EMPTY_ARGUMENT_INFO);
             return DynamicExpression.Dynamic(binder, typeof(object), target);
         }
 
