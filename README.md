@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
 [![Bower](https://img.shields.io/bower/v/devextreme-aspnet-data.svg?maxAge=43200)](https://libraries.io/bower/devextreme-aspnet-data)
 
-This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with their [server-side wrappers](https://js.devexpress.com/Documentation/16_2/Guide/ASP.NET_MVC_Wrappers/Prerequisites_and_Installation/).
+This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with [ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/).
 
 ## Installation
 
@@ -61,7 +61,7 @@ The server needs a custom model binder that will receive data loading options fr
 - [Web API](https://github.com/DevExpress/devextreme-examples/blob/16_2/datagrid-webapi/datagrid-webapi/DataSourceLoadOptions.cs)
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/DataSourceLoadOptions.cs)
 
-**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Wrappers](https://js.devexpress.com/Documentation/16_2/Guide/ASP.NET_MVC_Wrappers/Prerequisites_and_Installation/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Wrappers library.
+**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Controls library.
 
 ## Controller Example
 
@@ -89,7 +89,7 @@ To reach the controller from the client side, use the `DevExpress.data.AspNet.cr
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
-DevExtreme ASP.NET MVC Wrappers call the `DevExpress.data.AspNet.createStore` method internally. To configure the parameters, use the lambda expression of the `DataSource()` method.
+DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` method internally. To configure the parameters, use the lambda expression of the `DataSource()` method.
 
 ```Razor
 @(Html.DevExtreme().DataGrid()
@@ -110,5 +110,5 @@ DevExtreme ASP.NET MVC Wrappers call the `DevExpress.data.AspNet.createStore` me
 - [DataGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/16_2/datagrid-webapi)
 - [PivotGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/16_2/pivotgrid-webapi)
 - [KB T334360 - How to implement a data service that supports remote operations for dxDataGrid](https://www.devexpress.com/Support/Center/Example/Details/T334360)
-- [DataGrid - Use CustomStore](https://js.devexpress.com/Documentation/16_2/Guide/Widgets/DataGrid/Use_CustomStore/)
-- [PivotGrid - Use CustomStore](https://js.devexpress.com/Documentation/16_2/Guide/Widgets/PivotGrid/Use_CustomStore/)
+- [DataGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/DataGrid/Use_CustomStore/)
+- [PivotGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/PivotGrid/Use_CustomStore/)
