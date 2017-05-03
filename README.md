@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
 [![Bower](https://img.shields.io/bower/v/devextreme-aspnet-data.svg?maxAge=43200)](https://libraries.io/bower/devextreme-aspnet-data)
 
-This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with [ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/Prerequisites_and_Installation/).
+This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with [ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/).
 
 ## Installation
 
@@ -61,7 +61,7 @@ The server needs a custom model binder that will receive data loading options fr
 - [Web API](https://github.com/DevExpress/devextreme-examples/blob/16_2/datagrid-webapi/datagrid-webapi/DataSourceLoadOptions.cs)
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/DataSourceLoadOptions.cs)
 
-**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/Prerequisites_and_Installation/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Controls library.
+**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Controls library.
 
 ## Controller Example
 
