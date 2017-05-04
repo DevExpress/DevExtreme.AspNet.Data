@@ -145,7 +145,6 @@ namespace DevExtreme.AspNet.Data.Tests {
                 TotalSummary = new[] { new SummaryInfo { Selector = P1, SummaryType = "sum" } }
             });
 
-
             var resultData = result.data.Cast<JObject>().ToArray();
             Assert.Equal(1, resultData[0][P1]);
             Assert.Equal(3, resultData[1][P1]);
