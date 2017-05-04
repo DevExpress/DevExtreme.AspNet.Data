@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -74,7 +76,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     CreateExpando(null)
                 },
                 new SampleLoadOptions {
-                    Filter = new object[] { P1, Newtonsoft.Json.Linq.JValue.CreateNull() }
+                    Filter = new object[] { P1, JValue.CreateNull() }
                 }
             ));
 
@@ -127,6 +129,28 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(2m, expandoResult[0].summary[0]);
             Assert.Equal(4m, expandoResult[1].summary[0]);
+        }
+
+        [Fact]
+        public void JArray() {
+            var sourceData = JsonConvert.DeserializeObject<JArray>(@"[
+                { ""p1"": 2 },
+                { ""p1"": 3 },
+                { ""p1"": 1 },
+            ]");
+
+            var result = (DataSourceLoadResult)DataSourceLoader.Load(sourceData, new SampleLoadOptions {
+                Filter = new object[] { P1, "<>", 2 },
+                Sort = new[] { new SortingInfo { Selector = P1 } },
+                TotalSummary = new[] { new SummaryInfo { Selector = P1, SummaryType = "sum" } }
+            });
+
+
+            var resultData = result.data.Cast<JObject>().ToArray();
+            Assert.Equal(1, resultData[0][P1]);
+            Assert.Equal(3, resultData[1][P1]);
+
+            Assert.Equal(4m, result.summary[0]);
         }
 
     }

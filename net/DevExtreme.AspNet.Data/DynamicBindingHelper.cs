@@ -22,7 +22,11 @@ namespace DevExtreme.AspNet.Data {
                 EMPTY_ARGUMENT_INFO = new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) };
 
             var binder = DynamicBinder.GetMember(CSharpBinderFlags.None, clientExpr, typeof(DynamicBindingHelper), EMPTY_ARGUMENT_INFO);
-            return DynamicExpression.Dynamic(binder, typeof(object), target);
+
+            return Expression.Call(
+                typeof(Utils).GetMethod(nameof(Utils.UnwrapNewtonsoftValue)),
+                DynamicExpression.Dynamic(binder, typeof(object), target)
+            );
         }
 
     }

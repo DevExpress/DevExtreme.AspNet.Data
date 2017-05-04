@@ -95,7 +95,7 @@ namespace DevExtreme.AspNet.Data {
             return Comparer<object>.Default.Compare(selectorResult, clientValue);
         }
 
-        static object UnwrapNewtonsoftValue(object value) {
+        public static object UnwrapNewtonsoftValue(object value) {
             var jValue = value as JValue;
             if(jValue != null)
                 return jValue.Value;
