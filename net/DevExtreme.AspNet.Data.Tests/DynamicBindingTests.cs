@@ -53,18 +53,32 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var data = new[] {
-                CreateExpando(1),
-                CreateExpando(2)
+                CreateExpando(1m),
+                CreateExpando(2d)
             };
 
             var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions));
             var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions));
 
             Assert.Equal(1, objectResult.Length);
-            Assert.Equal(2, objectResult[0][P1]);
+            Assert.Equal(2d, objectResult[0][P1]);
 
             Assert.Equal(1, expandoResult.Length);
-            Assert.Equal(2, expandoResult[0][P1]);
+            Assert.Equal(2d, expandoResult[0][P1]);
+        }
+
+        [Fact]
+        public void Filter_JValueNull() {
+            var result = ToDictArray(DataSourceLoader.Load(
+                new[] {
+                    CreateExpando(null)
+                },
+                new SampleLoadOptions {
+                    Filter = new object[] { P1, Newtonsoft.Json.Linq.JValue.CreateNull() }
+                }
+            ));
+
+            Assert.Equal(1, result.Length);
         }
 
         [Fact]

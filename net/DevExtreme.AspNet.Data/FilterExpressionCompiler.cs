@@ -50,9 +50,12 @@ namespace DevExtreme.AspNet.Data {
                 return CompileStringFunction(accessorExpr, clientOperation, Convert.ToString(clientValue));
 
             } else {
+                var useDynamicBinding = accessorExpr.Type == typeof(Object);
                 var expressionType = TranslateBinaryOperation(clientOperation);
 
-                clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+                if(!useDynamicBinding)
+                    clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+
                 Expression valueExpr = Expression.Constant(clientValue);
 
                 if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
@@ -66,8 +69,8 @@ namespace DevExtreme.AspNet.Data {
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
-                else if(clientValue != null && (accessorExpr.Type == typeof(Object) || valueExpr.Type == typeof(Object))) {
-                    accessorExpr = Expression.Call(Expression.Constant(Comparer<Object>.Default), "Compare", Type.EmptyTypes, accessorExpr, valueExpr);
+                else if(clientValue != null && useDynamicBinding) {
+                    accessorExpr = Expression.Call(typeof(Utils).GetMethod(nameof(Utils.DynamicCompare)), accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
 

@@ -86,6 +86,15 @@ namespace DevExtreme.AspNet.Data {
                 .ToArray();
         }
 
+        public static int DynamicCompare(object selectorResult, object clientValue) {
+            if(selectorResult != null)
+                clientValue = ConvertClientValue(clientValue, selectorResult.GetType());
+            else
+                clientValue = UnwrapNewtonsoftValue(clientValue);
+
+            return Comparer<object>.Default.Compare(selectorResult, clientValue);
+        }
+
         static object UnwrapNewtonsoftValue(object value) {
             var jValue = value as JValue;
             if(jValue != null)
