@@ -84,6 +84,21 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void Filter_Null() {
+            var result = ToDictArray(DataSourceLoader.Load(
+                new[] {
+                    CreateExpando(1),
+                    CreateExpando(null)
+                },
+                new SampleLoadOptions {
+                    Filter = new object[] { P1, ">=", null }
+                }
+            ));
+
+            Assert.Equal(2, result.Length);
+        }
+
+        [Fact]
         public void TotalSummary() {
             var loadOptions = new SampleLoadOptions {
                 TotalSummary = new[] {

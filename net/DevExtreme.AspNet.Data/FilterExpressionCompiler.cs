@@ -69,7 +69,7 @@ namespace DevExtreme.AspNet.Data {
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
-                else if(clientValue != null && useDynamicBinding) {
+                else if(useDynamicBinding) {
                     accessorExpr = Expression.Call(typeof(Utils).GetMethod(nameof(Utils.DynamicCompare)), accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
