@@ -36,11 +36,11 @@ namespace DevExtreme.AspNet.Data {
                     i--;
                 }
 
-                if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type)) {
+                if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExpr);
-                } else {
+                else
                     currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);                    
-                }
+
                 progression.Add(currentTarget);
             }
 
