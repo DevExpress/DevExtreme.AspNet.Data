@@ -30,28 +30,20 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new SortingInfo { Selector = P1 }
                 }
             };
-            
-            var resultObject = ToDictArray(DataSourceLoader.Load(
-                new object[] {
-                    CreateExpando(2),
-                    CreateExpando(1)
-                }, 
-                loadOptions
-            ));
 
-            var resultExpando = ToDictArray(DataSourceLoader.Load(
-                new[] {
-                    CreateExpando(2),
-                    CreateExpando(1)
-                }, 
-                loadOptions
-            ));
+            var data = new[] {
+                CreateExpando(2),
+                CreateExpando(1)
+            };
 
-            Assert.Equal(1, resultObject[0][P1]);
-            Assert.Equal(2, resultObject[1][P1]);
+            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions));
+            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions));
 
-            Assert.Equal(1, resultExpando[0][P1]);
-            Assert.Equal(2, resultExpando[1][P1]);
+            Assert.Equal(1, objectResult[0][P1]);
+            Assert.Equal(2, objectResult[1][P1]);
+
+            Assert.Equal(1, expandoResult[0][P1]);
+            Assert.Equal(2, expandoResult[1][P1]);
         }
 
         [Fact]
@@ -60,27 +52,19 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Filter = new object[] { P1, ">", 1 }
             };
 
-            var resultObject = ToDictArray(DataSourceLoader.Load(
-                new object[] {
-                    CreateExpando(1),
-                    CreateExpando(2)
-                },
-                loadOptions
-            ));
+            var data = new[] {
+                CreateExpando(1),
+                CreateExpando(2)
+            };
 
-            var resultExpando = ToDictArray(DataSourceLoader.Load(
-                new[] {
-                    CreateExpando(1),
-                    CreateExpando(2)
-                },
-                loadOptions
-            ));
+            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions));
+            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions));
 
-            Assert.Equal(1, resultObject.Length);
-            Assert.Equal(2, resultObject[0][P1]);
+            Assert.Equal(1, objectResult.Length);
+            Assert.Equal(2, objectResult[0][P1]);
 
-            Assert.Equal(1, resultExpando.Length);
-            Assert.Equal(2, resultExpando[0][P1]);
+            Assert.Equal(1, expandoResult.Length);
+            Assert.Equal(2, expandoResult[0][P1]);
         }
 
         [Fact]
@@ -91,24 +75,44 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var resultObject = (DataSourceLoadResult)DataSourceLoader.Load(
-                new object[] {
-                    CreateExpando(1),
-                    CreateExpando(2)
-                },
-                loadOptions
-            );
+            var data = new[] {
+                CreateExpando(1),
+                CreateExpando(2)
+            };
 
-            var resultExpando = (DataSourceLoadResult)DataSourceLoader.Load(
-                new[] {
-                    CreateExpando(1),
-                    CreateExpando(2)
-                },
-                loadOptions
-            );
+            var objectResult = (DataSourceLoadResult)DataSourceLoader.Load<object>(data, loadOptions);
+            var expandoResult = (DataSourceLoadResult)DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
 
-            Assert.Equal(3m, resultObject.summary[0]);
-            Assert.Equal(3m, resultExpando.summary[0]);
+            Assert.Equal(3m, objectResult.summary[0]);
+            Assert.Equal(3m, expandoResult.summary[0]);
+        }
+
+        [Fact]
+        public void Grouping() {
+            var loadOptions = new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = P1 }
+                },
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector= P1, SummaryType = "sum" }
+                }
+            };
+
+            var data = new[] {
+                CreateExpando(1),
+                CreateExpando(2),
+                CreateExpando(1),
+                CreateExpando(2)
+            };
+
+            var objectResult = (IList<Group>)DataSourceLoader.Load<object>(data, loadOptions);
+            var expandoResult = (IList<Group>)DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
+
+            Assert.Equal(2m, objectResult[0].summary[0]);
+            Assert.Equal(4m, objectResult[1].summary[0]);
+
+            Assert.Equal(2m, expandoResult[0].summary[0]);
+            Assert.Equal(4m, expandoResult[1].summary[0]);
         }
 
     }
