@@ -200,6 +200,19 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertEvaluation(nullableObj, "enum", "=", "wednesday");
         }
 
+        [Fact]
+        public void StringFuncOnTimeSpan() {
+            // Regression test for the fix of https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/112
+
+            var obj = new {
+                Time = TimeSpan.Parse("01:23"),
+                NullableTime = new TimeSpan?(TimeSpan.Parse("01:23"))
+            };
+
+            AssertEvaluation(obj, new[] { "Time", "contains", "23" });
+            AssertEvaluation(obj, new[] { "NullableTime", "contains", "23" });
+        }
+
     }
 
 }

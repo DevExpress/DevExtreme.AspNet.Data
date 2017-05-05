@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
@@ -40,7 +41,7 @@ namespace DevExtreme.AspNet.Data {
             }
 
             if(forceToString && currentTarget.Type != typeof(String))
-                progression.Add(Expression.Call(currentTarget, "ToString", Type.EmptyTypes));            
+                progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));            
             
             return CompileNullGuard(progression);
         }
