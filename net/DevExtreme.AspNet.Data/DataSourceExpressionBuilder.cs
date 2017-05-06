@@ -49,7 +49,7 @@ namespace DevExtreme.AspNet.Data {
             Expression body = param;
 
             if(_loadOptions.HasFilter)
-                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
+                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter)));
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
