@@ -1,5 +1,4 @@
-﻿using DevExtreme.AspNet.Data.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +10,11 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     class FilterExpressionCompiler<T> : ExpressionCompiler {
+        const string
+            CONTAINS = "contains",
+            NOT_CONTAINS = "notcontains",
+            STARTS_WITH = "startswith",
+            ENDS_WITH = "endswith";
 
         public FilterExpressionCompiler(bool guardNulls)
             : base(guardNulls) {
@@ -42,7 +46,7 @@ namespace DevExtreme.AspNet.Data {
             var clientAccessor = Convert.ToString(criteriaJson[0]);
             var clientOperation = hasExplicitOperation ? Convert.ToString(criteriaJson[1]).ToLower() : "=";
             var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
-            var isStringOperation = clientOperation == "contains" || clientOperation == "notcontains" || clientOperation == "startswith" || clientOperation == "endswith";
+            var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, isStringOperation);
 
@@ -62,7 +66,7 @@ namespace DevExtreme.AspNet.Data {
                     if(clientValue == null)
                         valueExpr = Expression.Constant(null, typeof(String));
 
-                    var compareMethod = typeof(String).GetMethod("Compare", new[] { typeof(String), typeof(String) });
+                    var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
@@ -82,18 +86,16 @@ namespace DevExtreme.AspNet.Data {
 
             var invert = false;
 
-            if(clientOperation == "notcontains") {
-                clientOperation = "contains";
+            if(clientOperation == NOT_CONTAINS) {
+                clientOperation = CONTAINS;
                 invert = true;
             }
 
             if(GuardNulls)
                 accessorExpr = Expression.Coalesce(accessorExpr, Expression.Constant(""));
 
-            var toLowerMethod = typeof(String).GetMethod("ToLower", Type.EmptyTypes);
-            var operationMethod = typeof(String)
-                .GetMethods(BindingFlags.Instance | BindingFlags.Public)
-                .Single(m => m.Name.Equals(clientOperation, StringComparison.OrdinalIgnoreCase) && m.GetParameters().Length == 1);
+            var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
+            var operationMethod = typeof(String).GetMethod(GetStringOperationMethodName(clientOperation), new[] { typeof(String) });
 
             Expression result = Expression.Call(
                 Expression.Call(accessorExpr, toLowerMethod),
@@ -176,6 +178,15 @@ namespace DevExtreme.AspNet.Data {
             return Convert.ToString(criteriaJson[0]) == "!";
         }
 
+        string GetStringOperationMethodName(string clientOperation) {
+            if(clientOperation == STARTS_WITH)
+                return nameof(String.StartsWith);
+
+            if(clientOperation == ENDS_WITH)
+                return nameof(String.EndsWith);
+
+            return nameof(String.Contains);
+        }
     }
 
 }
