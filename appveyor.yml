@@ -17,6 +17,7 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
 
 test_script:
+  - npm run eclint-check
   - npm test
 
   - >-
@@ -45,4 +46,4 @@ on_success:
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
-  - path: devextreme-aspnet-data-*.tgz 
+  - path: devextreme-aspnet-data-*.tgz

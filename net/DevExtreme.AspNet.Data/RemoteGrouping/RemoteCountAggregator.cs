@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
     class RemoteCountAggregator<T> : Aggregator<T> {
         int _count = 0;
 
-        public RemoteCountAggregator(IAccessor<T> accessor) 
+        public RemoteCountAggregator(IAccessor<T> accessor)
             : base(accessor) {
         }
 

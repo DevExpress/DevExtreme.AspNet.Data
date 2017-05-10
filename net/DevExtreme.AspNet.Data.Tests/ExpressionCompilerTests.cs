@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class SampleCompiler : ExpressionCompiler {
 
-            public SampleCompiler(bool guardNulls) 
+            public SampleCompiler(bool guardNulls)
                 : base(guardNulls) {
             }
 
@@ -92,7 +92,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", true));
 
             Assert.Equal(
-                "IIF((t == null), null, t.String)", 
+                "IIF((t == null), null, t.String)",
                 CompileAccessor(true, "String", true)
             );
 

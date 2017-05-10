@@ -47,11 +47,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 #insert into t1 (a) values (null);
 
                 select concat(
-                    " sum=",   coalesce(sum(a),   'N'), 
-                    " min=",   coalesce(min(a),   'N'),  
-                    " max=",   coalesce(max(a),   'N'),  
-                    " avg=",   coalesce(avg(a),   'N'),  
-                    " count=", coalesce(count(*), 'N') 
+                    " sum=",   coalesce(sum(a),   'N'),
+                    " min=",   coalesce(min(a),   'N'),
+                    " max=",   coalesce(max(a),   'N'),
+                    " avg=",   coalesce(avg(a),   'N'),
+                    " count=", coalesce(count(*), 'N')
                 ) from t1;
 
             */

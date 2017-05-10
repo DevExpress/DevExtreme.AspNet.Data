@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data {
     // https://github.com/dotnet/coreclr/blob/release/1.0.0-rc1/src/mscorlib/src/System/Reflection/TypeInfo.cs
 
     static class TypeExtensions {
-        internal const BindingFlags 
+        internal const BindingFlags
             EVERYTHING = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 
         public static TypeInfo GetTypeInfo(this Type type) {

@@ -201,7 +201,7 @@
             return JSON.stringify(key);
 
         return key;
-    }    
+    }
 
     function serializeDate(date) {
 
@@ -219,7 +219,7 @@
             f = date.getMilliseconds();
 
         if(h + m + s + f > 0)
-            builder.push(" ", zpad(h, 2), ":", zpad(m, 2), ":", zpad(s, 2), ".", zpad(f, 3));        
+            builder.push(" ", zpad(h, 2), ":", zpad(m, 2), ":", zpad(s, 2), ".", zpad(f, 3));
 
         return builder.join("");
     }

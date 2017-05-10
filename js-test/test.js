@@ -303,7 +303,7 @@
                 loadUrl: "/load",
                 loadParams: { custom: 123 },
                 onBeforeSend: function(op, ajax) {
-                    assert.equal(op, "load");                    
+                    assert.equal(op, "load");
                     assert.deepEqual(ajax.data, { custom: 123 });
                     done();
                 }

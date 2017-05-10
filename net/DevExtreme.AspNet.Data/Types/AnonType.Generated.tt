@@ -1,5 +1,5 @@
 ﻿// WARNING! GENERATED CODE!
-<#@ output extension=".cs" #> 
+<#@ output extension=".cs" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
 using System;

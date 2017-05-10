@@ -26,11 +26,11 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         public int TotalSummaryStartIndex {
-            get { return KeysStartIndex + _groupCount; }            
+            get { return KeysStartIndex + _groupCount; }
         }
 
         public int GroupSummaryStartIndex{
-            get { return TotalSummaryStartIndex + _totalSummaryCount; }            
+            get { return TotalSummaryStartIndex + _totalSummaryCount; }
         }
 
     }

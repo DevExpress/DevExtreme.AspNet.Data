@@ -103,7 +103,7 @@ namespace DevExtreme.AspNet.Data {
                 result = new QueryableOnce<R>(result);
 
             if(options.ExpressionWatcher != null)
-                options.ExpressionWatcher(result.Expression);            
+                options.ExpressionWatcher(result.Expression);
 #endif
 
             return result;

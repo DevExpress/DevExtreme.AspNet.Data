@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data {
     class DefaultAccessor<T> : ExpressionCompiler, IAccessor<T> {
         IDictionary<string, Func<T, object>> _accessors;
 
-        public DefaultAccessor() 
+        public DefaultAccessor()
             : base(true) {
         }
 

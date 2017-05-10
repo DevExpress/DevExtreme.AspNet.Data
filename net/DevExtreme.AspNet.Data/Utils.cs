@@ -31,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
 
             if(value == null || type == null)
                 return value;
-            
+
             type = StripNullableType(type);
 
             if(IsIntegralType(type) && value is String)
