@@ -18,65 +18,46 @@ namespace DevExtreme.AspNet.Data {
             _guardNulls = guardNulls;
         }
 
-        public Expression<Func<IQueryable<T>, IQueryable<T>>> BuildLoadExpr(bool paginate = true) {
-            var param = CreateParam();
-            return Expression.Lambda<Func<IQueryable<T>, IQueryable<T>>>(
-                BuildCore(param, paginate: paginate),
-                param
-            );
+        public Expression BuildLoadExpr(Expression source, bool paginate = true) {
+            return BuildCore(source, paginate: paginate);
         }
 
-        public Expression<Func<IQueryable<T>, int>> BuildCountExpr() {
-            var param = CreateParam();
-            return Expression.Lambda<Func<IQueryable<T>, int>>(
-                BuildCore(param, isCountQuery: true),
-                param
-            );
+        public Expression BuildCountExpr(Expression source) {
+            return BuildCore(source, isCountQuery: true);
         }
 
-        public Expression<Func<IQueryable<T>, IQueryable<AnonType>>> BuildLoadGroupsExpr() {
-            var param = CreateParam();
-            return Expression.Lambda<Func<IQueryable<T>, IQueryable<AnonType>>>(
-                BuildCore(param, remoteGrouping: true),
-                param
-            );
+        public Expression BuildLoadGroupsExpr(Expression source) {
+            return BuildCore(source, remoteGrouping: true);
         }
 
-        Expression BuildCore(ParameterExpression param, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false) {
+        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
-            Expression body = param;
-
             if(_loadOptions.HasFilter)
-                body = Expression.Call(queryableType, "Where", genericTypeArguments, body, new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter));
+                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter)));
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
                     if(_loadOptions.HasAnySort)
-                        body = new SortExpressionCompiler<T>(_guardNulls).Compile(body, _loadOptions.GetFullSort());
+                        expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.GetFullSort());
                 } else {
-                    body = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(body);
+                    expr = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {
                     if(_loadOptions.Skip > 0)
-                        body = Expression.Call(queryableType, "Skip", genericTypeArguments, body, Expression.Constant(_loadOptions.Skip));
+                        expr = Expression.Call(queryableType, "Skip", genericTypeArguments, expr, Expression.Constant(_loadOptions.Skip));
 
                     if(_loadOptions.Take > 0)
-                        body = Expression.Call(queryableType, "Take", genericTypeArguments, body, Expression.Constant(_loadOptions.Take));
+                        expr = Expression.Call(queryableType, "Take", genericTypeArguments, expr, Expression.Constant(_loadOptions.Take));
                 }
             }
 
             if(isCountQuery)
-                body = Expression.Call(queryableType, "Count", genericTypeArguments, body);
+                expr = Expression.Call(queryableType, "Count", genericTypeArguments, expr);
 
-            return body;
-        }
-
-
-        ParameterExpression CreateParam() {
-            return Expression.Parameter(typeof(IQueryable<T>), "data");
+            return expr;
         }
     }
 

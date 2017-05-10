@@ -21,7 +21,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = builder.BuildLoadExpr();
 
-            Assert.Equal("data.Skip(111).Take(222)", expr.Body.ToString());
+            Assert.Equal("data.Skip(111).Take(222)", expr.ToString());
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = builder.BuildLoadExpr();
 
-            Assert.Equal("data.Where(obj => (obj > 123))", expr.Body.ToString());
+            Assert.Equal("data.Where(obj => (obj > 123))", expr.ToString());
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             var expr = builder.BuildLoadExpr();
-            Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.ToString());
         }
 
         [Fact]
@@ -102,11 +102,11 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
-                builder.BuildLoadExpr().Body.ToString()
+                builder.BuildLoadExpr().ToString()
             );
 
             loadOptions.Sort = null;
-            Assert.Contains("OrderBy", builder.BuildLoadExpr().Body.ToString());
+            Assert.Contains("OrderBy", builder.BuildLoadExpr().ToString());
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });
 
-            Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().ToString());
         }
 
         [Fact]
@@ -137,9 +137,6 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             }, true);
 
-            var expr = builder.BuildLoadExpr();
-            var query = expr.Compile();
-
             var data = new[] {
                 // filtered out
                 null,
@@ -151,9 +148,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 // kept
                 Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 2)),
                 Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 1))
-            };
+            }.AsQueryable();
 
-            var result = query(data.AsQueryable()).ToArray();
+            var expr = builder.BuildLoadExpr(data.Expression);
+            var result = data.Provider.CreateQuery<object>(expr).ToArray();
             Assert.Equal(2, result.Length);
         }
 
@@ -165,16 +163,16 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
 
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
 
             options.Sort = new[] {
                 new SortingInfo { Selector = "Item2" }
             };
 
-            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
 
             options.Sort[0].Selector = "Item1";
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).Body.ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
         }
 
         [Fact]
@@ -190,7 +188,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
-            var expr = builder.BuildLoadGroupsExpr().Body.ToString();
+            var expr = builder.BuildLoadGroupsExpr().ToString();
 
             Assert.True(expr.StartsWith("data.GroupBy"));
         }
@@ -205,7 +203,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
-                builder.BuildLoadExpr().Body.ToString()
+                builder.BuildLoadExpr().ToString()
             );
         }
 
@@ -221,7 +219,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1)",
-                builder.BuildLoadExpr().Body.ToString()
+                builder.BuildLoadExpr().ToString()
             );
 
             options.DefaultSort = "Item2";
@@ -229,7 +227,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item3).ThenBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
-                builder.BuildLoadExpr().Body.ToString()
+                builder.BuildLoadExpr().ToString()
             );
         }
     }
