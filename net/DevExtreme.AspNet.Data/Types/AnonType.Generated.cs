@@ -1,5 +1,4 @@
 ﻿// WARNING! GENERATED CODE!
- 
 using System;
 
 namespace DevExtreme.AspNet.Data.Types {

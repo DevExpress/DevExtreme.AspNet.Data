@@ -32,7 +32,7 @@
     "webpack": "^1.14.0"
   },
   "scripts": {
-    "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml} !net/**/{bin,obj}/** !js-test/test-bundle.js",
+    "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !js-test/test-bundle.js",
     "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
     "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled && tsc js-test/check-ts-compilation"
   }

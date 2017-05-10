@@ -41,8 +41,8 @@ namespace DevExtreme.AspNet.Data {
             }
 
             if(forceToString && currentTarget.Type != typeof(String))
-                progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));            
-            
+                progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));
+
             return CompileNullGuard(progression);
         }
 

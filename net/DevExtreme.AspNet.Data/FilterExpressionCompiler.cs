@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data {
 
     class FilterExpressionCompiler<T> : ExpressionCompiler {
 
-        public FilterExpressionCompiler(bool guardNulls) 
+        public FilterExpressionCompiler(bool guardNulls)
             : base(guardNulls) {
         }
 
@@ -28,7 +28,7 @@ namespace DevExtreme.AspNet.Data {
             try {
                 if(IsUnary(criteriaJson)) {
                     return CompileUnary(dataItemExpr, criteriaJson);
-                } 
+                }
 
                 return CompileBinary(dataItemExpr, criteriaJson);
             } catch {

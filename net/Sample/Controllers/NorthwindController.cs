@@ -97,7 +97,7 @@ namespace Sample.Controllers {
         [HttpGet("products")]
         public object Products(DataSourceLoadOptions loadOptions) {
             return DataSourceLoader.Load(
-                _nwind.Products.Include(p => p.Category), 
+                _nwind.Products.Include(p => p.Category),
                 loadOptions
             );
         }

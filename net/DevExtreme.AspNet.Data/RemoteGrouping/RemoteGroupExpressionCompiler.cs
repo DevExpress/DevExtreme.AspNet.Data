@@ -30,7 +30,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         Type _remoteGroupType;
         RemoteGroupTypeMarkup _remoteGroupTypeMarkup;
 
-        public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) 
+        public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
             : base(false) {
 
             _groupByParam = CreateItemParam(typeof(T));
@@ -140,7 +140,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             }
 
             AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, _remoteGroupTypeMarkup.TotalSummaryStartIndex);
-            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, _remoteGroupTypeMarkup.GroupSummaryStartIndex);            
+            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, _remoteGroupTypeMarkup.GroupSummaryStartIndex);
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
@@ -174,7 +174,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 );
             }
         }
-        
+
         static string GetPreAggregateMethodName(string summaryType) {
             switch(summaryType) {
                 case "min":
@@ -195,9 +195,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     ExpressionType.Subtract,
                     selector,
                     Expression.MakeBinary(
-                        ExpressionType.Modulo, 
-                        selector,                
-                        Expression.Convert(        
+                        ExpressionType.Modulo,
+                        selector,
+                        Expression.Convert(
                             Expression.Constant(Int32.Parse(intervalString)),
                             selector.Type
                         )

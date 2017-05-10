@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Get() {
             Assert.Same(
-                typeof(AnonType), 
+                typeof(AnonType),
                 AnonType.Get(new Type[0])
             );
 
@@ -29,7 +29,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var x = Record.Exception(delegate {
                 AnonType.Get(Enumerable.Repeat(typeof(int), 100).ToArray());
             });
-            Assert.Contains("Too many", x.Message);            
+            Assert.Contains("Too many", x.Message);
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data {
 
     class SortExpressionCompiler<T> : ExpressionCompiler {
 
-        public SortExpressionCompiler(bool guardNulls) 
+        public SortExpressionCompiler(bool guardNulls)
             : base(guardNulls) {
         }
 

@@ -135,7 +135,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new SummaryInfo { Selector = "this", SummaryType = "min" },
                     new SummaryInfo { Selector = "this", SummaryType = "max" }
                 }
-            });            
+            });
 
             Assert.Equal(1, result.summary[0]);
             Assert.Equal(3, result.summary[1]);
@@ -157,7 +157,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GroupSummary = new[] {
                     new SummaryInfo { Selector = "value", SummaryType = "sum" }
                 }
-            });            
+            });
 
             Assert.Equal(3M, result[0].summary[0]);
             Assert.Equal(30M, result[1].summary[0]);

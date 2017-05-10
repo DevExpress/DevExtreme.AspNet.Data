@@ -63,12 +63,12 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         void ProcessGroup(Group group) {
             if(_groupAggregatorsStack != null)
                 _groupAggregatorsStack.Push(_groupSummaryTypes.Select(CreateAggregator).ToArray());
-            
+
             foreach(var i in group.items)
                 ProcessItem(i);
 
             if(_groupAggregatorsStack != null)
-                group.summary = Finish(_groupAggregatorsStack.Pop());            
+                group.summary = Finish(_groupAggregatorsStack.Pop());
         }
 
         void Step(object obj, Aggregator<T>[] aggregators, string[] selectors) {

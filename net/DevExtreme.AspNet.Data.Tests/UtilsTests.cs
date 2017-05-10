@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
             var requiredSelectors = new[] { "R1", "R2" };
-            
+
             var ensuredSort = Utils.AddRequiredSort(initalSort, requiredSelectors).ToArray();
             Assert.False(ensuredSort[1].Desc);
             Assert.False(ensuredSort[2].Desc);

@@ -70,7 +70,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 TotalSummary = new[] {
                     new SummaryInfo { SummaryType = "count" },
                     new SummaryInfo { Selector = "B", SummaryType = "sum" },
-                    new SummaryInfo { Selector = "B", SummaryType = "avg" },                    
+                    new SummaryInfo { Selector = "B", SummaryType = "avg" },
                 }
             };
 
@@ -105,9 +105,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(new object[] { 3, 15M, 5M }, g2.summary);
             Assert.Equal(new object[] { 2, 9M, 4.5M }, g21.summary);
             Assert.Equal(new object[] { 1, 6M, 6M }, g22.summary);
-            
+
             Assert.Equal(2, g11.count);
-            Assert.Equal(1, g12.count);            
+            Assert.Equal(1, g12.count);
             Assert.Equal(2, g21.count);
             Assert.Equal(1, g22.count);
 
@@ -225,7 +225,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
-            
+
             Assert.Equal(4, result.totalCount);
 
             var groups = result.data.Cast<Group>().ToArray();
