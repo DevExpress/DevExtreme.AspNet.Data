@@ -104,7 +104,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
 
-            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, groupKeyLambda);
+            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, Expression.Quote(groupKeyLambda));
 
             for(var i = 0; i < groupKeyProps.Length; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
@@ -115,7 +115,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     Utils.GetSortMethod(i == 0, _descendingList[i]),
                     new[] { groupingType, orderAccessor.Type },
                     target,
-                    Expression.Lambda(orderAccessor, orderParam)
+                    Expression.Quote(Expression.Lambda(orderAccessor, orderParam))
                 );
             }
 
@@ -150,7 +150,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 param
             );
 
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, projectionLambda);
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, Expression.Quote(projectionLambda));
         }
 
         void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, int bindingFieldStartIndex) {
