@@ -226,8 +226,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void NoConvertWhenCompareWithNull() {
-            var expr = Compile<object>(new[] { "this", null });
-            Assert.Equal("(obj == null)", expr.Body.ToString());
+            var expr = Compile<DataItem1>(new[] { "StringProp", null });
+            Assert.Equal("(obj.StringProp == null)", expr.Body.ToString());
         }
 
         [Fact]
