@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^2.0.39",
+    "eclint": "^2.0.1",
     "jquery": "^2.2.4",
     "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
@@ -31,6 +32,7 @@
     "webpack": "^1.14.0"
   },
   "scripts": {
+    "eclint-check": "eclint check ** !.git/** !**/{node_modules,bin,obj}/** !**/*.sln !js-test/test-bundle.js",
     "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
     "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled && tsc js-test/check-ts-compilation"
   }

@@ -17,6 +17,7 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
 
 test_script:
+  - npm run eclint-check
   - npm test
 
   - >-
