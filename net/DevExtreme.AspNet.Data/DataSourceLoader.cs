@@ -97,7 +97,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         static int ExecCount<T>(DataSourceExpressionBuilder<T> builder, IQueryable<T> source) {
-            return (int)source.Provider.Execute(builder.BuildCountExpr(source.Expression));
+            return source.Provider.Execute<int>(builder.BuildCountExpr(source.Expression));
         }
 
         static IQueryable<R> AppendExpr<S, R>(IQueryable<S> source, Expression expr, DataSourceLoadOptionsBase options) {
