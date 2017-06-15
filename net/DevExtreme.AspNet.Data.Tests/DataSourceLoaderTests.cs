@@ -232,8 +232,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "f2" }
             };
 
-#warning TODO TODO!!!
-            var result = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<Types.AnonType>).ToArray();
+            var result = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).ToArray();
+            Assert.Equal(new[] { "f2" }, result[0].Keys);
+            Assert.Equal(2, result[0]["f2"]);
         }
     }
 

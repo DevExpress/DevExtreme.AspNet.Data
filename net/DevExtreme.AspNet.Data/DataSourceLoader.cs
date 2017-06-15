@@ -44,10 +44,19 @@ namespace DevExtreme.AspNet.Data {
                 if(Options.IsCountQuery)
                     return ExecCount();
 
-                DataSourceLoadResult result;
+                var result = new DataSourceLoadResult();
 
                 if(CanUseRemoteGrouping && EmptyGroups) {
-                    result = LoadGroupsOnly();
+                    var groupingResult = ExecRemoteGrouping();
+
+                    EmptyGroups(groupingResult.Groups, Options.Group.Length);
+
+                    result.data = Paginate(groupingResult.Groups, Options.Skip, Options.Take);
+                    result.summary = groupingResult.Totals;
+                    result.totalCount = groupingResult.TotalCount;
+
+                    if(Options.RequireGroupCount)
+                        result.groupCount = groupingResult.Groups.Count();
                 } else {
                     if(!Options.HasPrimaryKey)
                         Options.PrimaryKey = Utils.GetPrimaryKey(typeof(S));
@@ -55,10 +64,28 @@ namespace DevExtreme.AspNet.Data {
                     if(!Options.HasPrimaryKey && (Options.Skip > 0 || Options.Take > 0) && Compat.IsEntityFramework(Source.Provider))
                         Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
 
-                    if(Options.HasSelect)
-                        result = LoadData<AnonType>();
-                    else
-                        result = LoadData<S>();
+                    var deferPaging = Options.HasGroups || Options.HasSummary && !CanUseRemoteGrouping;
+                    var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+
+                    if(Options.HasSelect) {
+                        ContinueWithGrouping(
+                            AppendExpr<S, AnonType>(Source, loadExpr, Options)
+                                .AsEnumerable()
+                                .Select(i => AnonToDict(i, Options.Select)),
+#warning TODO
+                            null,
+                            result
+                        );
+                    } else {
+                        ContinueWithGrouping(
+                            AppendExpr<S, S>(Source, loadExpr, Options),
+                            new DefaultAccessor<S>(),
+                            result
+                        );
+                    }
+
+                    if(deferPaging)
+                        result.data = Paginate(result.data, Options.Skip, Options.Take);
 
                     if(EmptyGroups)
                         EmptyGroups(result.data, Options.Group.Length);
@@ -70,17 +97,11 @@ namespace DevExtreme.AspNet.Data {
                 return result;
             }
 
-            DataSourceLoadResult LoadData<R>() {
-                var deferPaging = Options.HasGroups || Options.HasSummary && !CanUseRemoteGrouping;
-                var dataQuery = AppendExpr<S, R>(Source, Builder.BuildLoadExpr(Source.Expression, !deferPaging), Options);
-
-                IEnumerable data = dataQuery;
-
-                var result = new DataSourceLoadResult();
-                var accessor = new DefaultAccessor<R>();
+            void ContinueWithGrouping<R>(IEnumerable<R> query, IAccessor<R> accessor, DataSourceLoadResult result) {
+                IEnumerable data = query;
 
                 if(Options.HasGroups) {
-                    data = new GroupHelper<R>(accessor).Group(dataQuery, Options.Group);
+                    data = new GroupHelper<R>(accessor).Group(query, Options.Group);
                     if(Options.RequireGroupCount) {
                         result.groupCount = (data as IList).Count;
                     }
@@ -95,32 +116,12 @@ namespace DevExtreme.AspNet.Data {
                         result.totalCount = ExecCount();
 
                     if(Options.HasSummary) {
-                        data = Buffer<S>(data);
+                        data = Buffer<R>(data);
                         result.summary = new AggregateCalculator<R>(data, accessor, Options.TotalSummary, Options.GroupSummary).Run();
                     }
                 }
 
-                if(deferPaging)
-                    data = Paginate(data, Options.Skip, Options.Take);
-
                 result.data = data;
-                return result;
-            }
-
-            DataSourceLoadResult LoadGroupsOnly() {
-                var result = new DataSourceLoadResult();
-                var groupingResult = ExecRemoteGrouping();
-
-                EmptyGroups(groupingResult.Groups, Options.Group.Length);
-
-                result.data = Paginate(groupingResult.Groups, Options.Skip, Options.Take);
-                result.summary = groupingResult.Totals;
-                result.totalCount = groupingResult.TotalCount;
-
-                if(Options.RequireGroupCount)
-                    result.groupCount = groupingResult.Groups.Count();
-
-                return result;
             }
 
             int ExecCount() {
@@ -190,6 +191,13 @@ namespace DevExtreme.AspNet.Data {
                     EmptyGroups(g.items, level - 1);
                 }
             }
+        }
+
+        static Dictionary<string, object> AnonToDict(AnonType obj, string[] names) {
+            var dict = new Dictionary<string, object>();
+            for(var i = 0; i < names.Length; i++)
+                dict[names[i]] = obj[i];
+            return dict;
         }
     }
 
