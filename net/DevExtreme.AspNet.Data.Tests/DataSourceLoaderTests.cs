@@ -232,9 +232,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "f2" }
             };
 
-            var result = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).ToArray();
-            Assert.Equal(new[] { "f2" }, result[0].Keys);
-            Assert.Equal(2, result[0]["f2"]);
+            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+
+            Assert.Equal(1, item.Keys.Count);
+            Assert.Equal(2, item["f2"]);
         }
     }
 
