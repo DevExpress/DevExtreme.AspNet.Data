@@ -55,7 +55,10 @@ namespace DevExtreme.AspNet.Data {
                     if(!Options.HasPrimaryKey && (Options.Skip > 0 || Options.Take > 0) && Compat.IsEntityFramework(Source.Provider))
                         Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
 
-                    result = LoadData<S>();
+                    if(Options.HasSelect)
+                        result = LoadData<AnonType>();
+                    else
+                        result = LoadData<S>();
 
                     if(EmptyGroups)
                         EmptyGroups(result.data, Options.Group.Length);

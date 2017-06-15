@@ -41,6 +41,8 @@ namespace DevExtreme.AspNet.Data {
                 if(!remoteGrouping) {
                     if(_loadOptions.HasAnySort)
                         expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.GetFullSort());
+                    if(_loadOptions.HasSelect)
+                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.Select);
                 } else {
                     expr = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
                 }

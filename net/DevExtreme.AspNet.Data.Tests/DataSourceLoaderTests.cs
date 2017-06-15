@@ -221,6 +221,20 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(2, result.groupCount);
         }
+
+        [Fact]
+        public void Select() {
+            var data = new[] {
+                new { f1 = 1, f2 = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f2" }
+            };
+
+#warning TODO TODO!!!
+            var result = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<Types.AnonType>).ToArray();
+        }
     }
 
 }
