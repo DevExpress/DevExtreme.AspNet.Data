@@ -274,6 +274,48 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             DataSourceLoader.Load(data, loadOptions);
         }
+
+        [Fact]
+        public void Load_SelectNested() {
+            var data = new[] {
+                new {
+                    Name = "Alex",
+                    Address = new {
+                        Zip = "89104",
+                        Street = new {
+                            Line1 = "2000 S Las Vegas Blvd",
+                            Line2 = ""
+                        },
+                        City = "Las Vegas"
+                    },
+                    Contacts = new {
+                        Phone = "phone",
+                        Email = "email"
+                    },
+                    Waste = ""
+                }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" }
+            };
+
+            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+
+            var address = (IDictionary)item["Address"];
+            var addressStreet = (IDictionary)address["Street"];
+            var contacts = (IDictionary)item["Contacts"];
+
+            Assert.Equal(3, item.Keys.Count);
+            Assert.Equal(2, address.Keys.Count);
+            Assert.Equal(1, addressStreet.Keys.Count);
+            Assert.Equal(1, contacts.Keys.Count);
+
+            Assert.Equal(data[0].Name, item["Name"]);
+            Assert.Equal(data[0].Address.City, address["City"]);
+            Assert.Equal(data[0].Address.Street.Line1, addressStreet["Line1"]);
+            Assert.Equal(data[0].Contacts.Email, contacts["Email"]);
+        }
     }
 
 }

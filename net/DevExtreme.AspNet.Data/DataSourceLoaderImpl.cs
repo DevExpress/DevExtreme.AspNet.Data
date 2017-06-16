@@ -189,8 +189,21 @@ namespace DevExtreme.AspNet.Data {
         static Dictionary<string, object> AnonToDict(AnonType obj, string[] names) {
             var dict = new Dictionary<string, object>();
             for(var i = 0; i < names.Length; i++)
-                dict[names[i]] = obj[i];
+                ShrinkSelectResult(dict, names[i].Split('.'), obj[i]);
             return dict;
+        }
+
+        static void ShrinkSelectResult(IDictionary<string, object> target, string[] path, object value, int index = 0) {
+            var key = path[index];
+
+            if(index == path.Length - 1) {
+                target[key] = value;
+            } else {
+                if(!target.ContainsKey(key))
+                    target[key] = new Dictionary<string, object>();
+
+                ShrinkSelectResult((IDictionary<string, object>)target[key], path, value, 1 + index);
+            }
         }
     }
 
