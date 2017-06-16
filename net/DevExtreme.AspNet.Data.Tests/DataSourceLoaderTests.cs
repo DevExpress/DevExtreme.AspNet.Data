@@ -223,7 +223,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void Select() {
+        public void Load_Select() {
             var data = new[] {
                 new { f1 = 1, f2 = 2 }
             };
@@ -239,7 +239,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void Select_LocalGrouping() {
+        public void Load_SelectWithGrouping() {
             var data = new[] {
                 new { g = 1, f = 1, waste = "any" }
             };
@@ -257,6 +257,22 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, item.Keys.Count);
             Assert.True(item.Contains("g"));
             Assert.True(item.Contains("f"));
+        }
+
+        [Fact]
+        public void Load_SelectWithPaging() {
+            var data = new[] {
+                new { f = 1 },
+                new { f = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f" },
+                Skip = 1,
+                Take = 1
+            };
+
+            DataSourceLoader.Load(data, loadOptions);
         }
     }
 

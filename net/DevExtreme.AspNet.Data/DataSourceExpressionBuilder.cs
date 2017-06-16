@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
@@ -41,8 +42,10 @@ namespace DevExtreme.AspNet.Data {
                 if(!remoteGrouping) {
                     if(_loadOptions.HasAnySort)
                         expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.GetFullSort());
-                    if(_loadOptions.HasSelect)
+                    if(_loadOptions.HasSelect) {
                         expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.Select);
+                        genericTypeArguments = expr.Type.GetGenericArguments();
+                    }
                 } else {
                     expr = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
                 }
