@@ -68,16 +68,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(!String.IsNullOrEmpty(groupSummary))
                 loadOptions.GroupSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(groupSummary);
 
-            if(!String.IsNullOrEmpty(select)) {
-                switch(JsonConvert.DeserializeObject(select)) {
-                    case string value:
-                        loadOptions.Select = new[] { value };
-                        break;
-                    case JArray value:
-                        loadOptions.Select = value.ToObject<string[]>();
-                        break;
-                }
-            }
+            if(!String.IsNullOrEmpty(select))
+                loadOptions.Select = JsonConvert.DeserializeObject<string[]>(select);
         }
     }
 

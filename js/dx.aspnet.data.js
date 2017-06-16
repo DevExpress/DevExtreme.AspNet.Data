@@ -96,7 +96,8 @@
 
                 var normalizeSorting = dataUtils.normalizeSortingInfo,
                     group = options.group,
-                    filter = options.filter;
+                    filter = options.filter,
+                    select = options.select;
 
                 if(options.sort)
                     result.sort = JSON.stringify(normalizeSorting(options.sort));
@@ -118,6 +119,12 @@
 
                 if(options.groupSummary)
                     result.groupSummary = JSON.stringify(options.groupSummary);
+
+                if(select) {
+                    if(!$.isArray(select))
+                        select = [ select ];
+                    result.select = JSON.stringify(select);
+                }
             }
 
             $.extend(result, loadParams);

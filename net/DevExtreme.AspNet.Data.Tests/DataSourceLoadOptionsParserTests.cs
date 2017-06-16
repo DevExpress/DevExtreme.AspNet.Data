@@ -60,19 +60,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.IsType<string>(opts.Filter[1]);
         }
 
-        [Fact]
-        public void SelectAsString() {
-            var opts = new SampleLoadOptions();
-
-            DataSourceLoadOptionsParser.Parse(opts, key => {
-                if(key == DataSourceLoadOptionsParser.KEY_SELECT)
-                    return "\"abc\"";
-                return null;
-            });
-
-            Assert.Equal("abc", opts.Select[0]);
-        }
-
     }
 
 }
