@@ -237,6 +237,27 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, item.Keys.Count);
             Assert.Equal(2, item["f2"]);
         }
+
+        [Fact]
+        public void Select_LocalGrouping() {
+            var data = new[] {
+                new { g = 1, f = 1, waste = "any" }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "g", "f" },
+                Group = new[] {
+                    new GroupingInfo { Selector = "g" }
+                }
+            };
+
+            var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions);
+            var item = (IDictionary)groups[0].items[0];
+
+            Assert.Equal(2, item.Keys.Count);
+            Assert.True(item.Contains("g"));
+            Assert.True(item.Contains("f"));
+        }
     }
 
 }

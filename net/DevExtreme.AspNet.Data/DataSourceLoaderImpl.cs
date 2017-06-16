@@ -71,8 +71,7 @@ namespace DevExtreme.AspNet.Data {
                         AppendExpr<AnonType>(Source, loadExpr, Options)
                             .AsEnumerable()
                             .Select(i => AnonToDict(i, Options.Select)),
-#warning TODO
-                        null,
+                        new DictAccessor(),
                         result
                     );
                 } else {
