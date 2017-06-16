@@ -316,6 +316,22 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(data[0].Address.Street.Line1, addressStreet["Line1"]);
             Assert.Equal(data[0].Contacts.Email, contacts["Email"]);
         }
+
+        [Fact]
+        public void Load_SelectWithConflict() {
+            var result = DataSourceLoader.Load(
+                new[] {
+                    Tuple.Create(Tuple.Create("abc"))
+                },
+                new SampleLoadOptions {
+                    Select = new[] { "Item1.Item1.Length", "Item1", "Item1.Item1.Length" }
+                }
+            );
+
+            var item = (result as IEnumerable<IDictionary>).First();
+            Assert.Equal(1, item.Keys.Count);
+            Assert.True(item.Contains("Item1"));
+        }
     }
 
 }

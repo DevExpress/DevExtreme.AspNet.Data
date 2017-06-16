@@ -202,7 +202,11 @@ namespace DevExtreme.AspNet.Data {
                 if(!target.ContainsKey(key))
                     target[key] = new Dictionary<string, object>();
 
-                ShrinkSelectResult((IDictionary<string, object>)target[key], path, value, 1 + index);
+                var child = target[key] as IDictionary<string, object>;
+                if(child == null)
+                    return;
+
+                ShrinkSelectResult(child, path, value, 1 + index);
             }
         }
     }
