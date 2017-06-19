@@ -24,7 +24,7 @@ namespace DevExtreme.AspNet.Data {
 
             Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping.HasValue ? options.RemoteGrouping.Value : !isLinqToObjects;
+            CanUseRemoteGrouping = options.RemoteGrouping ?? !isLinqToObjects;
 
             Source = source;
             Options = options;
@@ -203,10 +203,8 @@ namespace DevExtreme.AspNet.Data {
                     target[key] = new Dictionary<string, object>();
 
                 var child = target[key] as IDictionary<string, object>;
-                if(child == null)
-                    return;
-
-                ShrinkSelectResult(child, path, value, 1 + index);
+                if(child != null)
+                    ShrinkSelectResult(child, path, value, 1 + index);
             }
         }
     }
