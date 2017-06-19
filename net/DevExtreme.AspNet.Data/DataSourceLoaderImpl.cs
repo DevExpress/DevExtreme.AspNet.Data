@@ -93,15 +93,17 @@ namespace DevExtreme.AspNet.Data {
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, DataSourceLoadResult result) {
-            IEnumerable data = loadResult;
-
             if(Options.HasGroups) {
-                data = new GroupHelper<R>(accessor).Group(loadResult, Options.Group);
-                if(Options.RequireGroupCount) {
-                    result.groupCount = (data as IList).Count;
-                }
+                var groups = new GroupHelper<R>(accessor).Group(loadResult, Options.Group);
+                if(Options.RequireGroupCount)
+                    result.groupCount = groups.Count;
+                ContinueWithAggregation(groups, accessor, result);
+            } else {
+                ContinueWithAggregation(loadResult, accessor, result);
             }
+        }
 
+        void ContinueWithAggregation<R>(IEnumerable data, IAccessor<R> accessor, DataSourceLoadResult result) {
             if(CanUseRemoteGrouping && Options.HasSummary && !Options.HasGroups) {
                 var groupingResult = ExecRemoteGrouping();
                 result.totalCount = groupingResult.TotalCount;
@@ -146,11 +148,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         static IEnumerable Buffer<T>(IEnumerable data) {
-            var q = data as IQueryable<T>;
-            if(q != null)
-                return q.ToArray();
+            if(data is ICollection)
+                return data;
 
-            return data;
+            return Enumerable.ToArray((IEnumerable<T>)data);
         }
 
         static IEnumerable Paginate(IEnumerable data, int skip, int take) {

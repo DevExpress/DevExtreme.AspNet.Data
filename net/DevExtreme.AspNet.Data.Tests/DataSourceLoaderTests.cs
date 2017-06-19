@@ -332,6 +332,27 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, item.Keys.Count);
             Assert.True(item.Contains("Item1"));
         }
+
+        [Fact]
+        public void Load_SelectWithSummary_NoDoubleEnumeration() {
+            var data = new[] {
+                new { f = 1 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f" },
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "f", SummaryType = "sum" }
+                }
+            };
+
+            var x = Record.Exception(delegate {
+                var loadResult = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+                loadResult.data.Cast<object>().ToArray();
+            });
+
+            Assert.Null(x);
+        }
     }
 
 }
