@@ -21,15 +21,17 @@ namespace DevExtreme.AspNet.Data {
                 .Select(i => CompileAccessorExpression(itemExpr, i))
                 .ToArray();
 
-            var projType = AnonType.Get(accessors.Select(i => i.Type).ToArray());
+            var anonType = AnonType.Get(accessors.Select(i => i.Type).ToArray());
 
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { typeof(T), projType }, target, Expression.Quote(Expression.Lambda(
-                Expression.MemberInit(
-                    Expression.New(projType.GetConstructor(Type.EmptyTypes)),
-                    accessors.Select((expr, i) => Expression.Bind(projType.GetField(AnonType.ITEM_PREFIX + i), expr))
-                ),
-                itemExpr
-            )));
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { itemExpr.Type, anonType }, target, Expression.Quote(
+                Expression.Lambda(
+                    Expression.MemberInit(
+                        Expression.New(anonType.GetConstructor(Type.EmptyTypes)),
+                        accessors.Select((expr, i) => Expression.Bind(anonType.GetField(AnonType.ITEM_PREFIX + i), expr))
+                    ),
+                    itemExpr
+                )
+            ));
         }
     }
 
