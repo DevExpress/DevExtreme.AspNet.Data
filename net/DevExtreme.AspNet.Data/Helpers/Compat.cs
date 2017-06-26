@@ -7,13 +7,21 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Helpers {
 
     public static class Compat {
+        const string EF_CORE_PROVIDER_TYPE = "Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider";
 
         internal static bool IsEntityFramework(IQueryProvider provider) {
-            var type = provider.GetType().FullName;
+            switch(provider.GetType().FullName) {
+                case "System.Data.Entity.Internal.Linq.DbQueryProvider":
+                case "Microsoft.Data.Entity.Query.Internal.EntityQueryProvider":
+                case EF_CORE_PROVIDER_TYPE:
+                    return true;
+            }
 
-            return type == "System.Data.Entity.Internal.Linq.DbQueryProvider"
-                || type == "Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider"
-                || type == "Microsoft.Data.Entity.Query.Internal.EntityQueryProvider";
+            return false;
+        }
+
+        internal static bool IsEFCore(IQueryProvider provider) {
+            return provider.GetType().FullName == EF_CORE_PROVIDER_TYPE;
         }
 
     }
