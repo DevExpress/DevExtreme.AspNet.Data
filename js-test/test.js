@@ -225,6 +225,28 @@
             QUnit.test("grid groupInterval", testCase("group", [{ selector: "g", groupInterval: 123 }], "="));
         });
 
+        QUnit.module("select normalization", function() {
+
+            function testCase(rawValue, normalizedValue) {
+                return function(assert) {
+                    var done = assert.async();
+
+                    $.mockjax({
+                        url: "/",
+                        response: function(settings) {
+                            assert.deepEqual(JSON.parse(settings.data.select), normalizedValue);
+                            done();
+                        }
+                    });
+
+                    createStore({ loadUrl: "/" }).load({ select: rawValue });
+                };
+            }
+
+            QUnit.test("as string", testCase("abc", [ "abc" ]));
+            QUnit.test("as array", testCase([ "abc" ], [ "abc" ]));
+        });
+
     });
 
     QUnit.module("loading", function() {

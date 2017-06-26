@@ -61,9 +61,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor() {
             var o = new AnonType<int, int>(42, 84);
-            var accessor = new AnonTypeAccessor();
-            Assert.Equal(42, accessor.Read(o, "I0"));
-            Assert.Equal(84, accessor.Read(o, "I1"));
+            Assert.Equal(42, Accessors.AnonType.Read(o, "I0"));
+            Assert.Equal(84, Accessors.AnonType.Read(o, "I1"));
         }
 
     }

@@ -221,6 +221,142 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(2, result.groupCount);
         }
+
+        [Fact]
+        public void Load_Select() {
+            var data = new[] {
+                new { f1 = 1, f2 = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f2" }
+            };
+
+            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+
+            Assert.Equal(1, item.Keys.Count);
+            Assert.Equal(2, item["f2"]);
+        }
+
+        [Fact]
+        public void Load_SelectWithGrouping() {
+            var data = new[] {
+                new { g = 1, f = 1, waste = "any" }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "g", "f" },
+                Group = new[] {
+                    new GroupingInfo { Selector = "g" }
+                }
+            };
+
+            var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions);
+            var item = (IDictionary)groups[0].items[0];
+
+            Assert.Equal(2, item.Keys.Count);
+            Assert.True(item.Contains("g"));
+            Assert.True(item.Contains("f"));
+        }
+
+        [Fact]
+        public void Load_SelectWithPaging() {
+            var data = new[] {
+                new { f = 1 },
+                new { f = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f" },
+                Skip = 1,
+                Take = 1
+            };
+
+            var x = Record.Exception(delegate {
+                DataSourceLoader.Load(data, loadOptions);
+            });
+
+            Assert.Null(x);
+        }
+
+        [Fact]
+        public void Load_SelectNested() {
+            var data = new[] {
+                new {
+                    Name = "Alex",
+                    Address = new {
+                        Zip = "89104",
+                        Street = new {
+                            Line1 = "2000 S Las Vegas Blvd",
+                            Line2 = ""
+                        },
+                        City = "Las Vegas"
+                    },
+                    Contacts = new {
+                        Phone = "phone",
+                        Email = "email"
+                    },
+                    Waste = ""
+                }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" }
+            };
+
+            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+
+            var address = (IDictionary)item["Address"];
+            var addressStreet = (IDictionary)address["Street"];
+            var contacts = (IDictionary)item["Contacts"];
+
+            Assert.Equal(3, item.Keys.Count);
+            Assert.Equal(2, address.Keys.Count);
+            Assert.Equal(1, addressStreet.Keys.Count);
+            Assert.Equal(1, contacts.Keys.Count);
+
+            Assert.Equal(data[0].Name, item["Name"]);
+            Assert.Equal(data[0].Address.City, address["City"]);
+            Assert.Equal(data[0].Address.Street.Line1, addressStreet["Line1"]);
+            Assert.Equal(data[0].Contacts.Email, contacts["Email"]);
+        }
+
+        [Fact]
+        public void Load_SelectWithConflict() {
+            var result = DataSourceLoader.Load(
+                new[] {
+                    Tuple.Create(Tuple.Create("abc"))
+                },
+                new SampleLoadOptions {
+                    Select = new[] { "Item1.Item1.Length", "Item1", "Item1.Item1.Length" }
+                }
+            );
+
+            var item = (result as IEnumerable<IDictionary>).First();
+            Assert.Equal(1, item.Keys.Count);
+            Assert.True(item.Contains("Item1"));
+        }
+
+        [Fact]
+        public void Load_SelectWithSummary_NoDoubleEnumeration() {
+            var data = new[] {
+                new { f = 1 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "f" },
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "f", SummaryType = "sum" }
+                }
+            };
+
+            var x = Record.Exception(delegate {
+                var loadResult = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+                loadResult.data.Cast<object>().ToArray();
+            });
+
+            Assert.Null(x);
+        }
     }
 
 }

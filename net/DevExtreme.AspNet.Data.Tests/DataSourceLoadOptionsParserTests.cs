@@ -22,7 +22,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 { DataSourceLoadOptionsParser.KEY_GROUP, @"[ { ""selector"": ""g"" } ]" },
                 { DataSourceLoadOptionsParser.KEY_FILTER, @" [ ""foo"", ""bar"" ] " },
                 { DataSourceLoadOptionsParser.KEY_TOTAL_SUMMARY, @"[ { ""selector"": ""total"", ""summaryType"": ""min"" } ]" },
-                { DataSourceLoadOptionsParser.KEY_GROUP_SUMMARY, @"[ { ""selector"": ""group"", ""summaryType"": ""max"" } ]" }
+                { DataSourceLoadOptionsParser.KEY_GROUP_SUMMARY, @"[ { ""selector"": ""group"", ""summaryType"": ""max"" } ]" },
+                { DataSourceLoadOptionsParser.KEY_SELECT, @"[ ""f1"" ]" }
             };
 
             DataSourceLoadOptionsParser.Parse(opts, key => values[key]);
@@ -42,6 +43,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal("group", opts.GroupSummary[0].Selector);
             Assert.Equal("max", opts.GroupSummary[0].SummaryType);
+
+            Assert.Equal("f1", opts.Select[0]);
         }
 
         [Fact]

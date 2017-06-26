@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_GROUP = "group",
             KEY_FILTER = "filter",
             KEY_TOTAL_SUMMARY = "totalSummary",
-            KEY_GROUP_SUMMARY = "groupSummary";
+            KEY_GROUP_SUMMARY = "groupSummary",
+            KEY_SELECT = "select";
 
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
@@ -31,6 +33,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             var filter = valueSource(KEY_FILTER);
             var totalSummary = valueSource(KEY_TOTAL_SUMMARY);
             var groupSummary = valueSource(KEY_GROUP_SUMMARY);
+            var select = valueSource(KEY_SELECT);
 
             if(!String.IsNullOrEmpty(requireTotalCount))
                 loadOptions.RequireTotalCount = Convert.ToBoolean(requireTotalCount);
@@ -64,6 +67,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             if(!String.IsNullOrEmpty(groupSummary))
                 loadOptions.GroupSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(groupSummary);
+
+            if(!String.IsNullOrEmpty(select))
+                loadOptions.Select = JsonConvert.DeserializeObject<string[]>(select);
         }
     }
 

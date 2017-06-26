@@ -18,6 +18,7 @@ namespace DevExtreme.AspNet.Data {
         public IList Filter;
         public SummaryInfo[] TotalSummary;
         public SummaryInfo[] GroupSummary;
+        public string[] Select;
 
         public bool? RemoteGrouping;
         public string[] PrimaryKey;
@@ -54,6 +55,10 @@ namespace DevExtreme.AspNet.Data {
 
         internal bool HasAnySort {
             get { return HasGroups || HasSort || HasPrimaryKey || HasDefaultSort; }
+        }
+
+        internal bool HasSelect {
+            get { return Select != null && Select.Length > 0; }
         }
 
         internal IEnumerable<SortingInfo> GetFullSort() {
