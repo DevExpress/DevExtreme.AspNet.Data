@@ -272,7 +272,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 1
             };
 
-            DataSourceLoader.Load(data, loadOptions);
+            var x = Record.Exception(delegate {
+                DataSourceLoader.Load(data, loadOptions);
+            });
+
+            Assert.Null(x);
         }
 
         [Fact]
