@@ -265,6 +265,23 @@
             });
         });
 
+        QUnit.test("totalCount can receive DataSourceLoadResult", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: JSON.stringify({
+                    totalCount: 123,
+                    data: null
+                })
+            });
+
+            createStore({ loadUrl: "/" }).totalCount().done(function(r) {
+                assert.strictEqual(r, 123);
+                done();
+            });
+        });
+
         QUnit.test("load returns array", function(assert) {
             var done = assert.async();
 

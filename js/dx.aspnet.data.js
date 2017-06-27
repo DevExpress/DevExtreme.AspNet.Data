@@ -41,7 +41,7 @@
             deleteUrl = options.deleteUrl,
             onBeforeSend = options.onBeforeSend;
 
-        function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
+        function send(operation, requiresKey, ajaxSettings, successHandler) {
             var d = $.Deferred();
 
             if(requiresKey && !keyExpr) {
@@ -55,10 +55,7 @@
 
                 $.ajax(ajaxSettings)
                     .done(function(res) {
-                        if(customSuccessHandler)
-                            customSuccessHandler(d, res);
-                        else
-                            d.resolve(res);
+                        successHandler(d, res);
                     })
                     .fail(function(xhr, textStatus) {
                         var message = getErrorMessageFromXhr(xhr);
@@ -153,10 +150,19 @@
             },
 
             totalCount: function(loadOptions) {
-                return send("load", false, {
-                    url: loadUrl,
-                    data: loadOptionsToActionParams(loadOptions, true)
-                });
+                return send(
+                    "load",
+                    false,
+                    {
+                        url: loadUrl,
+                        data: loadOptionsToActionParams(loadOptions, true)
+                    },
+                    function(d, res) {
+                        if(typeof res === "object" && "totalCount" in res)
+                            res = res.totalCount;
+                        d.resolve(Number(res));
+                    }
+                );
             },
 
             byKey: function(key) {
