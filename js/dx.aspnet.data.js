@@ -142,7 +142,7 @@
                     },
                     function(d, res) {
                         if("data" in res)
-                            d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary, groupCount: res.groupCount });
+                            d.resolve(res.data, createLoadExtra(res));
                         else
                             d.resolve(res);
                     }
@@ -206,6 +206,14 @@
                 });
             }
 
+        };
+    }
+
+    function createLoadExtra(res) {
+        return {
+            totalCount: "totalCount" in res ? res.totalCount : -1,
+            groupCount: "groupCount" in res ? res.groupCount : -1,
+            summary: res.summary || null
         };
     }
 

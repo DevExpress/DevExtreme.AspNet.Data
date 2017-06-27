@@ -270,10 +270,7 @@
 
             $.mockjax({
                 url: "/",
-                responseText: JSON.stringify({
-                    totalCount: 123,
-                    data: null
-                })
+                responseText: '{ "totalCount": 123, "data": null }'
             });
 
             createStore({ loadUrl: "/" }).totalCount().done(function(r) {
@@ -310,6 +307,24 @@
                     totalCount: 123,
                     summary: [1, 2, 4],
                     groupCount: 11
+                });
+                done();
+            });
+        });
+
+        QUnit.test("load returns incomplete structure", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: '{ "data": [1, 2, 3] }'
+            });
+
+            createStore({ loadUrl: "/" }).load().done(function(data, extra) {
+                assert.deepEqual(extra, {
+                    totalCount: -1,
+                    groupCount: -1,
+                    summary: null
                 });
                 done();
             });
