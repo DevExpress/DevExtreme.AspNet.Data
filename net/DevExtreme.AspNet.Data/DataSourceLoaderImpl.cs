@@ -34,19 +34,10 @@ namespace DevExtreme.AspNet.Data {
             Options = options;
         }
 
-        public object Load() {
+        public DataSourceLoadResult Load() {
             if(Options.IsCountQuery)
-                return ExecCount();
+                return new DataSourceLoadResult { totalCount = ExecCount() };
 
-            var result = LoadCore();
-
-            if(result.IsDataOnly())
-                return result.data;
-
-            return result;
-        }
-
-        DataSourceLoadResult LoadCore() {
             var result = new DataSourceLoadResult();
 
             if(CanUseRemoteGrouping && ShouldEmptyGroups) {
