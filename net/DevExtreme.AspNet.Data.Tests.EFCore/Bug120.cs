@@ -25,7 +25,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
         [Fact]
         public void Scenario() {
             using(var context = new TestContext()) {
-                var result = (DataSourceLoadResult)DataSourceLoader.Load(context.Data, new SampleLoadOptions { RequireTotalCount = true });
+                var result = DataSourceLoader.Load(context.Data, new SampleLoadOptions { RequireTotalCount = true });
                 Assert.Equal(0, result.totalCount);
             }
         }

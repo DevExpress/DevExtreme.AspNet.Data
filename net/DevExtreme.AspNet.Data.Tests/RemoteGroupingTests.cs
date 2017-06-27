@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(1, loadOptions.ExpressionLog.Count);
             Assert.Contains("AnonType`2(I0 = obj.G1, I1 = obj.G2)", loadOptions.ExpressionLog[0]);
@@ -136,7 +137,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 1
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(2, loadOptions.ExpressionLog.Count);
 
@@ -156,7 +157,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void GroupSummaryAndTotalCount() {
             var exprList = new List<string>();
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(
+            var result = DataSourceLoader.Load(
                 new[] {
                     new { g = 1, v = 1 },
                     new { g = 1, v = 9 }
@@ -195,7 +196,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 1
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.False(loadOptions.ExpressionLog.Any(i => i.Contains("RemoteGroupKey")));
 
@@ -224,7 +225,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(4, result.totalCount);
 

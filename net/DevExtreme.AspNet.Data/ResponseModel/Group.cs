@@ -4,9 +4,9 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DevExtreme.AspNet.Data {
+namespace DevExtreme.AspNet.Data.ResponseModel {
 
-    class Group {
+    public class Group {
         public object key;
         public IList items;
 

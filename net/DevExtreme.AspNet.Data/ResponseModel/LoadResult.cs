@@ -6,9 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DevExtreme.AspNet.Data {
+namespace DevExtreme.AspNet.Data.ResponseModel {
 
-    public class DataSourceLoadResult {
+    public class LoadResult {
         public IEnumerable data;
 
         [DefaultValue(-1), JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

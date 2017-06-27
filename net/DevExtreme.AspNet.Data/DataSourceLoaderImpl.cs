@@ -1,6 +1,7 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.RemoteGrouping;
+using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
@@ -34,11 +35,11 @@ namespace DevExtreme.AspNet.Data {
             Options = options;
         }
 
-        public DataSourceLoadResult Load() {
+        public LoadResult Load() {
             if(Options.IsCountQuery)
-                return new DataSourceLoadResult { totalCount = ExecCount() };
+                return new LoadResult { totalCount = ExecCount() };
 
-            var result = new DataSourceLoadResult();
+            var result = new LoadResult();
 
             if(CanUseRemoteGrouping && ShouldEmptyGroups) {
                 var groupingResult = ExecRemoteGrouping();
@@ -87,7 +88,7 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, DataSourceLoadResult result) {
+        void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, LoadResult result) {
             if(Options.HasGroups) {
                 var groups = new GroupHelper<R>(accessor).Group(loadResult, Options.Group);
                 if(Options.RequireGroupCount)
@@ -98,7 +99,7 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        void ContinueWithAggregation<R>(IEnumerable data, IAccessor<R> accessor, DataSourceLoadResult result) {
+        void ContinueWithAggregation<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
             if(CanUseRemoteGrouping && Options.HasSummary && !Options.HasGroups) {
                 var groupingResult = ExecRemoteGrouping();
                 result.totalCount = groupingResult.TotalCount;

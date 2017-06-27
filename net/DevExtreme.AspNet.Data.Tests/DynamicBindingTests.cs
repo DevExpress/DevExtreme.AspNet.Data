@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -111,8 +112,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 CreateExpando(2)
             };
 
-            var objectResult = (DataSourceLoadResult)DataSourceLoader.Load<object>(data, loadOptions);
-            var expandoResult = (DataSourceLoadResult)DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
+            var objectResult = DataSourceLoader.Load<object>(data, loadOptions);
+            var expandoResult = DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
 
             Assert.Equal(3m, objectResult.summary[0]);
             Assert.Equal(3m, expandoResult.summary[0]);
@@ -154,7 +155,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 { ""p1"": 1 },
             ]");
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(sourceData, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(sourceData, new SampleLoadOptions {
                 Filter = new object[] { P1, "<>", 2 },
                 Sort = new[] { new SortingInfo { Selector = P1 } },
                 TotalSummary = new[] { new SummaryInfo { Selector = P1, SummaryType = "sum" } }

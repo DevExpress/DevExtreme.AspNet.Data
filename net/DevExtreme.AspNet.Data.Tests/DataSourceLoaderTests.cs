@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, options);
+            var result = DataSourceLoader.Load(data, options);
 
             Assert.Equal(4, result.totalCount);
             Assert.Equal(new[] { 3, 4 }, result.data.Cast<int>());
@@ -89,7 +90,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = "g1", a = 0 }  // skipped
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Filter = new[] { "a", "<>", "2" },
                 Sort = new[] { new SortingInfo { Selector = "a", Desc = true } },
                 Group = new[] { new GroupingInfo { Selector = "g" } },
@@ -131,7 +132,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Load_TotalSummary() {
             var data = new[] { 1, 2, 3 };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 TotalSummary = new[] {
                     new SummaryInfo { Selector = "this", SummaryType = "min" },
                     new SummaryInfo { Selector = "this", SummaryType = "max" }
@@ -169,7 +170,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Load_TotalSummaryAndPaging() {
             var data = new[] { 1, 3, 5 };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Skip = 1,
                 Take = 1,
                 TotalSummary = new[] {
@@ -220,7 +221,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 1
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(2, result.groupCount);
         }
@@ -354,7 +355,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var x = Record.Exception(delegate {
-                var loadResult = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+                var loadResult = DataSourceLoader.Load(data, loadOptions);
                 loadResult.data.Cast<object>().ToArray();
             });
 

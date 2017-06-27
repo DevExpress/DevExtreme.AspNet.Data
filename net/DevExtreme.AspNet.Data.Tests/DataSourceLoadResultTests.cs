@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void DontSerializeDefaultExtras() {
             Assert.Equal(
                 "{\"data\":null}",
-                JsonConvert.SerializeObject(new DataSourceLoadResult())
+                JsonConvert.SerializeObject(new LoadResult())
             );
         }
 
