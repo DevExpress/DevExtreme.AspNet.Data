@@ -150,19 +150,6 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void GroupExtraProps_NotSerializedIfEmpty() {
-            var group = new Group();
-            var json = JsonConvert.SerializeObject(group);
-
-            // these must always present
-            Assert.Contains("\"key\":", json);
-            Assert.Contains("\"items\":", json);
-
-            Assert.DoesNotContain("\"count\":", json);
-            Assert.DoesNotContain("\"summary\":", json);
-        }
-
-        [Fact]
         public void NullKey() {
             var data = new[] {
                 null,
