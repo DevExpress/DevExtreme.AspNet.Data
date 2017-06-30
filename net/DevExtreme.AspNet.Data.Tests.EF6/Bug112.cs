@@ -35,11 +35,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
                 context.SaveChanges();
 
-                var loadResult = (IEnumerable<Bug112_DataItem>)DataSourceLoader.Load(dbSet, new SampleLoadOptions {
+                var loadResult = DataSourceLoader.Load(dbSet, new SampleLoadOptions {
                     Filter = new[] { "Duration", "contains", "23" }
                 });
 
-                Assert.Equal(2, loadResult.Count());
+                var data = (IEnumerable<Bug112_DataItem>)loadResult.data;
+                Assert.Equal(2, data.Count());
             });
         }
 

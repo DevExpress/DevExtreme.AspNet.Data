@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,19 +147,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(g_year.key);
             Assert.Null(g_month.key);
             Assert.Null(g_day.key);
-        }
-
-        [Fact]
-        public void GroupExtraProps_NotSerializedIfEmpty() {
-            var group = new Group();
-            var json = JsonConvert.SerializeObject(group);
-
-            // these must always present
-            Assert.Contains("\"key\":", json);
-            Assert.Contains("\"items\":", json);
-
-            Assert.DoesNotContain("\"count\":", json);
-            Assert.DoesNotContain("\"summary\":", json);
         }
 
         [Fact]

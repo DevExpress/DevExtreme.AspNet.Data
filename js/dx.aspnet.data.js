@@ -41,7 +41,7 @@
             deleteUrl = options.deleteUrl,
             onBeforeSend = options.onBeforeSend;
 
-        function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
+        function send(operation, requiresKey, ajaxSettings, successHandler) {
             var d = $.Deferred();
 
             if(requiresKey && !keyExpr) {
@@ -55,10 +55,7 @@
 
                 $.ajax(ajaxSettings)
                     .done(function(res) {
-                        if(customSuccessHandler)
-                            customSuccessHandler(d, res);
-                        else
-                            d.resolve(res);
+                        successHandler(d, res);
                     })
                     .fail(function(xhr, textStatus) {
                         var message = getErrorMessageFromXhr(xhr);
@@ -145,7 +142,7 @@
                     },
                     function(d, res) {
                         if("data" in res)
-                            d.resolve(res.data, { totalCount: res.totalCount, summary: res.summary, groupCount: res.groupCount });
+                            d.resolve(res.data, createLoadExtra(res));
                         else
                             d.resolve(res);
                     }
@@ -153,10 +150,19 @@
             },
 
             totalCount: function(loadOptions) {
-                return send("load", false, {
-                    url: loadUrl,
-                    data: loadOptionsToActionParams(loadOptions, true)
-                });
+                return send(
+                    "load",
+                    false,
+                    {
+                        url: loadUrl,
+                        data: loadOptionsToActionParams(loadOptions, true)
+                    },
+                    function(d, res) {
+                        if(typeof res === "object" && "totalCount" in res)
+                            res = res.totalCount;
+                        d.resolve(Number(res));
+                    }
+                );
             },
 
             byKey: function(key) {
@@ -200,6 +206,14 @@
                 });
             }
 
+        };
+    }
+
+    function createLoadExtra(res) {
+        return {
+            totalCount: "totalCount" in res ? res.totalCount : -1,
+            groupCount: "groupCount" in res ? res.groupCount : -1,
+            summary: res.summary || null
         };
     }
 

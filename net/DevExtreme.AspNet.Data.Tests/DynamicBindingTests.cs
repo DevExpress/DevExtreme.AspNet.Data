@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -19,8 +20,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             return obj;
         }
 
-        static IDictionary<string, object>[] ToDictArray(object obj) {
-            return ((IEnumerable)obj)
+        static IDictionary<string, object>[] ToDictArray(IEnumerable data) {
+            return data
                 .Cast<IDictionary<string, object>>()
                 .ToArray();
         }
@@ -38,8 +39,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 CreateExpando(1)
             };
 
-            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions));
-            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions));
+            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions).data);
+            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions).data);
 
             Assert.Equal(1, objectResult[0][P1]);
             Assert.Equal(2, objectResult[1][P1]);
@@ -59,8 +60,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 CreateExpando(2d)
             };
 
-            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions));
-            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions));
+            var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions).data);
+            var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions).data);
 
             Assert.Equal(1, objectResult.Length);
             Assert.Equal(2d, objectResult[0][P1]);
@@ -78,7 +79,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new SampleLoadOptions {
                     Filter = new object[] { P1, JValue.CreateNull() }
                 }
-            ));
+            ).data);
 
             Assert.Equal(1, result.Length);
         }
@@ -93,7 +94,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new SampleLoadOptions {
                     Filter = new object[] { P1, ">=", null }
                 }
-            ));
+            ).data);
 
             Assert.Equal(2, result.Length);
         }
@@ -111,8 +112,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 CreateExpando(2)
             };
 
-            var objectResult = (DataSourceLoadResult)DataSourceLoader.Load<object>(data, loadOptions);
-            var expandoResult = (DataSourceLoadResult)DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
+            var objectResult = DataSourceLoader.Load<object>(data, loadOptions);
+            var expandoResult = DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
 
             Assert.Equal(3m, objectResult.summary[0]);
             Assert.Equal(3m, expandoResult.summary[0]);
@@ -136,8 +137,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 CreateExpando(2)
             };
 
-            var objectResult = (IList<Group>)DataSourceLoader.Load<object>(data, loadOptions);
-            var expandoResult = (IList<Group>)DataSourceLoader.Load<ExpandoObject>(data, loadOptions);
+            var objectResult = (IList<Group>)DataSourceLoader.Load<object>(data, loadOptions).data;
+            var expandoResult = (IList<Group>)DataSourceLoader.Load<ExpandoObject>(data, loadOptions).data;
 
             Assert.Equal(2m, objectResult[0].summary[0]);
             Assert.Equal(4m, objectResult[1].summary[0]);
@@ -154,7 +155,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 { ""p1"": 1 },
             ]");
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(sourceData, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(sourceData, new SampleLoadOptions {
                 Filter = new object[] { P1, "<>", 2 },
                 Sort = new[] { new SortingInfo { Selector = P1 } },
                 TotalSummary = new[] { new SummaryInfo { Selector = P1, SummaryType = "sum" } }

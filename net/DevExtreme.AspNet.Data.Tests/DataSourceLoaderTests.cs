@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.ResponseModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 IsCountQuery = true
             };
 
-            Assert.Equal(2, DataSourceLoader.Load(data, options));
+            Assert.Equal(2, DataSourceLoader.Load(data, options).totalCount);
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = false
             };
 
-            Assert.Equal(new[] { 3, 4 }, DataSourceLoader.Load(data, options) as IEnumerable<int>);
+            Assert.Equal(new[] { 3, 4 }, DataSourceLoader.Load(data, options).data.Cast<int>());
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, options);
+            var result = DataSourceLoader.Load(data, options);
 
             Assert.Equal(4, result.totalCount);
             Assert.Equal(new[] { 3, 4 }, result.data.Cast<int>());
@@ -72,7 +73,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });
 
-            var g1 = (result as IEnumerable<Group>).First();
+            var g1 = (result.data as IEnumerable<Group>).First();
             var g2 = g1.items[0] as Group;
 
             Assert.Equal(1, g1.key);
@@ -89,7 +90,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = "g1", a = 0 }  // skipped
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Filter = new[] { "a", "<>", "2" },
                 Sort = new[] { new SortingInfo { Selector = "a", Desc = true } },
                 Group = new[] { new GroupingInfo { Selector = "g" } },
@@ -114,13 +115,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g1 = 1, g2 = 2 }
             };
 
-            var groups = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g1", IsExpanded = false },
                     new GroupingInfo { Selector = "g2", IsExpanded = false }
                 }
             });
 
+            var groups = (IList<Group>)loadResult.data;
             var nestedGroup = (groups[0].items[0] as Group);
             Assert.Equal(2, nestedGroup.count);
             Assert.Null(nestedGroup.items);
@@ -130,7 +132,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Load_TotalSummary() {
             var data = new[] { 1, 2, 3 };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 TotalSummary = new[] {
                     new SummaryInfo { Selector = "this", SummaryType = "min" },
                     new SummaryInfo { Selector = "this", SummaryType = "max" }
@@ -150,7 +152,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = 2, value = 20 }
             };
 
-            var result = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g" }
                 },
@@ -159,15 +161,16 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });
 
-            Assert.Equal(3M, result[0].summary[0]);
-            Assert.Equal(30M, result[1].summary[0]);
+            var groups = (IList<Group>)loadResult.data;
+            Assert.Equal(3M, groups[0].summary[0]);
+            Assert.Equal(30M, groups[1].summary[0]);
         }
 
         [Fact]
         public void Load_TotalSummaryAndPaging() {
             var data = new[] { 1, 3, 5 };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var result = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Skip = 1,
                 Take = 1,
                 TotalSummary = new[] {
@@ -186,7 +189,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { g = 1, value = 2 }
             };
 
-            var groups = (IList<Group>)DataSourceLoader.Load(data, new SampleLoadOptions {
+            var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "g", IsExpanded = false }
                 },
@@ -195,6 +198,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             });
 
+            var groups = (IList<Group>)loadResult.data;
             Assert.Equal(3M, groups[0].summary[0]);
             Assert.Null(groups[0].items);
             Assert.Equal(2, groups[0].count);
@@ -217,7 +221,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Take = 1
             };
 
-            var result = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+            var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Equal(2, result.groupCount);
         }
@@ -232,7 +236,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "f2" }
             };
 
-            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary>().First();
 
             Assert.Equal(1, item.Keys.Count);
             Assert.Equal(2, item["f2"]);
@@ -251,7 +255,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions);
+            var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions).data;
             var item = (IDictionary)groups[0].items[0];
 
             Assert.Equal(2, item.Keys.Count);
@@ -304,7 +308,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" }
             };
 
-            var item = (DataSourceLoader.Load(data, loadOptions) as IEnumerable<IDictionary>).First();
+            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary>().First();
 
             var address = (IDictionary)item["Address"];
             var addressStreet = (IDictionary)address["Street"];
@@ -332,7 +336,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             );
 
-            var item = (result as IEnumerable<IDictionary>).First();
+            var item = result.data.Cast<IDictionary>().First();
             Assert.Equal(1, item.Keys.Count);
             Assert.True(item.Contains("Item1"));
         }
@@ -351,7 +355,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var x = Record.Exception(delegate {
-                var loadResult = (DataSourceLoadResult)DataSourceLoader.Load(data, loadOptions);
+                var loadResult = DataSourceLoader.Load(data, loadOptions);
                 loadResult.data.Cast<object>().ToArray();
             });
 
