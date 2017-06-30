@@ -26,7 +26,7 @@ namespace DevExtreme.AspNet.Data {
 
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
-        internal bool UseQueryableOnce;
+        internal bool UseEnumerableOnce;
 #endif
 
         internal bool HasFilter {
