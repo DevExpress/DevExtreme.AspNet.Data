@@ -361,6 +361,25 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Null(x);
         }
+
+        [Fact]
+        public void Issue132() {
+            var data = Enumerable.Repeat(new { }, 1);
+
+            var loadOptions = new SampleLoadOptions {
+                RequireTotalCount = true,
+                RemoteGrouping = false,
+                TotalSummary = new[] {
+                    new SummaryInfo { SummaryType = "count" },
+                    new SummaryInfo { SummaryType = "count" }
+                }
+            };
+
+            var loadResult = DataSourceLoader.Load(data, loadOptions);
+            Assert.False(loadResult.data is ICollection);
+            Assert.Equal(1, loadResult.summary[0]);
+            Assert.Equal(1, loadResult.summary[1]);
+        }
     }
 
 }

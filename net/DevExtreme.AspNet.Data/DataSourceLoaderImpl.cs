@@ -107,8 +107,12 @@ namespace DevExtreme.AspNet.Data {
                     result.totalCount = ExecCount();
 
                 if(Options.HasSummary) {
-                    data = Buffer<R>(data);
-                    result.summary = new AggregateCalculator<R>(data, accessor, Options.TotalSummary, Options.GroupSummary).Run();
+                    if(Options.RequireTotalCount && !Options.HasGroupSummary && Options.TotalSummary.All(i => i.SummaryType == "count")) {
+                        result.summary = Enumerable.Repeat((object)result.totalCount, Options.TotalSummary.Length).ToArray();
+                    } else {
+                        data = Buffer<R>(data);
+                        result.summary = new AggregateCalculator<R>(data, accessor, Options.TotalSummary, Options.GroupSummary).Run();
+                    }
                 }
             }
 
