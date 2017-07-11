@@ -64,15 +64,13 @@ namespace DevExtreme.AspNet.Data {
 
                 if(Options.HasSelect) {
                     ContinueWithGrouping(
-                        AppendExpr<AnonType>(Source, loadExpr, Options)
-                            .AsEnumerable()
-                            .Select(i => AnonToDict(i, Options.Select)),
+                        ExecExpr<AnonType>(Source, loadExpr).Select(ProjectionToDict),
                         Accessors.Dict,
                         result
                     );
                 } else {
                     ContinueWithGrouping(
-                        AppendExpr<S>(Source, loadExpr, Options),
+                        ExecExpr<S>(Source, loadExpr),
                         new DefaultAccessor<S>(),
                         result
                     );
@@ -123,21 +121,21 @@ namespace DevExtreme.AspNet.Data {
 
         RemoteGroupingResult ExecRemoteGrouping() {
             return RemoteGroupTransformer.Run(
-                AppendExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression), Options),
+                ExecExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
                 Options.HasGroups ? Options.Group.Length : 0,
                 Options.TotalSummary,
                 Options.GroupSummary
             );
         }
 
-        static IQueryable<R> AppendExpr<R>(IQueryable<S> source, Expression expr, DataSourceLoadOptionsBase options) {
-            var result = source.Provider.CreateQuery<R>(expr);
+        IEnumerable<R> ExecExpr<R>(IQueryable<S> source, Expression expr) {
+            IEnumerable<R> result = source.Provider.CreateQuery<R>(expr);
 
 #if DEBUG
-            if(options.UseQueryableOnce)
-                result = new QueryableOnce<R>(result);
+            if(Options.UseEnumerableOnce)
+                result = new EnumerableOnce<R>(result);
 
-            options.ExpressionWatcher?.Invoke(result.Expression);
+            Options.ExpressionWatcher?.Invoke(expr);
 #endif
 
             return result;
@@ -183,10 +181,11 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        static Dictionary<string, object> AnonToDict(AnonType obj, string[] names) {
+        Dictionary<string, object> ProjectionToDict(AnonType projection) {
+            var names = Options.Select;
             var dict = new Dictionary<string, object>();
             for(var i = 0; i < names.Length; i++)
-                ShrinkSelectResult(dict, names[i].Split('.'), obj[i]);
+                ShrinkSelectResult(dict, names[i].Split('.'), projection[i]);
             return dict;
         }
 

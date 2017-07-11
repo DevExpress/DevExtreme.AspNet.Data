@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public List<string> ExpressionLog = new List<string>();
 
         public SampleLoadOptions() {
-            UseQueryableOnce = true;
+            UseEnumerableOnce = true;
             ExpressionWatcher = x => ExpressionLog.Add(x.ToString());
         }
 
