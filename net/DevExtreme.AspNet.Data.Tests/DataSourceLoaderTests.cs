@@ -6,6 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
+#if NET40
+using Xunit.Extensions;
+#endif
+
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceLoaderTests {
@@ -362,13 +366,18 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(x);
         }
 
-        [Fact]
-        public void Issue132() {
-            var data = Enumerable.Repeat(new { }, 1);
+        [Theory]
+        [InlineData(false, true)]
+        [InlineData(false, false)]
+        [InlineData(true, false)]
+        public void Issue132(bool remoteGrouping, bool requireTotalCount) {
+            var count = 123;
+            var data = Enumerable.Repeat(new { }, count);
 
             var loadOptions = new SampleLoadOptions {
-                RequireTotalCount = true,
-                RemoteGrouping = false,
+                RemoteGrouping = remoteGrouping,
+                RequireTotalCount = requireTotalCount,
+                Take = 10,
                 TotalSummary = new[] {
                     new SummaryInfo { SummaryType = "count" },
                     new SummaryInfo { SummaryType = "count" }
@@ -376,9 +385,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadResult = DataSourceLoader.Load(data, loadOptions);
-            Assert.False(loadResult.data is ICollection);
-            Assert.Equal(1, loadResult.summary[0]);
-            Assert.Equal(1, loadResult.summary[1]);
+
+            Assert.Contains(".Take(10)", loadOptions.ExpressionLog[0].ToString());
+            Assert.Contains(".Count()", loadOptions.ExpressionLog[1].ToString());
+
+            Assert.Equal(count, loadResult.summary[0]);
+            Assert.Equal(count, loadResult.summary[1]);
         }
     }
 
