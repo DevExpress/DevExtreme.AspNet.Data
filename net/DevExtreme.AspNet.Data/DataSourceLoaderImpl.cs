@@ -19,6 +19,7 @@ namespace DevExtreme.AspNet.Data {
         readonly DataSourceExpressionBuilder<S> Builder;
         readonly bool ShouldEmptyGroups;
         readonly bool CanUseRemoteGrouping;
+        readonly bool SummaryIsTotalCountOnly;
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
             var isLinqToObjects = source is EnumerableQuery;
@@ -30,6 +31,7 @@ namespace DevExtreme.AspNet.Data {
             Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
             CanUseRemoteGrouping = options.RemoteGrouping ?? !(isLinqToObjects || preferLocalGrouping);
+            SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == "count");
 
             Source = source;
             Options = options;
@@ -59,7 +61,7 @@ namespace DevExtreme.AspNet.Data {
                 if(!Options.HasPrimaryKey && (Options.Skip > 0 || Options.Take > 0) && Compat.IsEntityFramework(Source.Provider))
                     Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
 
-                var deferPaging = Options.HasGroups || Options.HasSummary && !CanUseRemoteGrouping;
+                var deferPaging = Options.HasGroups || !CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary;
                 var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
 
                 if(Options.HasSelect) {
@@ -98,15 +100,22 @@ namespace DevExtreme.AspNet.Data {
         }
 
         void ContinueWithAggregation<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
-            if(CanUseRemoteGrouping && Options.HasSummary && !Options.HasGroups) {
+            if(CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary && !Options.HasGroups) {
                 var groupingResult = ExecRemoteGrouping();
                 result.totalCount = groupingResult.TotalCount;
                 result.summary = groupingResult.Totals;
             } else {
-                if(Options.RequireTotalCount)
-                    result.totalCount = ExecCount();
+                var totalCount = -1;
 
-                if(Options.HasSummary) {
+                if(Options.RequireTotalCount || SummaryIsTotalCountOnly)
+                    totalCount = ExecCount();
+
+                if(Options.RequireTotalCount)
+                    result.totalCount = totalCount;
+
+                if(SummaryIsTotalCountOnly) {
+                    result.summary = Enumerable.Repeat((object)totalCount, Options.TotalSummary.Length).ToArray();
+                } else if(Options.HasSummary) {
                     data = Buffer<R>(data);
                     result.summary = new AggregateCalculator<R>(data, accessor, Options.TotalSummary, Options.GroupSummary).Run();
                 }
@@ -116,7 +125,11 @@ namespace DevExtreme.AspNet.Data {
         }
 
         int ExecCount() {
-            return Source.Provider.Execute<int>(Builder.BuildCountExpr(Source.Expression));
+            var expr = Builder.BuildCountExpr(Source.Expression);
+#if DEBUG
+            Options.ExpressionWatcher?.Invoke(expr);
+#endif
+            return Source.Provider.Execute<int>(expr);
         }
 
         RemoteGroupingResult ExecRemoteGrouping() {

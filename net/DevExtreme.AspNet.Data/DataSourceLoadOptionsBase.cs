@@ -50,7 +50,11 @@ namespace DevExtreme.AspNet.Data {
         }
 
         internal bool HasSummary {
-            get { return TotalSummary != null && TotalSummary.Length > 0 || GroupSummary != null && GroupSummary.Length > 0; }
+            get { return TotalSummary != null && TotalSummary.Length > 0 || HasGroupSummary; }
+        }
+
+        internal bool HasGroupSummary {
+            get { return GroupSummary != null && GroupSummary.Length > 0; }
         }
 
         internal bool HasAnySort {
