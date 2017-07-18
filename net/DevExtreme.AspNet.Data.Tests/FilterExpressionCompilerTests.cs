@@ -261,6 +261,15 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void Issue136() {
+            var x = Record.Exception(delegate {
+                Compile<Tuple<int>>(new[] { "Item99", "1" });
+            });
+
+            Assert.True(x is ArgumentException);
+        }
+
     }
 
 }
