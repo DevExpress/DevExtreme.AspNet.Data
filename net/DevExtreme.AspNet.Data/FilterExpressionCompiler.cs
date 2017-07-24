@@ -29,15 +29,11 @@ namespace DevExtreme.AspNet.Data {
             if(IsCriteria(criteriaJson[0]))
                 return CompileGroup(dataItemExpr, criteriaJson);
 
-            try {
-                if(IsUnary(criteriaJson)) {
-                    return CompileUnary(dataItemExpr, criteriaJson);
-                }
-
-                return CompileBinary(dataItemExpr, criteriaJson);
-            } catch {
-                return Expression.Constant(false);
+            if(IsUnary(criteriaJson)) {
+                return CompileUnary(dataItemExpr, criteriaJson);
             }
+
+            return CompileBinary(dataItemExpr, criteriaJson);
         }
 
         Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson) {
@@ -57,8 +53,13 @@ namespace DevExtreme.AspNet.Data {
                 var useDynamicBinding = accessorExpr.Type == typeof(Object);
                 var expressionType = TranslateBinaryOperation(clientOperation);
 
-                if(!useDynamicBinding)
-                    clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+                if(!useDynamicBinding) {
+                    try {
+                        clientValue = Utils.ConvertClientValue(clientValue, accessorExpr.Type);
+                    } catch {
+                        return Expression.Constant(false);
+                    }
+                }
 
                 Expression valueExpr = Expression.Constant(clientValue);
 
