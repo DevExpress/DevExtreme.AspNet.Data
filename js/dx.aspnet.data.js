@@ -55,7 +55,10 @@
 
                 $.ajax(ajaxSettings)
                     .done(function(res) {
-                        successHandler(d, res);
+                        if (successHandler)
+                            successHandler(d, res);
+                        else
+                            d.resolve(res);
                     })
                     .fail(function(xhr, textStatus) {
                         var message = getErrorMessageFromXhr(xhr);
