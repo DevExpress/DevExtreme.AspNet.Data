@@ -149,8 +149,6 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void InvalidValueHandling() {
-            var obj = new Structs();
-
             var compiler = new FilterExpressionCompiler<Structs>(false);
 
             Assert.Equal("False", compiler.Compile(new[] { "byte", "-3" }).Body.ToString());
