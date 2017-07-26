@@ -510,4 +510,29 @@
         testCacheBusting("totalCount", function(store) { store.totalCount(); });
         testCacheBusting("byKey", function(store) { store.byKey(123); });
     });
+
+    QUnit.test("T538073", function(assert) {
+        var done = assert.async();
+
+        assert.expect(0);
+
+        $.mockjax({
+            url: "/",
+            status: 204,
+            responseText: ""
+        });
+
+        var store = createStore({
+            key: "id",
+            insertUrl: "/",
+            updateUrl: "/",
+            deleteUrl: "/"
+        });
+
+        $.when(
+            store.update(123, {}),
+            store.insert(123, {}),
+            store.remove(123)
+        ).then(done);
+    });
 });

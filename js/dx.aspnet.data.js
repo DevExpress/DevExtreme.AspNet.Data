@@ -41,7 +41,7 @@
             deleteUrl = options.deleteUrl,
             onBeforeSend = options.onBeforeSend;
 
-        function send(operation, requiresKey, ajaxSettings, successHandler) {
+        function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
             var d = $.Deferred();
 
             if(requiresKey && !keyExpr) {
@@ -55,8 +55,8 @@
 
                 $.ajax(ajaxSettings)
                     .done(function(res) {
-                        if (successHandler)
-                            successHandler(d, res);
+                        if(customSuccessHandler)
+                            customSuccessHandler(d, res);
                         else
                             d.resolve(res);
                     })
