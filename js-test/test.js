@@ -265,7 +265,7 @@
             });
         });
 
-        QUnit.test("totalCount can receive DataSourceLoadResult", function(assert) {
+        QUnit.test("totalCount can receive ResponseModel.LoadResult", function(assert) {
             var done = assert.async();
 
             $.mockjax({
@@ -340,6 +340,20 @@
 
             createStore({ key: "id", loadUrl: "/" }).byKey(123).done(function(r) {
                 assert.equal(r, "first");
+                done();
+            });
+        });
+
+        QUnit.test("byKey can receive ResponseModel.LoadResult", function(assert) {
+            var done = assert.async();
+
+            $.mockjax({
+                url: "/",
+                responseText: '{ "data": [ "item" ] }'
+            });
+
+            createStore({ key: "any", loadUrl: "/" }).byKey(123).done(function(r) {
+                assert.equal(r, "item");
                 done();
             });
         });

@@ -144,10 +144,8 @@
                         data: loadOptionsToActionParams(loadOptions)
                     },
                     function(d, res) {
-                        if("data" in res)
-                            d.resolve(res.data, createLoadExtra(res));
-                        else
-                            d.resolve(res);
+                        res = expandLoadResponse(res);
+                        d.resolve(res.data, createLoadExtra(res));
                     }
                 );
             },
@@ -161,9 +159,8 @@
                         data: loadOptionsToActionParams(loadOptions, true)
                     },
                     function(d, res) {
-                        if(typeof res === "object" && "totalCount" in res)
-                            res = res.totalCount;
-                        d.resolve(Number(res));
+                        res = expandLoadResponse(res);
+                        d.resolve(res.totalCount);
                     }
                 );
             },
@@ -177,7 +174,8 @@
                         data: loadOptionsToActionParams({ filter: filterByKey(key) })
                     },
                     function(d, res) {
-                        d.resolve(res[0]);
+                        res = expandLoadResponse(res);
+                        d.resolve(res.data[0]);
                     }
                 );
             },
@@ -210,6 +208,16 @@
             }
 
         };
+    }
+
+    function expandLoadResponse(value) {
+        if($.isArray(value))
+            return { data: value };
+
+        if(typeof value === "number")
+            return { totalCount: value };
+
+        return value;
     }
 
     function createLoadExtra(res) {
