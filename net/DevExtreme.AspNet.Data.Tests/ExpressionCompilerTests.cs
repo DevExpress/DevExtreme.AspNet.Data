@@ -107,6 +107,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void Issue142() {
+            Assert.Equal(
+                DateTime.MinValue.ToString() + ".Date.Date",
+                new SampleCompiler(true).CompileAccessorExpression(Expression.Constant(DateTime.MinValue), "Date.Date").ToString()
+            );
+        }
+
     }
 
 }
