@@ -74,6 +74,9 @@ namespace DevExtreme.AspNet.Data {
                     allTests = Expression.OrElse(allTests, test);
             }
 
+            if(allTests == null)
+                return last;
+
             return Expression.Condition(
                 allTests,
                 Expression.Constant(Utils.GetDefaultValue(lastType), lastType),
