@@ -144,8 +144,9 @@
                         data: loadOptionsToActionParams(loadOptions)
                     },
                     function(d, res) {
-                        res = expandLoadResponse(res);
-                        d.resolve(res.data, createLoadExtra(res));
+                        processLoadResponse(d, res, function(res) {
+                            return [ res.data, createLoadExtra(res) ];
+                        });
                     }
                 );
             },
@@ -159,8 +160,9 @@
                         data: loadOptionsToActionParams(loadOptions, true)
                     },
                     function(d, res) {
-                        res = expandLoadResponse(res);
-                        d.resolve(res.totalCount);
+                        processLoadResponse(d, res, function(res) {
+                            return [ res.totalCount ];
+                        });
                     }
                 );
             },
@@ -174,8 +176,9 @@
                         data: loadOptionsToActionParams({ filter: filterByKey(key) })
                     },
                     function(d, res) {
-                        res = expandLoadResponse(res);
-                        d.resolve(res.data[0]);
+                        processLoadResponse(d, res, function(res) {
+                            return [ res.data[0] ];
+                        });
                     }
                 );
             },
@@ -208,6 +211,15 @@
             }
 
         };
+    }
+
+    function processLoadResponse(d, res, getResolveArgs) {
+        res = expandLoadResponse(res);
+
+        if(!res || typeof res !== "object")
+            d.reject(new Error("Unexpected response received"));
+        else
+            d.resolve.apply(d, getResolveArgs(res));
     }
 
     function expandLoadResponse(value) {
