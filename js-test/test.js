@@ -134,6 +134,30 @@
             QUnit.test("other mime", testCase("unknown/unknown", "any", "Bad Request"));
         });
 
+        QUnit.test("Issue #146", function(assert) {
+            var done = assert.async(),
+                failCount = 0;
+
+            $.mockjax({
+                url: "/",
+                responseText: '"text"'
+            });
+
+            function handleFail(error) {
+                assert.equal(error.message, "Unexpected response received");
+                if(++failCount === 3)
+                    done();
+            }
+
+            var store = createStore({
+                loadUrl: "/",
+                key: "any"
+            });
+
+            store.load().fail(handleFail);
+            store.totalCount().fail(handleFail);
+            store.byKey("any").fail(handleFail);
+        });
     });
 
     QUnit.module("load options", function() {
