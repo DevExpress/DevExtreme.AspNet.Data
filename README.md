@@ -73,7 +73,8 @@ The server needs a custom model binder that will receive data loading options fr
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
 - `key` - the key property;       
-- `loadUrl` - the URL used to load data;      
+- `loadUrl` - the URL used to load data;   
+- `byKeyUrl` - a URL to override the default behaviour when requesting a record by key. See below for rationale
 - `loadParams` - additional parameters that should be passed to `loadUrl`;       
 - `updateUrl` - the URL used to update data;       
 - `insertUrl` - the URL used to insert data;        
@@ -88,6 +89,10 @@ To reach the controller from the client side, use the `DevExpress.data.AspNet.cr
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
 
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
+
+The byKeyUrl allows the store to specify a different URL for requests than the default, which uses loadUrl. This is useful when the loadURL implements additional logic that is unnecessary for the byKey function, or when they return different result sets - e.g. when the loadURL returns a Dto with miniimal fields to populate a list, whereas the byKeyUrl returns the full object.
+
+If myProductStore isset to http://www.example.com/api/products, then the function myProductStore.byKey(5) will issue the request  http://www.example.com/api/products/5 instead of the default where the request would be http://www.example.com/api/products with a filter ['ProductId','=','5']. 
 
 DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` method internally. To configure the parameters, use the lambda expression of the `DataSource()` method.
 
