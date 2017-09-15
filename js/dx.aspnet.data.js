@@ -34,12 +34,12 @@
 
     function createStoreConfig(options) {
         var keyExpr = options.key,
-            loadUrl = options.loadUrl,
-            byKeyUrl = options.byKeyUrl,
+            byKeyUrl = options.byKeyUrl || options.allUrl,
+            loadUrl =  options.loadUrl || options.allUrl,
             loadParams = options.loadParams,
-            updateUrl = options.updateUrl,
-            insertUrl = options.insertUrl,
-            deleteUrl = options.deleteUrl,
+            updateUrl =  options.updateUrl || options.allUrl,
+            insertUrl =  options.insertUrl || options.allUrl,
+            deleteUrl =  options.deleteUrl || options.allUrl,
             onBeforeSend = options.onBeforeSend;
 
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
