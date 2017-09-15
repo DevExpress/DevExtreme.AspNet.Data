@@ -1,7 +1,9 @@
 import CustomStore from "devextreme/data/custom_store";
 
 interface Options {
-    key?: string|Array<string>,
+    key?: string|Array<string>,        
+        
+    byKeyURL?: string,
 
     loadUrl?: string,
     loadParams?: Object,
