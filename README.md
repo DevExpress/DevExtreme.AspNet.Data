@@ -72,7 +72,8 @@ The server needs a custom model binder that will receive data loading options fr
 
 To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
 
-- `key` - the key property;       
+- `key` - the key property;      
+- `allUrl` - the URL used for all operations unless overridden by loadUrl, byKeyUrl, insertUrl etc.;  
 - `loadUrl` - the URL used to load data;   
 - `byKeyUrl` - a URL to override the default behaviour when requesting a record by key. See below for rationale
 - `loadParams` - additional parameters that should be passed to `loadUrl`;       
