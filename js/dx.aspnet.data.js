@@ -35,6 +35,7 @@
     function createStoreConfig(options) {
         var keyExpr = options.key,
             loadUrl = options.loadUrl,
+            byKeyURL = options.byKeyURL,
             loadParams = options.loadParams,
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
@@ -132,6 +133,18 @@
             return result;
         }
 
+        function getByKeyProperties(keyValue)
+        {
+            if (byKeyURL) return { 
+                url: byKeyURL + '/' + keyValue,
+                data: loadOptionsToActionParams() 
+            };
+            else return {
+                url: loadUrl,
+                data: loadOptionsToActionParams({ filter: filterByKey(keyValue) })
+            }
+        }
+
         return {
             key: keyExpr,
 
@@ -168,16 +181,15 @@
             },
 
             byKey: function(key) {
+                var keyProps = getByKeyProperties(key);
                 return send(
                     "load",
                     true,
-                    {
-                        url: loadUrl,
-                        data: loadOptionsToActionParams({ filter: filterByKey(key) })
-                    },
+                    keyProps,
                     function(d, res) {
                         processLoadResponse(d, res, function(res) {
-                            return [ res.data[0] ];
+                            if (byKeyURL) return [ res ];
+                            else return [ res.data[0] ];
                         });
                     }
                 );
