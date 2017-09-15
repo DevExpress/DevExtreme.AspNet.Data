@@ -35,7 +35,7 @@
     function createStoreConfig(options) {
         var keyExpr = options.key,
             loadUrl = options.loadUrl,
-            byKeyURL = options.byKeyURL,
+            byKeyUrl = options.byKeyUrl,
             loadParams = options.loadParams,
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
@@ -135,8 +135,8 @@
 
         function getByKeyProperties(keyValue)
         {
-            if (byKeyURL) return { 
-                url: byKeyURL + '/' + keyValue,
+            if (byKeyUrl) return { 
+                url: byKeyUrl + '/' + keyValue,
                 data: loadOptionsToActionParams() 
             };
             else return {
@@ -188,7 +188,7 @@
                     keyProps,
                     function(d, res) {
                         processLoadResponse(d, res, function(res) {
-                            if (byKeyURL) return [ res ];
+                            if (byKeyUrl) return [ res ];
                             else return [ res.data[0] ];
                         });
                     }
