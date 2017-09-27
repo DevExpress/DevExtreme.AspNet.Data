@@ -58,14 +58,16 @@ After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme s
 
 The server needs a custom model binder that will receive data loading options from the client and bind them to the model. The following links show how to implement it.
 
-- [Web API](https://github.com/DevExpress/devextreme-examples/blob/16_2/datagrid-webapi/datagrid-webapi/DataSourceLoadOptions.cs)
+- [Web API](https://github.com/DevExpress/devextreme-examples/blob/17_1/datagrid-webapi/datagrid-webapi/DataSourceLoadOptions.cs)
+- [ASP.NET MVC 5](https://github.com/DevExpress/devextreme-examples/blob/17_1/datagrid-mvc5/datagrid-mvc5/DataSourceLoadOptions.cs)
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/DataSourceLoadOptions.cs)
 
 **NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/), you do not need to implement the custom model binder, because it is already done in the ASP.NET MVC Controls library.
 
 ## Controller Example
 
-- [Web API](https://github.com/DevExpress/devextreme-examples/blob/16_2/datagrid-webapi/datagrid-webapi/Controllers/OrdersController.cs)
+- [Web API](https://github.com/DevExpress/devextreme-examples/blob/17_1/datagrid-webapi/datagrid-webapi/Controllers/OrdersController.cs)
+- [ASP.NET MVC 5](https://github.com/DevExpress/devextreme-examples/blob/17_1/datagrid-mvc5/datagrid-mvc5/Controllers/OrdersController.cs)
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Controllers/NorthwindController.cs)
 
 ## Client-Side Method
@@ -107,8 +109,9 @@ DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` me
 ## See Also
 
 - [Sample project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)
-- [DataGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/16_2/datagrid-webapi)
-- [PivotGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/16_2/pivotgrid-webapi)
+- [DataGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_1/datagrid-webapi)
+- [PivotGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_1/pivotgrid-webapi)
+- [DataGrid in an MVC 5 App example](https://github.com/DevExpress/devextreme-examples/tree/17_1/datagrid-mvc5)
 - [KB T334360 - How to implement a data service that supports remote operations for dxDataGrid](https://www.devexpress.com/Support/Center/Example/Details/T334360)
 - [DataGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/DataGrid/Use_CustomStore/)
 - [PivotGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/PivotGrid/Use_CustomStore/)
