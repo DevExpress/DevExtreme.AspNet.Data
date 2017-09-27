@@ -111,6 +111,7 @@ DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` me
 - [Sample project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)
 - [DataGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_1/datagrid-webapi)
 - [PivotGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_1/pivotgrid-webapi)
+- [DataGrid in an MVC 5 App example](https://github.com/DevExpress/devextreme-examples/tree/17_1/datagrid-mvc5)
 - [KB T334360 - How to implement a data service that supports remote operations for dxDataGrid](https://www.devexpress.com/Support/Center/Example/Details/T334360)
 - [DataGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/DataGrid/Use_CustomStore/)
 - [PivotGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/PivotGrid/Use_CustomStore/)
