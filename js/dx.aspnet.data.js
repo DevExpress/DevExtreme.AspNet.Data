@@ -1,4 +1,4 @@
-﻿// https://github.com/DevExpress/DevExtreme.AspNet.Data
+// https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
 // jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
