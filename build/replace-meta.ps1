@@ -36,3 +36,8 @@ $targets | %{
             -replace '%meta_project_url%', $meta_project_url
     } | Set-Content $path
 }
+
+$script_path = "$PSScriptRoot\..\js\dx.aspnet.data.js"
+$script_text = (Get-Content $script_path -Raw)
+Set-Content -Path $script_path -Value "// Version: $meta_version_full"
+Add-Content -Path $script_path -Value $script_text -NoNewline
