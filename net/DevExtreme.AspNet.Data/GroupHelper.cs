@@ -75,7 +75,7 @@ namespace DevExtreme.AspNet.Data {
                 case "quarter":
                     return (Convert.ToDateTime(memberValue).Month + 2) / 3;
                 case "month":
-                    return Convert.ToDateTime(memberValue).Month ;
+                    return Convert.ToDateTime(memberValue).Month;
                 case "day":
                     return Convert.ToDateTime(memberValue).Day;
                 case "dayOfWeek":

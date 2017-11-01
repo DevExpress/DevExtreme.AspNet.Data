@@ -73,8 +73,7 @@ namespace DevExtreme.AspNet.Data {
                     var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
-                }
-                else if(useDynamicBinding) {
+                } else if(useDynamicBinding) {
                     accessorExpr = Expression.Call(typeof(Utils).GetMethod(nameof(Utils.DynamicCompare)), accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
                 }
