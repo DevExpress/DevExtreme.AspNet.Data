@@ -41,7 +41,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(!String.IsNullOrEmpty(requireGroupCount))
                 loadOptions.RequireGroupCount = Convert.ToBoolean(requireGroupCount);
 
-            if (!String.IsNullOrEmpty(isCountQuery))
+            if(!String.IsNullOrEmpty(isCountQuery))
                 loadOptions.IsCountQuery = Convert.ToBoolean(isCountQuery);
 
             if(!String.IsNullOrEmpty(skip))
