@@ -42,6 +42,12 @@
     "globalMetadata": {
       "_appTitle": "DevExtreme.AspNet.Data Documentation",
       "_appFooter": "Copyright (c) Developer Express Inc.",
+      "_gitContribute": {
+        "repo": "https://github.com/DevExpress/DevExtreme.AspNet.Data",
+        "branch": "master",
+        "path": "docfx",
+        "apiSpecFolder": "docfx/apidoc"
+      }
     }
   }
 }
