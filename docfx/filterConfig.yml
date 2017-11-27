@@ -1,0 +1,6 @@
+apiRules:
+- exclude:
+    uidRegex: ^DevExtreme\.AspNet\.Data\.Helpers$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Object\.

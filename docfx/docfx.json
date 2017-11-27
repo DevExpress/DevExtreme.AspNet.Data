@@ -1,0 +1,47 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../net/DevExtreme.AspNet.Data",
+          "files": [
+            "bin/Debug/net40/DevExtreme.AspNet.Data.dll"
+          ]
+        }
+      ],
+      "dest": "api",
+      "filter": "filterConfig.yml"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+          "favicon.ico",
+          "logo.svg"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ]
+      }
+    ],
+    "dest": "../docs/net",
+    "globalMetadata": {
+      "_appTitle": "DevExtreme.AspNet.Data Documentation",
+      "_appFooter": "Copyright (c) Developer Express Inc.",
+    }
+  }
+}
