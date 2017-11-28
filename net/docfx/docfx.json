@@ -17,6 +17,7 @@
     "content": [
       {
         "files": [
+          "toc.yml",
           "api/**.yml",
           "api/index.md"
         ]
