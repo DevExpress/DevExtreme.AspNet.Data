@@ -56,4 +56,4 @@ on_success:
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
   - path: devextreme-aspnet-data-*.tgz
-  - path: net\docfx\build\docfx-site
+  - path: net\docfx\build\site
