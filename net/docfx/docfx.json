@@ -1,0 +1,57 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../DevExtreme.AspNet.Data",
+          "files": [
+            "bin/Debug/net40/DevExtreme.AspNet.Data.dll"
+          ]
+        }
+      ],
+      "dest": "api",
+      "filter": "filterConfig.yml"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "toc.yml",
+          "api/**.yml",
+          "api/index.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+          "favicon.ico",
+          "logo.svg"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ]
+      }
+    ],
+    "xref": [
+      "build/msdn.4.5.2/content/msdn.4.5.2.zip"
+    ],
+    "dest": "build/site",
+    "globalMetadata": {
+      "_appTitle": "DevExtreme.AspNet.Data Documentation",
+      "_appFooter": "Copyright (c) Developer Express Inc.",
+      "_gitContribute": {
+        "repo": "https://github.com/DevExpress/DevExtreme.AspNet.Data",
+        "branch": "master",
+        "path": "net/docfx",
+        "apiSpecFolder": "net/docfx/apidoc"
+      }
+    }
+  }
+}

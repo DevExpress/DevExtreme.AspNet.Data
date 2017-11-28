@@ -47,6 +47,7 @@ test_script:
 
 after_test:
   - npm pack
+  - cmd /c net\docfx\build
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
@@ -55,3 +56,4 @@ on_success:
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
   - path: devextreme-aspnet-data-*.tgz
+  - path: net\docfx\build\site
