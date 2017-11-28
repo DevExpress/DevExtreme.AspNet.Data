@@ -18,10 +18,8 @@
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.0' ">$(PackageTargetFallback);dnxcore50;portable-net45</PackageTargetFallback>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
