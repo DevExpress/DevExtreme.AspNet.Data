@@ -1,3 +1,2 @@
-api/.manifest
-api/*.yml
-build
+api/
+build/
