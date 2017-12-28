@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.ResponseModel {
 
     /// <summary>
-    /// Represents a group in the result dataset.
+    /// Represents a group in the resulting dataset.
     /// </summary>
     public class Group {
         /// <summary>
