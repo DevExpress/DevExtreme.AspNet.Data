@@ -15,14 +15,14 @@ namespace DevExtreme.AspNet.Data {
         public string GroupInterval;
 
         /// <summary>
-        /// A flag indicating whether the group's data objects should be returned instead of grouping data.
+        /// A flag indicating whether the group's data objects should be returned.
         /// </summary>
         public bool? IsExpanded;
 
         /// <summary>
-        /// Gets the value of the IsExpanded field.
+        /// Returns the value of the IsExpanded field or <c>true</c> if this value is <c>null</c>.
         /// </summary>
-        /// <returns>The value of the IsExpanded field.</returns>
+        /// <returns>The value of the IsExpanded field or <c>true</c> if this value is <c>null</c>.</returns>
         public bool GetIsExpanded() {
             if(!IsExpanded.HasValue)
                 return true;

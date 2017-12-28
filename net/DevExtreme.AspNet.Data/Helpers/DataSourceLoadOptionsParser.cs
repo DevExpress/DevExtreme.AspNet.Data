@@ -28,8 +28,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
         /// <summary>
         /// Converts the string representations of the data processing settings to equivalent values of appropriate types.
         /// </summary>
-        /// <param name="loadOptions">A storage for the converted equivalent values.</param>
-        /// <param name="valueSource">A method that retrieves a field value by field name.</param>
+        /// <param name="loadOptions">An object that will contain the converted values.</param>
+        /// <param name="valueSource">A function that retrieves string values from the fields defined by the constants.</param>
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
             var requireGroupCount = valueSource(KEY_REQUIRE_GROUP_COUNT);
