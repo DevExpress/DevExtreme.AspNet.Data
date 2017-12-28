@@ -7,21 +7,78 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
+    /// <summary>
+    /// An abstract class with fields that specify data processing settings.
+    /// </summary>
     public abstract class DataSourceLoadOptionsBase {
+        /// <summary>
+        /// A flag indicating whether the total number of data objects is required.
+        /// </summary>
         public bool RequireTotalCount;
+
+        /// <summary>
+        /// A flag indicating whether the number of top-level groups is required.
+        /// </summary>
         public bool RequireGroupCount;
+
+        /// <summary>
+        /// A flag indicating whether the current query is made to get the total number of data objects.
+        /// </summary>
         public bool IsCountQuery;
+
+        /// <summary>
+        /// The number of data objects to be skipped from the start of the resulting set.
+        /// </summary>
         public int Skip;
+
+        /// <summary>
+        /// The number of data objects to be loaded.
+        /// </summary>
         public int Take;
+
+        /// <summary>
+        /// A sort expression.
+        /// </summary>
         public SortingInfo[] Sort;
+
+        /// <summary>
+        /// A group expression.
+        /// </summary>
         public GroupingInfo[] Group;
+
+        /// <summary>
+        /// A filter expression.
+        /// </summary>
         public IList Filter;
+
+        /// <summary>
+        /// A total summary expression.
+        /// </summary>
         public SummaryInfo[] TotalSummary;
+
+        /// <summary>
+        /// A group summary expression.
+        /// </summary>
         public SummaryInfo[] GroupSummary;
+
+        /// <summary>
+        /// A select expression.
+        /// </summary>
         public string[] Select;
 
+        /// <summary>
+        /// A flag that indicates whether grouping must be performed on the server side.
+        /// </summary>
         public bool? RemoteGrouping;
+
+        /// <summary>
+        /// An array of primary keys.
+        /// </summary>
         public string[] PrimaryKey;
+
+        /// <summary>
+        /// The data field to be used for sorting by default.
+        /// </summary>
         public string DefaultSort;
 
 #if DEBUG
