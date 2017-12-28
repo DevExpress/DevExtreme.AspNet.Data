@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Helpers {
 
+    /// <summary>
+    /// A parser for the data processing settings.
+    /// </summary>
     public static class DataSourceLoadOptionsParser {
         public const string
             KEY_REQUIRE_TOTAL_COUNT = "requireTotalCount",
@@ -22,6 +25,11 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_GROUP_SUMMARY = "groupSummary",
             KEY_SELECT = "select";
 
+        /// <summary>
+        /// Converts the string representations of the data processing settings to equivalent values of appropriate types.
+        /// </summary>
+        /// <param name="loadOptions">A storage for the converted equivalent values.</param>
+        /// <param name="valueSource">A method that retrieves a field value by field name.</param>
         public static void Parse(DataSourceLoadOptionsBase loadOptions, Func<string, string> valueSource) {
             var requireTotalCount = valueSource(KEY_REQUIRE_TOTAL_COUNT);
             var requireGroupCount = valueSource(KEY_REQUIRE_GROUP_COUNT);
