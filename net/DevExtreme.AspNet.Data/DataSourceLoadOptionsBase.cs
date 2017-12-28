@@ -12,22 +12,22 @@ namespace DevExtreme.AspNet.Data {
     /// </summary>
     public abstract class DataSourceLoadOptionsBase {
         /// <summary>
-        /// A flag indicating whether the total count of data objects is required.
+        /// A flag indicating whether the total number of data objects is required.
         /// </summary>
         public bool RequireTotalCount;
 
         /// <summary>
-        /// A flag indicating whether the count of top-level groups is required.
+        /// A flag indicating whether the number of top-level groups is required.
         /// </summary>
         public bool RequireGroupCount;
 
         /// <summary>
-        /// A flag indicating whether the current query is made to get the total count of data objects.
+        /// A flag indicating whether the current query is made to get the total number of data objects.
         /// </summary>
         public bool IsCountQuery;
 
         /// <summary>
-        /// The number of data objects to be skipped from the start of the result set.
+        /// The number of data objects to be skipped from the start of the resulting set.
         /// </summary>
         public int Skip;
 
