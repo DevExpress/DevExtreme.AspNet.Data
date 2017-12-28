@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
     /// </summary>
     public class LoadResult {
         /// <summary>
-        /// A resultint dataset.
+        /// A resulting dataset.
         /// </summary>
         public IEnumerable data;
 
