@@ -13,18 +13,18 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
     /// </summary>
     public class LoadResult {
         /// <summary>
-        /// A result dataset.
+        /// A resultint dataset.
         /// </summary>
         public IEnumerable data;
 
         /// <summary>
-        /// The total count of data objects in the result dataset.
+        /// The total number of data objects in the resulting dataset.
         /// </summary>
         [DefaultValue(-1), JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int totalCount = -1;
 
         /// <summary>
-        /// The count of top-level groups in the result dataset.
+        /// The number of top-level groups in the resulting dataset.
         /// </summary>
         [DefaultValue(-1), JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int groupCount = -1;
