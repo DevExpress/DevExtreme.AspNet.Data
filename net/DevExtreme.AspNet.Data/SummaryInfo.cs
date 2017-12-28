@@ -15,7 +15,7 @@ namespace DevExtreme.AspNet.Data {
         public string Selector;
 
         /// <summary>
-        /// An aggregate function: "sum", "min", "max", "avg", "count", or "custom".
+        /// An aggregate function: "sum", "min", "max", "avg", or "count".
         /// </summary>
         public string SummaryType;
     }
