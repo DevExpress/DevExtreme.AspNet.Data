@@ -105,6 +105,10 @@ DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` me
 )
 ```
 
+## API Reference
+
+The DevExtreme ASP.NET Data API is documented [here](https://devexpress.github.io/DevExtreme.AspNet.Data/net/api/DevExtreme.AspNet.Data.html).
+
 ## See Also
 
 - [Sample project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)
