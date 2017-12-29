@@ -1,0 +1,223 @@
+{
+  "homepages": [],
+  "source_base_path": "S:/Fast-GitHub/DevExtreme.AspNet.Data/net/docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html",
+          "hash": "CerZ9lcfo0d6MR0Ykzikmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoader.html",
+          "hash": "SzhooXPPikDRemYr6HD/QQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.GroupingInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.GroupingInfo.html",
+          "hash": "R+QQR0ksBwSp66id/VyPBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser.html",
+          "hash": "dG8VoqUkZQ3bMlQURP+TMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.html",
+          "hash": "Ie5nuXNPDZMKyeTSX21GVg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.Group.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.Group.html",
+          "hash": "Hxj0jIGMNCzpRArmSjoTfQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html",
+          "hash": "+iXrPT1NZNaTQKgT4wT3LA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.html",
+          "hash": "i1WSpPzCHTM+56fBqIHNLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.SortingInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.SortingInfo.html",
+          "hash": "WyWSqyAddzGoKjeHK55+ow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.SummaryInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.SummaryInfo.html",
+          "hash": "pGWjl4pBG0KTeN8oolU70w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.html",
+          "hash": "vYrMT7udfH9Xot2Ko8UyXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "xJI0lwsT2YRmhQdHcBaTvA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "logo.svg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "IyMESjWA+5VZBRsmKTXToA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
