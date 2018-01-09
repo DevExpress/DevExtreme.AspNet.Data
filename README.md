@@ -69,9 +69,11 @@ The server needs a custom model binder that will receive data loading options fr
 - [ASP.NET MVC 5](https://github.com/DevExpress/devextreme-examples/blob/17_1/datagrid-mvc5/datagrid-mvc5/Controllers/OrdersController.cs)
 - [ASP.NET Core MVC](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Controllers/NorthwindController.cs)
 
-## Client-Side Method
+## API Reference
 
-To reach the controller from the client side, use the `DevExpress.data.AspNet.createStore` method. It accepts an object with the following fields.
+### Client Side
+
+The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, used to reach the controller from the client side. This method accepts an object with the following fields:
 
 - `key` - the key property;       
 - `loadUrl` - the URL used to load data;      
@@ -104,6 +106,10 @@ DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` me
     )
 )
 ```
+
+### Server Side
+
+The server-side API is documented [here](https://devexpress.github.io/DevExtreme.AspNet.Data/net/api/DevExtreme.AspNet.Data.html).
 
 ## See Also
 
