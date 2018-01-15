@@ -39,7 +39,7 @@ test_script:
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user
     -target:%xunit20%\xunit.console.exe
     -targetargs:"
-    net\DevExtreme.AspNet.Data.Tests.NET40\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
+    net\DevExtreme.AspNet.Data.Tests.NET4\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
     net\DevExtreme.AspNet.Data.Tests.EF6\bin\Debug\DevExtreme.AspNet.Data.Tests.EF6.dll
     -noshadow"
     -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
