@@ -179,9 +179,8 @@ namespace DevExtreme.AspNet.Data {
         static void EmptyGroups(IEnumerable groups, int level) {
             foreach(Group g in groups) {
                 if(level < 2) {
-                    var remoteGroup = g.items[0] as AnonType;
 
-                    if(remoteGroup != null) {
+                    if(g.items[0] is AnonType remoteGroup) {
                         g.count = (int)remoteGroup[RemoteGroupTypeMarkup.CountIndex];
                     } else {
                         g.count = g.items.Count;
@@ -211,8 +210,7 @@ namespace DevExtreme.AspNet.Data {
                 if(!target.ContainsKey(key))
                     target[key] = new Dictionary<string, object>();
 
-                var child = target[key] as IDictionary<string, object>;
-                if(child != null)
+                if(target[key] is IDictionary<string, object> child)
                     ShrinkSelectResult(child, path, value, 1 + index);
             }
         }

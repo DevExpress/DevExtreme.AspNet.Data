@@ -47,8 +47,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         void ProcessItem(object item) {
-            var group = item as Group;
-            if(group != null) {
+            if(item is Group group) {
                 ProcessGroup(group);
             } else {
                 if(_groupAggregatorsStack != null) {
