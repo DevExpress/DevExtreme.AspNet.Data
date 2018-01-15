@@ -6,10 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-#if NET4
-using Xunit.Extensions;
-#endif
-
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceLoaderTests {
