@@ -22,8 +22,7 @@ namespace DevExtreme.AspNet.Data {
             if(clientExpr == "this")
                 return target;
 
-            var progression = new List<Expression>();
-            progression.Add(target);
+            var progression = new List<Expression> { target };
 
             var clientExprItems = clientExpr.Split('.');
             var currentTarget = target;

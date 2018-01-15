@@ -125,12 +125,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
-            var projectionBindings = new List<MemberAssignment>();
-
-            projectionBindings.Add(Expression.Bind(
-                _remoteGroupType.GetField(AnonType.ITEM_PREFIX + RemoteGroupTypeMarkup.CountIndex),
-                Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
-            ));
+            var projectionBindings = new List<MemberAssignment> {
+                Expression.Bind(
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + RemoteGroupTypeMarkup.CountIndex),
+                    Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
+                )
+            };
 
             for(var i = 0; i < _groupKeyExprList.Count; i++) {
                 projectionBindings.Add(Expression.Bind(

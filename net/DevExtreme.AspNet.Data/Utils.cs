@@ -96,8 +96,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static object UnwrapNewtonsoftValue(object value) {
-            var jValue = value as JValue;
-            if(jValue != null)
+            if(value is JValue jValue)
                 return jValue.Value;
 
             return value;
