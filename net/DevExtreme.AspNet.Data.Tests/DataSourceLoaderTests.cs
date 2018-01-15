@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-#if NET40
+#if NET4
 using Xunit.Extensions;
 #endif
 
