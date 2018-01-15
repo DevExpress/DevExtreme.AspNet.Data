@@ -29,7 +29,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.DoesNotContain("\"summary\":", json);
         }
 
-#if NET40
+#if NET4
         [Fact]
         public void JavaScriptSerializer() {
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();

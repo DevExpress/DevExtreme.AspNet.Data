@@ -220,8 +220,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var method = expr.Compile();
 
-            var result = method.DynamicInvoke(new DataItem1 { NullableProp = 1 });
-            Assert.Equal(true, result);
+            var result = (bool)method.DynamicInvoke(new DataItem1 { NullableProp = 1 });
+            Assert.True(result);
         }
 
         [Fact]
@@ -236,7 +236,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new DataItem1{ Date = new DateTime(2011, 12, 13) }
             };
 
-            Assert.Equal(true, Compile<DataItem1>(new object[] { "Date", "12/13/2011 00:00:00" }).Compile().DynamicInvoke(data[0]));
+            Assert.True((bool)Compile<DataItem1>(new object[] { "Date", "12/13/2011 00:00:00" }).Compile().DynamicInvoke(data[0]));
         }
 
         [Fact]

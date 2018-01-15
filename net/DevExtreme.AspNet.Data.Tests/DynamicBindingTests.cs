@@ -63,10 +63,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             var objectResult = ToDictArray(DataSourceLoader.Load<object>(data, loadOptions).data);
             var expandoResult = ToDictArray(DataSourceLoader.Load<ExpandoObject>(data, loadOptions).data);
 
-            Assert.Equal(1, objectResult.Length);
+            Assert.Single(objectResult);
             Assert.Equal(2d, objectResult[0][P1]);
 
-            Assert.Equal(1, expandoResult.Length);
+            Assert.Single(expandoResult);
             Assert.Equal(2d, expandoResult[0][P1]);
         }
 
@@ -81,7 +81,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             ).data);
 
-            Assert.Equal(1, result.Length);
+            Assert.Single(result);
         }
 
         [Fact]

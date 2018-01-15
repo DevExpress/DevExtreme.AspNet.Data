@@ -190,7 +190,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var builder = new DataSourceExpressionBuilder<Tuple<int, int>>(options, false);
             var expr = builder.BuildLoadGroupsExpr().ToString();
 
-            Assert.True(expr.StartsWith("data.GroupBy"));
+            Assert.StartsWith("data.GroupBy", expr);
         }
 
         [Fact]
