@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         void AssertEvaluation<T>(T dataItem, params object[] clientFilter) {
             var expr = new FilterExpressionCompiler<T>(false).Compile(clientFilter);
-            Assert.Equal(true, expr.Compile().DynamicInvoke(dataItem));
+            Assert.True((bool)expr.Compile().DynamicInvoke(dataItem));
         }
 
         class Structs {

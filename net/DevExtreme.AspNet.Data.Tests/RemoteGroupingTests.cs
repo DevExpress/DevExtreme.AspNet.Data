@@ -77,7 +77,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var result = DataSourceLoader.Load(data, loadOptions);
 
-            Assert.Equal(1, loadOptions.ExpressionLog.Count);
+            Assert.Single(loadOptions.ExpressionLog);
             Assert.Contains("AnonType`2(I0 = obj.G1, I1 = obj.G2)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
@@ -149,7 +149,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("AnonType()", loadOptions.ExpressionLog[1]);
 
             Assert.Equal(4M, result.summary[0]);
-            Assert.Equal(1, result.data.Cast<object>().Count());
+            Assert.Single(result.data.Cast<object>());
             Assert.Equal(2, result.totalCount);
         }
 
@@ -198,7 +198,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var result = DataSourceLoader.Load(data, loadOptions);
 
-            Assert.False(loadOptions.ExpressionLog.Any(i => i.Contains("RemoteGroupKey")));
+            Assert.DoesNotContain(loadOptions.ExpressionLog, expr => expr.Contains("RemoteGroupKey"));
 
             Assert.Equal(2, result.totalCount);
             Assert.Null(result.summary);
@@ -231,7 +231,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var groups = result.data.Cast<Group>().ToArray();
 
-            Assert.Equal(1, groups.Count());
+            Assert.Single(groups);
             Assert.Equal(2, result.groupCount);
         }
     }

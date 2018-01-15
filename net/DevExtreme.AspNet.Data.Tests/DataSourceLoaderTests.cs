@@ -102,7 +102,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(3, result.totalCount);
 
             var groups = result.data.Cast<Group>().ToArray();
-            Assert.Equal(1, groups.Length);
+            Assert.Single(groups);
             Assert.Equal(2, groups[0].items.Count);
             Assert.Same(data[2], groups[0].items[0]);
             Assert.Same(data[0], groups[0].items[1]);
@@ -179,7 +179,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             Assert.Equal(9M, result.summary[0]);
-            Assert.Equal(1, result.data.Cast<object>().Count());
+            Assert.Single(result.data.Cast<object>());
         }
 
         [Fact]
