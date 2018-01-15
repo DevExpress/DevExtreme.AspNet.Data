@@ -71,24 +71,31 @@ namespace DevExtreme.AspNet.Data {
 
             switch(intervalString) {
                 case "year":
-                    return Convert.ToDateTime(memberValue).Year;
+                    return ToDateTime(memberValue).Year;
                 case "quarter":
-                    return (Convert.ToDateTime(memberValue).Month + 2) / 3;
+                    return (ToDateTime(memberValue).Month + 2) / 3;
                 case "month":
-                    return Convert.ToDateTime(memberValue).Month;
+                    return ToDateTime(memberValue).Month;
                 case "day":
-                    return Convert.ToDateTime(memberValue).Day;
+                    return ToDateTime(memberValue).Day;
                 case "dayOfWeek":
-                    return (int)Convert.ToDateTime(memberValue).DayOfWeek;
+                    return (int)ToDateTime(memberValue).DayOfWeek;
                 case "hour":
-                    return Convert.ToDateTime(memberValue).Hour;
+                    return ToDateTime(memberValue).Hour;
                 case "minute":
-                    return Convert.ToDateTime(memberValue).Minute;
+                    return ToDateTime(memberValue).Minute;
                 case "second":
-                    return Convert.ToDateTime(memberValue).Second;
+                    return ToDateTime(memberValue).Second;
             }
 
             throw new NotSupportedException();
+        }
+
+        static DateTime ToDateTime(object value) {
+            if(value is DateTimeOffset offset)
+                return offset.DateTime;
+
+            return Convert.ToDateTime(value);
         }
     }
 

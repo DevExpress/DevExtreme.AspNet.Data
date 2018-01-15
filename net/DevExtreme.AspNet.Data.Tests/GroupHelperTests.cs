@@ -150,6 +150,24 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupInterval_DateTimeOffset() {
+            var data = new[] {
+                new {
+                    d = new DateTimeOffset(
+                        new DateTime(2001, 1, 1, 1, 1, 1),
+                        TimeSpan.FromHours(-8)
+                    )
+                }
+            };
+
+            var groups = CreateHelper(data).Group(data, new[] {
+                new GroupingInfo { Selector = "d", GroupInterval = "hour" },
+            });
+
+            Assert.Equal(1, groups[0].key);
+        }
+
+        [Fact]
         public void NullKey() {
             var data = new[] {
                 null,
