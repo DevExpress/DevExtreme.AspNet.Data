@@ -111,6 +111,10 @@ DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` me
 
 The server-side API is documented [here](https://devexpress.github.io/DevExtreme.AspNet.Data/net/api/DevExtreme.AspNet.Data.html).
 
+## Using CI Builds
+
+To get CI builds, follow the instructions given [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/docs/using-ci-builds.md). Note that these builds are supposed to be used in testing workarounds and not-yet-released functionality and must not be used in production.
+
 ## See Also
 
 - [Sample project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)

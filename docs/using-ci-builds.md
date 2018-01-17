@@ -1,6 +1,6 @@
 # Using CI Builds
 
-Master branch build artifacts are stored [here](https://ci.appveyor.com/project/dxrobot/devextreme-aspnet-data/branch/master/artifacts). Download the `devextreme-aspnet-data-99.0.0-ci-NNN.tgz` file and use the instruction for the client-side script, or get `DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg` and follow the one for the NuGet package.
+Master branch build artifacts are stored [here](https://ci.appveyor.com/project/dxrobot/devextreme-aspnet-data/branch/master/artifacts). Download the `devextreme-aspnet-data-99.0.0-ci-NNN.tgz` and `DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg` files and follow the instructions below.
 
 ## Client-Side Script
 
@@ -11,9 +11,9 @@ Unpack the `.tgz` archive to a temporary location. On Windows, you can use [7zip
 7zip x devextreme-aspnet-data-99.0.0-ci-NNN.tar
 ```
 
-Navigate to the package/js folder in this location and copy the extracted JavaScript file to your project.
+Navigate to the package/js folder in the temporary location and copy the extracted JavaScript file to your project.
 
-For Node projects, you can install the archive as a package:
+For Node projects, you can [install](https://docs.npmjs.com/cli/install) the archive as a package:
 
 ```bash
 npm i /temp/path/devextreme-aspnet-data-99.0.0-ci-NNN.tgz
