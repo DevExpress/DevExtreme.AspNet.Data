@@ -113,7 +113,7 @@ The server-side API is documented [here](https://devexpress.github.io/DevExtreme
 
 ## Using CI Builds
 
-To get CI builds, follow the instructions given [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/docs/using-ci-builds.md). Note that these builds are supposed to be used in testing workarounds and not-yet-released functionality and must not be used in production.
+To get CI builds, follow the instructions given [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/docs/using-ci-builds.md). Note that these builds are supposed to be used for getting urgent bug fixes and testing not-yet-released functionality. In other cases, prefer release builds.
 
 ## See Also
 
