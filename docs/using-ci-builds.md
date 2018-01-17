@@ -1,4 +1,4 @@
-# Using CI Builds in Development
+# Using CI Builds
 
 Master branch build artifacts are stored [here](https://ci.appveyor.com/project/dxrobot/devextreme-aspnet-data/branch/master/artifacts). Download the `devextreme-aspnet-data-99.0.0-ci-NNN.tgz` file and use the instruction for the client-side script, or get `DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg` and follow the one for the NuGet package.
 
