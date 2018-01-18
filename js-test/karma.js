@@ -3,7 +3,7 @@ module.exports = function(config) {
         basePath: "",
         frameworks: [ "qunit" ],
         reporters: [ "dots" ],
-        browsers: [ "PhantomJS" ],
+        browsers: [ "ChromeHeadless" ],
         singleRun: true
     };
 
