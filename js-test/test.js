@@ -4,12 +4,19 @@
 (function(factory) {
     "use strict";
 
+    var QUnit = window.QUnit;
+
     if(typeof define === "function" && define.amd) {
+        define("qunit-amd", function() {
+            return QUnit; // https://github.com/karma-runner/karma-qunit/issues/57
+        });
+
         define(function(require) {
             var $ = require("jquery");
             require("jquery-mockjax")($, window);
             factory(
                 $,
+                require("qunit-amd"),
                 require("devextreme/data/data_source"),
                 require("../js/dx.aspnet.data.js")
             );
@@ -17,16 +24,16 @@
     } else {
         factory(
             jQuery,
+            QUnit,
             DevExpress.data.DataSource,
             DevExpress.data.AspNet
         );
     }
 
-})(function($, DataSource, AspNet) {
+})(function($, QUnit, DataSource, AspNet) {
     "use strict";
 
-    var QUnit = window.QUnit,
-        createStore = AspNet.createStore;
+    var createStore = AspNet.createStore;
 
     $.extend($.mockjaxSettings, {
         contentType: "application/json",
