@@ -5,5 +5,8 @@ var TEST_DEPS = [
     "../js/dx.aspnet.data.js",
 ];
 
+if(typeof window !== "undefined" && !window.Promise)
+    TEST_DEPS.push("../node_modules/bluebird/js/browser/bluebird.core.min.js");
+
 if(typeof module !== "undefined")
     module.exports = TEST_DEPS;
