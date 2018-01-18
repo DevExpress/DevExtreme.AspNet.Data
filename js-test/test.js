@@ -1,4 +1,4 @@
-// jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
+// jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
 /* global DevExpress, define, Promise */
 
 (function(factory) {
@@ -532,10 +532,10 @@
             deleteUrl: "/"
         });
 
-        $.when(
+        Promise.all([
             store.update(123, {}),
             store.insert(123, {}),
             store.remove(123)
-        ).then(done);
+        ]).then(done);
     });
 });
