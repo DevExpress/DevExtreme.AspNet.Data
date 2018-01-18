@@ -1,5 +1,5 @@
 // jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
-/* global DevExpress, define, Promise */
+/* global ASPNET_DATA_SCRIPT, DevExpress, define, Promise */
 
 (function(factory) {
     "use strict";
@@ -16,7 +16,7 @@
                 require("qunit-amd"),
                 require("xhr-mock").default,
                 require("devextreme/data/data_source"),
-                require("../js/dx.aspnet.data.js")
+                require(ASPNET_DATA_SCRIPT)
             );
         });
     } else {

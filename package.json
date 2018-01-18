@@ -36,7 +36,7 @@
   },
   "scripts": {
     "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**",
-    "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
-    "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled && tsc js-test/check-ts-compilation"
+    "test": "jshint --verbose js && npm run -s test-karma-jquery && tsc js-test/check-ts-compilation",
+    "test-karma-jquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.js' test.js test-bundle.js && karma start && karma start --bundled"
   }
 }
