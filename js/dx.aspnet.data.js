@@ -26,13 +26,6 @@
 })(function($, CustomStore, dataUtils) {
     "use strict";
 
-    // TODO remove
-    $ = {
-        ajax: $.ajax,
-        Deferred: $.Deferred,
-        extend: $.extend
-    };
-
     function createStore(options) {
         var store = new CustomStore(createStoreConfig(options));
         store._useDefaultSearch = true;
@@ -54,6 +47,7 @@
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
             } else {
+                ajaxSettings.dataType = "json";
                 if(operation === "load")
                     ajaxSettings.cache = false;
 

@@ -36,6 +36,7 @@
     function willRespondWithJson(obj) {
         XHRMock.use(function(req, res) {
             return res
+                .status(200)
                 .header("Content-Type", "application/json")
                 .body(JSON.stringify(obj));
         });

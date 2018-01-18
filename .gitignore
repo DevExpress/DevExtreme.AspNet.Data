@@ -4,6 +4,7 @@ obj/
 node_modules/
 net/packages/
 net/DevExtreme.AspNet.Data/release.snk
+/js/dx.aspnet.data.nojquery.js
 /js-test/coverage/
 /js-test/test-bundle.js
 /js-test/check-ts-compilation.js

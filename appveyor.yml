@@ -16,6 +16,7 @@ install:
 
 build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
+  - npm run make-nojquery
 
 test_script:
   - npm run eclint-check
