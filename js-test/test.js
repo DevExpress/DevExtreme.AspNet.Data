@@ -155,7 +155,7 @@
                 failCount = 0;
 
             XHRMock.use(function(req, res) {
-                return res.body('"text"');
+                return res.status(200).body('"text"');
             });
 
             function handleFail(error) {
