@@ -22,7 +22,6 @@
     "devextreme": ">=16.2.8",
     "eclint": "^2.0.1",
     "jquery": "^2.2.4",
-    "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
     "karma": "^1.3.0",
     "karma-coverage": "^1.1.1",
@@ -30,7 +29,8 @@
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.1.1",
     "typescript": "^2.0.10",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "xhr-mock": "^2.0.3"
   },
   "scripts": {
     "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**",
