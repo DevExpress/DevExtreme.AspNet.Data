@@ -19,7 +19,6 @@ build_script:
   - npm run make-nojquery
 
 test_script:
-  - npm run eclint-check
   - npm test
 
   - >-
