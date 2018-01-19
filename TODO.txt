@@ -1,3 +1,2 @@
 - change package.json main?
-- add version to nojquery script
 - nojquery exception message

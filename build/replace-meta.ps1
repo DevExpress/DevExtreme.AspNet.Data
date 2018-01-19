@@ -37,7 +37,8 @@ $targets | %{
     } | Set-Content $path
 }
 
-$script_path = "$PSScriptRoot\..\js\dx.aspnet.data.js"
-$script_text = (Get-Content $script_path -Raw)
-Set-Content -Path $script_path -Value "// Version: $meta_version_full"
-Add-Content -Path $script_path -Value $script_text -NoNewline
+Get-ChildItem "$PSScriptRoot\..\js\*" -Include *.js | ForEach-Object {
+    $script_text = (Get-Content $_ -Raw)
+    Set-Content -Path $_ -Value "// Version: $meta_version_full"
+    Add-Content -Path $_ -Value $script_text -NoNewline
+}
