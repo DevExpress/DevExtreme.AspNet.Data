@@ -37,8 +37,9 @@
   "scripts": {
     "make-nojquery": "node build/make-nojquery",
     "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**",
-    "test": "jshint --verbose js/dx.aspnet.data.js && npm run -s test-karma-jquery && npm run -s test-karma-nojquery && tsc js-test/check-ts-compilation",
+    "test": "jshint --verbose js/dx.aspnet.data.js && npm run -s test-karma-jquery && npm run -s test-karma-nojquery && npm run -s test-dts",
     "test-karma-jquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.js' test.js test-bundle.js && karma start && karma start --bundled",
-    "test-karma-nojquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.nojquery.js' test.js test-bundle.js && karma start --bundled"
+    "test-karma-nojquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.nojquery.js' test.js test-bundle.js && karma start --bundled",
+    "test-dts": "cd js-test && tsc check-ts-compilation.ts && tsc check-ts-compilation.nojquery.ts"
   }
 }
