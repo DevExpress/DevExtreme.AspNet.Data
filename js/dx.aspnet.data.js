@@ -1,8 +1,8 @@
 // https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
-// jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
-/* global DevExpress, define */
+// jshint strict: true, undef: true, unused: true, eqeqeq: true
+/* global DevExpress, jQuery, define */
 
 (function(factory) {
     "use strict";
@@ -17,7 +17,7 @@
         });
     } else {
         DevExpress.data.AspNet = factory(
-            window.jQuery,
+            jQuery,
             DevExpress.data.CustomStore,
             DevExpress.data.utils
         );
