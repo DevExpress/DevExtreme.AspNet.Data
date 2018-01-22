@@ -9,7 +9,7 @@ install:
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
-  - npm run make-nojquery
+  - node build/make-nojquery
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
   - npm install
   - dotnet restore net\DevExtreme.AspNet.Data.sln
