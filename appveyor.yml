@@ -47,6 +47,7 @@ test_script:
 
 after_test:
   - npm pack
+  - npm pack ./js-nojquery
   - cmd /c net\docfx\build
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 

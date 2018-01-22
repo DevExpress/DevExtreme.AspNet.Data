@@ -3,13 +3,18 @@
 const fs = require("fs");
 const path = require("path");
 
+const README = `# DevExtreme ASP.NET Data
+
+jQuery-free version of [devextreme-aspnet-data](https://www.npmjs.com/package/devextreme-aspnet-data)
+`;
+
 const JQ_SURROGATE_AMD = `{
                     ajax: require("devextreme/core/utils/ajax").sendRequest,
                     Deferred: require("devextreme/core/utils/deferred").Deferred,
                     extend: require("devextreme/core/utils/extend").extend
                 }`;
 
-const JQ_SURROGATE_GLOBAL = `throw "This script should be used with an AMD loader"`; // TODO check this message
+const JQ_SURROGATE_GLOBAL = `throw "This script should be used with an AMD loader"`;
 
 const AJAX_SETTINGS_SURROGATE = `{
         cache?: boolean;
@@ -25,23 +30,38 @@ const AJAX_SETTINGS_SURROGATE = `{
         xhrFields?: { [key: string]: any; };
     }`;
 
-const scriptText = fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.js"), "utf-8");
-const dtsText = fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.d.ts"), "utf-8");
-const sampleText = fs.readFileSync(path.join(__dirname, "../js-test/check-ts-compilation.ts"), "utf-8");
+const outputPath = path.join(__dirname, "..", "js-nojquery");
+if(!fs.existsSync(outputPath))
+    fs.mkdirSync(outputPath);
+
+const packageJSON = require("../package.json");
+[ "main", "types", "devDependencies", "scripts" ].forEach(i => delete packageJSON[i]);
+packageJSON.name += "-nojquery";
+packageJSON.dependencies.devextreme = ">=17.2.0";
+fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(packageJSON, null, "  "));
 
 fs.writeFileSync(
-    path.join(__dirname, "../js/dx.aspnet.data.nojquery.js"),
-    scriptText
+    path.join(outputPath, "index.js"),
+    fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.js"), "utf-8")
         .replace("require(\"jquery\")", JQ_SURROGATE_AMD)
         .replace(/DevExpress\.data\.AspNet = [^]+?\)/, JQ_SURROGATE_GLOBAL)
 );
 
 fs.writeFileSync(
-    path.join(__dirname, "../js/dx.aspnet.data.nojquery.d.ts"),
-    dtsText.replace("JQueryAjaxSettings", AJAX_SETTINGS_SURROGATE)
+    path.join(outputPath, "index.d.ts"),
+    fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.d.ts"), "utf-8")
+        .replace("JQueryAjaxSettings", AJAX_SETTINGS_SURROGATE)
 );
 
 fs.writeFileSync(
     path.join(__dirname, "../js-test/check-ts-compilation.nojquery.ts"),
-    sampleText.replace("dx.aspnet.data", "dx.aspnet.data.nojquery")
+    fs.readFileSync(path.join(__dirname, "../js-test/check-ts-compilation.ts"), "utf-8")
+        .replace("../js/dx.aspnet.data", "../js-nojquery/index")
+);
+
+fs.writeFileSync(path.join(outputPath, "README.md"), README);
+
+fs.copyFileSync(
+    path.join(__dirname, "../LICENSE"),
+    path.join(outputPath, "LICENSE")
 );
