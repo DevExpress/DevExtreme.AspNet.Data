@@ -33,6 +33,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
             : base(false) {
 
+            totalSummary = TransformSummary(totalSummary);
+            groupSummary = TransformSummary(groupSummary);
+
             _groupByParam = CreateItemParam(typeof(T));
 
             if(grouping != null) {
@@ -75,11 +78,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
             foreach(var i in summary) {
                 var p = CreateItemParam(typeof(T));
-                if(i.SummaryType == "count") {
-                    exprList.Add(Expression.Constant(null));
-                } else {
-                    exprList.Add(CompileAccessorExpression(p, i.Selector));
-                }
+                exprList.Add(CompileAccessorExpression(p, i.Selector));
                 summaryTypes.Add(i.SummaryType);
                 paramList.Add(p);
             }
@@ -156,19 +155,32 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, int bindingFieldStartIndex) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
+                var selectorExpr = selectorExprList[i];
 
-                if(summaryType == "count")
-                    continue;
+                var method = summaryType == "cnn" ? nameof(Enumerable.Count) : GetPreAggregateMethodName(summaryType);
+                var args = new List<Expression> { aggregateTarget };
+
+                if(summaryType == "cnn") {
+                    if(Utils.CanAssignNull(selectorExpr.Type)) {
+                        args.Add(
+                            Expression.Lambda(
+                                Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
+                                summaryParams[i]
+                            )
+                        );
+                    }
+                } else {
+                    args.Add(Expression.Lambda(selectorExpr, summaryParams[i]));
+                }
 
                 bindingList.Add(
                     Expression.Bind(
                         _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
                         Expression.Call(
                             typeof(Enumerable),
-                            GetPreAggregateMethodName(summaryType),
+                            method,
                             new[] { typeof(T) },
-                            aggregateTarget,
-                            Expression.Lambda(selectorExprList[i], summaryParams[i])
+                            args.ToArray()
                         )
                     )
                 );
@@ -182,7 +194,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 case "max":
                     return nameof(Enumerable.Max);
                 case "sum":
-                case "avg":
                     return nameof(Enumerable.Sum);
             }
 
@@ -235,6 +246,24 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
+        static SummaryInfo[] TransformSummary(IEnumerable<SummaryInfo> source) {
+            if(source == null)
+                return null;
+
+            var result = new List<SummaryInfo>();
+            foreach(var i in source) {
+                if(i.SummaryType == "count")
+                    continue;
+                if(i.SummaryType == "avg") {
+                    result.Add(new SummaryInfo { SummaryType = "sum", Selector = i.Selector });
+                    result.Add(new SummaryInfo { SummaryType = "cnn", Selector = i.Selector });
+                } else {
+                    result.Add(i);
+                }
+            }
+
+            return result.ToArray();
+        }
 
     }
 
