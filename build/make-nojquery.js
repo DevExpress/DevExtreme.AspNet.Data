@@ -37,7 +37,7 @@ if(!fs.existsSync(outputPath))
 const packageJSON = require("../package.json");
 [ "main", "types", "devDependencies", "scripts" ].forEach(i => delete packageJSON[i]);
 packageJSON.name += "-nojquery";
-packageJSON.dependencies.devextreme = ">=17.2.0";
+packageJSON.dependencies.devextreme = ">=17.2.5";
 fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(packageJSON, null, "  "));
 
 fs.writeFileSync(
