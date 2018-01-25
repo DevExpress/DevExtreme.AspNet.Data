@@ -91,15 +91,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 case "max":
                     return new MaxAggregator<T>(_accessor);
                 case "avg":
-                    return new AvgAggregator<T>(_accessor, new CountAggregator<T>(_accessor, true));
+                    return new AvgAggregator<T>(_accessor);
                 case "count":
                     return new CountAggregator<T>(_accessor, false);
 
                 case "remoteCount":
                     return new RemoteCountAggregator<T>(_accessor);
                 case "remoteAvg":
-                    return new AvgAggregator<T>(_accessor, new RemoteCountAggregator<T>(_accessor));
-
+                    return new RemoteAvgAggregator<T>(_accessor);
             }
 
             throw new NotSupportedException();

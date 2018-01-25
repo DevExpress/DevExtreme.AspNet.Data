@@ -50,31 +50,35 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
         }
 
-        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, int fieldStartIndex) {
+        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, int fieldIndex) {
             var result = new List<SummaryInfo>();
+            if(original == null)
+                return result;
 
-            if(original != null) {
-                for(var i = 0; i < original.Length; i++) {
+            for(var originalIndex = 0; originalIndex < original.Length; originalIndex++) {
+                var originalType = original[originalIndex].SummaryType;
+
+                if(originalType == "count") {
                     result.Add(new SummaryInfo {
-                        Selector = AnonType.ITEM_PREFIX + (fieldStartIndex + i),
-                        SummaryType = TransformSummaryType(original[i].SummaryType)
+                        SummaryType = "remoteCount"
                     });
+                } else if(originalType == "avg") {
+                    result.Add(new SummaryInfo {
+                        SummaryType = "remoteAvg",
+                        Selector = fieldIndex.ToString()
+                    });
+                    fieldIndex += 2;
+                } else {
+                    result.Add(new SummaryInfo {
+                        SummaryType = originalType,
+                        Selector = AnonType.ITEM_PREFIX + fieldIndex
+                    });
+                    fieldIndex++;
                 }
             }
 
             return result;
         }
-
-        static string TransformSummaryType(string type) {
-            if(type == "count")
-                return "remoteCount";
-
-            if(type == "avg")
-                return "remoteAvg";
-
-            return type;
-        }
-
 
     }
 
