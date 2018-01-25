@@ -156,13 +156,11 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
                 var selectorExpr = selectorExprList[i];
-
-                var method = summaryType == "cnn" ? nameof(Enumerable.Count) : GetPreAggregateMethodName(summaryType);
-                var args = new List<Expression> { aggregateTarget };
+                var callArgs = new List<Expression> { aggregateTarget };
 
                 if(summaryType == "cnn") {
                     if(Utils.CanAssignNull(selectorExpr.Type)) {
-                        args.Add(
+                        callArgs.Add(
                             Expression.Lambda(
                                 Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
                                 summaryParams[i]
@@ -170,7 +168,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                         );
                     }
                 } else {
-                    args.Add(Expression.Lambda(selectorExpr, summaryParams[i]));
+                    callArgs.Add(Expression.Lambda(selectorExpr, summaryParams[i]));
                 }
 
                 bindingList.Add(
@@ -178,9 +176,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                         _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
                         Expression.Call(
                             typeof(Enumerable),
-                            method,
+                            GetPreAggregateMethodName(summaryType),
                             new[] { typeof(T) },
-                            args.ToArray()
+                            callArgs.ToArray()
                         )
                     )
                 );
@@ -195,6 +193,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     return nameof(Enumerable.Max);
                 case "sum":
                     return nameof(Enumerable.Sum);
+                case "cnn":
+                    return nameof(Enumerable.Count);
             }
 
             throw new NotSupportedException();
