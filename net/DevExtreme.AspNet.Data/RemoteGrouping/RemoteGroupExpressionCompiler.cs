@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data.Types;
+﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -158,7 +159,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 var selectorExpr = selectorExprList[i];
                 var callArgs = new List<Expression> { aggregateTarget };
 
-                if(summaryType == "cnn") {
+                if(summaryType == AggregateName.COUNT_NOT_NULL) {
                     if(Utils.CanAssignNull(selectorExpr.Type)) {
                         callArgs.Add(
                             Expression.Lambda(
@@ -189,13 +190,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
         static string GetPreAggregateMethodName(string summaryType) {
             switch(summaryType) {
-                case "min":
+                case AggregateName.MIN:
                     return nameof(Enumerable.Min);
-                case "max":
+                case AggregateName.MAX:
                     return nameof(Enumerable.Max);
-                case "sum":
+                case AggregateName.SUM:
                     return nameof(Enumerable.Sum);
-                case "cnn":
+                case AggregateName.COUNT_NOT_NULL:
                     return nameof(Enumerable.Count);
             }
 
@@ -254,11 +255,11 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             var result = new List<SummaryInfo>();
             foreach(var i in source) {
-                if(i.SummaryType == "count")
+                if(i.SummaryType == AggregateName.COUNT)
                     continue;
-                if(i.SummaryType == "avg") {
-                    result.Add(new SummaryInfo { SummaryType = "sum", Selector = i.Selector });
-                    result.Add(new SummaryInfo { SummaryType = "cnn", Selector = i.Selector });
+                if(i.SummaryType == AggregateName.AVG) {
+                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.SUM });
+                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.COUNT_NOT_NULL });
                 } else {
                     result.Add(i);
                 }

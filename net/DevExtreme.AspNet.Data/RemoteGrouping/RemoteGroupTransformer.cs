@@ -29,7 +29,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             var transformedTotalSummary = TransformSummary(totalSummary, ref fieldIndex);
             var transformedGroupSummary = TransformSummary(groupSummary, ref fieldIndex);
 
-            transformedTotalSummary.Add(new SummaryInfo { SummaryType = "remoteCount" });
+            transformedTotalSummary.Add(new SummaryInfo { SummaryType = AggregateName.REMOTE_COUNT });
 
             var totals = new AggregateCalculator<AnonType>(dataToAggregate, Accessors.AnonType, transformedTotalSummary, transformedGroupSummary).Run();
             var totalCount = (int)totals.Last();
@@ -53,13 +53,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             for(var originalIndex = 0; originalIndex < original.Length; originalIndex++) {
                 var originalType = original[originalIndex].SummaryType;
 
-                if(originalType == "count") {
+                if(originalType == AggregateName.COUNT) {
                     result.Add(new SummaryInfo {
-                        SummaryType = "remoteCount"
+                        SummaryType = AggregateName.REMOTE_COUNT
                     });
-                } else if(originalType == "avg") {
+                } else if(originalType == AggregateName.AVG) {
                     result.Add(new SummaryInfo {
-                        SummaryType = "remoteAvg",
+                        SummaryType = AggregateName.REMOTE_AVG,
                         Selector = fieldIndex.ToString()
                     });
                     fieldIndex += 2;
