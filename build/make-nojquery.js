@@ -5,7 +5,7 @@ const path = require("path");
 
 const README = `# DevExtreme ASP.NET Data
 
-jQuery-free version of [devextreme-aspnet-data](https://www.npmjs.com/package/devextreme-aspnet-data)
+jQuery-free version of [devextreme-aspnet-data](https://www.npmjs.com/package/devextreme-aspnet-data).
 `;
 
 const JQ_SURROGATE_AMD = `{
@@ -34,11 +34,13 @@ const outputPath = path.join(__dirname, "..", "js-nojquery");
 if(!fs.existsSync(outputPath))
     fs.mkdirSync(outputPath);
 
-const packageJSON = require("../package.json");
-[ "main", "types", "devDependencies", "scripts" ].forEach(i => delete packageJSON[i]);
-packageJSON.name += "-nojquery";
-packageJSON.dependencies.devextreme = ">=17.2.5";
-fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(packageJSON, null, "  "));
+const originalPackageJSON = require("../package.json");
+const nojqueryPackageJSON = { };
+[ "name", "title", "version", "description", "homepage", "license", "author", "repository", "dependencies" ]
+    .forEach(i => nojqueryPackageJSON[i] = originalPackageJSON[i]);
+nojqueryPackageJSON.name += "-nojquery";
+nojqueryPackageJSON.dependencies.devextreme = ">=17.2.5";
+fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(nojqueryPackageJSON, null, "  "));
 
 fs.writeFileSync(
     path.join(outputPath, "index.js"),
