@@ -28,7 +28,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _groupSummaryParams = new List<ParameterExpression>();
 
         Type _remoteGroupType;
-        RemoteGroupTypeMarkup _remoteGroupTypeMarkup;
 
         public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
             : base(false) {
@@ -72,7 +71,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 .ToArray();
 
             _remoteGroupType = AnonType.Get(typeArguments);
-            _remoteGroupTypeMarkup = new RemoteGroupTypeMarkup(_groupKeyExprList.Count, _totalSummaryExprList.Count, _groupSummaryExprList.Count);
         }
 
         void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
@@ -126,20 +124,22 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
             var projectionBindings = new List<MemberAssignment> {
                 Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + RemoteGroupTypeMarkup.CountIndex),
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + 0),
                     Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
                 )
             };
 
             for(var i = 0; i < _groupKeyExprList.Count; i++) {
                 projectionBindings.Add(Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (RemoteGroupTypeMarkup.KeysStartIndex + i)),
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (1 + i)),
                     Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i)
                 ));
             }
 
-            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, _remoteGroupTypeMarkup.TotalSummaryStartIndex);
-            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, _remoteGroupTypeMarkup.GroupSummaryStartIndex);
+            var bindingFieldIndex = 1 + _groupKeyExprList.Count;
+
+            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, ref bindingFieldIndex);
+            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, ref bindingFieldIndex);
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
@@ -152,7 +152,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, Expression.Quote(projectionLambda));
         }
 
-        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, int bindingFieldStartIndex) {
+        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, ref int bindingFieldIndex) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
                 var selectorExpr = selectorExprList[i];
@@ -173,7 +173,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
                 bindingList.Add(
                     Expression.Bind(
-                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
+                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + bindingFieldIndex),
                         Expression.Call(
                             typeof(Enumerable),
                             GetPreAggregateMethodName(summaryType),
@@ -182,6 +182,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                         )
                     )
                 );
+
+                bindingFieldIndex++;
             }
         }
 

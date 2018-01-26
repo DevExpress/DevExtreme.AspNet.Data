@@ -181,7 +181,7 @@ namespace DevExtreme.AspNet.Data {
                 if(level < 2) {
 
                     if(g.items[0] is AnonType remoteGroup) {
-                        g.count = (int)remoteGroup[RemoteGroupTypeMarkup.CountIndex];
+                        g.count = (int)remoteGroup[0];
                     } else {
                         g.count = g.items.Count;
                     }

@@ -12,18 +12,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
     class RemoteGroupTransformer {
 
         public static RemoteGroupingResult Run(IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
-            var markup = new RemoteGroupTypeMarkup(
-                groupCount,
-                totalSummary != null ? totalSummary.Length : 0,
-                groupSummary != null ? groupSummary.Length : 0
-            );
-
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
                 hierGroups = new GroupHelper<AnonType>(Accessors.AnonType).Group(
                     flatGroups,
-                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (RemoteGroupTypeMarkup.KeysStartIndex + i) }).ToArray()
+                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (1 + i) }).ToArray()
                 );
             }
 
@@ -31,8 +25,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(dataToAggregate == null)
                 dataToAggregate = flatGroups;
 
-            var transformedTotalSummary = TransformSummary(totalSummary, markup.TotalSummaryStartIndex);
-            var transformedGroupSummary = TransformSummary(groupSummary, markup.GroupSummaryStartIndex);
+            var fieldIndex = 1 + groupCount;
+            var transformedTotalSummary = TransformSummary(totalSummary, ref fieldIndex);
+            var transformedGroupSummary = TransformSummary(groupSummary, ref fieldIndex);
 
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = "remoteCount" });
 
@@ -50,7 +45,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
         }
 
-        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, int fieldIndex) {
+        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, ref int fieldIndex) {
             var result = new List<SummaryInfo>();
             if(original == null)
                 return result;
