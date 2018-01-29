@@ -73,7 +73,7 @@ The server needs a custom model binder that will receive data loading options fr
 
 ### Client Side
 
-The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, used to reach the controller from the client side. This method accepts an object with the following fields:
+The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, used to reach the controller from the client side. This method accepts an object with the following fields and returns a [CustomStore](https://js.devexpress.com/Documentation/ApiReference/Data_Layer/CustomStore/) instance:
 
 - `key` - the key property;       
 - `loadUrl` - the URL used to load data;      
@@ -89,9 +89,7 @@ The client-side API consists of a single method, `DevExpress.data.AspNet.createS
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
     - `jQueryAjaxSettings`: object      
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
-
-and returns a [CustomStore](https://js.devexpress.com/Documentation/ApiReference/Data_Layer/CustomStore/) instance.
-
+    
 You can find an example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
 DevExtreme ASP.NET MVC Controls call the `DevExpress.data.AspNet.createStore` method internally. To configure the parameters, use the lambda expression of the `DataSource()` method.
