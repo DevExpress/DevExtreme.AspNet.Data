@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data.Types;
+﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _groupSummaryParams = new List<ParameterExpression>();
 
         Type _remoteGroupType;
-        RemoteGroupTypeMarkup _remoteGroupTypeMarkup;
 
         public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
             : base(false) {
+
+            totalSummary = TransformSummary(totalSummary);
+            groupSummary = TransformSummary(groupSummary);
 
             _groupByParam = CreateItemParam(typeof(T));
 
@@ -69,17 +72,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 .ToArray();
 
             _remoteGroupType = AnonType.Get(typeArguments);
-            _remoteGroupTypeMarkup = new RemoteGroupTypeMarkup(_groupKeyExprList.Count, _totalSummaryExprList.Count, _groupSummaryExprList.Count);
         }
 
         void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
             foreach(var i in summary) {
                 var p = CreateItemParam(typeof(T));
-                if(i.SummaryType == "count") {
-                    exprList.Add(Expression.Constant(null));
-                } else {
-                    exprList.Add(CompileAccessorExpression(p, i.Selector));
-                }
+                exprList.Add(CompileAccessorExpression(p, i.Selector));
                 summaryTypes.Add(i.SummaryType);
                 paramList.Add(p);
             }
@@ -127,20 +125,22 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
             var projectionBindings = new List<MemberAssignment> {
                 Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + RemoteGroupTypeMarkup.CountIndex),
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + 0),
                     Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
                 )
             };
 
             for(var i = 0; i < _groupKeyExprList.Count; i++) {
                 projectionBindings.Add(Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (RemoteGroupTypeMarkup.KeysStartIndex + i)),
+                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (1 + i)),
                     Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i)
                 ));
             }
 
-            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, _remoteGroupTypeMarkup.TotalSummaryStartIndex);
-            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, _remoteGroupTypeMarkup.GroupSummaryStartIndex);
+            var bindingFieldIndex = 1 + _groupKeyExprList.Count;
+
+            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, ref bindingFieldIndex);
+            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, ref bindingFieldIndex);
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
@@ -153,37 +153,51 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, Expression.Quote(projectionLambda));
         }
 
-        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, int bindingFieldStartIndex) {
+        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, ref int bindingFieldIndex) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
+                var selectorExpr = selectorExprList[i];
+                var callArgs = new List<Expression> { aggregateTarget };
 
-                if(summaryType == "count")
-                    continue;
+                if(summaryType == AggregateName.COUNT_NOT_NULL) {
+                    if(Utils.CanAssignNull(selectorExpr.Type)) {
+                        callArgs.Add(
+                            Expression.Lambda(
+                                Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
+                                summaryParams[i]
+                            )
+                        );
+                    }
+                } else {
+                    callArgs.Add(Expression.Lambda(selectorExpr, summaryParams[i]));
+                }
 
                 bindingList.Add(
                     Expression.Bind(
-                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (bindingFieldStartIndex + i)),
+                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + bindingFieldIndex),
                         Expression.Call(
                             typeof(Enumerable),
                             GetPreAggregateMethodName(summaryType),
                             new[] { typeof(T) },
-                            aggregateTarget,
-                            Expression.Lambda(selectorExprList[i], summaryParams[i])
+                            callArgs.ToArray()
                         )
                     )
                 );
+
+                bindingFieldIndex++;
             }
         }
 
         static string GetPreAggregateMethodName(string summaryType) {
             switch(summaryType) {
-                case "min":
+                case AggregateName.MIN:
                     return nameof(Enumerable.Min);
-                case "max":
+                case AggregateName.MAX:
                     return nameof(Enumerable.Max);
-                case "sum":
-                case "avg":
+                case AggregateName.SUM:
                     return nameof(Enumerable.Sum);
+                case AggregateName.COUNT_NOT_NULL:
+                    return nameof(Enumerable.Count);
             }
 
             throw new NotSupportedException();
@@ -235,6 +249,24 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
+        static SummaryInfo[] TransformSummary(IEnumerable<SummaryInfo> source) {
+            if(source == null)
+                return null;
+
+            var result = new List<SummaryInfo>();
+            foreach(var i in source) {
+                if(i.SummaryType == AggregateName.COUNT)
+                    continue;
+                if(i.SummaryType == AggregateName.AVG) {
+                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.SUM });
+                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.COUNT_NOT_NULL });
+                } else {
+                    result.Add(i);
+                }
+            }
+
+            return result.ToArray();
+        }
 
     }
 

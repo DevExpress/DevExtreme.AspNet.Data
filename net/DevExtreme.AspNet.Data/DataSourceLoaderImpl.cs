@@ -31,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
             Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
             CanUseRemoteGrouping = options.RemoteGrouping ?? !(isLinqToObjects || preferLocalGrouping);
-            SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == "count");
+            SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
 
             Source = source;
             Options = options;
@@ -181,7 +181,7 @@ namespace DevExtreme.AspNet.Data {
                 if(level < 2) {
 
                     if(g.items[0] is AnonType remoteGroup) {
-                        g.count = (int)remoteGroup[RemoteGroupTypeMarkup.CountIndex];
+                        g.count = (int)remoteGroup[0];
                     } else {
                         g.count = g.items.Count;
                     }

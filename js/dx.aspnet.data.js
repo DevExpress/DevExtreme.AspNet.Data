@@ -1,8 +1,8 @@
 // https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
-// jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
-/* global DevExpress, define */
+// jshint strict: true, undef: true, unused: true, eqeqeq: true
+/* global DevExpress, jQuery, define */
 
 (function(factory) {
     "use strict";
@@ -47,6 +47,7 @@
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
             } else {
+                ajaxSettings.dataType = "json";
                 if(operation === "load")
                     ajaxSettings.cache = false;
 
@@ -73,11 +74,11 @@
         }
 
         function filterByKey(keyValue) {
-            if(!$.isArray(keyExpr))
+            if(!Array.isArray(keyExpr))
                 return [keyExpr, keyValue];
 
-            return $.map(keyExpr, function(i) {
-                return [[i, keyValue[i]]];
+            return keyExpr.map(function(i) {
+                return [i, keyValue[i]];
             });
         }
 
@@ -89,9 +90,9 @@
 
             if(options) {
 
-                $.each(["skip", "take", "requireTotalCount", "requireGroupCount"], function() {
-                    if(this in options)
-                        result[this] = options[this];
+                ["skip", "take", "requireTotalCount", "requireGroupCount"].forEach(function(i) {
+                    if(i in options)
+                        result[i] = options[i];
                 });
 
                 var normalizeSorting = dataUtils.normalizeSortingInfo,
@@ -108,7 +109,7 @@
                     result.group = JSON.stringify(group);
                 }
 
-                if($.isArray(filter)) {
+                if(Array.isArray(filter)) {
                     filter = $.extend(true, [], filter);
                     stringifyDatesInFilter(filter);
                     result.filter = JSON.stringify(filter);
@@ -121,7 +122,7 @@
                     result.groupSummary = JSON.stringify(options.groupSummary);
 
                 if(select) {
-                    if(!$.isArray(select))
+                    if(!Array.isArray(select))
                         select = [ select ];
                     result.select = JSON.stringify(select);
                 }
@@ -223,7 +224,7 @@
     }
 
     function expandLoadResponse(value) {
-        if($.isArray(value))
+        if(Array.isArray(value))
             return { data: value };
 
         if(typeof value === "number")
@@ -269,20 +270,17 @@
     }
 
     function stringifyDatesInFilter(crit) {
-        $.each(crit, function(k, v) {
-            switch($.type(v)) {
-                case "array":
-                    stringifyDatesInFilter(v);
-                    break;
-                case "date":
-                    crit[k] = serializeDate(v);
-                    break;
+        crit.forEach(function(v, k) {
+            if(Array.isArray(v)) {
+                stringifyDatesInFilter(v);
+            } else if(Object.prototype.toString.call(v) === "[object Date]") {
+                crit[k] = serializeDate(v);
             }
         });
     }
 
     function isAdvancedGrouping(expr) {
-        if(!$.isArray(expr))
+        if(!Array.isArray(expr))
             return false;
 
         for(var i = 0; i < expr.length; i++) {
@@ -309,7 +307,7 @@
             if(typeof jsonObj === "string")
                 return jsonObj;
 
-            if($.isPlainObject(jsonObj)) {
+            if(typeof jsonObj === "object") {
                 for(var key in jsonObj) {
                     if(typeof jsonObj[key] === "string")
                         return jsonObj[key];

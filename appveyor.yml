@@ -5,10 +5,11 @@ environment:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 install:
-  - ps: Install-Product node 6
+  - ps: Install-Product node 8
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
+  - node build/make-nojquery
   - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
   - npm install
   - dotnet restore net\DevExtreme.AspNet.Data.sln
@@ -18,7 +19,6 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
 
 test_script:
-  - npm run eclint-check
   - npm test
 
   - >-
@@ -47,6 +47,7 @@ test_script:
 
 after_test:
   - npm pack
+  - npm pack ./js-nojquery
   - cmd /c net\docfx\build
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 

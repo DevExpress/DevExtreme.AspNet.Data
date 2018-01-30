@@ -15,6 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             public int G1 = 0;
             public int G2 = 0;
             public int Value = 0;
+            public int? Nullable = null;
         }
 
         static ParameterExpression CreateTargetParam<T>() {
@@ -37,10 +38,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 },
                 new[] {
                     new SummaryInfo { SummaryType = "count" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "avg" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "max" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "min" },
-                    new SummaryInfo { Selector = "Value", SummaryType = "sum" }
+                    new SummaryInfo { Selector = "Nullable", SummaryType = "avg" },
+                    new SummaryInfo { Selector = "Nullable", SummaryType = "max" },
+                    new SummaryInfo { Selector = "Nullable", SummaryType = "min" },
+                    new SummaryInfo { Selector = "Nullable", SummaryType = "sum" }
                 }
             );
 
@@ -64,15 +65,17 @@ namespace DevExtreme.AspNet.Data.Tests {
                 + "I3 = g.Sum(obj => obj.Value), "
                 + "I4 = g.Min(obj => obj.Value), "
                 + "I5 = g.Max(obj => obj.Value), "
-                + "I6 = g.Sum(obj => obj.Value), "
-                // I7 - skipped count
+                + "I6 = g.Sum(obj => obj.Value), "  // avg sum
+                + "I7 = g.Count(), "                // avg count
+                // (count skipped)
 
                 // group summary
-                // I8 - skipped count
-                + "I9 = g.Sum(obj => obj.Value), "
-                + "I10 = g.Max(obj => obj.Value), "
-                + "I11 = g.Min(obj => obj.Value), "
-                + "I12 = g.Sum(obj => obj.Value)"
+                // (count skipped)
+                + "I8 = g.Sum(obj => obj.Nullable), "               // avg sum
+                + "I9 = g.Count(obj => (obj.Nullable != null)), "   // avg count
+                + "I10 = g.Max(obj => obj.Nullable), "
+                + "I11 = g.Min(obj => obj.Nullable), "
+                + "I12 = g.Sum(obj => obj.Nullable)"
                 + "})",
                 expr.ToString()
             );
