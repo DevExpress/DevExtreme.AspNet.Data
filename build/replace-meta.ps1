@@ -20,7 +20,7 @@ $meta_description = "DevExtreme data layer extension for ASP.NET"
 $meta_license_url = "https://raw.githubusercontent.com/DevExpress/DevExtreme.AspNet.Data/master/LICENSE"
 $meta_project_url = "https://github.com/DevExpress/DevExtreme.AspNet.Data"
 
-$targets = ("..\net\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj", "..\package.json")
+$targets = ("..\net\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj", "..\package.json", "..\js-nojquery\package.json")
 
 $targets | %{
     $path = "$PSScriptRoot\$_"
@@ -37,7 +37,10 @@ $targets | %{
     } | Set-Content $path
 }
 
-$script_path = "$PSScriptRoot\..\js\dx.aspnet.data.js"
-$script_text = (Get-Content $script_path -Raw)
-Set-Content -Path $script_path -Value "// Version: $meta_version_full"
-Add-Content -Path $script_path -Value $script_text -NoNewline
+("..\js\dx.aspnet.data.js", "..\js-nojquery\index.js") | %{
+    $path = "$PSScriptRoot\$_"
+
+    $script_text = (Get-Content $path -Raw)
+    Set-Content -Path $path -Value "// Version: $meta_version_full"
+    Add-Content -Path $path -Value $script_text -NoNewline
+}
