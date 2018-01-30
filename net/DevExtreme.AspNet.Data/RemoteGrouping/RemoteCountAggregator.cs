@@ -16,7 +16,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
         public override void Step(T dataitem, string selector) {
             var group = dataitem as AnonType;
-            _count += (int)group[RemoteGroupTypeMarkup.CountIndex];
+            _count += (int)group[0];
         }
 
         public override object Finish() {

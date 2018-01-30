@@ -84,22 +84,21 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
         Aggregator<T> CreateAggregator(string summaryType) {
             switch(summaryType) {
-                case "sum":
+                case AggregateName.SUM:
                     return new SumAggregator<T>(_accessor);
-                case "min":
+                case AggregateName.MIN:
                     return new MinAggregator<T>(_accessor);
-                case "max":
+                case AggregateName.MAX:
                     return new MaxAggregator<T>(_accessor);
-                case "avg":
-                    return new AvgAggregator<T>(_accessor, new CountAggregator<T>(_accessor, true));
-                case "count":
+                case AggregateName.AVG:
+                    return new AvgAggregator<T>(_accessor);
+                case AggregateName.COUNT:
                     return new CountAggregator<T>(_accessor, false);
 
-                case "remoteCount":
+                case AggregateName.REMOTE_COUNT:
                     return new RemoteCountAggregator<T>(_accessor);
-                case "remoteAvg":
-                    return new AvgAggregator<T>(_accessor, new RemoteCountAggregator<T>(_accessor));
-
+                case AggregateName.REMOTE_AVG:
+                    return new RemoteAvgAggregator<T>(_accessor);
             }
 
             throw new NotSupportedException();
