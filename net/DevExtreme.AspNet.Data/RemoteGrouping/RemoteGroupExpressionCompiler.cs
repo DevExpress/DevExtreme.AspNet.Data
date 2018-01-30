@@ -10,29 +10,22 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
+        IEnumerable<SummaryInfo>
+            _totalSummary,
+            _groupSummary;
+
         ParameterExpression _groupByParam;
 
         IList<Expression>
-            _groupKeyExprList = new List<Expression>(),
-            _totalSummaryExprList = new List<Expression>(),
-            _groupSummaryExprList = new List<Expression>();
+            _groupKeyExprList = new List<Expression>();
 
         IList<bool>
             _descendingList = new List<bool>();
 
-        IList<string>
-            _totalSummaryTypes = new List<string>(),
-            _groupSummaryTypes = new List<string>();
-
-        IList<ParameterExpression>
-            _totalSummaryParams = new List<ParameterExpression>(),
-            _groupSummaryParams = new List<ParameterExpression>();
-
-        public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
+        public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
             : base(false) {
-
-            totalSummary = TransformSummary(totalSummary);
-            groupSummary = TransformSummary(groupSummary);
+            _totalSummary = totalSummary;
+            _groupSummary = groupSummary;
 
             _groupByParam = CreateItemParam(typeof(T));
 
@@ -57,21 +50,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     _groupKeyExprList.Add(selectorExpr);
                     _descendingList.Add(i.Desc);
                 }
-            }
-
-            if(totalSummary != null)
-                InitSummary(totalSummary, _totalSummaryExprList, _totalSummaryTypes, _totalSummaryParams);
-
-            if(_groupKeyExprList.Any() && groupSummary != null)
-                InitSummary(groupSummary, _groupSummaryExprList, _groupSummaryTypes, _groupSummaryParams);
-        }
-
-        void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
-            foreach(var i in summary) {
-                var p = CreateItemParam(typeof(T));
-                exprList.Add(CompileAccessorExpression(p, i.Selector));
-                summaryTypes.Add(i.SummaryType);
-                paramList.Add(p);
             }
         }
 
@@ -122,8 +100,10 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             for(var i = 0; i < _groupKeyExprList.Count; i++)
                 projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
 
-            projectionExprList.AddRange(MakeAggregates(param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes));
-            projectionExprList.AddRange(MakeAggregates(param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes));
+            projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
+
+            if(_groupKeyExprList.Any())
+                projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
             var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
 
@@ -138,35 +118,34 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionType }, target, Expression.Quote(projectionLambda));
         }
 
-        IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes) {
-            for(var i = 0; i < selectorExprList.Count; i++) {
-                var summaryType = summaryTypes[i];
-                var selectorExpr = selectorExprList[i];
-                var summaryParam = summaryParams[i];
+        IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
+            foreach(var s in TransformSummary(summary)) {
+                var itemParam = CreateItemParam(typeof(T));
+                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector);
 
                 var callMethodTypeParams = new List<Type> { typeof(T) };
                 var callArgs = new List<Expression> { aggregateTarget };
 
-                if(summaryType == AggregateName.COUNT_NOT_NULL) {
+                if(s.SummaryType == AggregateName.COUNT_NOT_NULL) {
                     if(Utils.CanAssignNull(selectorExpr.Type)) {
                         callArgs.Add(Expression.Lambda(
                             Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
-                            summaryParam
+                            itemParam
                         ));
                     }
                 } else {
                     if(!IsWellKnownAggregateDataType(selectorExpr.Type)) {
-                        if(summaryType == AggregateName.MIN || summaryType == AggregateName.MAX)
+                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX)
                             callMethodTypeParams.Add(selectorExpr.Type);
-                        else if(summaryType == AggregateName.SUM)
+                        else if(s.SummaryType == AggregateName.SUM)
                             selectorExpr = Expression.Convert(selectorExpr, typeof(Int64)); // TODO
                     }
-                    callArgs.Add(Expression.Lambda(selectorExpr, summaryParam));
+                    callArgs.Add(Expression.Lambda(selectorExpr, itemParam));
                 }
 
                 yield return Expression.Call(
                     typeof(Enumerable),
-                    GetPreAggregateMethodName(summaryType),
+                    GetPreAggregateMethodName(s.SummaryType),
                     callMethodTypeParams.ToArray(),
                     callArgs.ToArray()
                 );
@@ -243,23 +222,20 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
-        static SummaryInfo[] TransformSummary(IEnumerable<SummaryInfo> source) {
+        static IEnumerable<SummaryInfo> TransformSummary(IEnumerable<SummaryInfo> source) {
             if(source == null)
-                return null;
+                yield break;
 
-            var result = new List<SummaryInfo>();
             foreach(var i in source) {
                 if(i.SummaryType == AggregateName.COUNT)
                     continue;
                 if(i.SummaryType == AggregateName.AVG) {
-                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.SUM });
-                    result.Add(new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.COUNT_NOT_NULL });
+                    yield return new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.SUM };
+                    yield return new SummaryInfo { Selector = i.Selector, SummaryType = AggregateName.COUNT_NOT_NULL };
                 } else {
-                    result.Add(i);
+                    yield return i;
                 }
             }
-
-            return result.ToArray();
         }
 
     }
