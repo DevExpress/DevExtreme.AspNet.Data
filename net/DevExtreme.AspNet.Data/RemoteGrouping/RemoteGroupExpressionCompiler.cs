@@ -28,8 +28,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummaryParams = new List<ParameterExpression>(),
             _groupSummaryParams = new List<ParameterExpression>();
 
-        Type _remoteGroupType;
-
         public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary)
             : base(false) {
 
@@ -66,12 +64,6 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             if(_groupKeyExprList.Any() && groupSummary != null)
                 InitSummary(groupSummary, _groupSummaryExprList, _groupSummaryTypes, _groupSummaryParams);
-
-            var typeArguments = new[] { typeof(int) }
-                .Concat(_groupKeyExprList.Concat(_totalSummaryExprList).Concat(_groupSummaryExprList).Select(i => i.Type))
-                .ToArray();
-
-            _remoteGroupType = AnonType.Get(typeArguments);
         }
 
         void InitSummary(IEnumerable<SummaryInfo> summary, IList<Expression> exprList, IList<string> summaryTypes, IList<ParameterExpression> paramList) {
@@ -123,69 +115,71 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
-            var projectionBindings = new List<MemberAssignment> {
-                Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + 0),
-                    Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
-                )
+            var projectionExprList = new List<Expression> {
+                Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
             };
 
-            for(var i = 0; i < _groupKeyExprList.Count; i++) {
-                projectionBindings.Add(Expression.Bind(
-                    _remoteGroupType.GetField(AnonType.ITEM_PREFIX + (1 + i)),
-                    Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i)
-                ));
-            }
+            for(var i = 0; i < _groupKeyExprList.Count; i++)
+                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
 
-            var bindingFieldIndex = 1 + _groupKeyExprList.Count;
+            projectionExprList.AddRange(MakeAggregates(param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes));
+            projectionExprList.AddRange(MakeAggregates(param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes));
 
-            AddAggregateBindings(projectionBindings, param, _totalSummaryExprList, _totalSummaryParams, _totalSummaryTypes, ref bindingFieldIndex);
-            AddAggregateBindings(projectionBindings, param, _groupSummaryExprList, _groupSummaryParams, _groupSummaryTypes, ref bindingFieldIndex);
+            var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
 
             var projectionLambda = Expression.Lambda(
                 Expression.MemberInit(
-                    Expression.New(_remoteGroupType.GetConstructor(Type.EmptyTypes)),
-                    projectionBindings
+                    Expression.New(projectionType.GetConstructor(Type.EmptyTypes)),
+                    projectionExprList.Select((expr, i) => Expression.Bind(projectionType.GetField(AnonType.ITEM_PREFIX + i), expr))
                 ),
                 param
             );
 
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, _remoteGroupType }, target, Expression.Quote(projectionLambda));
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionType }, target, Expression.Quote(projectionLambda));
         }
 
-        void AddAggregateBindings(ICollection<MemberAssignment> bindingList, Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes, ref int bindingFieldIndex) {
+        IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IList<Expression> selectorExprList, IList<ParameterExpression> summaryParams, IList<string> summaryTypes) {
             for(var i = 0; i < selectorExprList.Count; i++) {
                 var summaryType = summaryTypes[i];
                 var selectorExpr = selectorExprList[i];
+                var summaryParam = summaryParams[i];
+
+                var callMethodTypeParams = new List<Type> { typeof(T) };
                 var callArgs = new List<Expression> { aggregateTarget };
 
                 if(summaryType == AggregateName.COUNT_NOT_NULL) {
                     if(Utils.CanAssignNull(selectorExpr.Type)) {
-                        callArgs.Add(
-                            Expression.Lambda(
-                                Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
-                                summaryParams[i]
-                            )
-                        );
+                        callArgs.Add(Expression.Lambda(
+                            Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorExpr.Type)),
+                            summaryParam
+                        ));
                     }
                 } else {
-                    callArgs.Add(Expression.Lambda(selectorExpr, summaryParams[i]));
+                    if(!IsWellKnownAggregateDataType(selectorExpr.Type)) {
+                        if(summaryType == AggregateName.MIN || summaryType == AggregateName.MAX)
+                            callMethodTypeParams.Add(selectorExpr.Type);
+                        else if(summaryType == AggregateName.SUM)
+                            selectorExpr = Expression.Convert(selectorExpr, typeof(Int64)); // TODO
+                    }
+                    callArgs.Add(Expression.Lambda(selectorExpr, summaryParam));
                 }
 
-                bindingList.Add(
-                    Expression.Bind(
-                        _remoteGroupType.GetField(AnonType.ITEM_PREFIX + bindingFieldIndex),
-                        Expression.Call(
-                            typeof(Enumerable),
-                            GetPreAggregateMethodName(summaryType),
-                            new[] { typeof(T) },
-                            callArgs.ToArray()
-                        )
-                    )
+                yield return Expression.Call(
+                    typeof(Enumerable),
+                    GetPreAggregateMethodName(summaryType),
+                    callMethodTypeParams.ToArray(),
+                    callArgs.ToArray()
                 );
-
-                bindingFieldIndex++;
             }
+        }
+
+        static bool IsWellKnownAggregateDataType(Type type) {
+            type = Utils.StripNullableType(type);
+            return type == typeof(decimal)
+                || type == typeof(double)
+                || type == typeof(float)
+                || type == typeof(int)
+                || type == typeof(long);
         }
 
         static string GetPreAggregateMethodName(string summaryType) {

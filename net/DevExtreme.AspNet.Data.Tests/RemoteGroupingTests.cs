@@ -234,6 +234,27 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Single(groups);
             Assert.Equal(2, result.groupCount);
         }
+
+        [Fact]
+        public void Summary_MissingOverload() {
+            // Neither of Min, Max, Sum, Average provides an overload for byte sequences
+            var data = new byte[] { 1, 3, 5 };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] { "sum", "min", "max", "avg" }
+                    .Select(i => new SummaryInfo { Selector = "this", SummaryType = i })
+                    .ToArray()
+            };
+
+            var summary = DataSourceLoader.Load(data, loadOptions).summary;
+
+            Assert.Equal(9M, summary[0]);
+            Assert.Equal((byte)1, summary[1]);
+            Assert.Equal((byte)5, summary[2]);
+            Assert.Equal(3M, summary[3]);
+        }
+
     }
 
 }
