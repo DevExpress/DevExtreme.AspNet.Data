@@ -3,7 +3,7 @@ module.exports = function(config) {
         basePath: "",
         frameworks: [ "qunit" ],
         reporters: [ "dots" ],
-        browsers: [ "PhantomJS" ],
+        browsers: [ "ChromeHeadless" ],
         singleRun: true
     };
 
@@ -11,7 +11,14 @@ module.exports = function(config) {
         options.files = [ "test-bundle.js" ];
     } else {
         options.files = require("./test-deps.js");
-        options.files.push("test.js");
+        options.files.push(
+            "../node_modules/bluebird/js/browser/bluebird.core.min.js",
+            "test.js"
+        );
+        options.customLaunchers = {
+            IE9: { base: "IE", "x-ua-compatible": "IE=EmulateIE9" }
+        };
+        options.browsers.push("IE9");
         options.preprocessors = {
             "../js/*.js": "coverage"
         };

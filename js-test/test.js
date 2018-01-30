@@ -1,41 +1,53 @@
-// jshint strict: true, browser: true, jquery: true, undef: true, unused: true, eqeqeq: true
-/* global DevExpress, define */
+// jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
+/* global ASPNET_DATA_SCRIPT, DevExpress, define, Promise */
 
 (function(factory) {
     "use strict";
 
+    var QUnit = window.QUnit;
+
     if(typeof define === "function" && define.amd) {
+        define("qunit-amd", function() {
+            return QUnit; // https://github.com/karma-runner/karma-qunit/issues/57
+        });
+
         define(function(require) {
-            var $ = require("jquery");
-            require("jquery-mockjax")($, window);
             factory(
-                $,
+                require("qunit-amd"),
+                require("xhr-mock").default,
                 require("devextreme/data/data_source"),
-                require("../js/dx.aspnet.data.js")
+                require(ASPNET_DATA_SCRIPT)
             );
         });
     } else {
         factory(
-            jQuery,
+            QUnit,
+            window.XHRMock,
             DevExpress.data.DataSource,
             DevExpress.data.AspNet
         );
     }
 
-})(function($, DataSource, AspNet) {
+})(function(QUnit, XHRMock, DataSource, AspNet) {
     "use strict";
 
-    var QUnit = window.QUnit,
-        createStore = AspNet.createStore;
+    var createStore = AspNet.createStore;
 
-    $.extend($.mockjaxSettings, {
-        contentType: "application/json",
-        responseTime: 0,
-        logging: false
+    function willRespondWithJson(obj) {
+        XHRMock.use(function(req, res) {
+            return res
+                .status(200)
+                .header("Content-Type", "application/json")
+                .body(JSON.stringify(obj));
+        });
+    }
+
+    QUnit.testStart(function() {
+        XHRMock.setup();
     });
 
     QUnit.testDone(function() {
-        $.mockjax.clear();
+        XHRMock.teardown();
     });
 
     QUnit.module("error handling", function() {
@@ -64,10 +76,8 @@
         QUnit.test("server error", function(assert) {
             var done = assert.async(6);
 
-            $.mockjax({
-                url: "/",
-                status: 500,
-                statusText: "Test Status"
+            XHRMock.use(function(req, res) {
+                return res.status(500).reason("Test Status");
             });
 
             var store = createStore({
@@ -94,12 +104,18 @@
         QUnit.test("timeout", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                isTimeout: true
+            XHRMock.use(function() {
+                return new Promise(function() { });
             });
 
-            createStore({ loadUrl: "/" }).load().fail(function(error) {
+            var store = createStore({
+                loadUrl: "/",
+                onBeforeSend: function(op, ajax) {
+                    ajax.timeout = 1;
+                }
+            });
+
+            store.load().fail(function(error) {
                 assert.equal(error.message, "Network connection timeout");
                 done();
             });
@@ -112,12 +128,12 @@
                 return function(assert) {
                     var done = assert.async();
 
-                    $.mockjax({
-                        url: "/",
-                        status: 400,
-                        statusText: "Bad Request",
-                        contentType: mime,
-                        responseText: responseText
+                    XHRMock.use(function(req, res) {
+                        return res
+                            .status(400)
+                            .reason("Bad Request")
+                            .header("Content-Type", mime)
+                            .body(responseText);
                     });
 
                     createStore({ loadUrl: "/" }).load().fail(function(error) {
@@ -138,9 +154,8 @@
             var done = assert.async(),
                 failCount = 0;
 
-            $.mockjax({
-                url: "/",
-                responseText: '"text"'
+            XHRMock.use(function(req, res) {
+                return res.status(200).body('"text"');
             });
 
             function handleFail(error) {
@@ -165,12 +180,9 @@
         QUnit.test("search becomes filter", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                response: function(settngs) {
-                    assert.equal(settngs.data.filter, '[["haystack","contains","needle"]]');
-                    done();
-                }
+            XHRMock.use(function(req) {
+                assert.equal(req.url().query.filter, '[["haystack","contains","needle"]]');
+                done();
             });
 
             var dataSource = new DataSource({
@@ -185,12 +197,9 @@
         QUnit.test("dates in filter", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                response: function(settings) {
-                    assert.equal(settings.data.filter, '[["a","1/1/2000"],["b","1/1/2000 02:03:04.005"]]');
-                    done();
-                }
+            XHRMock.use(function(req) {
+                assert.equal(req.url().query.filter, '[["a","1/1/2000"],["b","1/1/2000 02:03:04.005"]]');
+                done();
             });
 
             createStore({ loadUrl: "/" }).load({
@@ -201,15 +210,13 @@
         QUnit.test("skip, take, requireTotalCount, requireGroupCount are passed in the request data", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                response: function(settings) {
-                    assert.strictEqual(settings.data.requireGroupCount, true);
-                    assert.strictEqual(settings.data.skip, 0);
-                    assert.strictEqual(settings.data.take, 10);
-                    assert.strictEqual(settings.data.requireTotalCount, false);
-                    done();
-                }
+            XHRMock.use(function(req) {
+                var query = req.url().query;
+                assert.strictEqual(query.requireGroupCount, "true");
+                assert.strictEqual(query.skip, "0");
+                assert.strictEqual(query.take, "10");
+                assert.strictEqual(query.requireTotalCount, "false");
+                done();
             });
 
             createStore({ loadUrl: "/" }).load({
@@ -229,12 +236,9 @@
                     if(normalizedValue === "=")
                         normalizedValue = rawValue;
 
-                    $.mockjax({
-                        url: "/",
-                        response: function(settings) {
-                            assert.deepEqual(JSON.parse(settings.data[optionName]), normalizedValue);
-                            done();
-                        }
+                    XHRMock.use(function(req) {
+                        assert.deepEqual(JSON.parse(req.url().query[optionName]), normalizedValue);
+                        done();
                     });
 
                     var loadOptions = {};
@@ -255,12 +259,9 @@
                 return function(assert) {
                     var done = assert.async();
 
-                    $.mockjax({
-                        url: "/",
-                        response: function(settings) {
-                            assert.deepEqual(JSON.parse(settings.data.select), normalizedValue);
-                            done();
-                        }
+                    XHRMock.use(function(req) {
+                        assert.deepEqual(JSON.parse(req.url().query.select), normalizedValue);
+                        done();
                     });
 
                     createStore({ loadUrl: "/" }).load({ select: rawValue });
@@ -278,10 +279,7 @@
         QUnit.test("totalCount", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: "123"
-            });
+            willRespondWithJson(123);
 
             createStore({ loadUrl: "/" }).totalCount().done(function(r) {
                 assert.strictEqual(r, 123);
@@ -292,10 +290,7 @@
         QUnit.test("totalCount can receive ResponseModel.LoadResult", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: '{ "totalCount": 123, "data": null }'
-            });
+            willRespondWithJson({ totalCount: 123, data: null });
 
             createStore({ loadUrl: "/" }).totalCount().done(function(r) {
                 assert.strictEqual(r, 123);
@@ -306,10 +301,7 @@
         QUnit.test("load returns array", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: "[1, 2, 3]"
-            });
+            willRespondWithJson([1, 2, 3]);
 
             createStore({ loadUrl: "/" }).load().done(function(r) {
                 assert.deepEqual(r, [1, 2, 3]);
@@ -320,9 +312,11 @@
         QUnit.test("load returns structure", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: '{ "data": [1, 2, 3], "totalCount": 123, "summary": [1, 2, 4], "groupCount": 11 }'
+            willRespondWithJson({
+                data: [1, 2, 3],
+                totalCount: 123,
+                summary: [1, 2, 4],
+                groupCount: 11
             });
 
             createStore({ loadUrl: "/" }).load().done(function(data, extra) {
@@ -339,10 +333,7 @@
         QUnit.test("load returns incomplete structure", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: '{ "data": [1, 2, 3] }'
-            });
+            willRespondWithJson({ data: [1, 2, 3] });
 
             createStore({ loadUrl: "/" }).load().done(function(data, extra) {
                 assert.deepEqual(extra, {
@@ -357,10 +348,7 @@
         QUnit.test("byKey", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: '[ "first", "other" ]'
-            });
+            willRespondWithJson([ "first", "other" ]);
 
             createStore({ key: "id", loadUrl: "/" }).byKey(123).done(function(r) {
                 assert.equal(r, "first");
@@ -371,10 +359,7 @@
         QUnit.test("byKey can receive ResponseModel.LoadResult", function(assert) {
             var done = assert.async();
 
-            $.mockjax({
-                url: "/",
-                responseText: '{ "data": [ "item" ] }'
-            });
+            willRespondWithJson({ data: [ "item" ] });
 
             createStore({ key: "any", loadUrl: "/" }).byKey(123).done(function(r) {
                 assert.equal(r, "item");
@@ -388,8 +373,6 @@
 
         QUnit.test("load, no arguments", function(assert) {
             var done = assert.async();
-
-            $.mockjax({ url: "/load" });
 
             var store = createStore({
                 loadUrl: "/load",
@@ -407,8 +390,6 @@
         QUnit.test("totalCount, no arguments", function(assert) {
             var done = assert.async();
 
-            $.mockjax({ url: "/load" });
-
             var store = createStore({
                 loadUrl: "/load",
                 loadParams: { custom: 123 },
@@ -424,8 +405,6 @@
 
         QUnit.test("byKey, single key", function(assert) {
             var done = assert.async();
-
-            $.mockjax({ url: "/load" });
 
             var store = createStore({
                 key: "id",
@@ -444,8 +423,6 @@
         QUnit.test("byKey, compound key", function(assert) {
             var done = assert.async();
 
-            $.mockjax({ url: "/load" });
-
             var store = createStore({
                 key: ["k1", "k2"],
                 loadUrl: "/load",
@@ -461,8 +438,6 @@
 
         QUnit.test("insert", function(assert) {
             var done = assert.async();
-
-            $.mockjax({ url: "/insert" });
 
             var store = createStore({
                 key: "id",
@@ -482,8 +457,6 @@
         QUnit.test("update", function(assert) {
             var done = assert.async();
 
-            $.mockjax({ url: "/update" });
-
             var store = createStore({
                 key: "id",
                 updateUrl: "/update",
@@ -502,8 +475,6 @@
 
         QUnit.test("delete", function(assert) {
             var done = assert.async();
-
-            $.mockjax({ url: "/delete" });
 
             var store = createStore({
                 key: "id",
@@ -528,12 +499,9 @@
             QUnit.test(testName, function(assert) {
                 var done = assert.async();
 
-                $.mockjax({
-                    url: "/",
-                    response: function(settings) {
-                        assert.strictEqual(settings.cache, false);
-                        done();
-                    }
+                XHRMock.use(function(req) {
+                    assert.ok("_" in req.url().query);
+                    done();
                 });
 
                 action(createStore({
@@ -554,10 +522,8 @@
 
         assert.expect(0);
 
-        $.mockjax({
-            url: "/",
-            status: 204,
-            responseText: ""
+        XHRMock.use(function(req, res) {
+            return res.status(204);
         });
 
         var store = createStore({
@@ -567,10 +533,10 @@
             deleteUrl: "/"
         });
 
-        $.when(
+        Promise.all([
             store.update(123, {}),
             store.insert(123, {}),
             store.remove(123)
-        ).then(done);
+        ]).then(done);
     });
 });

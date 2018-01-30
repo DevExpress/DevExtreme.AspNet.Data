@@ -19,22 +19,26 @@
   },
   "devDependencies": {
     "@types/jquery": "^2.0.39",
-    "devextreme": ">=16.2.8",
+    "bluebird": "^3.5.1",
+    "devextreme": ">=17.2.5",
     "eclint": "^2.0.1",
     "jquery": "^3.3.1",
-    "jquery-mockjax": "^2.2.1",
     "jshint": "^2.9.2",
     "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
-    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-ie-launcher": "^1.0.0",
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.1.1",
     "typescript": "^2.0.10",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "xhr-mock": "^2.0.3"
   },
   "scripts": {
-    "eclint-check": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**",
-    "pretest": "webpack --config js-test/test-bundle-webpack-config.js",
-    "test": "jshint --verbose js && karma start js-test/karma.js && karma start js-test/karma.js --bundled && tsc js-test/check-ts-compilation"
+    "test": "jshint --verbose js js-nojquery && npm run -s test-eclint && npm run -s test-karma-jquery && npm run -s test-karma-nojquery && npm run -s test-dts",
+    "test-karma-jquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.js' test.js test-bundle.js && karma start && karma start --bundled",
+    "test-karma-nojquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' test.js test-bundle.js && karma start --bundled",
+    "test-dts": "cd js-test && tsc check-ts-compilation.ts && tsc check-ts-compilation.nojquery.ts",
+    "test-eclint": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !net/docfx/build/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**"
   }
 }

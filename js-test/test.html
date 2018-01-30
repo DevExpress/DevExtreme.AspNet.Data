@@ -1,5 +1,8 @@
 <script src="test-deps.js"></script>
 <script>
+    if(!window.Promise)
+        TEST_DEPS.push("../node_modules/bluebird/js/browser/bluebird.core.min.js");
+
     TEST_DEPS.forEach(function(i) {
         document.write("<script src='" + i + "'></scr" + "ipt>");
     });
