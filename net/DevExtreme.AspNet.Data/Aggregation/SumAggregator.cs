@@ -8,7 +8,6 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
     class SumAggregator<T> : Aggregator<T> {
         object _sum;
-        Type _type;
 
         public SumAggregator(IAccessor<T> accessor)
             : base(accessor) {
@@ -18,20 +17,18 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             var value = Accessor.Read(container, selector);
 
             if(value != null) {
-                if(_type == null) {
-                    _type = (value is Double || value is Single) ? typeof(Double) : typeof(Decimal);
-                    _sum = Activator.CreateInstance(_type);
+                if(_sum == null) {
+                    if(value is Double || value is Single)
+                        _sum = 0d;
+                    else
+                        _sum = 0m;
                 }
 
                 try {
-                    value = Convert.ChangeType(value, _type, CultureInfo.InvariantCulture);
-
-                    if(_type == typeof(Double)) {
-                        _sum = (Double)_sum + (Double)value;
-                    } else {
-                        _sum = (Decimal)_sum + (Decimal)value;
-                    }
-
+                    if(_sum is Double)
+                        _sum = (Double)_sum + Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                    else
+                        _sum = (Decimal)_sum + Convert.ToDecimal(value, CultureInfo.InvariantCulture);
                 } catch(FormatException) {
                 } catch(InvalidCastException) {
                 }
