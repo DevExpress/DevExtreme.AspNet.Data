@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bug179.cs" />
+    <Compile Include="Bug184.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Bug112.cs" />
     <Compile Include="SampleLoadOptions.cs" />
