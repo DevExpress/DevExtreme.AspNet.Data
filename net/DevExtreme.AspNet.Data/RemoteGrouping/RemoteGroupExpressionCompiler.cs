@@ -30,20 +30,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(_grouping != null) {
                 foreach(var i in _grouping) {
                     var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector);
-                    if(!String.IsNullOrEmpty(i.GroupInterval)) {
-                        var groupIntervalExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
-
-                        if(Utils.CanAssignNull(selectorExpr.Type)) {
-                            var nullableType = typeof(Nullable<>).MakeGenericType(groupIntervalExpr.Type);
-                            var nullConst = Expression.Constant(null, nullableType);
-                            var test = Expression.Equal(selectorExpr, nullConst);
-
-                            groupIntervalExpr = Expression.Convert(groupIntervalExpr, nullableType);
-                            selectorExpr = Expression.Condition(test, nullConst, groupIntervalExpr);
-                        } else {
-                            selectorExpr = groupIntervalExpr;
-                        }
-                    }
+                    if(!String.IsNullOrEmpty(i.GroupInterval))
+                        selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
 
                     groupKeyExprList.Add(selectorExpr);
                     descendingList.Add(i.Desc);
@@ -194,7 +182,24 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
-        Expression CompileGroupInterval(Expression selector, string intervalString) {
+        Expression CompileGroupInterval(Expression selectorExpr, string groupInterval) {
+            var groupIntervalExpr = CompileGroupIntervalCore(selectorExpr, groupInterval);
+
+            if(Utils.CanAssignNull(selectorExpr.Type)) {
+                var nullableType = typeof(Nullable<>).MakeGenericType(groupIntervalExpr.Type);
+                var nullConst = Expression.Constant(null, nullableType);
+
+                return Expression.Condition(
+                    Expression.Equal(selectorExpr, nullConst),
+                    nullConst,
+                    Expression.Convert(groupIntervalExpr, nullableType)
+                );
+            }
+
+            return groupIntervalExpr;
+        }
+
+        Expression CompileGroupIntervalCore(Expression selector, string intervalString) {
             if(Char.IsDigit(intervalString[0])) {
                 return Expression.MakeBinary(
                     ExpressionType.Subtract,
