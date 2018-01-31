@@ -10,28 +10,26 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
+        IEnumerable<GroupingInfo> _grouping;
         IEnumerable<SummaryInfo>
             _totalSummary,
             _groupSummary;
 
-        ParameterExpression _groupByParam;
-
-        IList<Expression>
-            _groupKeyExprList = new List<Expression>();
-
-        IList<bool>
-            _descendingList = new List<bool>();
-
-        public RemoteGroupExpressionCompiler(GroupingInfo[] grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
             : base(false) {
+            _grouping = grouping;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
+        }
 
-            _groupByParam = CreateItemParam(typeof(T));
+        public Expression Compile(Expression target) {
+            var groupByParam = CreateItemParam(typeof(T));
+            var groupKeyExprList = new List<Expression>();
+            var descendingList = new List<bool>();
 
-            if(grouping != null) {
-                foreach(var i in grouping) {
-                    var selectorExpr = CompileAccessorExpression(_groupByParam, i.Selector);
+            if(_grouping != null) {
+                foreach(var i in _grouping) {
+                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector);
                     if(!String.IsNullOrEmpty(i.GroupInterval)) {
                         var groupIntervalExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
 
@@ -47,27 +45,25 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                         }
                     }
 
-                    _groupKeyExprList.Add(selectorExpr);
-                    _descendingList.Add(i.Desc);
+                    groupKeyExprList.Add(selectorExpr);
+                    descendingList.Add(i.Desc);
                 }
             }
-        }
 
-        public Expression Compile(Expression target) {
-            var groupKeySelectorTypes = _groupKeyExprList.Select(i => i.Type).ToArray();
+            var groupKeySelectorTypes = groupKeyExprList.Select(i => i.Type).ToArray();
             var groupKeyType = AnonType.Get(groupKeySelectorTypes);
 
-            var groupKeyProps = Enumerable.Range(0, _groupKeyExprList.Count)
+            var groupKeyProps = Enumerable.Range(0, groupKeyExprList.Count)
                 .Select(i => groupKeyType.GetField(AnonType.ITEM_PREFIX + i))
                 .ToArray();
 
             var groupKeyLambda = Expression.Lambda(
                 Expression.New(
                     groupKeyType.GetConstructor(groupKeySelectorTypes),
-                    _groupKeyExprList,
+                    groupKeyExprList,
                     groupKeyProps
                 ),
-                _groupByParam
+                groupByParam
             );
 
             var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
@@ -80,29 +76,29 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
                 target = Expression.Call(
                     typeof(Queryable),
-                    Utils.GetSortMethod(i == 0, _descendingList[i]),
+                    Utils.GetSortMethod(i == 0, descendingList[i]),
                     new[] { groupingType, orderAccessor.Type },
                     target,
                     Expression.Quote(Expression.Lambda(orderAccessor, orderParam))
                 );
             }
 
-            target = MakeAggregatingProjection(target, Expression.Parameter(groupingType, "g"));
-
-            return target;
+            return MakeAggregatingProjection(target, groupingType, groupKeyExprList.Count);
         }
 
-        Expression MakeAggregatingProjection(Expression target, ParameterExpression param) {
+        Expression MakeAggregatingProjection(Expression target, Type groupingType, int groupCount) {
+            var param = Expression.Parameter(groupingType, "g");
+
             var projectionExprList = new List<Expression> {
                 Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
             };
 
-            for(var i = 0; i < _groupKeyExprList.Count; i++)
+            for(var i = 0; i < groupCount; i++)
                 projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
 
             projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
 
-            if(_groupKeyExprList.Any())
+            if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
             var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
