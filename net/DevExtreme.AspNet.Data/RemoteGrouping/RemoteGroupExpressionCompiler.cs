@@ -124,6 +124,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 var selectorExpr = CompileAccessorExpression(itemParam, s.Selector);
                 var selectorType = selectorExpr.Type;
 
+                var callType = typeof(Enumerable);
+                var callMethod = GetPreAggregateMethodName(s.SummaryType);
                 var callMethodTypeParams = new List<Type> { typeof(T) };
                 var callArgs = new List<Expression> { aggregateTarget };
 
@@ -136,20 +138,21 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     }
                 } else {
                     if(!IsWellKnownAggregateDataType(selectorType)) {
-                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX)
+                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
                             callMethodTypeParams.Add(selectorType);
-                        else if(s.SummaryType == AggregateName.SUM)
-                            selectorExpr = Expression.Convert(selectorExpr, GetSumType(selectorType));
+                        } else if(s.SummaryType == AggregateName.SUM) {
+                            if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
+                                callType = typeof(DynamicSum);
+                                callMethod = nameof(DynamicSum.Calculate);
+                            } else {
+                                selectorExpr = Expression.Convert(selectorExpr, GetSumType(selectorType));
+                            }
+                        }
                     }
                     callArgs.Add(Expression.Lambda(selectorExpr, itemParam));
                 }
 
-                yield return Expression.Call(
-                    typeof(Enumerable),
-                    GetPreAggregateMethodName(s.SummaryType),
-                    callMethodTypeParams.ToArray(),
-                    callArgs.ToArray()
-                );
+                yield return Expression.Call(callType, callMethod, callMethodTypeParams.ToArray(), callArgs.ToArray());
             }
         }
 

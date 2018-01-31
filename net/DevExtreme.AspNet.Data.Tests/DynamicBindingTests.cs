@@ -168,6 +168,35 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(4m, result.summary[0]);
         }
 
+        [Fact]
+        public void T598818() {
+            var data = new[] {
+                CreateExpando(1),
+                CreateExpando(3),
+                CreateExpando(5),
+                CreateExpando(null),
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { SummaryType = "sum", Selector = P1 },
+                    new SummaryInfo { SummaryType = "min", Selector = P1 },
+                    new SummaryInfo { SummaryType = "max", Selector = P1 },
+                    new SummaryInfo { SummaryType = "avg", Selector = P1 }
+                }
+            };
+
+            var summary = DataSourceLoader.Load(data, loadOptions).summary;
+
+            Assert.Contains(".GroupBy", loadOptions.ExpressionLog[1]);
+
+            Assert.Equal(9m, summary[0]);
+            Assert.Equal(1, summary[1]);
+            Assert.Equal(5, summary[2]);
+            Assert.Equal(3m, summary[3]);
+        }
+
     }
 
 }
