@@ -21,13 +21,16 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override object Finish() {
-            var count = _counter.Finish();
-            var sum = _summator.Finish();
-
-            if(Equals(count, 0))
+            var count = (int)_counter.Finish();
+            if(count == 0)
                 return null;
 
-            return (decimal)sum / (int)count;
+            var sum = _summator.Finish();
+
+            if(sum is Double doubleSum)
+                return doubleSum / count;
+
+            return (decimal)sum / count;
         }
     }
 
