@@ -539,4 +539,17 @@
             store.remove(123)
         ]).then(done);
     });
+
+    QUnit.test("DevExtreme#2770", function(assert) {
+        var done = assert.async();
+
+        XHRMock.use(function(req, res) {
+            return res.status(200).body("[]");
+        });
+
+        createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function(res) {
+            assert.expect(0);
+            done();
+        });
+    });
 });
