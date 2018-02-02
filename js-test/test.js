@@ -541,6 +541,10 @@
     });
 
     QUnit.test("DevExtreme#2770", function(assert) {
+        assert.expect(0);
+        if(document.documentMode < 10)
+            return;
+
         var done = assert.async();
 
         XHRMock.use(function(req, res) {
@@ -548,7 +552,6 @@
         });
 
         createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function(res) {
-            assert.expect(0);
             done();
         });
     });
