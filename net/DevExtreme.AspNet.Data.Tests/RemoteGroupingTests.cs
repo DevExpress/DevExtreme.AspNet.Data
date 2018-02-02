@@ -234,6 +234,85 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Single(groups);
             Assert.Equal(2, result.groupCount);
         }
+
+        [Fact]
+        public void Summary_MissingOverload() {
+            // Neither of Min, Max, Sum, Average provides an overload for byte sequences
+            var data = new byte[] { 1, 3, 5 };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] { "sum", "min", "max", "avg" }
+                    .Select(i => new SummaryInfo { Selector = "this", SummaryType = i })
+                    .ToArray()
+            };
+
+            var summary = DataSourceLoader.Load(data, loadOptions).summary;
+
+            Assert.Equal(9M, summary[0]);
+            Assert.Equal((byte)1, summary[1]);
+            Assert.Equal((byte)5, summary[2]);
+            Assert.Equal(3M, summary[3]);
+        }
+
+        [Fact]
+        public void Summary_MissingOverload_SumBrute() {
+            var values = new[] {
+                new {
+                    p1 = byte.MaxValue,
+                    p2 = sbyte.MaxValue,
+                    p3 = short.MaxValue,
+                    p4 = ushort.MaxValue,
+                    p5 = uint.MaxValue,
+                    p6 = ulong.MaxValue
+                }
+            };
+
+            var nullableValues = new[] {
+                new {
+                    p1 = new byte?(byte.MaxValue),
+                    p2 = new sbyte?(sbyte.MaxValue),
+                    p3 = new short?(short.MaxValue),
+                    p4 = new ushort?(ushort.MaxValue),
+                    p5 = new uint?(uint.MaxValue),
+                    p6 = new ulong?(ulong.MaxValue)
+                }
+            };
+
+            var nulls = new[] {
+                new {
+                    p1 = new byte?(),
+                    p2 = new sbyte?(),
+                    p3 = new short?(),
+                    p4 = new ushort?(),
+                    p5 = new uint?(),
+                    p6 = new ulong?()
+                }
+            };
+
+            var valuesExpectation = new object[] {
+                (decimal)byte.MaxValue,
+                (decimal)sbyte.MaxValue,
+                (decimal)short.MaxValue,
+                (decimal)ushort.MaxValue,
+                (decimal)uint.MaxValue,
+                (decimal)ulong.MaxValue,
+            };
+
+            var nullsExpectation = new object[] { 0m, 0m, 0m, 0m, 0m, 0m };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = Enumerable.Range(1, 6)
+                    .Select(i => new SummaryInfo { Selector = "p" + i, SummaryType = "sum" })
+                    .ToArray()
+            };
+
+            Assert.Equal(valuesExpectation, DataSourceLoader.Load(values, loadOptions).summary);
+            Assert.Equal(valuesExpectation, DataSourceLoader.Load(nullableValues, loadOptions).summary);
+            Assert.Equal(nullsExpectation, DataSourceLoader.Load(nulls, loadOptions).summary);
+        }
+
     }
 
 }
