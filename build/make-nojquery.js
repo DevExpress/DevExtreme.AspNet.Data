@@ -39,7 +39,7 @@ const nojqueryPackageJSON = { };
 [ "name", "title", "version", "description", "homepage", "license", "author", "repository", "dependencies" ]
     .forEach(i => nojqueryPackageJSON[i] = originalPackageJSON[i]);
 nojqueryPackageJSON.name += "-nojquery";
-nojqueryPackageJSON.dependencies.devextreme = ">=17.2.5";
+nojqueryPackageJSON.dependencies.devextreme = ">=17.2.6-pre-18033";
 fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(nojqueryPackageJSON, null, "  "));
 
 fs.writeFileSync(
