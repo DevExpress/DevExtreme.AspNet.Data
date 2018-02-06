@@ -444,7 +444,7 @@
                 insertUrl: "/insert",
                 onBeforeSend: function(op, ajax) {
                     assert.equal(op, "insert");
-                    assert.equal(ajax.type, "POST");
+                    assert.equal(ajax.method, "POST");
                     assert.deepEqual(ajax.data, {
                         values: '{"a":1}'
                     });
@@ -462,7 +462,7 @@
                 updateUrl: "/update",
                 onBeforeSend: function(op, ajax) {
                     assert.equal(op, "update");
-                    assert.equal(ajax.type, "PUT");
+                    assert.equal(ajax.method, "PUT");
                     assert.deepEqual(ajax.data, {
                         key: 123,
                         values: '{"a":1}'
@@ -481,7 +481,7 @@
                 deleteUrl: "/delete",
                 onBeforeSend: function(op, ajax) {
                     assert.equal(op, "delete");
-                    assert.equal(ajax.type, "DELETE");
+                    assert.equal(ajax.method, "DELETE");
                     assert.deepEqual(ajax.data, {
                         key: 123,
                     });
@@ -538,5 +538,58 @@
             store.insert(123, {}),
             store.remove(123)
         ]).then(done);
+    });
+
+    QUnit.test("DevExtreme#2770", function(assert) {
+        assert.expect(0);
+        if(document.documentMode < 10)
+            return;
+
+        var done = assert.async();
+
+        XHRMock.use(function(req, res) {
+            return res.status(200).body("[]");
+        });
+
+        createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function(res) {
+            done();
+        });
+    });
+
+    QUnit.test("custom HTTP methods", function(assert) {
+        var done = assert.async();
+        var actualMethods = [];
+
+        function notifyRequest() {
+            if(actualMethods.length > 5) {
+                actualMethods.sort();
+                assert.deepEqual(actualMethods, [
+                    "CUSTOM_DELETE",
+                    "CUSTOM_INSERT",
+                    "CUSTOM_LOAD", "CUSTOM_LOAD", "CUSTOM_LOAD",
+                    "CUSTOM_UPDATE"
+                ]);
+                done();
+            }
+        }
+
+        XHRMock.use(function(req, res) {
+            actualMethods.push(req.method());
+            notifyRequest();
+        });
+
+        var options = { key: "any" };
+        [ "load", "insert", "update", "delete" ].forEach(function(op) {
+            options[op + "Url"] = "/";
+            options[op + "Method"] = "custom_" + op;
+        });
+
+        var store = createStore(options);
+        store.load();
+        store.totalCount();
+        store.byKey(123);
+        store.insert({});
+        store.update(123, {});
+        store.remove(123);
     });
 });

@@ -197,11 +197,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             var data = Enumerable.Repeat(Double.MaxValue / 3, 2);
 
             var calculator = new AggregateCalculator<double>(data, new DefaultAccessor<double>(),
-                new[] { new SummaryInfo { Selector = "this", SummaryType = "sum" } },
+                new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "sum" },
+                    new SummaryInfo { Selector = "this", SummaryType = "avg" }
+                },
                 null
             );
 
-            Assert.Equal(data.Sum(), calculator.Run()[0]);
+            var totals = calculator.Run();
+
+            Assert.Equal(data.Sum(), totals[0]);
+            Assert.Equal(data.Average(), totals[1]);
         }
 
     }
