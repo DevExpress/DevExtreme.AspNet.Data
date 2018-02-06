@@ -555,7 +555,7 @@
             done();
         });
     });
-    
+
     QUnit.test("custom HTTP methods", function(assert) {
         var done = assert.async();
         var actualMethods = [];
