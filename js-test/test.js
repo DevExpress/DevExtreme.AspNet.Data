@@ -540,7 +540,6 @@
         ]).then(done);
     });
 
-
     QUnit.test("DevExtreme#2770", function(assert) {
         assert.expect(0);
         if(document.documentMode < 10)
