@@ -540,6 +540,23 @@
         ]).then(done);
     });
 
+
+    QUnit.test("DevExtreme#2770", function(assert) {
+        assert.expect(0);
+        if(document.documentMode < 10)
+            return;
+
+        var done = assert.async();
+
+        XHRMock.use(function(req, res) {
+            return res.status(200).body("[]");
+        });
+
+        createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function(res) {
+            done();
+        });
+    });
+    
     QUnit.test("custom HTTP methods", function(assert) {
         var done = assert.async();
         var actualMethods = [];
@@ -570,5 +587,5 @@
         store.insert({});
         store.update(123, {});
         store.remove(123);
-    });
+    });    
 });
