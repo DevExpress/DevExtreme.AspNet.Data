@@ -561,11 +561,14 @@
         var actualMethods = [];
 
         function notifyRequest() {
-            if(actualMethods.length > 3) {
-                assert.ok(actualMethods.indexOf("CUSTOM_LOAD") > -1);
-                assert.ok(actualMethods.indexOf("CUSTOM_INSERT") > -1);
-                assert.ok(actualMethods.indexOf("CUSTOM_UPDATE") > -1);
-                assert.ok(actualMethods.indexOf("CUSTOM_DELETE") > -1);
+            if(actualMethods.length > 5) {
+                actualMethods.sort();
+                assert.deepEqual(actualMethods, [
+                    "CUSTOM_DELETE",
+                    "CUSTOM_INSERT",
+                    "CUSTOM_LOAD", "CUSTOM_LOAD", "CUSTOM_LOAD",
+                    "CUSTOM_UPDATE"
+                ]);
                 done();
             }
         }
@@ -583,6 +586,8 @@
 
         var store = createStore(options);
         store.load();
+        store.totalCount();
+        store.byKey(123);
         store.insert({});
         store.update(123, {});
         store.remove(123);
