@@ -587,5 +587,5 @@
         store.insert({});
         store.update(123, {});
         store.remove(123);
-    });    
+    });
 });
