@@ -35,6 +35,7 @@
     function createStoreConfig(options) {
         var keyExpr = options.key,
             loadUrl = options.loadUrl,
+            loadMethod = options.loadMethod || "GET",
             loadParams = options.loadParams,
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
@@ -142,6 +143,7 @@
                     false,
                     {
                         url: loadUrl,
+                        method: loadMethod,
                         data: loadOptionsToActionParams(loadOptions)
                     },
                     function(d, res) {
@@ -158,6 +160,7 @@
                     false,
                     {
                         url: loadUrl,
+                        method: loadMethod,
                         data: loadOptionsToActionParams(loadOptions, true)
                     },
                     function(d, res) {
@@ -174,6 +177,7 @@
                     true,
                     {
                         url: loadUrl,
+                        method: loadMethod,
                         data: loadOptionsToActionParams({ filter: filterByKey(key) })
                     },
                     function(d, res) {
@@ -187,7 +191,7 @@
             update: updateUrl && function(key, values) {
                 return send("update", true, {
                     url: updateUrl,
-                    type: options.updateMethod || "PUT",
+                    method: options.updateMethod || "PUT",
                     data: {
                         key: serializeKey(key),
                         values: JSON.stringify(values)
@@ -198,7 +202,7 @@
             insert: insertUrl && function(values) {
                 return send("insert", true, {
                     url: insertUrl,
-                    type: options.insertMethod || "POST",
+                    method: options.insertMethod || "POST",
                     data: { values: JSON.stringify(values) }
                 });
             },
@@ -206,7 +210,7 @@
             remove: deleteUrl && function(key) {
                 return send("delete", true, {
                     url: deleteUrl,
-                    type: options.deleteMethod || "DELETE",
+                    method: options.deleteMethod || "DELETE",
                     data: { key: serializeKey(key) }
                 });
             }

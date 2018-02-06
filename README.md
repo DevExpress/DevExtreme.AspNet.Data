@@ -81,6 +81,7 @@ The client-side API consists of a single method, `DevExpress.data.AspNet.createS
 - `updateUrl` - the URL used to update data;       
 - `insertUrl` - the URL used to insert data;        
 - `deleteUrl` - the URL used to delete data;     
+- `loadMethod` - the HTTP method for load requests; "GET" by default;
 - `updateMethod` - the HTTP method for update requests; "PUT" by default;
 - `insertMethod` - the HTTP method for insert requests; "POST" by default;
 - `deleteMethod` - the HTTP method for delete requests; "DELETE" by default;
