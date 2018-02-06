@@ -592,4 +592,58 @@
         store.update(123, {});
         store.remove(123);
     });
+
+    QUnit.test("insert responds with text", function(assert) {
+        var done = assert.async();
+
+        XHRMock.use(function(req, res) {
+            return res
+                .header("Content-Type", "text/plain")
+                .status(200)
+                .body("key-text");
+        });
+
+        createStore({ key: "any", insertUrl: "/" })
+            .insert({ })
+            .done(function(values, key) {
+                assert.equal(key, "key-text");
+                done();
+            });
+    });
+
+    QUnit.test("insert responds with JSON", function(assert) {
+        var done = assert.async();
+
+        willRespondWithJson({ keyProp: "keyValue" });
+
+        createStore({ key: "any", insertUrl: "/" })
+            .insert({ })
+            .done(function(values, key) {
+                assert.deepEqual(key, { keyProp: "keyValue" });
+                done();
+            });
+    });
+
+    QUnit.test("insert, update, delete accept empty response", function(assert) {
+        var done = assert.async();
+
+        XHRMock.use(function(req, res) {
+            return res.status(200).body("");
+        });
+
+        var store = createStore({
+            key: "any",
+            insertUrl: "/",
+            updateUrl: "/",
+            deleteUrl: "/"
+        });
+
+        assert.expect(0);
+
+        Promise.all([
+            store.insert({}),
+            store.update(123, { }),
+            store.remove(123)
+        ]).then(done);
+    });
 });
