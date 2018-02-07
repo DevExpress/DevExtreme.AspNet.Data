@@ -63,7 +63,7 @@
                         if(customSuccessHandler)
                             customSuccessHandler(d, res, xhr);
                         else
-                            d.resolve(res);
+                            d.resolve();
                     })
                     .fail(function(xhr, textStatus) {
                         var message = getErrorMessageFromXhr(xhr);
