@@ -73,7 +73,7 @@ The server needs a custom model binder that will receive data loading options fr
 
 ### Client Side
 
-The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, used to reach the controller from the client side. This method accepts an object with the following fields:
+The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, that creates a [CustomStore](https://js.devexpress.com/Documentation/ApiReference/Data_Layer/CustomStore/), configures it to reach the controller from the client side, and returns its instance. When calling this method, pass in an object with the following properties:
 
 - `key` - the key property;       
 - `loadUrl` - the URL used to load data;      
