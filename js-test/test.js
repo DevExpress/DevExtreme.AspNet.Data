@@ -272,6 +272,52 @@
             QUnit.test("as array", testCase([ "abc" ], [ "abc" ]));
         });
 
+        QUnit.test("undefined values", function(assert) {
+            var done = assert.async();
+
+            var loadOptionNames = [
+                "skip", "take",
+                "requireTotalCount", "requireGroupCount",
+                "sort", "group", "filter",
+                "totalSummary", "groupSummary"
+            ];
+
+            XHRMock.use(function(req) {
+                var query = req.url().query;
+                loadOptionNames.forEach(function(i) {
+                    assert.ok(!(i in query));
+                });
+                done();
+            });
+
+            var loadOptions = { };
+            loadOptionNames.forEach(function(i) {
+                loadOptions[i] = undefined;
+            });
+
+            createStore({ loadUrl: "/" }).load(loadOptions);
+        });
+
+        QUnit.test("zero and false", function(assert) {
+            var done = assert.async();
+
+            XHRMock.use(function(req) {
+                var query = req.url().query;
+                assert.equal(query.skip, "0");
+                assert.equal(query.take, "0");
+                assert.equal(query.requireTotalCount, "false");
+                assert.equal(query.requireGroupCount, "false");
+                done();
+            });
+
+            createStore({ loadUrl: "/" }).load({
+                skip: 0,
+                take: 0,
+                requireTotalCount: false,
+                requireGroupCount: false
+            });
+        });
+
     });
 
     QUnit.module("loading", function() {

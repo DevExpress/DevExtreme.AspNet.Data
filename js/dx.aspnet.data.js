@@ -1,7 +1,7 @@
 // https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
-// jshint strict: true, undef: true, unused: true, eqeqeq: true
+// jshint strict: true, undef: true, unused: true, eqeqeq: true, eqnull:true
 /* global DevExpress, jQuery, define */
 
 (function(factory) {
@@ -95,7 +95,7 @@
             if(options) {
 
                 ["skip", "take", "requireTotalCount", "requireGroupCount"].forEach(function(i) {
-                    if(i in options)
+                    if(options[i] != null)
                         result[i] = options[i];
                 });
 
