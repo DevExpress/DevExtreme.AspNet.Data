@@ -48,19 +48,22 @@
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
             } else {
-                ajaxSettings.dataType = "json";
-                if(operation === "load")
+                if(operation === "load") {
                     ajaxSettings.cache = false;
+                    ajaxSettings.dataType = "json";
+                } else {
+                    ajaxSettings.dataType = "text";
+                }
 
                 if(onBeforeSend)
                     onBeforeSend(operation, ajaxSettings);
 
                 $.ajax(ajaxSettings)
-                    .done(function(res) {
+                    .done(function(res, textStatus, xhr) {
                         if(customSuccessHandler)
-                            customSuccessHandler(d, res);
+                            customSuccessHandler(d, res, xhr);
                         else
-                            d.resolve(res);
+                            d.resolve();
                     })
                     .fail(function(xhr, textStatus) {
                         var message = getErrorMessageFromXhr(xhr);
@@ -200,11 +203,20 @@
             },
 
             insert: insertUrl && function(values) {
-                return send("insert", true, {
-                    url: insertUrl,
-                    method: options.insertMethod || "POST",
-                    data: { values: JSON.stringify(values) }
-                });
+                return send(
+                    "insert",
+                    true,
+                    {
+                        url: insertUrl,
+                        method: options.insertMethod || "POST",
+                        data: { values: JSON.stringify(values) }
+                    },
+                    function(d, res, xhr) {
+                        var mime = xhr.getResponseHeader("Content-Type"),
+                            isJSON = mime && mime.indexOf("application/json") > -1;
+                        d.resolve(isJSON ? JSON.parse(res) : res);
+                    }
+                );
             },
 
             remove: deleteUrl && function(key) {
