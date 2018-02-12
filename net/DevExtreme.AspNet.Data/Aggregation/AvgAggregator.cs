@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Aggregation.Accumulators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,12 +26,9 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             if(count == 0)
                 return null;
 
-            var sum = _summator.Finish();
-
-            if(sum is Double doubleSum)
-                return doubleSum / count;
-
-            return (decimal)sum / count;
+            var accumulator = _summator.GetAccumulator();
+            accumulator.Divide(count);
+            return accumulator.GetValue();
         }
     }
 

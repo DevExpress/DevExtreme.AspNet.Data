@@ -210,6 +210,34 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(data.Average(), totals[1]);
         }
 
+        [Fact]
+        public void TimeSpanType() {
+            var data = new[] {
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromMinutes(3)
+            };
+
+            var calculator = new AggregateCalculator<TimeSpan>(data, new DefaultAccessor<TimeSpan>(),
+                new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "min" },
+                    new SummaryInfo { Selector = "this", SummaryType = "max" },
+                    new SummaryInfo { Selector = "this", SummaryType = "sum" },
+                    new SummaryInfo { Selector = "this", SummaryType = "avg" }
+                },
+                null
+            );
+
+            Assert.Equal(
+                new object[] {
+                    TimeSpan.FromMinutes(1),
+                    TimeSpan.FromMinutes(3),
+                    TimeSpan.FromMinutes(4),
+                    TimeSpan.FromMinutes(2)
+                },
+                calculator.Run()
+            );
+        }
+
     }
 
 }
