@@ -62,7 +62,10 @@ namespace Sample.Controllers {
 
         [HttpPut("update-order")]
         public IActionResult UpdateOrder(int key, string values) {
-            var order = _nwind.Orders.First(o => o.OrderID == key);
+            var order = _nwind.Orders.FirstOrDefault(o => o.OrderID == key);
+            if(order == null)
+                return StatusCode(409, "Order not found");
+
             JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
@@ -84,14 +87,19 @@ namespace Sample.Controllers {
             _nwind.Orders.Add(order);
             _nwind.SaveChanges();
 
-            return Ok();
+            return Json(order.OrderID);
         }
 
         [HttpDelete("delete-order")]
-        public void DeleteOrder(int key) {
-            var order = _nwind.Orders.First(o => o.OrderID == key);
+        public IActionResult DeleteOrder(int key) {
+            var order = _nwind.Orders.FirstOrDefault(o => o.OrderID == key);
+            if(order == null)
+                return StatusCode(409, "Order not found");
+
             _nwind.Orders.Remove(order);
             _nwind.SaveChanges();
+
+            return Ok();
         }
 
         [HttpGet("products")]
