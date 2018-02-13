@@ -272,6 +272,19 @@
             QUnit.test("as array", testCase([ "abc" ], [ "abc" ]));
         });
 
+        QUnit.test("undefined values", function(assert) {
+            var done = assert.async();
+
+            XHRMock.use(function(req) {
+                assert.ok(!("take" in req.url().query));
+                done();
+            });
+
+            createStore({ loadUrl: "/" }).load({
+                take: undefined
+            });
+        });
+
     });
 
     QUnit.module("loading", function() {
