@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Aggregation.Accumulators;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     class SumAggregator<T> : Aggregator<T> {
-        object _sum;
+        IAccumulator _accumulator;
 
         public SumAggregator(IAccessor<T> accessor)
             : base(accessor) {
@@ -17,18 +18,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             var value = Accessor.Read(container, selector);
 
             if(value != null) {
-                if(_sum == null) {
-                    if(value is Double || value is Single)
-                        _sum = 0d;
-                    else
-                        _sum = 0m;
-                }
+                if(_accumulator == null)
+                    _accumulator = AccumulatorFactory.Create(value.GetType());
 
                 try {
-                    if(_sum is Double)
-                        _sum = (Double)_sum + Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                    else
-                        _sum = (Decimal)_sum + Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    _accumulator.Add(value);
                 } catch(FormatException) {
                 } catch(InvalidCastException) {
                 }
@@ -36,7 +30,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override object Finish() {
-            return _sum;
+            return _accumulator?.GetValue();
+        }
+
+        public IAccumulator GetAccumulator() {
+            return _accumulator;
         }
 
     }
