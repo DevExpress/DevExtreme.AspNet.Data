@@ -230,6 +230,25 @@ namespace DevExtreme.AspNet.Data.Tests {
                 builder.BuildLoadExpr().ToString()
             );
         }
+
+        [Fact]
+        public void PR202() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/pull/202
+
+            var options = new SampleLoadOptions {
+                DefaultSort = "item1",
+                Sort = new[] {
+                    new SortingInfo { Selector = "ITEM1" }
+                }
+            };
+
+            var builder = new DataSourceExpressionBuilder<Tuple<int>>(options, false);
+
+            Assert.Equal(
+                "data.OrderBy(obj => obj.Item1)",
+                builder.BuildLoadExpr().ToString()
+            );
+        }
     }
 
 }
