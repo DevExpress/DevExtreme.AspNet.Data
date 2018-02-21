@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data {
 
         public static IEnumerable<SortingInfo> AddRequiredSort(IEnumerable<SortingInfo> sort, IEnumerable<string> requiredSelectors) {
             sort = sort ?? new SortingInfo[0];
-            requiredSelectors = requiredSelectors.Except(sort.Select(i => i.Selector));
+            requiredSelectors = requiredSelectors.Except(sort.Select(i => i.Selector), StringComparer.OrdinalIgnoreCase);
 
             var desc = sort.LastOrDefault()?.Desc;
 
