@@ -24,7 +24,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             RegisterDefaultAggregators(_aggregatorRegistry);
         }
 
-       internal AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        internal AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
