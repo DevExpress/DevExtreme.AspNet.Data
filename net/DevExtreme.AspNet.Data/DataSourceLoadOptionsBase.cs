@@ -70,6 +70,9 @@ namespace DevExtreme.AspNet.Data {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string[] PreSelect;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool? RemoteSelect;
+
         /// <summary>
         /// A flag that indicates whether grouping must be performed on the server side.
         /// </summary>
@@ -132,6 +135,10 @@ namespace DevExtreme.AspNet.Data {
 
         internal bool HasSelect {
             get { return Select != null && Select.Length > 0; }
+        }
+
+        internal bool UseRemoteSelect {
+            get { return RemoteSelect.GetValueOrDefault(true); }
         }
 
         internal IEnumerable<SortingInfo> GetFullSort() {
