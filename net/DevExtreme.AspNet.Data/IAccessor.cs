@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    interface IAccessor<T> {
+    public interface IAccessor<T> {
         object Read(T container, string selector);
     }
 

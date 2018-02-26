@@ -4,11 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    class AggregateCalculator<T> {
+    public class AggregateCalculator<T> {
         IEnumerable _data;
         IAccessor<T> _accessor;
 
@@ -19,24 +18,29 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         string[] _groupSelectors;
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
+        static AggregatorRegistry<T> _aggregatorRegistry = new AggregatorRegistry<T>();
 
-        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        static AggregateCalculator() {
+            RegisterDefaultAggregators(_aggregatorRegistry);
+        }
+
+       internal AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
-            if(totalSummary != null) {
+            if (totalSummary != null) {
                 _totalAggregators = totalSummary.Select(i => CreateAggregator(i.SummaryType)).ToArray();
                 _totalSelectors = totalSummary.Select(i => i.Selector).ToArray();
             }
 
-            if(groupSummary != null) {
+            if (groupSummary != null) {
                 _groupSummaryTypes = groupSummary.Select(i => i.SummaryType).ToArray();
                 _groupSelectors = groupSummary.Select(i => i.Selector).ToArray();
                 _groupAggregatorsStack = new Stack<Aggregator<T>[]>();
             }
         }
 
-        public object[] Run() {
+        internal object[] Run() {
             foreach(var item in _data)
                 ProcessItem(item);
 
@@ -44,6 +48,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 return Finish(_totalAggregators);
 
             return null;
+        }
+
+        public static void RegisterAggregator<TAggregator>(string summaryType) where TAggregator : Aggregator<T> {
+            _aggregatorRegistry.RegisterAggregator<TAggregator>(summaryType);
+        }
+
+        public static void RegisterAggregator(string summaryType, Func<IAccessor<T>, Aggregator<T>> factory) {
+            _aggregatorRegistry.RegisterAggregator(summaryType, factory);
         }
 
         void ProcessItem(object item) {
@@ -81,29 +93,24 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             return aggregators.Select(a => a.Finish()).ToArray();
         }
 
-
         Aggregator<T> CreateAggregator(string summaryType) {
-            switch(summaryType) {
-                case AggregateName.SUM:
-                    return new SumAggregator<T>(_accessor);
-                case AggregateName.MIN:
-                    return new MinAggregator<T>(_accessor);
-                case AggregateName.MAX:
-                    return new MaxAggregator<T>(_accessor);
-                case AggregateName.AVG:
-                    return new AvgAggregator<T>(_accessor);
-                case AggregateName.COUNT:
-                    return new CountAggregator<T>(_accessor, false);
+            var aggregator = _aggregatorRegistry.CreateAggregator(summaryType, _accessor);
 
-                case AggregateName.REMOTE_COUNT:
-                    return new RemoteCountAggregator<T>(_accessor);
-                case AggregateName.REMOTE_AVG:
-                    return new RemoteAvgAggregator<T>(_accessor);
-            }
+            if (aggregator == null)
+                throw new NotSupportedException();
 
-            throw new NotSupportedException();
+            return aggregator;
         }
 
-    }
+        static void RegisterDefaultAggregators(AggregatorRegistry<T> aggregatorRegistry) {
+            aggregatorRegistry.RegisterAggregator<SumAggregator<T>>(AggregateName.SUM);
+            aggregatorRegistry.RegisterAggregator<MinAggregator<T>>(AggregateName.MIN);
+            aggregatorRegistry.RegisterAggregator<MaxAggregator<T>>(AggregateName.MAX);
+            aggregatorRegistry.RegisterAggregator<AvgAggregator<T>>(AggregateName.AVG);
+            aggregatorRegistry.RegisterAggregator(AggregateName.COUNT, accessor => new CountAggregator<T>(accessor, false));
 
+            aggregatorRegistry.RegisterAggregator<RemoteCountAggregator<T>>(AggregateName.REMOTE_COUNT);
+            aggregatorRegistry.RegisterAggregator<RemoteAvgAggregator<T>>(AggregateName.REMOTE_AVG);
+        }
+    }
 }

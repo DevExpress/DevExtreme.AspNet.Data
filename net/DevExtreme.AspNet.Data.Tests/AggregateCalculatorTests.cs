@@ -1,9 +1,8 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -238,6 +237,45 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
-    }
+        [Fact]
+        public void CustomAggregator() {
+            AggregateCalculator<int>.RegisterAggregator<CommaAggregator>("comma");
 
+            var data = new[] {
+                new Group { items = new object[] { 1, 5 } },
+                new Group { items = new object[] { 7 } },
+                new Group { items = new object[] { } }
+            };
+
+            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(),
+                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } },
+                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } }
+            );
+
+            var totals = calculator.Run();
+
+            Assert.Equal("1,5,7", totals[0]);
+            Assert.Equal("1,5", data[0].summary[0]);
+            Assert.Equal("7", data[1].summary[0]);
+            Assert.Equal(string.Empty, data[2].summary[0]);
+        }
+
+        private class CommaAggregator : Aggregator<int> {
+            private readonly StringBuilder _stringBuilder = new StringBuilder();
+            public CommaAggregator(IAccessor<int> accessor) : base(accessor) {
+            }
+
+            public override object Finish() {
+                var result = _stringBuilder.ToString();
+                if(string.IsNullOrEmpty(result))
+                    return string.Empty;
+
+                return result.Substring(0, result.Length - 1);
+            }
+
+            public override void Step(int container, string selector) {
+                _stringBuilder.Append($"{container},");
+            }
+        }
+    }
 }
