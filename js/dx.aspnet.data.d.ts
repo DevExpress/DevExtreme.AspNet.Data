@@ -5,6 +5,7 @@ interface Options {
 
     loadUrl?: string,
     loadParams?: Object,
+    loadMethod?: string,
 
     updateUrl?: string,
     updateMethod?: string,
