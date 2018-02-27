@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Text;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -241,42 +240,41 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CustomAggregator() {
-            CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
+            CustomAggregatorsBarrier.Run(delegate {
+                CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
 
-            var data = new[] {
-                new Group { items = new object[] { 1, 5 } },
-                new Group { items = new object[] { 7 } },
-                new Group { items = new object[] { } }
-            };
+                var data = new[] {
+                    new Group { items = new Tuple<int>[] { Tuple.Create(1), Tuple.Create(5) } },
+                    new Group { items = new Tuple<int>[] { Tuple.Create(7) } },
+                    new Group { items = new Tuple<int>[] { } }
+                };
 
-            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(),
-                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } },
-                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } }
-            );
+                var calculator = new AggregateCalculator<Tuple<int>>(data, new DefaultAccessor<Tuple<int>>(),
+                    new[] { new SummaryInfo { Selector = "Item1", SummaryType = "comma" } },
+                    new[] { new SummaryInfo { Selector = "Item1", SummaryType = "comma" } }
+                );
 
-            var totals = calculator.Run();
+                var totals = calculator.Run();
 
-            Assert.Equal("1,5,7", totals[0]);
-            Assert.Equal("1,5", data[0].summary[0]);
-            Assert.Equal("7", data[1].summary[0]);
-            Assert.Equal(string.Empty, data[2].summary[0]);
+                Assert.Equal("1,5,7", totals[0]);
+                Assert.Equal("1,5", data[0].summary[0]);
+                Assert.Equal("7", data[1].summary[0]);
+                Assert.Equal(string.Empty, data[2].summary[0]);
+            });
         }
 
         private class CommaAggregator<T> : Aggregator<T> {
-            private readonly StringBuilder _stringBuilder = new StringBuilder();
+            ICollection<object> _bag = new List<object>();
+
             public CommaAggregator(IAccessor<T> accessor) : base(accessor) {
             }
 
             public override object Finish() {
-                var result = _stringBuilder.ToString();
-                if(string.IsNullOrEmpty(result))
-                    return string.Empty;
-
-                return result.Substring(0, result.Length - 1);
+                return String.Join(",", _bag);
             }
 
             public override void Step(T container, string selector) {
-                _stringBuilder.Append($"{container},");
+                _bag.Add(Accessor.Read(container, selector));
             }
         }
     }
