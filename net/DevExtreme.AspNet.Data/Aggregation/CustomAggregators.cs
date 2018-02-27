@@ -17,5 +17,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
             return null;
         }
+
+#if DEBUG
+        internal static void Clear() {
+            _aggregatorTypes.Clear();
+        }
+#endif
     }
 }

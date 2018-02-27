@@ -241,25 +241,27 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CustomAggregator() {
-            CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
+            CustomAggregatorsBarrier.Run(delegate {
+                CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
 
-            var data = new[] {
-                new Group { items = new object[] { 1, 5 } },
-                new Group { items = new object[] { 7 } },
-                new Group { items = new object[] { } }
-            };
+                var data = new[] {
+                    new Group { items = new object[] { 1, 5 } },
+                    new Group { items = new object[] { 7 } },
+                    new Group { items = new object[] { } }
+                };
 
-            var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(),
-                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } },
-                new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } }
-            );
+                var calculator = new AggregateCalculator<int>(data, new DefaultAccessor<int>(),
+                    new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } },
+                    new[] { new SummaryInfo { Selector = "this", SummaryType = "comma" } }
+                );
 
-            var totals = calculator.Run();
+                var totals = calculator.Run();
 
-            Assert.Equal("1,5,7", totals[0]);
-            Assert.Equal("1,5", data[0].summary[0]);
-            Assert.Equal("7", data[1].summary[0]);
-            Assert.Equal(string.Empty, data[2].summary[0]);
+                Assert.Equal("1,5,7", totals[0]);
+                Assert.Equal("1,5", data[0].summary[0]);
+                Assert.Equal("7", data[1].summary[0]);
+                Assert.Equal(string.Empty, data[2].summary[0]);
+            });
         }
 
         private class CommaAggregator<T> : Aggregator<T> {
