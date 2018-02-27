@@ -1,7 +1,9 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.ResponseModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Text;
 using Xunit;
 
@@ -239,7 +241,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CustomAggregator() {
-            AggregateCalculator<int>.RegisterAggregator<CommaAggregator>("comma");
+            CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
 
             var data = new[] {
                 new Group { items = new object[] { 1, 5 } },
@@ -260,9 +262,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(string.Empty, data[2].summary[0]);
         }
 
-        private class CommaAggregator : Aggregator<int> {
+        private class CommaAggregator<T> : Aggregator<T> {
             private readonly StringBuilder _stringBuilder = new StringBuilder();
-            public CommaAggregator(IAccessor<int> accessor) : base(accessor) {
+            public CommaAggregator(IAccessor<T> accessor) : base(accessor) {
             }
 
             public override object Finish() {
@@ -273,7 +275,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 return result.Substring(0, result.Length - 1);
             }
 
-            public override void Step(int container, string selector) {
+            public override void Step(T container, string selector) {
                 _stringBuilder.Append($"{container},");
             }
         }
