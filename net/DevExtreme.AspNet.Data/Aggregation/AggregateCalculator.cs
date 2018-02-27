@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    public class AggregateCalculator<T> {
+    class AggregateCalculator<T> {
         IEnumerable _data;
         IAccessor<T> _accessor;
 
@@ -19,23 +19,23 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         string[] _groupSelectors;
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
-        internal AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
 
-            if (totalSummary != null) {
+            if(totalSummary != null) {
                 _totalAggregators = totalSummary.Select(i => CreateAggregator(i.SummaryType)).ToArray();
                 _totalSelectors = totalSummary.Select(i => i.Selector).ToArray();
             }
 
-            if (groupSummary != null) {
+            if(groupSummary != null) {
                 _groupSummaryTypes = groupSummary.Select(i => i.SummaryType).ToArray();
                 _groupSelectors = groupSummary.Select(i => i.Selector).ToArray();
                 _groupAggregatorsStack = new Stack<Aggregator<T>[]>();
             }
         }
 
-        internal object[] Run() {
+        public object[] Run() {
             foreach(var item in _data)
                 ProcessItem(item);
 
@@ -80,6 +80,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             return aggregators.Select(a => a.Finish()).ToArray();
         }
 
+
         Aggregator<T> CreateAggregator(string summaryType) {
             switch(summaryType) {
                 case AggregateName.SUM:
@@ -92,6 +93,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                     return new AvgAggregator<T>(_accessor);
                 case AggregateName.COUNT:
                     return new CountAggregator<T>(_accessor, false);
+
                 case AggregateName.REMOTE_COUNT:
                     return new RemoteCountAggregator<T>(_accessor);
                 case AggregateName.REMOTE_AVG:
@@ -99,10 +101,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             }
 
             var aggregator = CustomAggregators.CreateAggregator(summaryType, _accessor);
-            if (aggregator == null)
-                throw new NotSupportedException();
+            if(aggregator != null)
+                return aggregator;
 
-            return aggregator;
+            throw new NotSupportedException();
         }
     }
+
 }
