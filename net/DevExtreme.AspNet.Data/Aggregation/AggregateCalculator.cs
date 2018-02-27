@@ -19,6 +19,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         string[] _groupSelectors;
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
+
         public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
             _data = data;
             _accessor = accessor;
@@ -106,6 +107,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
             throw new NotSupportedException();
         }
+
     }
 
 }
