@@ -7,7 +7,6 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
     class Bug179_DataItem {
-        [Key]
         public int ID { get; set; }
         public string Group { get; set; }
         public int? Value { get; set; }
@@ -25,11 +24,11 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 var dbSet = context.Bug179_Data;
 
                 dbSet.AddRange(new[] {
-                    new Bug179_DataItem { ID = 1, Group = "A", Value = 1 },
-                    new Bug179_DataItem { ID = 2, Group = "A", Value = 3 },
-                    new Bug179_DataItem { ID = 3, Group = "A", Value = null },
-                    new Bug179_DataItem { ID = 4, Group = "B", Value = 5 },
-                    new Bug179_DataItem { ID = 5, Group = "B", Value = null },
+                    new Bug179_DataItem { Group = "A", Value = 1 },
+                    new Bug179_DataItem { Group = "A", Value = 3 },
+                    new Bug179_DataItem { Group = "A", Value = null },
+                    new Bug179_DataItem { Group = "B", Value = 5 },
+                    new Bug179_DataItem { Group = "B", Value = null },
                 });
 
                 context.SaveChanges();
