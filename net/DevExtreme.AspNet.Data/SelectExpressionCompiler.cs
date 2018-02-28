@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data {
             : base(guardNulls) {
         }
 
-        public Expression Compile(Expression target, string[] clientExprList) {
+        public Expression Compile(Expression target, IEnumerable<string> clientExprList) {
             var itemExpr = CreateItemParam(typeof(T));
 
             var accessors = clientExprList
