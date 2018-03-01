@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -66,6 +67,9 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public string[] Select;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public string[] PreSelect;
+
         /// <summary>
         /// A flag that indicates whether grouping must be performed on the server side.
         /// </summary>
@@ -118,6 +122,14 @@ namespace DevExtreme.AspNet.Data {
             get { return HasGroups || HasSort || HasPrimaryKey || HasDefaultSort; }
         }
 
+        internal bool HasAnySelect {
+            get { return HasPreSelect || HasSelect; }
+        }
+
+        internal bool HasPreSelect {
+            get { return PreSelect != null && PreSelect.Length > 0; }
+        }
+
         internal bool HasSelect {
             get { return Select != null && Select.Length > 0; }
         }
@@ -155,6 +167,19 @@ namespace DevExtreme.AspNet.Data {
                 requiredSort = requiredSort.Concat(PrimaryKey);
 
             return Utils.AddRequiredSort(result, requiredSort);
+        }
+
+        internal IEnumerable<string> GetFullSelect() {
+            if(HasPreSelect && HasSelect)
+                return Enumerable.Intersect(PreSelect, Select);
+
+            if(HasPreSelect)
+                return PreSelect;
+
+            if(HasSelect)
+                return Select;
+
+            return Enumerable.Empty<string>();
         }
     }
 

@@ -64,7 +64,7 @@ namespace DevExtreme.AspNet.Data {
                 var deferPaging = Options.HasGroups || !CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary;
                 var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
 
-                if(Options.HasSelect) {
+                if(Options.HasAnySelect) {
                     ContinueWithGrouping(
                         ExecExpr<AnonType>(Source, loadExpr).Select(ProjectionToDict),
                         Accessors.Dict,
@@ -194,10 +194,12 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Dictionary<string, object> ProjectionToDict(AnonType projection) {
-            var names = Options.Select;
             var dict = new Dictionary<string, object>();
-            for(var i = 0; i < names.Length; i++)
-                ShrinkSelectResult(dict, names[i].Split('.'), projection[i]);
+            var index = 0;
+            foreach(var name in Options.GetFullSelect()) {
+                ShrinkSelectResult(dict, name.Split('.'), projection[index]);
+                index++;
+            }
             return dict;
         }
 
