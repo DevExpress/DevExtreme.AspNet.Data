@@ -10,9 +10,13 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
     class SelectNotMapped_DataItem {
         public int ID { get; set; }
 
+        public string Name { get; set; }
+
+        public byte[] Blob { get; set; }
+
         [NotMapped]
-        public string NotMapped {
-            get { return "NotMapped"; }
+        public string BlobUrl {
+            get { return "blob:" + Convert.ToBase64String(Blob); }
         }
     }
 
@@ -27,18 +31,27 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             TestDbContext.Exec(context => {
                 var dbSet = context.SelectNotMapped_Data;
 
-                dbSet.Add(new SelectNotMapped_DataItem { ID = 1 });
+                dbSet.Add(new SelectNotMapped_DataItem { Blob = new byte[] { 143, 93, 183 } });
                 context.SaveChanges();
 
-                var loadResult = DataSourceLoader.Load(dbSet, new SampleLoadOptions {
-                    Select = new[] { "NotMapped" },
-                    RemoteSelect = false
+                var loadOptions = new SampleLoadOptions {
+                    PreSelect = new[] { "ID", "Name", "BlobUrl" },
+                };
+
+                var error = Record.Exception(delegate {
+                    DataSourceLoader.Load(dbSet, loadOptions).data.Cast<object>().First();
                 });
 
+                Assert.Contains("member 'BlobUrl' is not supported ", error.Message);
+
+                loadOptions.RemoteSelect = false;
+                var loadResult = DataSourceLoader.Load(dbSet, loadOptions);
                 var item = loadResult.data.Cast<IDictionary>().First();
 
-                Assert.Single(item.Keys);
-                Assert.Equal("NotMapped", item["NotMapped"]);
+                Assert.Equal(3, item.Keys.Count);
+                Assert.True(item.Contains("ID"));
+                Assert.True(item.Contains("Name"));
+                Assert.Equal("blob:j123", item["BlobUrl"]);
             });
         }
 
