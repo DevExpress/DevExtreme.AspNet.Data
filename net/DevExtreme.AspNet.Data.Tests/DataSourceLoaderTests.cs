@@ -395,6 +395,18 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.Contains("b"));
         }
 
+        public void Load_RemoteSelectFalse() {
+            var loadResult = DataSourceLoader.Load(new[] { new { a = 1, b = 2 } }, new SampleLoadOptions {
+                Select = new[] { "a" },
+                RemoteSelect = false
+            });
+
+            var item = loadResult.data.Cast<IDictionary>().First();
+
+            Assert.Single(item.Keys);
+            Assert.Equal(1, item["a"]);
+        }
+
         [Theory]
         [InlineData(false, true)]
         [InlineData(false, false)]

@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data {
 
                 if(Options.HasAnySelect) {
                     ContinueWithGrouping(
-                        ExecExpr<AnonType>(Source, loadExpr).Select(ProjectionToDict),
+                        ExecWithSelect(loadExpr).Select(ProjectionToDict),
                         Accessors.Dict,
                         result
                     );
@@ -86,6 +86,15 @@ namespace DevExtreme.AspNet.Data {
             }
 
             return result;
+        }
+
+        IEnumerable<AnonType> ExecWithSelect(Expression loadExpr) {
+            if(Options.UseRemoteSelect)
+                return ExecExpr<AnonType>(Source, loadExpr);
+
+            var inMemoryQuery = ForceExecution(ExecExpr<S>(Source, loadExpr)).AsQueryable();
+            var selectExpr = new SelectExpressionCompiler<S>(true).Compile(inMemoryQuery.Expression, Options.GetFullSelect());
+            return ExecExpr<AnonType>(inMemoryQuery, selectExpr);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, LoadResult result) {
@@ -152,6 +161,11 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
             return result;
+        }
+
+        static IEnumerable<T> ForceExecution<T>(IEnumerable<T> sequence) {
+            foreach(var item in sequence)
+                yield return item;
         }
 
         static IEnumerable Buffer<T>(IEnumerable data) {

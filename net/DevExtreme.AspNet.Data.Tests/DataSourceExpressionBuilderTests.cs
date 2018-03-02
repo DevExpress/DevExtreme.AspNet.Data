@@ -249,6 +249,19 @@ namespace DevExtreme.AspNet.Data.Tests {
                 builder.BuildLoadExpr().ToString()
             );
         }
+
+        [Fact]
+        public void RemoteSelectFalse() {
+            var options = new SampleLoadOptions {
+                Select = new[] { "abc" },
+                RemoteSelect = false
+            };
+
+            Assert.Equal(
+                "data",
+                new DataSourceExpressionBuilder<object>(options, false).BuildLoadExpr().ToString()
+            );
+        }
     }
 
 }
