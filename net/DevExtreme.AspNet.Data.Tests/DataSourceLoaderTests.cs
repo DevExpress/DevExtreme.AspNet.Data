@@ -362,6 +362,51 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(x);
         }
 
+        [Fact]
+        public void Load_PreSelect() {
+            var data = new[] {
+                new { a = 1, b = 2, c = 3 }
+            };
+
+            IDictionary Load(string[] preSelect, string[] select) {
+                var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
+                    PreSelect = preSelect,
+                    Select = select
+                });
+
+                return loadResult.data.Cast<IDictionary>().First();
+            }
+
+            var item = Load(
+                preSelect: new[] { "a", "b" },
+                select: null
+            );
+
+            Assert.Equal(2, item.Keys.Count);
+            Assert.True(item.Contains("a"));
+            Assert.True(item.Contains("b"));
+
+            item = Load(
+                preSelect: new[] { "a", "b" },
+                select: new[] { "b", "c" }
+            );
+
+            Assert.Equal(1, item.Keys.Count);
+            Assert.True(item.Contains("b"));
+        }
+
+        public void Load_RemoteSelectFalse() {
+            var loadResult = DataSourceLoader.Load(new[] { new { a = 1, b = 2 } }, new SampleLoadOptions {
+                Select = new[] { "a" },
+                RemoteSelect = false
+            });
+
+            var item = loadResult.data.Cast<IDictionary>().First();
+
+            Assert.Single(item.Keys);
+            Assert.Equal(1, item["a"]);
+        }
+
         [Theory]
         [InlineData(false, true)]
         [InlineData(false, false)]

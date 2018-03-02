@@ -9,7 +9,6 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
     public class Bug120 {
 
         public class DataItem {
-            [Key]
             public long ID { get; set; }
         }
 

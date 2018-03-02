@@ -64,9 +64,9 @@ namespace DevExtreme.AspNet.Data {
                 var deferPaging = Options.HasGroups || !CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary;
                 var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
 
-                if(Options.HasSelect) {
+                if(Options.HasAnySelect) {
                     ContinueWithGrouping(
-                        ExecExpr<AnonType>(Source, loadExpr).Select(ProjectionToDict),
+                        ExecWithSelect(loadExpr).Select(ProjectionToDict),
                         Accessors.Dict,
                         result
                     );
@@ -86,6 +86,15 @@ namespace DevExtreme.AspNet.Data {
             }
 
             return result;
+        }
+
+        IEnumerable<AnonType> ExecWithSelect(Expression loadExpr) {
+            if(Options.UseRemoteSelect)
+                return ExecExpr<AnonType>(Source, loadExpr);
+
+            var inMemoryQuery = ForceExecution(ExecExpr<S>(Source, loadExpr)).AsQueryable();
+            var selectExpr = new SelectExpressionCompiler<S>(true).Compile(inMemoryQuery.Expression, Options.GetFullSelect());
+            return ExecExpr<AnonType>(inMemoryQuery, selectExpr);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, LoadResult result) {
@@ -154,6 +163,11 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
+        static IEnumerable<T> ForceExecution<T>(IEnumerable<T> sequence) {
+            foreach(var item in sequence)
+                yield return item;
+        }
+
         static IEnumerable Buffer<T>(IEnumerable data) {
             if(data is ICollection)
                 return data;
@@ -194,10 +208,12 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Dictionary<string, object> ProjectionToDict(AnonType projection) {
-            var names = Options.Select;
             var dict = new Dictionary<string, object>();
-            for(var i = 0; i < names.Length; i++)
-                ShrinkSelectResult(dict, names[i].Split('.'), projection[i]);
+            var index = 0;
+            foreach(var name in Options.GetFullSelect()) {
+                ShrinkSelectResult(dict, name.Split('.'), projection[index]);
+                index++;
+            }
             return dict;
         }
 

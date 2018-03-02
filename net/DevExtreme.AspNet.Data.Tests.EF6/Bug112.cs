@@ -11,7 +11,6 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
     class Bug112_DataItem {
-        [Key]
         public int ID { get; set; }
         public TimeSpan? Duration { get; set; }
     }
@@ -28,9 +27,9 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 var dbSet = context.Bug112_Data;
 
                 dbSet.AddRange(new[] {
-                    new Bug112_DataItem { ID = 1, Duration = TimeSpan.Parse("01:23") },
-                    new Bug112_DataItem { ID = 2, Duration = TimeSpan.Parse("02:23") },
-                    new Bug112_DataItem { ID = 3, Duration = TimeSpan.Zero }
+                    new Bug112_DataItem { Duration = TimeSpan.Parse("01:23") },
+                    new Bug112_DataItem { Duration = TimeSpan.Parse("02:23") },
+                    new Bug112_DataItem { Duration = TimeSpan.Zero }
                 });
 
                 context.SaveChanges();
