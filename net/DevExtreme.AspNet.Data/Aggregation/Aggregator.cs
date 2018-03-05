@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
-    abstract class Aggregator<T> {
+    public abstract class Aggregator<T> {
         protected readonly IAccessor<T> Accessor;
 
-        public Aggregator(IAccessor<T> accessor) {
+        protected Aggregator(IAccessor<T> accessor) {
             Accessor = accessor;
         }
 

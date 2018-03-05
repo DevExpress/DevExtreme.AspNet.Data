@@ -101,6 +101,10 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                     return new RemoteAvgAggregator<T>(_accessor);
             }
 
+            var aggregator = CustomAggregators.CreateAggregator(summaryType, _accessor);
+            if(aggregator != null)
+                return aggregator;
+
             throw new NotSupportedException();
         }
 
