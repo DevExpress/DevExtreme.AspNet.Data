@@ -7,6 +7,96 @@ references:
   commentId: N:DevExtreme.AspNet.Data
   fullName: DevExtreme.AspNet.Data
   nameWithType: DevExtreme.AspNet.Data
+- uid: DevExtreme.AspNet.Data.Aggregation
+  name: DevExtreme.AspNet.Data.Aggregation
+  href: api/DevExtreme.AspNet.Data.Aggregation.html
+  commentId: N:DevExtreme.AspNet.Data.Aggregation
+  fullName: DevExtreme.AspNet.Data.Aggregation
+  nameWithType: DevExtreme.AspNet.Data.Aggregation
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1
+  name: Aggregator<T>
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html
+  commentId: T:DevExtreme.AspNet.Data.Aggregation.Aggregator`1
+  name.vb: Aggregator(Of T)
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T)
+  nameWithType: Aggregator<T>
+  nameWithType.vb: Aggregator(Of T)
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.#ctor(DevExtreme.AspNet.Data.Helpers.IAccessor{`0})
+  name: Aggregator(IAccessor<T>)
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1__ctor_DevExtreme_AspNet_Data_Helpers_IAccessor__0__
+  commentId: M:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.#ctor(DevExtreme.AspNet.Data.Helpers.IAccessor{`0})
+  name.vb: Aggregator(IAccessor(Of T))
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Aggregator(DevExtreme.AspNet.Data.Helpers.IAccessor<T>)
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Aggregator(DevExtreme.AspNet.Data.Helpers.IAccessor(Of T))
+  nameWithType: Aggregator<T>.Aggregator(IAccessor<T>)
+  nameWithType.vb: Aggregator(Of T).Aggregator(IAccessor(Of T))
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.#ctor*
+  name: Aggregator
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1__ctor_
+  commentId: Overload:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.#ctor
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Aggregator
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Aggregator
+  nameWithType: Aggregator<T>.Aggregator
+  nameWithType.vb: Aggregator(Of T).Aggregator
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
+  name: Accessor
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Accessor
+  commentId: F:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Accessor
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Accessor
+  nameWithType: Aggregator<T>.Accessor
+  nameWithType.vb: Aggregator(Of T).Accessor
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Finish
+  name: Finish()
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Finish
+  commentId: M:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Finish
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Finish()
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Finish()
+  nameWithType: Aggregator<T>.Finish()
+  nameWithType.vb: Aggregator(Of T).Finish()
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Finish*
+  name: Finish
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Finish_
+  commentId: Overload:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Finish
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Finish
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Finish
+  nameWithType: Aggregator<T>.Finish
+  nameWithType.vb: Aggregator(Of T).Finish
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Step(`0,System.String)
+  name: Step(T, String)
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Step__0_System_String_
+  commentId: M:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Step(`0,System.String)
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Step(T, System.String)
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Step(T, System.String)
+  nameWithType: Aggregator<T>.Step(T, String)
+  nameWithType.vb: Aggregator(Of T).Step(T, String)
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Step*
+  name: Step
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Step_
+  commentId: Overload:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Step
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Step
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Step
+  nameWithType: Aggregator<T>.Step
+  nameWithType.vb: Aggregator(Of T).Step
+- uid: DevExtreme.AspNet.Data.Aggregation.CustomAggregators
+  name: CustomAggregators
+  href: api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html
+  commentId: T:DevExtreme.AspNet.Data.Aggregation.CustomAggregators
+  fullName: DevExtreme.AspNet.Data.Aggregation.CustomAggregators
+  nameWithType: CustomAggregators
+- uid: DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator(System.String,System.Type)
+  name: RegisterAggregator(String, Type)
+  href: api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html#DevExtreme_AspNet_Data_Aggregation_CustomAggregators_RegisterAggregator_System_String_System_Type_
+  commentId: M:DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator(System.String,System.Type)
+  fullName: DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator(System.String, System.Type)
+  nameWithType: CustomAggregators.RegisterAggregator(String, Type)
+- uid: DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator*
+  name: RegisterAggregator
+  href: api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html#DevExtreme_AspNet_Data_Aggregation_CustomAggregators_RegisterAggregator_
+  commentId: Overload:DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator
+  fullName: DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator
+  nameWithType: CustomAggregators.RegisterAggregator
 - uid: DevExtreme.AspNet.Data.DataSourceLoader
   name: DataSourceLoader
   href: api/DevExtreme.AspNet.Data.DataSourceLoader.html
@@ -286,6 +376,31 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser.Parse
   fullName: DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser.Parse
   nameWithType: DataSourceLoadOptionsParser.Parse
+- uid: DevExtreme.AspNet.Data.Helpers.IAccessor`1
+  name: IAccessor<T>
+  href: api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.html
+  commentId: T:DevExtreme.AspNet.Data.Helpers.IAccessor`1
+  name.vb: IAccessor(Of T)
+  fullName: DevExtreme.AspNet.Data.Helpers.IAccessor<T>
+  fullName.vb: DevExtreme.AspNet.Data.Helpers.IAccessor(Of T)
+  nameWithType: IAccessor<T>
+  nameWithType.vb: IAccessor(Of T)
+- uid: DevExtreme.AspNet.Data.Helpers.IAccessor`1.Read(`0,System.String)
+  name: Read(T, String)
+  href: api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.html#DevExtreme_AspNet_Data_Helpers_IAccessor_1_Read__0_System_String_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.IAccessor`1.Read(`0,System.String)
+  fullName: DevExtreme.AspNet.Data.Helpers.IAccessor<T>.Read(T, System.String)
+  fullName.vb: DevExtreme.AspNet.Data.Helpers.IAccessor(Of T).Read(T, System.String)
+  nameWithType: IAccessor<T>.Read(T, String)
+  nameWithType.vb: IAccessor(Of T).Read(T, String)
+- uid: DevExtreme.AspNet.Data.Helpers.IAccessor`1.Read*
+  name: Read
+  href: api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.html#DevExtreme_AspNet_Data_Helpers_IAccessor_1_Read_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IAccessor`1.Read
+  fullName: DevExtreme.AspNet.Data.Helpers.IAccessor<T>.Read
+  fullName.vb: DevExtreme.AspNet.Data.Helpers.IAccessor(Of T).Read
+  nameWithType: IAccessor<T>.Read
+  nameWithType.vb: IAccessor(Of T).Read
 - uid: DevExtreme.AspNet.Data.ResponseModel
   name: DevExtreme.AspNet.Data.ResponseModel
   href: api/DevExtreme.AspNet.Data.ResponseModel.html
