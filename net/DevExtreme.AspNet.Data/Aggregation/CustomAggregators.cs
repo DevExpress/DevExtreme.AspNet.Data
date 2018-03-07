@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
