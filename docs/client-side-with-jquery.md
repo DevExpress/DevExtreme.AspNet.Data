@@ -1,4 +1,4 @@
-# Client Side Configuration
+# Client Side with jQuery
 
 ## Installation
 

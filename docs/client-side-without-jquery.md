@@ -1,16 +1,14 @@
-# Client Side on Angular
+# Client Side without jQuery (Angular, etc.)
 
 ## Installation
 
-For Angular, we provide an [individual npm package](https://www.npmjs.com/package/devextreme-aspnet-data-nojquery) that does not depend on jQuery. Run the following command to install it:
+We provide an [individual npm package](https://www.npmjs.com/package/devextreme-aspnet-data-nojquery) to be used with client-side frameworks that do not depend on jQuery, for example, with Angular. Run the following command to install it:
 
     npm install devextreme-aspnet-data-nojquery
 
-As DevExtreme ASP.NET Data is supposed to be used with DevExtreme widgets, make sure that you have installed the [devextreme-angular](https://github.com/DevExpress/devextreme-angular#add-to-existing-app) package in your app.
-
 ## API Reference and Usage
 
-The API consists of a single method, `createStore`, which is described [here](docs/client-side-configuration.md#api-reference). The following example shows how to use this method to create a store for the **DataGrid** widget:
+The API consists of a single method, `createStore`, which is described [here](docs/client-side-configuration.md#api-reference). The following example shows how to use this method in an Angular app to create a store for the **DataGrid** widget. Note that the widget requires the [devextreme-angular](https://github.com/DevExpress/devextreme-angular#add-to-existing-app) package in addition.
 
 **app.component.ts**
 
@@ -64,7 +62,3 @@ import { DxDataGridModule } from 'devextreme-angular'
 })
 export class AppModule { }
 ```
-
-## See Also
-
-- [DataGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/DataGrid/Use_CustomStore/)

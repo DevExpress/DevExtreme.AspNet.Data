@@ -10,11 +10,11 @@ This extension enables [DevExtreme client-side widgets](https://js.devexpress.co
 
 ## Installation and Configuration
 
-The DevExtreme ASP.NET Data extenstion consists of two parts: server-side and client-side. Learn how to install and configure both the parts from the following topics:
+The `DevExtreme.AspNet.Data` extension consists of two parts: server-side and client-side. Learn how to install and configure both the parts from the following topics:
 
 - [Server Side Configuration](docs/server-side-configuration.md)
-- [Client Side Configuration](docs/client-side-configuration.md)
-- [Client Side on Angular](docs/client-side-on-angular.md)
+- [Client Side with jQuery](docs/client-side-with-jquery.md)
+- [Client Side without jQuery (Angular, etc.)](docs/client-side-without-jquery.md)
 
 ## Using CI Builds
 
