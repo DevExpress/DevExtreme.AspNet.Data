@@ -8,7 +8,7 @@ We provide an [individual npm package](https://www.npmjs.com/package/devextreme-
 
 ## API Reference and Usage
 
-The API consists of a single method, `createStore`, which is described [here](docs/client-side-configuration.md#api-reference). The following example shows how to use this method in an Angular app to create a store for the **DataGrid** widget. Note that the widget requires the [devextreme-angular](https://github.com/DevExpress/devextreme-angular#add-to-existing-app) package in addition.
+The API consists of a single method, `createStore`, which is described [here](client-side-with-jquery.md#api-reference). The following example shows how to use this method in an Angular app to create a store for the **DataGrid** widget. Note that the widget requires the [devextreme-angular](https://github.com/DevExpress/devextreme-angular#add-to-existing-app) package in addition.
 
 **app.component.ts**
 
