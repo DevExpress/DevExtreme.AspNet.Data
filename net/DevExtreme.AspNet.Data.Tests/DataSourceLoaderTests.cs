@@ -395,6 +395,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.Contains("b"));
         }
 
+        [Fact]
         public void Load_RemoteSelectFalse() {
             var loadResult = DataSourceLoader.Load(new[] { new { a = 1, b = 2 } }, new SampleLoadOptions {
                 Select = new[] { "a" },

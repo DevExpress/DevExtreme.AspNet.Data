@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace DevExtreme.AspNet.Data {
+namespace DevExtreme.AspNet.Data.Helpers {
 
     static class Accessors {
         public static readonly IAccessor<IDictionary<string, object>> Dict = new DictImpl();

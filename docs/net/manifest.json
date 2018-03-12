@@ -1,8 +1,44 @@
 {
   "homepages": [],
-  "source_base_path": "S:/Fast-GitHub/DevExtreme.AspNet.Data/net/docfx",
+  "source_base_path": "C:/projects/devextreme-aspnet-data/net/docfx",
   "xrefmap": "xrefmap.yml",
   "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html",
+          "hash": "EZ+lPZv/367V9NtKjfXd7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html",
+          "hash": "hRQhZyPWNvnm6B1jqhPXbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Aggregation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.html",
+          "hash": "va3XA7yVqEP8ZIJJJfEL7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
     {
       "type": "ManagedReference",
       "source_relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.yml",
@@ -53,11 +89,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.html",
+          "hash": "Mfug6a2ZgkmeeJq9gvA0oQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.yml",
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.html",
-          "hash": "Ie5nuXNPDZMKyeTSX21GVg=="
+          "hash": "1pucKlZSPVzecZB/MxsWZA=="
         }
       },
       "is_incremental": false,
@@ -141,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "xJI0lwsT2YRmhQdHcBaTvA=="
+          "hash": "w+SQrrsfh2+XtnuKqheXcw=="
         }
       },
       "is_incremental": false,
@@ -185,13 +233,13 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ResourceDocumentProcessor": {
@@ -199,16 +247,17 @@
           "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
     },
     {
       "status": {
-        "can_incremental": true,
-        "details": "Can support incremental post processing.",
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
         "incrementalPhase": "postProcessing"
       },
       "processors": {}
