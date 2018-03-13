@@ -23,8 +23,7 @@ import CustomStore from 'devextreme/data/custom_store';
         <dx-data-grid
             [dataSource]="store">
         </dx-data-grid>
-    `,
-    styleUrls: ['./app.component.css']
+    `
 })
 export class AppComponent {
     store: CustomStore;
