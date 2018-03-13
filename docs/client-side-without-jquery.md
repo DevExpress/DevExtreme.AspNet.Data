@@ -14,8 +14,8 @@ The API consists of a single method, `createStore`, which is described [here](cl
 
 ```TypeScript
 import { Component } from '@angular/core';
-import { createStore } from 'devextreme-aspnet-data-nojquery'
-import CustomStore from 'devextreme/data/custom_store'
+import { createStore } from 'devextreme-aspnet-data-nojquery';
+import CustomStore from 'devextreme/data/custom_store';
 
 @Component({
     selector: 'app-root',
@@ -29,14 +29,14 @@ import CustomStore from 'devextreme/data/custom_store'
 export class AppComponent {
     store: CustomStore;
     constructor() {
-        let serviceUrl = "http://url/to/my/service"
+        let serviceUrl = "http://url/to/my/service";
         this.store = createStore({
             key: "ID",
             loadUrl: serviceUrl + "/GetAction",
             insertUrl: serviceUrl + "/InsertAction",
             updateUrl: serviceUrl + "/UpdateAction",
             deleteUrl: serviceUrl + "/DeleteAction"
-        })
+        });
     }
 }
 ```
@@ -47,7 +47,7 @@ export class AppComponent {
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { DxDataGridModule } from 'devextreme-angular'
+import { DxDataGridModule } from 'devextreme-angular';
 
 @NgModule({
   declarations: [
