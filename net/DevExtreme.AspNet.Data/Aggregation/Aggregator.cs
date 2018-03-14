@@ -25,16 +25,16 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         /// <summary>
-        /// A method that is called once for each data item in the collection.
+        /// A method that is called once for each data item.
         /// </summary>
         /// <param name="container">A data item.</param>
-        /// <param name="selector">The name of the property whose value should be processed.</param>
+        /// <param name="selector">The name or path to the property whose value should be processed.</param>
         public abstract void Step(T container, string selector);
 
         /// <summary>
-        /// A method that is called at the final stage of the calculation.
+        /// A method that is called at the final stage of the aggregation.
         /// </summary>
-        /// <returns>The result of the calculation.</returns>
+        /// <returns>The result of the aggregation.</returns>
         public abstract object Finish();
     }
 

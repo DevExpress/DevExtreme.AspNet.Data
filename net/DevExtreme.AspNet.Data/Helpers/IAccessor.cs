@@ -4,16 +4,16 @@ using System.Linq;
 namespace DevExtreme.AspNet.Data.Helpers {
 
     /// <summary>
-    /// Defines a method that a class implements to access data item properties.
+    /// Provides the means to access object properties.
     /// </summary>
-    /// <typeparam name="T">The type of the data item.</typeparam>
+    /// <typeparam name="T">The type of the object.</typeparam>
     public interface IAccessor<T> {
         /// <summary>
-        /// Gets the value of a data item property.
+        /// Gets the value of an object property.
         /// </summary>
-        /// <param name="container">A data item.</param>
-        /// <param name="selector">The property's name.</param>
-        /// <returns>The property's value.</returns>
+        /// <param name="container">An object with the property to access.</param>
+        /// <param name="selector">The name or path to the property.</param>
+        /// <returns>The obtained value.</returns>
         object Read(T container, string selector);
     }
 
