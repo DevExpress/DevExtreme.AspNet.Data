@@ -28,7 +28,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         /// A callback invoked once for each data item.
         /// </summary>
         /// <param name="container">A data item.</param>
-        /// <param name="selector">The name or path to the property whose value should be processed.</param>
+        /// <param name="selector">The name or path to the property whose value should be aggregated.</param>
         public abstract void Step(T container, string selector);
 
         /// <summary>
