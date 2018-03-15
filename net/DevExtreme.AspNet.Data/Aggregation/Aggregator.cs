@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Aggregation {
 
     /// <summary>
-    /// An abstract class that represents a data aggregator.
+    /// Represents a data aggregator.
     /// </summary>
     /// <typeparam name="T">The type of the data items to be aggregated.</typeparam>
     public abstract class Aggregator<T> {
@@ -25,14 +25,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         /// <summary>
-        /// A method that is called once for each data item.
+        /// A callback invoked once for each data item.
         /// </summary>
         /// <param name="container">A data item.</param>
         /// <param name="selector">The name or path to the property whose value should be processed.</param>
         public abstract void Step(T container, string selector);
 
         /// <summary>
-        /// A method that is called at the final stage of the aggregation.
+        /// A callback invoked at the final stage of the aggregation.
         /// </summary>
         /// <returns>The result of the aggregation.</returns>
         public abstract object Finish();

@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         private static readonly Dictionary<string, Type> _aggregatorTypes = new Dictionary<string, Type>();
 
         /// <summary>
-        /// A method that registers a custom aggregator.
+        /// Registers a custom aggregator.
         /// </summary>
         /// <param name="summaryType">The aggregator's string identifier.</param>
         /// <param name="aggregatorType">The aggregator's type declaration without the generic type parameter T.</param>
