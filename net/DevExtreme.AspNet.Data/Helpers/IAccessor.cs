@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         /// <summary>
         /// Reads an object property.
         /// </summary>
-        /// <param name="container">An object with the property to read.</param>
+        /// <param name="container">An object whose property should be read.</param>
         /// <param name="selector">The name or path to the property.</param>
         /// <returns>The property's value.</returns>
         object Read(T container, string selector);

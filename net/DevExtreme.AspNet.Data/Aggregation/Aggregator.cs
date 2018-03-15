@@ -12,14 +12,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     /// <typeparam name="T">The type of the data items to be aggregated.</typeparam>
     public abstract class Aggregator<T> {
         /// <summary>
-        /// Provides the means to access data item properties.
+        /// Provides the means to read data item properties.
         /// </summary>
         protected readonly IAccessor<T> Accessor;
 
         /// <summary>
-        /// Initializes a new instance of the Aggregator class with an object that provides the means to access data item properties.
+        /// Initializes a new instance of the Aggregator class with an object that provides the means to read data item properties.
         /// </summary>
-        /// <param name="accessor">An object that provides the means to access data item properties.</param>
+        /// <param name="accessor">An object that provides the means to read data item properties.</param>
         protected Aggregator(IAccessor<T> accessor) {
             Accessor = accessor;
         }
