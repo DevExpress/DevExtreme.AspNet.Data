@@ -3,9 +3,17 @@ using System;
 using System.Collections.Generic;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
+    /// <summary>
+    /// Provides methods that manipulate custom aggregators.
+    /// </summary>
     public static class CustomAggregators {
         private static readonly Dictionary<string, Type> _aggregatorTypes = new Dictionary<string, Type>();
 
+        /// <summary>
+        /// Registers a custom aggregator.
+        /// </summary>
+        /// <param name="summaryType">The aggregator's string identifier.</param>
+        /// <param name="aggregatorType">The aggregator's type declaration without the generic type parameter T.</param>
         public static void RegisterAggregator(string summaryType, Type aggregatorType) {
             _aggregatorTypes[summaryType] = aggregatorType;
         }
