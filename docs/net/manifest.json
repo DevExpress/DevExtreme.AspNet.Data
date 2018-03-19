@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html",
-          "hash": "EZ+lPZv/367V9NtKjfXd7w=="
+          "hash": "XR3NWME83CzuUj8uD7eFfg=="
         }
       },
       "is_incremental": false,
@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html",
-          "hash": "hRQhZyPWNvnm6B1jqhPXbw=="
+          "hash": "zMF4+iAfeHPnUg0Si3Alkw=="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.html",
-          "hash": "va3XA7yVqEP8ZIJJJfEL7w=="
+          "hash": "S0nMIxLqtVQFu6tz5ABxVQ=="
         }
       },
       "is_incremental": false,
@@ -93,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.IAccessor-1.html",
-          "hash": "Mfug6a2ZgkmeeJq9gvA0oQ=="
+          "hash": "kTeGRCS4wS+i87NCXt5IXQ=="
         }
       },
       "is_incremental": false,
@@ -105,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.html",
-          "hash": "1pucKlZSPVzecZB/MxsWZA=="
+          "hash": "POAeNiSEVA7z8SbSXoZJLQ=="
         }
       },
       "is_incremental": false,
@@ -238,13 +238,13 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build"
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
           "incrementalPhase": "build"
         },
         "TocDocumentProcessor": {
