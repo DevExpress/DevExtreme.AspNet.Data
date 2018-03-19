@@ -4,7 +4,7 @@ using System.Linq;
 namespace DevExtreme.AspNet.Data.Helpers {
 
     /// <summary>
-    /// Provides the means to read object properties.
+    /// Allows reading object properties.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
     public interface IAccessor<T> {

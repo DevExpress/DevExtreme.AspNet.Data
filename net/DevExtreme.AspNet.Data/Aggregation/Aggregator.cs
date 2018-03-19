@@ -12,14 +12,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     /// <typeparam name="T">The type of the data items to be aggregated.</typeparam>
     public abstract class Aggregator<T> {
         /// <summary>
-        /// Provides the means to read data item properties.
+        /// Allows reading data item properties.
         /// </summary>
         protected readonly IAccessor<T> Accessor;
 
         /// <summary>
-        /// Initializes a new instance of the Aggregator class with an object that provides the means to read data item properties.
+        /// Initializes a new Aggregator class instance with an object that allows reading data item properties.
         /// </summary>
-        /// <param name="accessor">An object that provides the means to read data item properties.</param>
+        /// <param name="accessor">An object that allows reading data item properties.</param>
         protected Aggregator(IAccessor<T> accessor) {
             Accessor = accessor;
         }
@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         public abstract void Step(T container, string selector);
 
         /// <summary>
-        /// A callback invoked at the final stage of the aggregation.
+        /// A callback invoked at the aggregation's final stage.
         /// </summary>
         /// <returns>The result of the aggregation.</returns>
         public abstract object Finish();
