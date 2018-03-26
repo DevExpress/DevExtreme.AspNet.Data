@@ -36,10 +36,10 @@ if(!fs.existsSync(outputPath))
 
 const originalPackageJSON = require("../package.json");
 const nojqueryPackageJSON = { };
-[ "name", "title", "version", "description", "homepage", "license", "author", "repository", "dependencies" ]
+[ "name", "title", "version", "description", "homepage", "license", "author", "repository", "dependencies", "peerDependencies" ]
     .forEach(i => nojqueryPackageJSON[i] = originalPackageJSON[i]);
 nojqueryPackageJSON.name += "-nojquery";
-nojqueryPackageJSON.dependencies.devextreme = ">=17.2.6-pre-18044";
+nojqueryPackageJSON.peerDependencies.devextreme = ">=17.2.6-pre-18044";
 fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(nojqueryPackageJSON, null, "  "));
 
 fs.writeFileSync(

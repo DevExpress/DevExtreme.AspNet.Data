@@ -14,7 +14,7 @@
   },
   "main": "js/dx.aspnet.data.js",
   "types": "js/dx.aspnet.data.d.ts",
-  "dependencies": {
+  "peerDependencies": {
     "devextreme": ">=16.1.0"
   },
   "devDependencies": {
