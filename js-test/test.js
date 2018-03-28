@@ -31,7 +31,8 @@
 })(function(QUnit, XHRMock, DataSource, AspNet) {
     "use strict";
 
-    var createStore = AspNet.createStore;
+    var createStore = AspNet.createStore,
+        NEVER_RESOLVE = new Promise(function() { });
 
     function willRespondWithJson(obj) {
         XHRMock.use(function(req, res) {
@@ -39,6 +40,12 @@
                 .status(200)
                 .header("Content-Type", "application/json")
                 .body(JSON.stringify(obj));
+        });
+    }
+
+    function wontRespond() {
+        XHRMock.use(function() {
+            return NEVER_RESOLVE;
         });
     }
 
@@ -104,9 +111,7 @@
         QUnit.test("timeout", function(assert) {
             var done = assert.async();
 
-            XHRMock.use(function() {
-                return new Promise(function() { });
-            });
+            wontRespond();
 
             var store = createStore({
                 loadUrl: "/",
@@ -183,6 +188,7 @@
             XHRMock.use(function(req) {
                 assert.equal(req.url().query.filter, '[["haystack","contains","needle"]]');
                 done();
+                return NEVER_RESOLVE;
             });
 
             var dataSource = new DataSource({
@@ -200,6 +206,7 @@
             XHRMock.use(function(req) {
                 assert.equal(req.url().query.filter, '[["a","1/1/2000"],["b","1/1/2000 02:03:04.005"]]');
                 done();
+                return NEVER_RESOLVE;
             });
 
             createStore({ loadUrl: "/" }).load({
@@ -217,6 +224,7 @@
                 assert.strictEqual(query.take, "10");
                 assert.strictEqual(query.requireTotalCount, "false");
                 done();
+                return NEVER_RESOLVE;
             });
 
             createStore({ loadUrl: "/" }).load({
@@ -239,6 +247,7 @@
                     XHRMock.use(function(req) {
                         assert.deepEqual(JSON.parse(req.url().query[optionName]), normalizedValue);
                         done();
+                        return NEVER_RESOLVE;
                     });
 
                     var loadOptions = {};
@@ -262,6 +271,7 @@
                     XHRMock.use(function(req) {
                         assert.deepEqual(JSON.parse(req.url().query.select), normalizedValue);
                         done();
+                        return NEVER_RESOLVE;
                     });
 
                     createStore({ loadUrl: "/" }).load({ select: rawValue });
@@ -278,6 +288,7 @@
             XHRMock.use(function(req) {
                 assert.ok(!("take" in req.url().query));
                 done();
+                return NEVER_RESOLVE;
             });
 
             createStore({ loadUrl: "/" }).load({
@@ -382,7 +393,7 @@
 
     });
 
-    QUnit.module("check request data onBeforeSend", function() {
+    QUnit.module("check request data onBeforeSend", { beforeEach: wontRespond }, function() {
 
         QUnit.test("load, no arguments", function(assert) {
             var done = assert.async();
@@ -515,6 +526,7 @@
                 XHRMock.use(function(req) {
                     assert.ok("_" in req.url().query);
                     done();
+                    return NEVER_RESOLVE;
                 });
 
                 action(createStore({
@@ -564,7 +576,7 @@
             return res.status(200).body("[]");
         });
 
-        createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function(res) {
+        createStore({ loadUrl: "http://cross-domain.example.net" }).load().done(function() {
             done();
         });
     });
@@ -586,9 +598,10 @@
             }
         }
 
-        XHRMock.use(function(req, res) {
+        XHRMock.use(function(req) {
             actualMethods.push(req.method());
             notifyRequest();
+            return NEVER_RESOLVE;
         });
 
         var options = { key: "any" };
