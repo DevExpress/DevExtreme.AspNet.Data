@@ -12,7 +12,7 @@
 
   <!-- https://github.com/dotnet/sdk/issues/1055#issuecomment-292792445 -->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="xcopy /y $(ProjectDir)\..\..\js\*.js $(ProjectDir)\wwwroot\lib\" />
+    <Exec Command="xcopy /y &quot;$(ProjectDir)\..\..\js\*.js&quot; &quot;$(ProjectDir)\wwwroot\lib\&quot;" />
   </Target>
 
 </Project>
