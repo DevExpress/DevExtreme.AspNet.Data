@@ -36,7 +36,7 @@ namespace DevExtreme.AspNet.Data {
                 }
 
                 if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
-                    currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExpr);
+                    currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
                     currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);
 

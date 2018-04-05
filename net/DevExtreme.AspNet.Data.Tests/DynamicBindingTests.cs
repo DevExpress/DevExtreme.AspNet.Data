@@ -197,6 +197,22 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(3m, summary[3]);
         }
 
+        [Fact]
+        public void Issue227() {
+            dynamic
+                dataItem = new ExpandoObject(),
+                company = new ExpandoObject();
+
+            dataItem.Company = company;
+            company.Name = "abc";
+
+            var loadResult = DataSourceLoader.Load(new[] { dataItem }, new SampleLoadOptions {
+                Filter = new[] { "Company.Name", "abc" }
+            });
+
+            Assert.Single(loadResult.data);
+        }
+
     }
 
 }
