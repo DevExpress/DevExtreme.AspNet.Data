@@ -434,6 +434,24 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(count, loadResult.summary[0]);
             Assert.Equal(count, loadResult.summary[1]);
         }
+
+        [Fact]
+        public void Load_GridFilter_T616169() {
+            var loadOptions = new SampleLoadOptions {
+                Filter = new object[] {
+                    new object[] { "f", ">", 0 },
+                    "or",
+                    new object[] { "f", "=", null }
+                }
+            };
+
+            var data = new[] {
+                new { f = 1 }
+            };
+
+            var loadResult = DataSourceLoader.Load(data, loadOptions);
+            Assert.NotEmpty(loadResult.data);
+        }
     }
 
 }
