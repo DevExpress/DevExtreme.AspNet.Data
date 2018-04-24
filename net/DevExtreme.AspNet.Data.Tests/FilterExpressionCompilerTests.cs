@@ -270,6 +270,24 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(x is ArgumentException);
         }
 
+        [Fact]
+        public void ValueTypeAndNull() {
+            // Part of https://devexpress.com/issue=T616169 fix
+
+            string CompileOperation(string op) {
+                return Compile<Tuple<int>>(new[] { "Item1", op, null }).Body.ToString();
+            }
+
+            Assert.Equal("False", CompileOperation("="));
+            Assert.Equal("True", CompileOperation("<>"));
+
+            // https://stackoverflow.com/q/4399932
+            Assert.Equal("False", CompileOperation(">"));
+            Assert.Equal("False", CompileOperation(">="));
+            Assert.Equal("False", CompileOperation("<"));
+            Assert.Equal("False", CompileOperation("<="));
+        }
+
     }
 
 }
