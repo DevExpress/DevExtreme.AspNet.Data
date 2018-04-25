@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
-        private TestDbContext(params Type[] knownEntities)
+        private TestDbContext()
             : base($"Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog={typeof(TestDbContext).Assembly.GetName().Name}; Integrated Security=True") {
         }
 
