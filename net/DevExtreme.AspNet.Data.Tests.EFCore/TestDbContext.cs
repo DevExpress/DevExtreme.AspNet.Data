@@ -26,7 +26,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             lock(LOCK) {
                 if(INSTANCE == null) {
                     ResetTestDatabase();
-                    INSTANCE = new TestDbContext();                    
+                    INSTANCE = new TestDbContext();
                     INSTANCE.Database.EnsureCreated();
                 }
 
