@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore {
+namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
 
     class RemoteGrouping_DataItem {
         public int ID { get; set; }

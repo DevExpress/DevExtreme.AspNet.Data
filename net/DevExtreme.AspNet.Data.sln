@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExtreme.AspNet.Data.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExtreme.AspNet.Data.Tests.EF6", "DevExtreme.AspNet.Data.Tests.EF6\DevExtreme.AspNet.Data.Tests.EF6.csproj", "{C401BB6E-D21B-45D5-AB98-6B308DB4E4FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExtreme.AspNet.Data.Tests.EFCore", "DevExtreme.AspNet.Data.Tests.EFCore\DevExtreme.AspNet.Data.Tests.EFCore.csproj", "{215EE7D0-0E2B-4A07-810F-9224F0C5021F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data.Tests.EFCore1", "DevExtreme.AspNet.Data.Tests.EFCore1\DevExtreme.AspNet.Data.Tests.EFCore1.csproj", "{215EE7D0-0E2B-4A07-810F-9224F0C5021F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

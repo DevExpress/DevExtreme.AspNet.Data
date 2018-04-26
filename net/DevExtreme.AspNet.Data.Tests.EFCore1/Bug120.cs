@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore {
+namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
     public class Bug120 {
 
         public class DataItem {

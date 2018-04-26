@@ -40,9 +40,9 @@ test_script:
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
     -target:dotnet.exe
-    -targetargs:"test net\DevExtreme.AspNet.Data.Tests.EFCore\DevExtreme.AspNet.Data.Tests.EFCore.csproj"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests.EFCore]*"
-    -output:coverage_efcore.xml
+    -targetargs:"test net\DevExtreme.AspNet.Data.Tests.EFCore1"
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests.EFCore1]*"
+    -output:coverage_efcore1.xml
 
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user
@@ -61,7 +61,7 @@ after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
-  - codecov -X gcov -f coverage_netcore.xml coverage_efcore.xml coverage_netfx.xml js-test/coverage/lcov.info
+  - codecov -X gcov -f coverage_netcore.xml coverage_efcore1.xml coverage_netfx.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg

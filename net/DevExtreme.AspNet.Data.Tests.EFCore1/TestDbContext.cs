@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore {
+namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
 
     partial class TestDbContext : DbContext {
         static readonly object LOCK = new object();

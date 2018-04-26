@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 #if DEBUG
 [assembly: InternalsVisibleTo("DevExtreme.AspNet.Data.Tests")]
 [assembly: InternalsVisibleTo("DevExtreme.AspNet.Data.Tests.EF6")]
-[assembly: InternalsVisibleTo("DevExtreme.AspNet.Data.Tests.EFCore")]
+[assembly: InternalsVisibleTo("DevExtreme.AspNet.Data.Tests.EFCore1")]
 #endif
 
 [assembly: CLSCompliant(true)]
