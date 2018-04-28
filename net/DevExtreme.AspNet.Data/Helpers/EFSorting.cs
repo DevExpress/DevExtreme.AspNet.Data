@@ -31,20 +31,39 @@ namespace DevExtreme.AspNet.Data.Helpers {
         }
 
         public static string FindSortableMember(Type entityType) {
-            var candidates = Enumerable.Concat(
-                entityType.GetRuntimeProperties()
-                    .Where(i => i.CanRead && i.CanWrite && i.GetGetMethod(true).IsPublic && i.GetSetMethod(true).IsPublic)
-                    .Select(i => new Candidate(i, i.PropertyType)),
-                entityType.GetRuntimeFields()
-                    .Where(i => i.IsPublic)
-                    .Select(i => new Candidate(i, i.FieldType))
-            );
 
-            var codeFirstId = candidates.FirstOrDefault(IsEFCodeFirstConventionalKey);
+            bool IsPublicReadable(PropertyInfo p) {
+                return p.CanRead && p.GetGetMethod(true).IsPublic;
+            }
+
+            bool IsPublicWritable(PropertyInfo p) {
+                return p.CanWrite && p.GetSetMethod(true).IsPublic;
+            }
+
+            IEnumerable<Candidate> GenerateCandidates() {
+                var runtimeProps = entityType.GetRuntimeProperties();
+
+                foreach(var p in runtimeProps) {
+                    if(IsPublicWritable(p) && IsPublicReadable(p))
+                        yield return new Candidate(p, p.PropertyType);
+                }
+
+                foreach(var p in runtimeProps) {
+                    if(IsPublicReadable(p))
+                        yield return new Candidate(p, p.PropertyType);
+                }
+
+                foreach(var f in entityType.GetRuntimeFields()) {
+                    if(f.IsPublic)
+                        yield return new Candidate(f, f.FieldType);
+                }
+            }
+
+            var codeFirstId = GenerateCandidates().FirstOrDefault(IsEFCodeFirstConventionalKey);
             if(codeFirstId != null)
                 return codeFirstId.Member.Name;
 
-            return ORDERED_SORTABLE_TYPES.SelectMany(type => candidates.Where(c => c.Type == type)).FirstOrDefault()?.Member.Name;
+            return ORDERED_SORTABLE_TYPES.SelectMany(type => GenerateCandidates().Where(c => c.Type == type)).FirstOrDefault()?.Member.Name;
         }
 
         static bool IsEFCodeFirstConventionalKey(Candidate candidate) {

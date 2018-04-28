@@ -14,9 +14,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             protected int Bad1 = 0;
             protected int Bad2 { get; set; }
 
-            public int Bad3 { get; }
-            public int Bad4 { get; internal set; }
-
             public object Bad5 = null;
             public object Bad6 { get; set; }
         }
@@ -52,6 +49,15 @@ namespace DevExtreme.AspNet.Data.Tests {
             public byte[] ID { get; set; }
         }
 
+        class TestClass_Issue235_AllReadonly {
+            public int ID { get; }
+        }
+
+        class TestClass_Issue235_PreferWritable {
+            public int Readonly { get; }
+            public int Writable { get; set; }
+        }
+
 
         [Fact]
         public void FindSortableMember() {
@@ -65,6 +71,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("ID", EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv1)));
             Assert.Equal("TestClass_CodeFirstConv2Id", EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv2)));
             Assert.Null(EFSorting.FindSortableMember(typeof(TestClass_CodeFirstConv_InvalidType)));
+
+            Assert.Equal("ID", EFSorting.FindSortableMember(typeof(TestClass_Issue235_AllReadonly)));
+            Assert.Equal("Writable", EFSorting.FindSortableMember(typeof(TestClass_Issue235_PreferWritable)));
         }
 
 
