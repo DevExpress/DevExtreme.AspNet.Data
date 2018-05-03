@@ -31,6 +31,9 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
                     }
                 };
 
+                DataSourceLoader.Load(dbSet, loadOptions);
+
+                Assert.NotEmpty(loadOptions.ExpressionLog);
                 Assert.DoesNotContain(loadOptions.ExpressionLog, i => i.Contains(".GroupBy"));
             });
         }
