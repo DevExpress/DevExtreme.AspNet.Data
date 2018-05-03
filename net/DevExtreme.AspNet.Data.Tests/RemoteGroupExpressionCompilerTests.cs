@@ -111,7 +111,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var expr = compiler.Compile(CreateTargetParam<double>()).ToString();
-            Assert.Contains("I0 = (obj - (obj % Convert(123))", expr);
+            Assert.Contains("I0 = (obj - (obj % " + Compat.ExpectedConvert(123, "Double") + ")", expr);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("I1 = ((obj.Month + 2) / 3)", expr);
             Assert.Contains("I2 = obj.Month", expr);
             Assert.Contains("I3 = obj.Day", expr);
-            Assert.Contains("I4 = Convert(obj.DayOfWeek)", expr);
+            Assert.Contains("I4 = " + Compat.ExpectedConvert("obj.DayOfWeek", "Int32"), expr);
             Assert.Contains("I5 = obj.Hour", expr);
             Assert.Contains("I6 = obj.Minute", expr);
             Assert.Contains("I7 = obj.Second", expr);
@@ -153,7 +153,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = compiler.Compile(CreateTargetParam<Nullable<DateTime>>()).ToString();
 
-            Assert.Contains("I0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
+            Assert.Contains("I0 = IIF((obj == null), null, " +  Compat.ExpectedConvert("obj.Value.Year", "Nullable`1") + ")", expr);
         }
 
         [Fact]
