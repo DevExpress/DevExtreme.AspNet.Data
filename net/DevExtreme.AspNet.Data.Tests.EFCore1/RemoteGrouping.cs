@@ -21,7 +21,6 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         public void DisabledByDefault() {
             TestDbContext.Exec(context => {
                 var dbSet = context.RemoteGrouping_Data;
-                var exprLog = new List<string>();
 
                 var loadOptions = new SampleLoadOptions {
                     Group = new[] {
@@ -29,11 +28,10 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
                             Selector = "Group",
                             IsExpanded = false
                         }
-                    },
-                    ExpressionWatcher = x => exprLog.Add(x.ToString())
+                    }
                 };
 
-                Assert.DoesNotContain(exprLog, i => i.Contains(".GroupBy"));
+                Assert.DoesNotContain(loadOptions.ExpressionLog, i => i.Contains(".GroupBy"));
             });
         }
 
