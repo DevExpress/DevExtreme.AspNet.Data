@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
+    <ProjectReference Include="..\DevExtreme.AspNet.Data.Tests.Common\DevExtreme.AspNet.Data.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

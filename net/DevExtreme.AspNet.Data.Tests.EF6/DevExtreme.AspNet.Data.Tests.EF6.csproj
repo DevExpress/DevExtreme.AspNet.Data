@@ -64,6 +64,10 @@
       <Project>{f91204f2-1f3a-433f-871d-5f31b769fa90}</Project>
       <Name>DevExtreme.AspNet.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DevExtreme.AspNet.Data.Tests.Common\DevExtreme.AspNet.Data.Tests.Common.csproj">
+      <Project>{f5878ad6-459f-4fce-9bfb-54ee94d2083f}</Project>
+      <Name>DevExtreme.AspNet.Data.Tests.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,7 +79,6 @@
     <Compile Include="SelectNotMapped.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Bug112.cs" />
-    <Compile Include="SampleLoadOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExtreme.AspNet.Data.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data.Tests.EFCore1", "DevExtreme.AspNet.Data.Tests.EFCore1\DevExtreme.AspNet.Data.Tests.EFCore1.csproj", "{215EE7D0-0E2B-4A07-810F-9224F0C5021F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExtreme.AspNet.Data.Tests.Common", "DevExtreme.AspNet.Data.Tests.Common\DevExtreme.AspNet.Data.Tests.Common.csproj", "{F5878AD6-459F-4FCE-9BFB-54EE94D2083F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{215EE7D0-0E2B-4A07-810F-9224F0C5021F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{215EE7D0-0E2B-4A07-810F-9224F0C5021F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{215EE7D0-0E2B-4A07-810F-9224F0C5021F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5878AD6-459F-4FCE-9BFB-54EE94D2083F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5878AD6-459F-4FCE-9BFB-54EE94D2083F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5878AD6-459F-4FCE-9BFB-54EE94D2083F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5878AD6-459F-4FCE-9BFB-54EE94D2083F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
