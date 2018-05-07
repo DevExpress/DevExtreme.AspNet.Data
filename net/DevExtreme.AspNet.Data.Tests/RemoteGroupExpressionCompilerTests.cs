@@ -111,7 +111,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var expr = compiler.Compile(CreateTargetParam<double>()).ToString();
-            Assert.Contains("I0 = (obj - (obj % " + Compat.ExpectedConvert(123, "Double") + ")", expr);
+            Assert.Contains("I0 = (obj - (obj % 123)", expr);
         }
 
         [Fact]

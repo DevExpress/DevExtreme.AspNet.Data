@@ -210,17 +210,15 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
         Expression CompileGroupIntervalCore(Expression selector, string intervalString) {
             if(Char.IsDigit(intervalString[0])) {
+                var intervalExpr = Expression.Constant(
+                    Utils.ConvertClientValue(intervalString, selector.Type),
+                    selector.Type
+                );
+
                 return Expression.MakeBinary(
                     ExpressionType.Subtract,
                     selector,
-                    Expression.MakeBinary(
-                        ExpressionType.Modulo,
-                        selector,
-                        Expression.Convert(
-                            Expression.Constant(Int32.Parse(intervalString)),
-                            selector.Type
-                        )
-                    )
+                    Expression.MakeBinary(ExpressionType.Modulo, selector, intervalExpr)
                 );
             }
 
