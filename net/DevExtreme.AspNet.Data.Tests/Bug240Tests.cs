@@ -65,7 +65,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(
                 "data"
                     // All selectors are guarded and use conversion to Nullable
-                    + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == {Compat.ExpectedConvert(123, "Nullable`1")}))"
+                    + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == 123))"
                     + $".OrderBy(obj => {FormatExpectedSelectorExpr(true, true)})"
                     + ".Select(obj => new AnonType`1() {"
                     + $"I0 = {FormatExpectedSelectorExpr(true, true)}"
@@ -101,7 +101,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(
                 // All selectors are guarded and use conversion to Nullable
                 "data"
-                    + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == {Compat.ExpectedConvert(123, "Nullable`1")}))"
+                    + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == 123))"
                     + $".GroupBy(obj => new AnonType`1(I0 = {FormatExpectedSelectorExpr(true, true)}))"
                     + ".OrderBy(g => g.Key.I0)"
                     + ".Select(g => new AnonType`4() {"

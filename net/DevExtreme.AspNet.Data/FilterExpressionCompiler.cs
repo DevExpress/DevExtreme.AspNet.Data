@@ -75,10 +75,7 @@ namespace DevExtreme.AspNet.Data {
                     }
                 }
 
-                Expression valueExpr = Expression.Constant(clientValue);
-
-                if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
-                    valueExpr = Expression.Convert(valueExpr, accessorExpr.Type);
+                Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
                     if(clientValue == null)
