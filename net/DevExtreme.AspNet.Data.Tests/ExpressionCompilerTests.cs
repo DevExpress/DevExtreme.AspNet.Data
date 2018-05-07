@@ -35,7 +35,10 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
             return new SampleCompiler(guardNulls)
-                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, forceToString)
+                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, progression => {
+                    if(forceToString)
+                        ExpressionCompiler.ForceToString(progression);
+                })
                 .ToString();
         }
 
