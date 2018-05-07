@@ -115,6 +115,19 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupInterval_NullableNumeric() {
+            var compiler = new RemoteGroupExpressionCompiler<double?>(
+                new[] {
+                    new GroupingInfo { Selector = "this", GroupInterval = "123" }
+                },
+                null, null
+            );
+
+            var expr = compiler.Compile(CreateTargetParam<double?>()).ToString();
+#warning TODO assert
+        }
+
+        [Fact]
         public void GroupInterval_Date() {
             var compiler = new RemoteGroupExpressionCompiler<DateTime>(
                 new[] {
