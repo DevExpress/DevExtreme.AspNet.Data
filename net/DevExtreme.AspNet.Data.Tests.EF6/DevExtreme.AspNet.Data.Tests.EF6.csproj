@@ -39,6 +39,7 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -81,6 +82,7 @@
     <Compile Include="Bug179.cs" />
     <Compile Include="Bug184.cs" />
     <Compile Include="Bug235.cs" />
+    <Compile Include="Bug240.cs" />
     <Compile Include="SelectNotMapped.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Bug112.cs" />

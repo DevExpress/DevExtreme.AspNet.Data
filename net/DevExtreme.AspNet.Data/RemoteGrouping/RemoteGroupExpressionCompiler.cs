@@ -15,12 +15,18 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : base(false) {
+        public RemoteGroupExpressionCompiler(bool guardNulls, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : base(guardNulls) {
             _grouping = grouping;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
         }
+
+#if DEBUG
+        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : this(false, grouping, totalSummary, groupSummary) {
+        }
+#endif
 
         public Expression Compile(Expression target) {
             var groupByParam = CreateItemParam(typeof(T));
@@ -29,7 +35,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             if(_grouping != null) {
                 foreach(var i in _grouping) {
-                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector);
+                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector, liftNullableChains: true);
                     if(!String.IsNullOrEmpty(i.GroupInterval))
                         selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
 
@@ -60,7 +66,10 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             for(var i = 0; i < groupKeyProps.Length; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
-                var orderAccessor = CompileAccessorExpression(orderParam, "Key." + groupKeyProps[i].Name);
+                var orderAccessor = Expression.Field(
+                    Expression.Property(orderParam, "Key"),
+                    groupKeyProps[i].Name
+                );
 
                 target = Expression.Call(
                     typeof(Queryable),
@@ -105,7 +114,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
             foreach(var s in TransformSummary(summary)) {
                 var itemParam = CreateItemParam(typeof(T));
-                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector);
+                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftNullableChains: true);
                 var selectorType = selectorExpr.Type;
 
                 var callType = typeof(Enumerable);

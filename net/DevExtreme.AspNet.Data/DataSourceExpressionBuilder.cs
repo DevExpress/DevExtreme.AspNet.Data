@@ -47,7 +47,7 @@ namespace DevExtreme.AspNet.Data {
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {
