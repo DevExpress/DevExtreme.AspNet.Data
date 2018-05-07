@@ -18,7 +18,7 @@ namespace DevExtreme.AspNet.Data {
             get { return _guardNulls; }
         }
 
-        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false, bool liftNullableChains = false) {
+        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false, bool liftToNullable = false) {
             if(clientExpr == "this")
                 return target;
 
@@ -46,7 +46,7 @@ namespace DevExtreme.AspNet.Data {
             if(forceToString && currentTarget.Type != typeof(String))
                 progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));
 
-            if(_guardNulls && progression.Count > 1 || liftNullableChains && progression.Count > 2) {
+            if(_guardNulls && progression.Count > 1 || liftToNullable && progression.Count > 2) {
                 var lastIndex = progression.Count - 1;
                 var last = progression[lastIndex];
                 if(Utils.CanAssignNull(target.Type) && !Utils.CanAssignNull(last.Type))

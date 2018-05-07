@@ -35,7 +35,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             if(_grouping != null) {
                 foreach(var i in _grouping) {
-                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector, liftNullableChains: true);
+                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector, liftToNullable: true);
                     if(!String.IsNullOrEmpty(i.GroupInterval))
                         selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
 
@@ -114,7 +114,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
             foreach(var s in TransformSummary(summary)) {
                 var itemParam = CreateItemParam(typeof(T));
-                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftNullableChains: true);
+                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftToNullable: true);
                 var selectorType = selectorExpr.Type;
 
                 var callType = typeof(Enumerable);
