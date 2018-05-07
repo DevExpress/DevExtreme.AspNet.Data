@@ -19,9 +19,6 @@ namespace DevExtreme.AspNet.Data {
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
-            if(clientExpr == "this")
-                return target;
-
             var progression = new List<Expression> { target };
 
             var clientExprItems = clientExpr.Split('.');
@@ -29,6 +26,9 @@ namespace DevExtreme.AspNet.Data {
 
             for(var i = 0; i < clientExprItems.Length; i++) {
                 var clientExprItem = clientExprItems[i];
+
+                if(i == 0 && clientExprItem == "this")
+                    continue;
 
                 if(Utils.IsNullable(currentTarget.Type)) {
                     clientExprItem = "Value";

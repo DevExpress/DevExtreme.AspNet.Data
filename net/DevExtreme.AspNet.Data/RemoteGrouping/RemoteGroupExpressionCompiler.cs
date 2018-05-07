@@ -35,9 +35,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             if(_grouping != null) {
                 foreach(var i in _grouping) {
-                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector, liftToNullable: true);
-                    if(!String.IsNullOrEmpty(i.GroupInterval))
-                        selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
+                    var selectorExpr = String.IsNullOrEmpty(i.GroupInterval)
+                        ? CompileAccessorExpression(groupByParam, i.Selector, liftToNullable: true)
+                        : CompileGroupInterval(groupByParam, i.Selector, i.GroupInterval);
 
                     groupKeyExprList.Add(selectorExpr);
                     descendingList.Add(i.Desc);
@@ -191,65 +191,56 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
-        Expression CompileGroupInterval(Expression selectorExpr, string groupInterval) {
-            var groupIntervalExpr = CompileGroupIntervalCore(selectorExpr, groupInterval);
+        Expression CompileGroupInterval(Expression target, string selector, string intervalString) {
+            if(Char.IsDigit(intervalString[0]))
+                return CompileNumericGroupInterval(target, selector, intervalString);
 
-            if(Utils.CanAssignNull(selectorExpr.Type)) {
-                var nullableType = typeof(Nullable<>).MakeGenericType(groupIntervalExpr.Type);
-                var nullConst = Expression.Constant(null, nullableType);
-
-                return Expression.Condition(
-                    Expression.Equal(selectorExpr, nullConst),
-                    nullConst,
-                    Expression.Convert(groupIntervalExpr, nullableType)
-                );
-            }
-
-            return groupIntervalExpr;
+            return CompileDateGroupInterval(target, selector, intervalString);
         }
 
-        Expression CompileGroupIntervalCore(Expression selector, string intervalString) {
-            if(Char.IsDigit(intervalString[0])) {
-                var intervalExpr = Expression.Constant(
-                    Utils.ConvertClientValue(intervalString, selector.Type),
-                    selector.Type
-                );
+        Expression CompileNumericGroupInterval(Expression target, string selector, string intervalString) {
+            return CompileAccessorExpression(
+                target,
+                selector,
+                progression => {
+                    var lastIndex = progression.Count - 1;
+                    var last = progression[lastIndex];
 
-                return Expression.MakeBinary(
-                    ExpressionType.Subtract,
-                    selector,
-                    Expression.MakeBinary(ExpressionType.Modulo, selector, intervalExpr)
-                );
-            }
-
-            switch(intervalString) {
-                case "year":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Year));
-                case "quarter":
-                    return Expression.MakeBinary(
-                        ExpressionType.Divide,
-                        Expression.MakeBinary(
-                            ExpressionType.Add,
-                            CompileAccessorExpression(selector, nameof(DateTime.Month)),
-                            Expression.Constant(2)
-                        ),
-                        Expression.Constant(3)
+                    var intervalExpr = Expression.Constant(
+                        Utils.ConvertClientValue(intervalString, last.Type),
+                        last.Type
                     );
-                case "month":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Month));
-                case "day":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Day));
-                case "dayOfWeek":
-                    return Expression.Convert(CompileAccessorExpression(selector, nameof(DateTime.DayOfWeek)), typeof(int));
-                case "hour":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Hour));
-                case "minute":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Minute));
-                case "second":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Second));
-            }
 
-            throw new NotSupportedException();
+                    progression[lastIndex] = Expression.MakeBinary(
+                        ExpressionType.Subtract,
+                        last,
+                        Expression.MakeBinary(ExpressionType.Modulo, last, intervalExpr)
+                    );
+                },
+                true
+            );
+        }
+
+        Expression CompileDateGroupInterval(Expression target, string selector, string intervalString) {
+            return CompileAccessorExpression(
+                target,
+                selector + "." + (intervalString == "quarter" ? "month" : intervalString),
+                progression => {
+                    var lastIndex = progression.Count - 1;
+                    var last = progression[lastIndex];
+
+                    if(intervalString == "quarter") {
+                        progression[lastIndex] = Expression.MakeBinary(
+                            ExpressionType.Divide,
+                            Expression.MakeBinary(ExpressionType.Add, last, Expression.Constant(2)),
+                            Expression.Constant(3)
+                        );
+                    } else if(intervalString == "dayOfWeek") {
+                        progression[lastIndex] = Expression.Convert(last, typeof(int));
+                    }
+                },
+                true
+            );
         }
 
         static IEnumerable<SummaryInfo> TransformSummary(IEnumerable<SummaryInfo> source) {

@@ -124,7 +124,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var expr = compiler.Compile(CreateTargetParam<double?>()).ToString();
-#warning TODO assert
+            Assert.Contains("I0 = (obj - (obj % 123)", expr);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = compiler.Compile(CreateTargetParam<Nullable<DateTime>>()).ToString();
 
-            Assert.Contains("I0 = IIF((obj == null), null, " +  Compat.ExpectedConvert("obj.Value.Year", "Nullable`1") + ")", expr);
+            Assert.Contains("I0 = " +  Compat.ExpectedConvert("obj.Value.Year", "Nullable`1"), expr);
         }
 
         [Fact]
