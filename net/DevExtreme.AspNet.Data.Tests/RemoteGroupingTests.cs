@@ -155,15 +155,12 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GroupSummaryAndTotalCount() {
-            var exprList = new List<string>();
-
             var result = DataSourceLoader.Load(
                 new[] {
                     new { g = 1, v = 1 },
                     new { g = 1, v = 9 }
                 },
                 new SampleLoadOptions {
-                    ExpressionWatcher = x => exprList.Add(x.ToString()),
                     RequireTotalCount = true,
                     RemoteGrouping = true,
                     Group = new[] {

@@ -33,16 +33,13 @@ test_script:
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
     -target:dotnet.exe
-    -targetargs:"test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
+    -targetargs:"vstest
+    net\DevExtreme.AspNet.Data.Tests\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.dll
+    net\DevExtreme.AspNet.Data.Tests.EFCore1\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore1.dll
+    net\DevExtreme.AspNet.Data.Tests.EFCore2\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore2.dll
+    "
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
     -output:coverage_netcore.xml
-
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
-    -target:dotnet.exe
-    -targetargs:"test net\DevExtreme.AspNet.Data.Tests.EFCore\DevExtreme.AspNet.Data.Tests.EFCore.csproj"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests.EFCore]*"
-    -output:coverage_efcore.xml
 
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user
@@ -61,7 +58,7 @@ after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
-  - codecov -X gcov -f coverage_netcore.xml coverage_efcore.xml coverage_netfx.xml js-test/coverage/lcov.info
+  - codecov -X gcov -f coverage_netcore.xml coverage_netfx.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg

@@ -216,7 +216,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void NullablePropertyAndPureValue() {
             var expr = Compile<DataItem1>(new object[] { "NullableProp", 1 });
-            Assert.Equal("(obj.NullableProp == Convert(1))", expr.Body.ToString());
+            Assert.Equal("(obj.NullableProp == " + Compat.ExpectedConvert(1, "Nullable`1") + ")", expr.Body.ToString());
 
             var method = expr.Compile();
 
