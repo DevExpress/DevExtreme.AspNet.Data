@@ -33,9 +33,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             }
         }
 
-        string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
+        string CompileAccessor(bool guardNulls, string selector, Action<List<Expression>> customizeProgression = null) {
             return new SampleCompiler(guardNulls)
-                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, forceToString)
+                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, customizeProgression)
                 .ToString();
         }
 
@@ -90,23 +90,23 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Accessor_ForceToString() {
-            Assert.Equal("t.String", CompileAccessor(false, "String", true));
-            Assert.Equal("t.Value.ToString()", CompileAccessor(false, "Value", true));
-            Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", true));
+            Assert.Equal("t.String", CompileAccessor(false, "String", ExpressionCompiler.ForceToString));
+            Assert.Equal("t.Value.ToString()", CompileAccessor(false, "Value", ExpressionCompiler.ForceToString));
+            Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", ExpressionCompiler.ForceToString));
 
             Assert.Equal(
                 "IIF((t == null), null, t.String)",
-                CompileAccessor(true, "String", true)
+                CompileAccessor(true, "String", ExpressionCompiler.ForceToString)
             );
 
             Assert.Equal(
                 "IIF((t == null), null, t.Value.ToString())",
-                CompileAccessor(true, "Value", true)
+                CompileAccessor(true, "Value", ExpressionCompiler.ForceToString)
             );
 
             Assert.Equal(
                 "IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), null, t.Ref.Ref.ToString())",
-                CompileAccessor(true, "Ref.Ref", true)
+                CompileAccessor(true, "Ref.Ref", ExpressionCompiler.ForceToString)
             );
         }
 

@@ -44,7 +44,10 @@ namespace DevExtreme.AspNet.Data {
             var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
-            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, isStringOperation);
+            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
+                if(isStringOperation)
+                    ForceToString(progression);
+            });
 
             if(isStringOperation) {
                 return CompileStringFunction(accessorExpr, clientOperation, Convert.ToString(clientValue));

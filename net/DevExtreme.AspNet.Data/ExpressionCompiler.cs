@@ -18,10 +18,7 @@ namespace DevExtreme.AspNet.Data {
             get { return _guardNulls; }
         }
 
-        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false, bool liftToNullable = false) {
-            if(clientExpr == "this")
-                return target;
-
+        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
             var progression = new List<Expression> { target };
 
             var clientExprItems = clientExpr.Split('.');
@@ -29,6 +26,9 @@ namespace DevExtreme.AspNet.Data {
 
             for(var i = 0; i < clientExprItems.Length; i++) {
                 var clientExprItem = clientExprItems[i];
+
+                if(i == 0 && clientExprItem == "this")
+                    continue;
 
                 if(Utils.IsNullable(currentTarget.Type)) {
                     clientExprItem = "Value";
@@ -43,8 +43,7 @@ namespace DevExtreme.AspNet.Data {
                 progression.Add(currentTarget);
             }
 
-            if(forceToString && currentTarget.Type != typeof(String))
-                progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));
+            customizeProgression?.Invoke(progression);
 
             if(_guardNulls && progression.Count > 1 || liftToNullable && progression.Count > 2) {
                 var lastIndex = progression.Count - 1;
@@ -92,6 +91,12 @@ namespace DevExtreme.AspNet.Data {
 
         protected ParameterExpression CreateItemParam(Type type) {
             return Expression.Parameter(type, "obj");
+        }
+
+        internal static void ForceToString(List<Expression> progression) {
+            var last = progression.Last();
+            if(last.Type != typeof(String))
+                progression.Add(Expression.Call(last, typeof(Object).GetMethod(nameof(Object.ToString))));
         }
 
     }
