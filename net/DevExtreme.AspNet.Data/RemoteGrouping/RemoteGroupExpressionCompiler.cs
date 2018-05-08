@@ -236,7 +236,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                             Expression.Constant(3)
                         );
                     } else if(intervalString == "dayOfWeek") {
-                        progression[lastIndex] = Expression.Convert(last, typeof(int));
+                        var hasNullable = progression.Any(i => Utils.CanAssignNull(i.Type));
+                        progression[lastIndex] = Expression.Convert(last, hasNullable ? typeof(int?) : typeof(int));
                     }
                 },
                 true
