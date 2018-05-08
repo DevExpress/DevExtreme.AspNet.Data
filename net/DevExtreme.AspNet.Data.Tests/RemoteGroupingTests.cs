@@ -78,7 +78,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Single(loadOptions.ExpressionLog);
-            Assert.Contains("AnonType`2(I0 = obj.G1, I1 = obj.G2)", loadOptions.ExpressionLog[0]);
+            Assert.Matches(@"AnonType`2\(I0 = .+?, I1 = .+?\)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);

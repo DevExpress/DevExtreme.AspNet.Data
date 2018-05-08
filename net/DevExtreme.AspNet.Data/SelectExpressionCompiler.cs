@@ -18,7 +18,7 @@ namespace DevExtreme.AspNet.Data {
             var itemExpr = CreateItemParam(typeof(T));
 
             var accessors = clientExprList
-                .Select(i => CompileAccessorExpression(itemExpr, i))
+                .Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))
                 .ToArray();
 
             var anonType = AnonType.Get(accessors.Select(i => i.Type).ToArray());
