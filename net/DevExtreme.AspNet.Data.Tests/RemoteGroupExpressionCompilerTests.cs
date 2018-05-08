@@ -103,28 +103,26 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GroupInterval_Numeric() {
-            var compiler = new RemoteGroupExpressionCompiler<double>(
-                new[] {
-                    new GroupingInfo { Selector = "this", GroupInterval = "123" }
-                },
-                null, null
+
+            string Compile<T>(string selector, bool guardNulls) {
+                var compiler = new RemoteGroupExpressionCompiler<T>(
+                    guardNulls,
+                    new[] {
+                        new GroupingInfo { Selector = selector, GroupInterval = "123" }
+                    },
+                    null, null
+                );
+
+                return compiler.Compile(CreateTargetParam<T>()).ToString();
+            }
+
+            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double>("this", false));
+            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double?>("this", false));
+
+            Assert.Contains(
+                $"I0 = IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert("(obj.Item1.Length - (obj.Item1.Length % 123))", "Nullable`1")})",
+                Compile<Tuple<string>>("Item1.Length", true)
             );
-
-            var expr = compiler.Compile(CreateTargetParam<double>()).ToString();
-            Assert.Contains("I0 = (obj - (obj % 123)", expr);
-        }
-
-        [Fact]
-        public void GroupInterval_NullableNumeric() {
-            var compiler = new RemoteGroupExpressionCompiler<double?>(
-                new[] {
-                    new GroupingInfo { Selector = "this", GroupInterval = "123" }
-                },
-                null, null
-            );
-
-            var expr = compiler.Compile(CreateTargetParam<double?>()).ToString();
-            Assert.Contains("I0 = (obj - (obj % 123)", expr);
         }
 
         [Fact]
