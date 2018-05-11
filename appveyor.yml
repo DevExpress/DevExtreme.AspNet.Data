@@ -29,6 +29,7 @@ test_script:
   - npm run karma
   - npm run karma-bundled
   - npm run karma-bundled-nojquery
+  - npm run karma-bundled-nojquery-cjs
 
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
