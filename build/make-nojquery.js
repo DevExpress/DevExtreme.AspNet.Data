@@ -47,7 +47,7 @@ fs.writeFileSync(
     fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.js"), "utf-8")
         .replace(/( +)require\("jquery"\)/g, JQ_SURROGATE_MODULAR)
         .replace(/DevExpress\.data\.AspNet = [^]+?\)/, JQ_SURROGATE_GLOBAL)
-        .replace(/\/\* global .+?\*\//, "/* global define */")
+        .replace(/\/\* global .+?\*\//, "/* global define, module, require */")
 );
 
 fs.writeFileSync(
