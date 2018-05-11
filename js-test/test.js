@@ -4,16 +4,9 @@
 (function(factory) {
     "use strict";
 
-    var QUnit = window.QUnit;
-
     if(typeof define === "function" && define.amd) {
-        define("qunit-amd", function() {
-            return QUnit; // https://github.com/karma-runner/karma-qunit/issues/57
-        });
-
         define(function(require) {
             factory(
-                require("qunit-amd"),
                 require("xhr-mock").default,
                 require("devextreme/data/data_source"),
                 require(ASPNET_DATA_SCRIPT)
@@ -21,15 +14,17 @@
         });
     } else {
         factory(
-            QUnit,
             window.XHRMock,
             DevExpress.data.DataSource,
             DevExpress.data.AspNet
         );
     }
 
-})(function(QUnit, XHRMock, DataSource, AspNet) {
+})(function(XHRMock, DataSource, AspNet) {
     "use strict";
+
+    // https://github.com/karma-runner/karma-qunit/issues/57
+    var QUnit = window.QUnit;
 
     var createStore = AspNet.createStore,
         NEVER_RESOLVE = new Promise(function() { });
