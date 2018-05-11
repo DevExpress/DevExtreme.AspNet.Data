@@ -1,5 +1,5 @@
 // jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
-/* global ASPNET_DATA_SCRIPT, DevExpress, define, Promise */
+/* global ASPNET_DATA_SCRIPT, DevExpress, define, module, Promise, require */
 
 (function(factory) {
     "use strict";
@@ -12,6 +12,12 @@
                 require(ASPNET_DATA_SCRIPT)
             );
         });
+    } else if (typeof module === "object" && module.exports) {
+        module.exports = factory(
+            require("xhr-mock").default,
+            require("devextreme/data/data_source"),
+            require(ASPNET_DATA_SCRIPT)
+        );
     } else {
         factory(
             window.XHRMock,
