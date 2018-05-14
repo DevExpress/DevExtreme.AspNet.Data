@@ -1,38 +1,50 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Newtonsoft.Json;
 
 namespace Sample.Models {
 
     [Table("Products")]
-    public class Product {
+    public partial class Product {
         public Product() {
-            Order_Details = new HashSet<Order_Details>();
+            OrderDetails = new HashSet<OrderDetail>();
         }
 
         [Key]
-        public int ProductID { get; set; }
-        public int? CategoryID { get; set; }
-        public bool Discontinued { get; set; }
+        [Column("ProductID")]
+        public int ProductId { get; set; }
+
         [Required]
+        [StringLength(40)]
         public string ProductName { get; set; }
+
+        [Column("SupplierID")]
+        public int? SupplierId { get; set; }
+
+        [Column("CategoryID")]
+        public int? CategoryId { get; set; }
+
+        [StringLength(20)]
         public string QuantityPerUnit { get; set; }
-        public short? ReorderLevel { get; set; }
-        public int? SupplierID { get; set; }
+
+        [Column(TypeName = "money")]
         public decimal? UnitPrice { get; set; }
+
         public short? UnitsInStock { get; set; }
+
         public short? UnitsOnOrder { get; set; }
 
-        [JsonIgnore]
-        [InverseProperty("Product")]
-        public virtual ICollection<Order_Details> Order_Details { get; set; }
+        public short? ReorderLevel { get; set; }
 
-        [ForeignKey("CategoryID")]
+        [Required]
+        public bool? Discontinued { get; set; }
+
+        [ForeignKey("CategoryId")]
         [InverseProperty("Products")]
-        public virtual Category Category { get; set; }
+        public Category Category { get; set; }
+
+        [InverseProperty("Product")]
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
