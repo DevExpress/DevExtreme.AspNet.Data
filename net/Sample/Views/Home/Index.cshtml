@@ -90,7 +90,8 @@
                             dataSource: DevExpress.data.AspNet.createStore({
                                 loadUrl: "@Url.Action("OrderDetails", "Northwind")",
                                 loadParams: { orderId: options.data.orderId }
-                            })
+                            }),
+                            remoteOperations: true
                         })
                         .appendTo(container);
                 }
