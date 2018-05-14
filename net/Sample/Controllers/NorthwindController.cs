@@ -20,7 +20,17 @@ namespace Sample.Controllers {
 
         [HttpGet("orders")]
         public object Orders(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoader.Load(_nwind.Orders, loadOptions);
+            var source = _nwind.Orders.Select(o => new {
+                o.OrderId,
+                o.CustomerId,
+                o.OrderDate,
+                o.Freight,
+                o.ShipCountry,
+                o.ShipRegion,
+                o.ShipVia
+            });
+
+            return DataSourceLoader.Load(source, loadOptions);
         }
 
         [HttpGet("order-details")]
@@ -104,10 +114,14 @@ namespace Sample.Controllers {
 
         [HttpGet("products")]
         public object Products(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoader.Load(
-                _nwind.Products.Include(p => p.Category),
-                loadOptions
-            );
+            var projection = _nwind.Products.Select(p => new {
+                p.ProductId,
+                p.ProductName,
+                p.Category.CategoryName,
+                p.UnitPrice
+            });
+
+            return DataSourceLoader.Load(projection, loadOptions);
         }
 
     }
