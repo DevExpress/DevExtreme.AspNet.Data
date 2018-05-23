@@ -6,14 +6,7 @@ using System.Linq;
 namespace DevExtreme.AspNet.Data.Helpers {
 
     static class Accessors {
-        public static readonly IAccessor<IDictionary<string, object>> Dict = new DictImpl();
         public static readonly IAccessor<AnonType> AnonType = new AnonTypeImpl();
-
-        class DictImpl : IAccessor<IDictionary<string, object>> {
-            public object Read(IDictionary<string, object> container, string selector) {
-                return container[selector];
-            }
-        }
 
         class AnonTypeImpl : IAccessor<AnonType> {
             public object Read(AnonType container, string selector) {

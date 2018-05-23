@@ -310,6 +310,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(nullsExpectation, DataSourceLoader.Load(nulls, loadOptions).summary);
         }
 
+        [Fact]
+        public void Summary_Empty() {
+            // https://stackoverflow.com/a/1122839
+            // See also AggregateCalculatorTests.Calculation_Empty
+
+            var loadResult = DataSourceLoader.Load(new object[0], new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "any", SummaryType = "sum" },
+                    new SummaryInfo { Selector = "any", SummaryType = "min" },
+                    new SummaryInfo { Selector = "any", SummaryType = "max" },
+                    new SummaryInfo { Selector = "any", SummaryType = "avg" },
+                    new SummaryInfo { Selector = "any", SummaryType = "count" }
+                }
+            });
+
+            Assert.Equal(
+                new object[] { null, null, null, null, 0 },
+                loadResult.summary
+            );
+        }
+
     }
 
 }

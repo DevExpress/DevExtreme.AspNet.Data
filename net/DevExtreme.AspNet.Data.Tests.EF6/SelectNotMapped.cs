@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
@@ -46,11 +46,11 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
                 loadOptions.RemoteSelect = false;
                 var loadResult = DataSourceLoader.Load(dbSet, loadOptions);
-                var item = loadResult.data.Cast<IDictionary>().First();
+                var item = loadResult.data.Cast<IDictionary<string, object>>().First();
 
                 Assert.Equal(3, item.Keys.Count);
-                Assert.True(item.Contains("ID"));
-                Assert.True(item.Contains("Name"));
+                Assert.True(item.ContainsKey("ID"));
+                Assert.True(item.ContainsKey("Name"));
                 Assert.Equal("blob:j123", item["BlobUrl"]);
             });
         }
