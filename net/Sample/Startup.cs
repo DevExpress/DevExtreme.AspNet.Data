@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
@@ -16,8 +17,9 @@ namespace Sample {
             services
                 .AddLogging()
                 .AddEntityFrameworkSqlServer()
-                .AddDbContext<NorthwindContext>();
-
+                .AddDbContext<NorthwindContext>(options => options
+                    .UseSqlServer("Server=.\\SQLEXPRESS; Database=Northwind; Trusted_Connection=True"
+                ));
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {

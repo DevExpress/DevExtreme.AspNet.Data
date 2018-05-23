@@ -2,6 +2,7 @@
     "name": "Sample",
     "private": true,
     "dependencies": {
-        "devextreme": "17.1.6"
+        "devextreme": "~18.1.0",
+        "jquery": "3.1.1"
     }
 }

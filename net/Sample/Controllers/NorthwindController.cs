@@ -20,14 +20,24 @@ namespace Sample.Controllers {
 
         [HttpGet("orders")]
         public object Orders(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoader.Load(_nwind.Orders, loadOptions);
+            var source = _nwind.Orders.Select(o => new {
+                o.OrderId,
+                o.CustomerId,
+                o.OrderDate,
+                o.Freight,
+                o.ShipCountry,
+                o.ShipRegion,
+                o.ShipVia
+            });
+
+            return DataSourceLoader.Load(source, loadOptions);
         }
 
         [HttpGet("order-details")]
-        public object OrderDetails(int orderID, DataSourceLoadOptions options) {
+        public object OrderDetails(int orderId, DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
-                from i in _nwind.Order_Details
-                where i.OrderID == orderID
+                from i in _nwind.OrderDetails
+                where i.OrderId == orderId
                 select new {
                     Product = i.Product.ProductName,
                     Price = i.UnitPrice,
@@ -42,7 +52,7 @@ namespace Sample.Controllers {
         public object CustomersLookup(DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from c in _nwind.Customers orderby c.CompanyName select new {
-                    Value = c.CustomerID,
+                    Value = c.CustomerId,
                     Text = $"{c.CompanyName} ({c.Country})"
                 },
                 options
@@ -53,7 +63,7 @@ namespace Sample.Controllers {
         public object ShippersLookup(DataSourceLoadOptions options) {
             return DataSourceLoader.Load(
                 from s in _nwind.Shippers orderby s.CompanyName select new {
-                    Value = s.ShipperID,
+                    Value = s.ShipperId,
                     Text = s.CompanyName
                 },
                 options
@@ -62,7 +72,7 @@ namespace Sample.Controllers {
 
         [HttpPut("update-order")]
         public IActionResult UpdateOrder(int key, string values) {
-            var order = _nwind.Orders.FirstOrDefault(o => o.OrderID == key);
+            var order = _nwind.Orders.FirstOrDefault(o => o.OrderId == key);
             if(order == null)
                 return StatusCode(409, "Order not found");
 
@@ -87,12 +97,12 @@ namespace Sample.Controllers {
             _nwind.Orders.Add(order);
             _nwind.SaveChanges();
 
-            return Json(order.OrderID);
+            return Json(order.OrderId);
         }
 
         [HttpDelete("delete-order")]
         public IActionResult DeleteOrder(int key) {
-            var order = _nwind.Orders.FirstOrDefault(o => o.OrderID == key);
+            var order = _nwind.Orders.FirstOrDefault(o => o.OrderId == key);
             if(order == null)
                 return StatusCode(409, "Order not found");
 
@@ -104,10 +114,14 @@ namespace Sample.Controllers {
 
         [HttpGet("products")]
         public object Products(DataSourceLoadOptions loadOptions) {
-            return DataSourceLoader.Load(
-                _nwind.Products.Include(p => p.Category),
-                loadOptions
-            );
+            var projection = _nwind.Products.Select(p => new {
+                p.ProductId,
+                p.ProductName,
+                p.Category.CategoryName,
+                p.UnitPrice
+            });
+
+            return DataSourceLoader.Load(projection, loadOptions);
         }
 
     }

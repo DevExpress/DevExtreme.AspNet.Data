@@ -1,27 +1,28 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Newtonsoft.Json;
 
 namespace Sample.Models {
 
     [Table("Shippers")]
-    public class Shipper {
-        public Shipper() {
+    public partial class Shippers {
+        public Shippers() {
             Orders = new HashSet<Order>();
         }
 
         [Key]
-        public int ShipperID { get; set; }
+        [Column("ShipperID")]
+        public int ShipperId { get; set; }
+
         [Required]
+        [StringLength(40)]
         public string CompanyName { get; set; }
+
+        [StringLength(24)]
         public string Phone { get; set; }
 
-        [JsonIgnore]
         [InverseProperty("Shipper")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }
