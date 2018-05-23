@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -35,7 +36,9 @@ namespace DevExtreme.AspNet.Data {
                     i--;
                 }
 
-                if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
+                if(currentTarget.Type == typeof(ExpandoObject))
+                    currentTarget = ReadExpando(currentTarget, clientExprItem);
+                else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
                     currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);
@@ -99,6 +102,13 @@ namespace DevExtreme.AspNet.Data {
                 progression.Add(Expression.Call(last, typeof(Object).GetMethod(nameof(Object.ToString))));
         }
 
+        static Expression ReadExpando(Expression expando, string member) {
+            return Expression.Property(
+                Expression.Convert(expando, typeof(IDictionary<string, object>)),
+                "Item",
+                Expression.Constant(member)
+            );
+        }
     }
 
 }
