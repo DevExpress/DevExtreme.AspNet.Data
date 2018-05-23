@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -123,7 +123,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadResult = DataSourceLoader.Load(data, loadOptions);
-            var items = loadResult.data.Cast<IDictionary>();
+            var items = loadResult.data.Cast<IDictionary<string, object>>();
             Assert.Null(items.First()["Length"]);
         }
 
