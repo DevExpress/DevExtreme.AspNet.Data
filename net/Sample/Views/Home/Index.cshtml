@@ -7,7 +7,7 @@
         $("#grid").dxDataGrid({
 
             dataSource: DevExpress.data.AspNet.createStore({
-                key: "orderID",
+                key: "orderId",
                 loadUrl: "@Url.Action("Orders", "Northwind")",
                 updateUrl: "@Url.Action("UpdateOrder", "Northwind")",
                 insertUrl: "@Url.Action("InsertOrder", "Northwind")",
@@ -21,7 +21,7 @@
 
             columns: [
                 {
-                    dataField: "customerID",
+                    dataField: "customerId",
                     caption: "Customer",
                     lookup: {
                         valueExpr: "value",
@@ -89,8 +89,9 @@
                         .dxDataGrid({
                             dataSource: DevExpress.data.AspNet.createStore({
                                 loadUrl: "@Url.Action("OrderDetails", "Northwind")",
-                                loadParams: { orderID: options.data.orderID }
-                            })
+                                loadParams: { orderId: options.data.orderId }
+                            }),
+                            remoteOperations: true
                         })
                         .appendTo(container);
                 }

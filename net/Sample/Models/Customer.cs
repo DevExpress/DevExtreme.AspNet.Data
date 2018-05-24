@@ -1,35 +1,53 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Newtonsoft.Json;
 
 namespace Sample.Models {
 
     [Table("Customers")]
-    public class Customer {
+    public partial class Customer {
         public Customer() {
             Orders = new HashSet<Order>();
         }
 
         [Key]
-        public string CustomerID { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
+        [Column("CustomerID")]
+        [StringLength(5)]
+        public string CustomerId { get; set; }
+
         [Required]
+        [StringLength(40)]
         public string CompanyName { get; set; }
+
+        [StringLength(30)]
         public string ContactName { get; set; }
+
+        [StringLength(30)]
         public string ContactTitle { get; set; }
-        public string Country { get; set; }
-        public string Fax { get; set; }
-        public string Phone { get; set; }
-        public string PostalCode { get; set; }
+
+        [StringLength(60)]
+        public string Address { get; set; }
+
+        [StringLength(15)]
+        public string City { get; set; }
+
+        [StringLength(15)]
         public string Region { get; set; }
 
-        [JsonIgnore]
+        [StringLength(10)]
+        public string PostalCode { get; set; }
+
+        [StringLength(15)]
+        public string Country { get; set; }
+
+        [StringLength(24)]
+        public string Phone { get; set; }
+
+        [StringLength(24)]
+        public string Fax { get; set; }
+
         [InverseProperty("Customer")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

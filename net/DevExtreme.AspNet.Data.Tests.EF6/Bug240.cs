@@ -31,8 +31,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
                 var items = loadResult.data.Cast<dynamic>().ToArray();
 
-                Assert.Null(items[0]["Date"]["Year"]);
-                Assert.Null(items[0]["Text"]["Length"]);
+                Assert.Null(items[0].Date.Year);
+                Assert.Null(items[0].Text.Length);
             });
         }
 
