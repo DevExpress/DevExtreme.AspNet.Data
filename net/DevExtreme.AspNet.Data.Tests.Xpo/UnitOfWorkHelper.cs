@@ -5,14 +5,14 @@ using System;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
-    class UnitOfWorkHelper {
+    static class UnitOfWorkHelper {
         static readonly object LOCK = new object();
         static IDataLayer DATA_LAYER;
 
         public static void Exec(Action<UnitOfWork> action) {
-            XpoDefault.Session = null;
-
             lock(LOCK) {
+                XpoDefault.Session = null;
+
                 if(DATA_LAYER == null) {
                     var sqlHelper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_Xpo_DB");
                     sqlHelper.ResetDatabase();
