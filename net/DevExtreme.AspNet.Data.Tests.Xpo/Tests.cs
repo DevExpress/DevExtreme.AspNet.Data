@@ -8,6 +8,24 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
     public class Tests {
 
         [Fact]
+        public void DefaultSort() {
+            UnitOfWorkHelper.Exec(uow => {
+                new GenericTestEntity(uow) { Oid = MakeGuid('a') };
+                new GenericTestEntity(uow) { Oid = MakeGuid('c') };
+                new GenericTestEntity(uow) { Oid = MakeGuid('b') };
+                uow.CommitChanges();
+
+                var loadResult = DataSourceLoader.Load(uow.Query<GenericTestEntity>(), new SampleLoadOptions {
+                    Skip = 1,
+                    Take = 1
+                });
+
+                var data = loadResult.data.Cast<GenericTestEntity>().ToArray();
+                Assert.StartsWith("b", data[0].Oid.ToString());
+            });
+        }
+
+        [Fact]
         public void DefaultSort_Projection() {
             UnitOfWorkHelper.Exec(uow => {
                 new GenericTestEntity(uow) { Oid = MakeGuid('a'), Text = "a" };
