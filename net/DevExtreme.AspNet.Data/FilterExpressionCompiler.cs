@@ -66,15 +66,16 @@ namespace DevExtreme.AspNet.Data {
 
                 if(clientValue == null && !Utils.CanAssignNull(accessorExpr.Type)) {
                     switch(expressionType) {
-                        case ExpressionType.NotEqual:
-                            return Expression.Constant(true);
-
-                        case ExpressionType.Equal:
                         case ExpressionType.GreaterThan:
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
                             return Expression.Constant(false);
+
+                        case ExpressionType.Equal:
+                        case ExpressionType.NotEqual:
+                            accessorExpr = Expression.Convert(accessorExpr, Utils.MakeNullable(accessorExpr.Type));
+                            break;
                     }
                 }
 
