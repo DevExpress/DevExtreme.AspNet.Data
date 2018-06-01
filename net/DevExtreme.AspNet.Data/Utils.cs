@@ -20,6 +20,10 @@ namespace DevExtreme.AspNet.Data {
             return info.IsGenericType && info.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
+        public static Type MakeNullable(Type type) {
+            return typeof(Nullable<>).MakeGenericType(type);
+        }
+
         public static object GetDefaultValue(Type type) {
             if(type.GetTypeInfo().IsValueType)
                 return Activator.CreateInstance(type);

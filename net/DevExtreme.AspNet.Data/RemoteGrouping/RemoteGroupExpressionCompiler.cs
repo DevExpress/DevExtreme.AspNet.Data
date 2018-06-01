@@ -171,7 +171,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             }
 
             if(nullable)
-                type = typeof(Nullable<>).MakeGenericType(type);
+                return Utils.MakeNullable(type);
 
             return type;
         }
