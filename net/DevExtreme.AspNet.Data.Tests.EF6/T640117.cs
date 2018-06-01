@@ -76,6 +76,14 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
                     Assert.Single(loadResult.data);
                 }
+
+                {
+                    var loadResult = DataSourceLoader.Load(context.T640117_Children, new SampleLoadOptions {
+                        Filter = new[] { "ID", null }
+                    });
+
+                    Assert.Empty(loadResult.data);
+                }
             });
         }
     }
