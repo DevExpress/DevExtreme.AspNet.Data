@@ -85,6 +85,7 @@
     <Compile Include="Bug239.cs" />
     <Compile Include="Bug240.cs" />
     <Compile Include="SelectNotMapped.cs" />
+    <Compile Include="T640117.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Bug112.cs" />
   </ItemGroup>

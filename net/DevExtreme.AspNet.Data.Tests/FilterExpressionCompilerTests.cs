@@ -278,8 +278,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 return Compile<Tuple<int>>(new[] { "Item1", op, null }).Body.ToString();
             }
 
-            Assert.Equal("False", CompileOperation("="));
-            Assert.Equal("True", CompileOperation("<>"));
+            var expectedConvert = Compat.ExpectedConvert("obj.Item1", "Nullable`1");
+
+            Assert.Equal($"({expectedConvert} == null)", CompileOperation("="));
+            Assert.Equal($"({expectedConvert} != null)", CompileOperation("<>"));
 
             // https://stackoverflow.com/q/4399932
             Assert.Equal("False", CompileOperation(">"));
