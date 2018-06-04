@@ -35,6 +35,7 @@
     function createStore(options) {
         var store = new CustomStore(createStoreConfig(options));
         store._useDefaultSearch = true;
+        store._options = options;
         return store;
     }
 
