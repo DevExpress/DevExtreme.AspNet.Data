@@ -2,6 +2,7 @@
 <#@ output extension=".cs" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
+#if false
 using System;
 
 namespace DevExtreme.AspNet.Data.Types {
@@ -65,6 +66,7 @@ namespace DevExtreme.AspNet.Data.Types {
 
     }
 }
+#endif
 <#+
     static readonly int[] SIZES = new[] { 1, 2, 4, 8, 16, 32 };
 

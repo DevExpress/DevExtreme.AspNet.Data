@@ -1,4 +1,5 @@
 ﻿// WARNING! GENERATED CODE!
+#if false
 using System;
 
 namespace DevExtreme.AspNet.Data.Types {
@@ -439,3 +440,4 @@ namespace DevExtreme.AspNet.Data.Types {
 
     }
 }
+#endif

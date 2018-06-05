@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data.Helpers;
+﻿#if false
+using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
@@ -69,3 +70,4 @@ namespace DevExtreme.AspNet.Data.Tests {
     }
 
 }
+#endif
