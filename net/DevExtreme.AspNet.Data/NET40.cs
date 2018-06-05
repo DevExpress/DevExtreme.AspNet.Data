@@ -46,6 +46,10 @@ namespace DevExtreme.AspNet.Data {
             get { return _type.IsEnum; }
         }
 
+        public Type[] GenericTypeArguments {
+            get { return _type.GetGenericArguments(); }
+        }
+
         public Type GetGenericTypeDefinition() {
             return _type.GetGenericTypeDefinition();
         }
