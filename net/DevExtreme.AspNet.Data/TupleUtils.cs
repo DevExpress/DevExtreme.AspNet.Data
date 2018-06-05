@@ -7,6 +7,25 @@ using System.Reflection;
 namespace DevExtreme.AspNet.Data {
 
     static class TupleUtils {
+        static readonly PropertyInfo ITEM_PROP;
+
+        static TupleUtils() {
+            // Indexer is available in .NET >= 4.7.1 & .NET Core >= 2
+            // See https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.ituple.item
+            ITEM_PROP = Type.GetType("System.Runtime.CompilerServices.ITuple")?.GetProperty("Item");
+        }
+
+        public static object ReadItem(object tuple, int itemIndex, bool useIndexer = true) {
+            if(ITEM_PROP == null || !useIndexer) {
+                while(itemIndex > 6) {
+                    tuple = tuple.GetType().GetProperty("Rest").GetValue(tuple, null);
+                    itemIndex -= 7;
+                }
+                return tuple.GetType().GetProperty("Item" + (1 + itemIndex)).GetValue(tuple, null);
+            }
+
+            return ITEM_PROP.GetValue(tuple, new object[] { itemIndex });
+        }
 
         public static Type CreateType(IList<Type> typeArguments) {
             var result = (Type)null;

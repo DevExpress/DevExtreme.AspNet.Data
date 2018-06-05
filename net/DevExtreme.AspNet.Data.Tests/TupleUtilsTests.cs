@@ -101,6 +101,16 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Theory]
+        [InlineData(true), InlineData(false)]
+        public void ReadItem(bool useIndexer) {
+            var tuple = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16).ToTuple();
+
+            Assert.Equal(6, TupleUtils.ReadItem(tuple, 6, useIndexer));
+            Assert.Equal(7, TupleUtils.ReadItem(tuple, 7, useIndexer));
+            Assert.Equal(15, TupleUtils.ReadItem(tuple, 15, useIndexer));
+        }
+
     }
 
 }
