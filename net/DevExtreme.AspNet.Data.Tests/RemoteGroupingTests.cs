@@ -78,7 +78,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Single(loadOptions.ExpressionLog);
-            Assert.Matches(@"AnonType`2\(I0 = .+?, I1 = .+?\)", loadOptions.ExpressionLog[0]);
+            Assert.Matches(@"Tuple`2\(Item1 = .+?, Item2 = .+?\)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);
@@ -146,7 +146,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("Take", loadOptions.ExpressionLog[0]);
 
             // 2 - load summaries
-            Assert.Contains("AnonType()", loadOptions.ExpressionLog[1]);
+            Assert.Contains("new Object()", loadOptions.ExpressionLog[1]);
 
             Assert.Equal(4M, result.summary[0]);
             Assert.Single(result.data.Cast<object>());

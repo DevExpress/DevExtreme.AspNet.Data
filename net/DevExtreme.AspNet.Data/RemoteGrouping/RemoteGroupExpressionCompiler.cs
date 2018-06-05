@@ -1,5 +1,4 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,32 +43,19 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 }
             }
 
-            var groupKeySelectorTypes = groupKeyExprList.Select(i => i.Type).ToArray();
-            var groupKeyType = AnonType.Get(groupKeySelectorTypes);
-
-            var groupKeyProps = Enumerable.Range(0, groupKeyExprList.Count)
-                .Select(i => groupKeyType.GetField(AnonType.ITEM_PREFIX + i))
-                .ToArray();
+            var groupKeyType = TupleUtils.CreateType(groupKeyExprList.Select(i => i.Type).ToArray());
+            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
 
             var groupKeyLambda = Expression.Lambda(
-                Expression.New(
-                    groupKeyType.GetConstructor(groupKeySelectorTypes),
-                    groupKeyExprList,
-                    groupKeyProps
-                ),
+                TupleUtils.CreateNewExpr(groupKeyType, groupKeyExprList),
                 groupByParam
             );
 
-            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
-
             target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, Expression.Quote(groupKeyLambda));
 
-            for(var i = 0; i < groupKeyProps.Length; i++) {
+            for(var i = 0; i < groupKeyExprList.Count; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
-                var orderAccessor = Expression.Field(
-                    Expression.Property(orderParam, "Key"),
-                    groupKeyProps[i].Name
-                );
+                var orderAccessor = TupleUtils.CreateReadItemExpr(Expression.Property(orderParam, "Key"), i);
 
                 target = Expression.Call(
                     typeof(Queryable),
@@ -91,20 +77,17 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
 
             for(var i = 0; i < groupCount; i++)
-                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
+                projectionExprList.Add(TupleUtils.CreateReadItemExpr(Expression.Property(param, "Key"), i));
 
             projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
 
             if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
-            var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
+            var projectionType = TupleUtils.CreateType(projectionExprList.Select(i => i.Type).ToArray());
 
             var projectionLambda = Expression.Lambda(
-                Expression.MemberInit(
-                    Expression.New(projectionType.GetConstructor(Type.EmptyTypes)),
-                    projectionExprList.Select((expr, i) => Expression.Bind(projectionType.GetField(AnonType.ITEM_PREFIX + i), expr))
-                ),
+                TupleUtils.CreateNewExpr(projectionType, projectionExprList),
                 param
             );
 

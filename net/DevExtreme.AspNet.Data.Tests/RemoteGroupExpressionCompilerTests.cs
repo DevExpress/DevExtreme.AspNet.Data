@@ -49,34 +49,34 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data"
-                + ".GroupBy(obj => new AnonType`2(I0 = obj.G1, I1 = obj.G2))"
-                + ".OrderBy(g => g.Key.I0)"
-                + ".ThenByDescending(g => g.Key.I1)"
-                + ".Select(g => new AnonType`16() {"
+                + ".GroupBy(obj => new Tuple`2(Item1 = obj.G1, Item2 = obj.G2))"
+                + ".OrderBy(g => g.Key.Item1)"
+                + ".ThenByDescending(g => g.Key.Item2)"
+                + ".Select(g => new Tuple`8("
 
                 // count
-                + "I0 = g.Count(), "
+                + "Item1 = g.Count(), "
 
                 // keys
-                + "I1 = g.Key.I0, "
-                + "I2 = g.Key.I1, "
+                + "Item2 = g.Key.Item1, "
+                + "Item3 = g.Key.Item2, "
 
                 // total summary
-                + "I3 = g.Sum(obj => obj.Value), "
-                + "I4 = g.Min(obj => obj.Value), "
-                + "I5 = g.Max(obj => obj.Value), "
-                + "I6 = g.Sum(obj => obj.Value), "  // avg sum
-                + "I7 = g.Count(), "                // avg count
+                + "Item4 = g.Sum(obj => obj.Value), "
+                + "Item5 = g.Min(obj => obj.Value), "
+                + "Item6 = g.Max(obj => obj.Value), "
+                + "Item7 = g.Sum(obj => obj.Value), Rest = new Tuple`6("    // avg sum
+                + "Item1 = g.Count(), "                                     // avg count
                 // (count skipped)
 
                 // group summary
                 // (count skipped)
-                + "I8 = g.Sum(obj => obj.Nullable), "               // avg sum
-                + "I9 = g.Count(obj => (obj.Nullable != null)), "   // avg count
-                + "I10 = g.Max(obj => obj.Nullable), "
-                + "I11 = g.Min(obj => obj.Nullable), "
-                + "I12 = g.Sum(obj => obj.Nullable)"
-                + "})",
+                + "Item2 = g.Sum(obj => obj.Nullable), "               // avg sum
+                + "Item3 = g.Count(obj => (obj.Nullable != null)), "   // avg count
+                + "Item4 = g.Max(obj => obj.Nullable), "
+                + "Item5 = g.Min(obj => obj.Nullable), "
+                + "Item6 = g.Sum(obj => obj.Nullable)"
+                + ")))",
                 expr.ToString()
             );
         }
@@ -86,8 +86,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = new RemoteGroupExpressionCompiler<DataItem>(null, null, null).Compile(CreateTargetParam<DataItem>());
             Assert.Equal(
                 "data"
-                    + ".GroupBy(obj => new AnonType())"
-                    + ".Select(g => new AnonType`1() {I0 = g.Count()})",
+                    + ".GroupBy(obj => new Object())"
+                    + ".Select(g => new Tuple`1(Item1 = g.Count()))",
                 expr.ToString()
             );
         }
@@ -116,11 +116,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 return compiler.Compile(CreateTargetParam<T>()).ToString();
             }
 
-            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double>("this", false));
-            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double?>("this", false));
+            Assert.Contains("Item1 = (obj - (obj % 123)", Compile<double>("this", false));
+            Assert.Contains("Item1 = (obj - (obj % 123)", Compile<double?>("this", false));
 
             Assert.Contains(
-                $"I0 = IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert("(obj.Item1.Length - (obj.Item1.Length % 123))", "Nullable`1")})",
+                $"Item1 = IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert("(obj.Item1.Length - (obj.Item1.Length % 123))", "Nullable`1")})",
                 Compile<Tuple<string>>("Item1.Length", true)
             );
         }
@@ -150,14 +150,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             {
                 var expr = Compile<DateTime>("this", false);
 
-                Assert.Contains("I0 = obj.Year", expr);
-                Assert.Contains("I1 = ((obj.Month + 2) / 3)", expr);
-                Assert.Contains("I2 = obj.Month", expr);
-                Assert.Contains("I3 = obj.Day", expr);
-                Assert.Contains("I4 = " + Compat.ExpectedConvert("obj.DayOfWeek", "Int32"), expr);
-                Assert.Contains("I5 = obj.Hour", expr);
-                Assert.Contains("I6 = obj.Minute", expr);
-                Assert.Contains("I7 = obj.Second", expr);
+                Assert.Contains("Item1 = obj.Year", expr);
+                Assert.Contains("Item2 = ((obj.Month + 2) / 3)", expr);
+                Assert.Contains("Item3 = obj.Month", expr);
+                Assert.Contains("Item4 = obj.Day", expr);
+                Assert.Contains("Item5 = " + Compat.ExpectedConvert("obj.DayOfWeek", "Int32"), expr);
+                Assert.Contains("Item6 = obj.Hour", expr);
+                Assert.Contains("Item7 = obj.Minute", expr);
+                Assert.Contains("Item1 = obj.Second", expr);
             }
 
             {
@@ -167,14 +167,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                     return Compat.ExpectedConvert(coreSelector, "Nullable`1");
                 }
 
-                Assert.Contains("I0 = " + Wrap("obj.Value.Year"), expr);
-                Assert.Contains("I1 = " + Wrap("((obj.Value.Month + 2) / 3)"), expr);
-                Assert.Contains("I2 = " + Wrap("obj.Value.Month"), expr);
-                Assert.Contains("I3 = " + Wrap("obj.Value.Day"), expr);
-                Assert.Contains("I4 = " + Wrap("obj.Value.DayOfWeek"), expr);
-                Assert.Contains("I5 = " + Wrap("obj.Value.Hour"), expr);
-                Assert.Contains("I6 = " + Wrap("obj.Value.Minute"), expr);
-                Assert.Contains("I7 = " + Wrap("obj.Value.Second"), expr);
+                Assert.Contains("Item1 = " + Wrap("obj.Value.Year"), expr);
+                Assert.Contains("Item2 = " + Wrap("((obj.Value.Month + 2) / 3)"), expr);
+                Assert.Contains("Item3 = " + Wrap("obj.Value.Month"), expr);
+                Assert.Contains("Item4 = " + Wrap("obj.Value.Day"), expr);
+                Assert.Contains("Item5 = " + Wrap("obj.Value.DayOfWeek"), expr);
+                Assert.Contains("Item6 = " + Wrap("obj.Value.Hour"), expr);
+                Assert.Contains("Item7 = " + Wrap("obj.Value.Minute"), expr);
+                Assert.Contains("Item1 = " + Wrap("obj.Value.Second"), expr);
             }
 
             {
@@ -184,14 +184,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                     return $"IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert(coreSelector, "Nullable`1")})";
                 }
 
-                Assert.Contains("I0 = " + Wrap("obj.Item1.Value.Year"), expr);
-                Assert.Contains("I1 = " + Wrap("((obj.Item1.Value.Month + 2) / 3)"), expr);
-                Assert.Contains("I2 = " + Wrap("obj.Item1.Value.Month"), expr);
-                Assert.Contains("I3 = " + Wrap("obj.Item1.Value.Day"), expr);
-                Assert.Contains("I4 = " + Wrap("obj.Item1.Value.DayOfWeek"), expr);
-                Assert.Contains("I5 = " + Wrap("obj.Item1.Value.Hour"), expr);
-                Assert.Contains("I6 = " + Wrap("obj.Item1.Value.Minute"), expr);
-                Assert.Contains("I7 = " + Wrap("obj.Item1.Value.Second"), expr);
+                Assert.Contains("Item1 = " + Wrap("obj.Item1.Value.Year"), expr);
+                Assert.Contains("Item2 = " + Wrap("((obj.Item1.Value.Month + 2) / 3)"), expr);
+                Assert.Contains("Item3 = " + Wrap("obj.Item1.Value.Month"), expr);
+                Assert.Contains("Item4 = " + Wrap("obj.Item1.Value.Day"), expr);
+                Assert.Contains("Item5 = " + Wrap("obj.Item1.Value.DayOfWeek"), expr);
+                Assert.Contains("Item6 = " + Wrap("obj.Item1.Value.Hour"), expr);
+                Assert.Contains("Item7 = " + Wrap("obj.Item1.Value.Minute"), expr);
+                Assert.Contains("Item1 = " + Wrap("obj.Item1.Value.Second"), expr);
             }
         }
 
@@ -211,7 +211,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             Assert.Contains(
-                "(" + String.Join(", ", memberNames.Select((i, index) => $"I{index} = obj.{i}")) + ")",
+                "(" + String.Join(", ", memberNames.Select((i, index) => $"Item{1 + index} = obj.{i}")) + ")",
                 compiler.Compile(CreateTargetParam<T>()).ToString()
             );
         }

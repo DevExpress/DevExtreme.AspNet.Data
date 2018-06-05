@@ -1,5 +1,4 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Linq;
 
@@ -15,11 +14,9 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             _valueAggregator = new SumAggregator<T>(accessor);
         }
 
-        public override void Step(T container, string selector) {
-            var itemIndex = Int32.Parse(selector);
-
-            _countAggregator.Step(container, AnonType.ITEM_PREFIX + (itemIndex + 1));
-            _valueAggregator.Step(container, AnonType.ITEM_PREFIX + itemIndex);
+        public override void Step(T tuple, string itemIndex) {
+            _countAggregator.Step(tuple, Convert.ToString(1 + Int32.Parse(itemIndex)));
+            _valueAggregator.Step(tuple, itemIndex);
         }
 
         public override object Finish() {

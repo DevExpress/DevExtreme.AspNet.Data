@@ -1,7 +1,6 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.ResponseModel;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,13 +11,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupTransformer {
 
-        public static RemoteGroupingResult Run(IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
+        public static RemoteGroupingResult Run(IEnumerable<object> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
-                hierGroups = new GroupHelper<AnonType>(Accessors.AnonType).Group(
+                hierGroups = new GroupHelper<object>(TupleUtils.ACCESSOR).Group(
                     flatGroups,
-                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (1 + i) }).ToArray()
+                    Enumerable.Range(1, groupCount).Select(i => new GroupingInfo { Selector = i.ToString() }).ToArray()
                 );
             }
 
@@ -32,7 +31,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = AggregateName.REMOTE_COUNT });
 
-            var totals = new AggregateCalculator<AnonType>(dataToAggregate, Accessors.AnonType, transformedTotalSummary, transformedGroupSummary).Run();
+            var totals = new AggregateCalculator<object>(dataToAggregate, TupleUtils.ACCESSOR, transformedTotalSummary, transformedGroupSummary).Run();
             var totalCount = (int)totals.Last();
 
             totals = totals.Take(totals.Length - 1).ToArray();
@@ -67,7 +66,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 } else {
                     result.Add(new SummaryInfo {
                         SummaryType = originalType,
-                        Selector = AnonType.ITEM_PREFIX + fieldIndex
+                        Selector = fieldIndex.ToString()
                     });
                     fieldIndex++;
                 }

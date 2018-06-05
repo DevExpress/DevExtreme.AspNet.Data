@@ -1,6 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +14,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             : base(accessor) {
         }
 
-        public override void Step(T dataitem, string selector) {
-            var group = dataitem as AnonType;
-            _count += (int)group[0];
+        public override void Step(T tuple, string _) {
+            _count += (int)TupleUtils.ReadItem(tuple, 0);
         }
 
         public override object Finish() {

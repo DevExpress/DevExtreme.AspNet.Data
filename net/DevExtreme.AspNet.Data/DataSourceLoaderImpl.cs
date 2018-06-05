@@ -2,7 +2,6 @@
 using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.RemoteGrouping;
 using DevExtreme.AspNet.Data.ResponseModel;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +46,7 @@ namespace DevExtreme.AspNet.Data {
             if(CanUseRemoteGrouping && ShouldEmptyGroups) {
                 var groupingResult = ExecRemoteGrouping();
 
-                EmptyGroups(groupingResult.Groups, Options.Group.Length);
+                EmptyGroups(groupingResult.Groups, Options.Group.Length, g => (int)TupleUtils.ReadItem(g.items[0], 0));
 
                 result.data = Paginate(groupingResult.Groups, Options.Skip, Options.Take);
                 result.summary = groupingResult.Totals;
@@ -85,19 +84,19 @@ namespace DevExtreme.AspNet.Data {
                     result.data = Paginate(result.data, Options.Skip, Options.Take);
 
                 if(ShouldEmptyGroups)
-                    EmptyGroups(result.data, Options.Group.Length);
+                    EmptyGroups(result.data, Options.Group.Length, g => g.items.Count);
             }
 
             return result;
         }
 
-        IEnumerable<AnonType> ExecWithSelect(Expression loadExpr) {
+        IEnumerable<object> ExecWithSelect(Expression loadExpr) {
             if(Options.UseRemoteSelect)
-                return ExecExpr<AnonType>(Source, loadExpr);
+                return ExecExpr<object>(Source, loadExpr);
 
             var inMemoryQuery = ForceExecution(ExecExpr<S>(Source, loadExpr)).AsQueryable();
             var selectExpr = new SelectExpressionCompiler<S>(true).Compile(inMemoryQuery.Expression, Options.GetFullSelect());
-            return ExecExpr<AnonType>(inMemoryQuery, selectExpr);
+            return ExecExpr<object>(inMemoryQuery, selectExpr);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {
@@ -147,7 +146,7 @@ namespace DevExtreme.AspNet.Data {
 
         RemoteGroupingResult ExecRemoteGrouping() {
             return RemoteGroupTransformer.Run(
-                ExecExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
+                ExecExpr<object>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
                 Options.HasGroups ? Options.Group.Length : 0,
                 Options.TotalSummary,
                 Options.GroupSummary
@@ -194,28 +193,22 @@ namespace DevExtreme.AspNet.Data {
             return typed;
         }
 
-        static void EmptyGroups(IEnumerable groups, int level) {
+        static void EmptyGroups(IEnumerable groups, int level, Func<Group, int> countReader) {
             foreach(Group g in groups) {
                 if(level < 2) {
-
-                    if(g.items[0] is AnonType remoteGroup) {
-                        g.count = (int)remoteGroup[0];
-                    } else {
-                        g.count = g.items.Count;
-                    }
-
+                    g.count = countReader(g);
                     g.items = null;
                 } else {
-                    EmptyGroups(g.items, level - 1);
+                    EmptyGroups(g.items, level - 1, countReader);
                 }
             }
         }
 
-        ExpandoObject ProjectionToExpando(AnonType projection) {
+        ExpandoObject ProjectionToExpando(object projection) {
             var expando = new ExpandoObject();
             var index = 0;
             foreach(var name in Options.GetFullSelect()) {
-                ShrinkSelectResult(expando, name.Split('.'), projection[index]);
+                ShrinkSelectResult(expando, name.Split('.'), TupleUtils.ReadItem(projection, index));
                 index++;
             }
             return expando;

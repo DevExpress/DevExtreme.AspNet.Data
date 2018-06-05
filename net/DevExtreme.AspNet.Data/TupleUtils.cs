@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,6 +8,8 @@ using System.Reflection;
 namespace DevExtreme.AspNet.Data {
 
     static class TupleUtils {
+        public static readonly IAccessor<object> ACCESSOR = new AccessorImpl();
+
         static readonly PropertyInfo ITEM_PROP;
 
         static TupleUtils() {
@@ -28,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static Type CreateType(IList<Type> typeArguments) {
-            var result = (Type)null;
+            var result = typeof(object);
             var levelTypeArguments = new Type[typeArguments.Count < 8 ? typeArguments.Count : typeArguments.Count % 7];
             var levelIndex = levelTypeArguments.Length - 1;
 
@@ -85,6 +88,12 @@ namespace DevExtreme.AspNet.Data {
             return Expression.Property(tupleExpr, "Item" + (1 + itemIndex));
         }
 
+
+        class AccessorImpl : IAccessor<object> {
+            public object Read(object tuple, string itemIndex) {
+                return ReadItem(tuple, Int32.Parse(itemIndex));
+            }
+        }
     }
 
 }
