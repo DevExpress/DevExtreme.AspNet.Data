@@ -17,12 +17,9 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
                     sqlHelper.ResetDatabase();
 
                     FACTORY = Fluently.Configure()
-                        .Database(MsSqlConfiguration.MsSql2012
-                            .ConnectionString(sqlHelper.ConnectionString)
-                            .ShowSql()
-                        )
+                        .Database(MsSqlConfiguration.MsSql2012.ConnectionString(sqlHelper.ConnectionString))
                         .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(SessionFactoryHelper).Assembly))
-                        .ExposeConfiguration(config => new SchemaExport(config).Create(true, true))
+                        .ExposeConfiguration(config => new SchemaExport(config).Create(false, true))
                         .BuildSessionFactory();
                 }
 
