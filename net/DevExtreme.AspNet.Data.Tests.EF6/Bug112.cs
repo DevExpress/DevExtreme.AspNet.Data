@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,16 +14,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public TimeSpan? Duration { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug112_DataItem> Bug112_Data { get; set; }
-    }
-
     public class Bug112 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug112_Data;
+                var dbSet = context.Set<Bug112_DataItem>();
 
                 dbSet.AddRange(new[] {
                     new Bug112_DataItem { Duration = TimeSpan.Parse("01:23") },

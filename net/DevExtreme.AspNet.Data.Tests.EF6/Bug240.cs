@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
@@ -11,16 +10,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public string Text { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug240_DataItem> Bug240_Data { get; set; }
-    }
-
     public class Bug240 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug240_Data;
+                var dbSet = context.Set<Bug240_DataItem>();
 
                 dbSet.Add(new Bug240_DataItem());
                 context.SaveChanges();

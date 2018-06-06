@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
@@ -12,16 +11,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public int? Value { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug179_DataItem> Bug179_Data { get; set; }
-    }
-
     public class Bug179 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug179_Data;
+                var dbSet = context.Set<Bug179_DataItem>();
 
                 dbSet.AddRange(new[] {
                     new Bug179_DataItem { Group = "A", Value = 1 },

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
@@ -29,27 +28,25 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public T640117_ParentItem Parent { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<T640117_ParentItem> T640117_Parents { get; set; }
-        public DbSet<T640117_ChildItem> T640117_Children { get; set; }
-    }
-
     public class T640117 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
+                var parents = context.Set<T640117_ParentItem>();
+                var children = context.Set<T640117_ChildItem>();
+
                 var parent = new T640117_ParentItem { ID = 123 };
                 var child = new T640117_ChildItem { ID = 1 };
                 var orphan = new T640117_ChildItem { ID = 2 };
 
                 parent.Children.Add(child);
-                context.T640117_Parents.Add(parent);
-                context.T640117_Children.Add(orphan);
+                parents.Add(parent);
+                children.Add(orphan);
                 context.SaveChanges();
 
                 {
-                    var loadResut = DataSourceLoader.Load(context.T640117_Children, new SampleLoadOptions {
+                    var loadResut = DataSourceLoader.Load(children, new SampleLoadOptions {
                         Select = new[] { "Parent.ID" },
                         Sort = new[] {
                             new SortingInfo { Selector = "Parent.ID" }
@@ -62,7 +59,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 }
 
                 {
-                    var loadResult = DataSourceLoader.Load(context.T640117_Children, new SampleLoadOptions {
+                    var loadResult = DataSourceLoader.Load(children, new SampleLoadOptions {
                         Filter = new[] { "Parent.ID", null }
                     });
 
@@ -70,7 +67,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 }
 
                 {
-                    var loadResult = DataSourceLoader.Load(context.T640117_Children, new SampleLoadOptions {
+                    var loadResult = DataSourceLoader.Load(children, new SampleLoadOptions {
                         Filter = new[] { "Parent.ID", "<>", null }
                     });
 
@@ -78,7 +75,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 }
 
                 {
-                    var loadResult = DataSourceLoader.Load(context.T640117_Children, new SampleLoadOptions {
+                    var loadResult = DataSourceLoader.Load(children, new SampleLoadOptions {
                         Filter = new[] { "ID", null }
                     });
 

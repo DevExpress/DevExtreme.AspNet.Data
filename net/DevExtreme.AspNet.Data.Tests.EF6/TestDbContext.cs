@@ -7,12 +7,26 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
-    partial class TestDbContext : DbContext {
+    class TestDbContext : DbContext {
         static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
         private TestDbContext(string connectionString)
             : base(connectionString) {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder) {
+            modelBuilder.Entity<Bug112_DataItem>();
+            modelBuilder.Entity<Bug179_DataItem>();
+            modelBuilder.Entity<Bug184_DataItem>();
+            modelBuilder.Entity<Bug235_DataItem>();
+            modelBuilder.Entity<Bug239_DataItem>();
+            modelBuilder.Entity<Bug240_DataItem>();
+
+            modelBuilder.Entity<SelectNotMapped_DataItem>();
+
+            modelBuilder.Entity<T640117_ParentItem>();
+            modelBuilder.Entity<T640117_ChildItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
@@ -14,16 +13,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public int Prop { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug235_DataItem> Bug235_Data { get; set; }
-    }
-
     public class Bug235 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug235_Data;
+                var dbSet = context.Set<Bug235_DataItem>();
 
                 dbSet.Add(new Bug235_DataItem { ID = 1, Prop = 0 });
                 dbSet.Add(new Bug235_DataItem { ID = 2, Prop = 2 });

@@ -4,12 +4,17 @@ using System.Collections.Generic;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
 
-    partial class TestDbContext : DbContext {
+    class TestDbContext : DbContext {
         static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
         private TestDbContext(DbContextOptions options)
             : base(options) {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Bug120_DataItem>();
+            modelBuilder.Entity<RemoteGrouping_DataItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {

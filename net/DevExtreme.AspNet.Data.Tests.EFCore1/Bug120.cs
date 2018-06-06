@@ -1,32 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
+
+    class Bug120_DataItem {
+        public long ID { get; set; }
+    }
+
     public class Bug120 {
-
-        public class DataItem {
-            public long ID { get; set; }
-        }
-
-        public class TestContext : DbContext {
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-                if(!optionsBuilder.IsConfigured)
-                    optionsBuilder.UseInMemoryDatabase(nameof(Bug120));
-            }
-
-            public DbSet<DataItem> Data { get; set; }
-        }
 
         [Fact]
         public void Scenario() {
-            using(var context = new TestContext()) {
-                var result = DataSourceLoader.Load(context.Data, new SampleLoadOptions { RequireTotalCount = true });
+            TestDbContext.Exec(context => {
+                var dbSet = context.Set<Bug120_DataItem>();
+                var result = DataSourceLoader.Load(dbSet, new SampleLoadOptions { RequireTotalCount = true });
                 Assert.Equal(0, result.totalCount);
-            }
+            });
         }
 
     }
