@@ -20,7 +20,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         public static void Exec(Action<TestDbContext> action) {
             lock(LOCK) {
                 if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_EFCore1_DB");
+                    var helper = new SqlServerTestDbHelper("EFCore1");
                     helper.ResetDatabase();
 
                     var options = new DbContextOptionsBuilder()

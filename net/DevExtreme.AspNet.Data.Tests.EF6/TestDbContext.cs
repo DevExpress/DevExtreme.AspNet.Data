@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public static void Exec(Action<TestDbContext> action) {
             lock(LOCK) {
                 if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_EF6_DB");
+                    var helper = new SqlServerTestDbHelper("EF6");
                     helper.ResetDatabase();
 
                     INSTANCE = new TestDbContext(helper.ConnectionString);

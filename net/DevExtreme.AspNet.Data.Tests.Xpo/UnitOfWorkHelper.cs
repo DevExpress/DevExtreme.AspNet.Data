@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                 XpoDefault.Session = null;
 
                 if(DATA_LAYER == null) {
-                    var sqlHelper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_Xpo_DB");
+                    var sqlHelper = new SqlServerTestDbHelper("Xpo");
                     sqlHelper.ResetDatabase();
 
                     var dict = new ReflectionDictionary();

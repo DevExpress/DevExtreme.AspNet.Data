@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         public static void Exec(Action<ISession> action) {
             lock(LOCK) {
                 if(FACTORY == null) {
-                    var sqlHelper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_NH_DB");
+                    var sqlHelper = new SqlServerTestDbHelper("NH");
                     sqlHelper.ResetDatabase();
 
                     FACTORY = Fluently.Configure()
