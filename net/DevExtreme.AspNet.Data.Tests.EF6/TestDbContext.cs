@@ -16,6 +16,9 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
+            // NOTE cannot use inner classes (e.g. Bug112.DataItem) because of
+            // https://github.com/aspnet/EntityFramework6/issues/362
+
             modelBuilder.Entity<Bug112_DataItem>();
             modelBuilder.Entity<Bug179_DataItem>();
             modelBuilder.Entity<Bug184_DataItem>();
