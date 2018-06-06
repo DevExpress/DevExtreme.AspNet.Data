@@ -4,6 +4,7 @@ using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = Bug179_DataItem;
 
     class Bug179_DataItem {
         public int ID { get; set; }
@@ -16,14 +17,14 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Set<Bug179_DataItem>();
+                var dbSet = context.Set<DataItem>();
 
                 dbSet.AddRange(new[] {
-                    new Bug179_DataItem { Group = "A", Value = 1 },
-                    new Bug179_DataItem { Group = "A", Value = 3 },
-                    new Bug179_DataItem { Group = "A", Value = null },
-                    new Bug179_DataItem { Group = "B", Value = 5 },
-                    new Bug179_DataItem { Group = "B", Value = null },
+                    new DataItem { Group = "A", Value = 1 },
+                    new DataItem { Group = "A", Value = 3 },
+                    new DataItem { Group = "A", Value = null },
+                    new DataItem { Group = "B", Value = 5 },
+                    new DataItem { Group = "B", Value = null },
                 });
 
                 context.SaveChanges();

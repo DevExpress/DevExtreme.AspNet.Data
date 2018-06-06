@@ -4,6 +4,7 @@ using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = Bug239_DataItem;
 
     class Bug239_DataItem {
         public int ID { get; set; }
@@ -16,10 +17,10 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Set<Bug239_DataItem>();
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new Bug239_DataItem());
-                dbSet.Add(new Bug239_DataItem { OrderDate = new DateTime(2009, 9, 9), Freight = 199 });
+                dbSet.Add(new DataItem());
+                dbSet.Add(new DataItem { OrderDate = new DateTime(2009, 9, 9), Freight = 199 });
                 context.SaveChanges();
 
                 var loadResult = DataSourceLoader.Load(dbSet, new SampleLoadOptions {

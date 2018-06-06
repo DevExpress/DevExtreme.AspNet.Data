@@ -5,6 +5,7 @@ using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = SelectNotMapped_DataItem;
 
     class SelectNotMapped_DataItem {
         public int ID { get; set; }
@@ -24,9 +25,9 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Set<SelectNotMapped_DataItem>();
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new SelectNotMapped_DataItem { Blob = new byte[] { 143, 93, 183 } });
+                dbSet.Add(new DataItem { Blob = new byte[] { 143, 93, 183 } });
                 context.SaveChanges();
 
                 var loadOptions = new SampleLoadOptions {

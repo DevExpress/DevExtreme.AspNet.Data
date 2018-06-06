@@ -4,6 +4,7 @@ using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
+    using DataItem = RemoteGrouping_DataItem;
 
     class RemoteGrouping_DataItem {
         public int ID { get; set; }
@@ -15,7 +16,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         [Fact]
         public void DisabledByDefault() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Set<RemoteGrouping_DataItem>();
+                var dbSet = context.Set<DataItem>();
 
                 var loadOptions = new SampleLoadOptions {
                     Group = new[] {
