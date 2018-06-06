@@ -52,7 +52,7 @@ namespace DevExtreme.AspNet.Data {
                 var lastIndex = progression.Count - 1;
                 var last = progression[lastIndex];
                 if(Utils.CanAssignNull(target.Type) && !Utils.CanAssignNull(last.Type))
-                    progression[lastIndex] = Expression.Convert(last, typeof(Nullable<>).MakeGenericType(last.Type));
+                    progression[lastIndex] = Expression.Convert(last, Utils.MakeNullable(last.Type));
             }
 
             return CompileNullGuard(progression);
