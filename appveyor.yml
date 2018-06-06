@@ -39,7 +39,7 @@ test_script:
     net\DevExtreme.AspNet.Data.Tests.EFCore1\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore1.dll
     net\DevExtreme.AspNet.Data.Tests.EFCore2\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore2.dll
     net\DevExtreme.AspNet.Data.Tests.NH\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.NH.dll
-    net\DevExtreme.AspNet.Data.Tests.Xpo\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.Xpo.dll    
+    net\DevExtreme.AspNet.Data.Tests.Xpo\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.Xpo.dll
     "
     -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
     -output:coverage_netcore.xml
