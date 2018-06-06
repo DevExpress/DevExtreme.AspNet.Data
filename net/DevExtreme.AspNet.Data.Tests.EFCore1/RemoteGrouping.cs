@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
-    using DataItem = RemoteGrouping_DataItem;
-
-    class RemoteGrouping_DataItem {
-        public int ID { get; set; }
-        public int Group { get; set; }
-    }
 
     public class RemoteGrouping {
+
+        [Table(nameof(RemoteGrouping) + "_" + nameof(DataItem))]
+        public class DataItem {
+            public int ID { get; set; }
+            public int Group { get; set; }
+        }
 
         [Fact]
         public void DisabledByDefault() {
