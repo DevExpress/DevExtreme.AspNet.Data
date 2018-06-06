@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
                     var dict = new ReflectionDictionary();
                     dict.GetDataStoreSchema(
-                        typeof(GenericTestEntity)
+                        typeof(DefaultSort.DataItem)
                     );
 
                     var provider = XpoDefault.GetConnectionProvider(
@@ -30,14 +30,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                     DATA_LAYER = new SimpleDataLayer(dict, provider);
                 }
 
-                try {
-                    using(var uow = new UnitOfWork(DATA_LAYER)) {
-                        action(uow);
-                    }
-                } finally {
-                    using(var purger = new Session(DATA_LAYER)) {
-                        purger.ExecuteNonQuery("delete from " + nameof(GenericTestEntity));
-                    }
+                using(var uow = new UnitOfWork(DATA_LAYER)) {
+                    action(uow);
                 }
             }
         }
