@@ -26,14 +26,6 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GroupSummary = BuildSummaryParams()
             };
 
-            if(data.Provider.GetType().Name == "XPQuery`1") {
-                // TODO
-                // Temporary disabled due to NotSupportedException in PropertyAlias
-                loadOptions.GroupSummary = loadOptions.GroupSummary
-                    .Where(i => i.SummaryType != "avg")
-                    .ToArray();
-            }
-
             return (IList<Group>)DataSourceLoader.Load(data, loadOptions).data;
         }
 
