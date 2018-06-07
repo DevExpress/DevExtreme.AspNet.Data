@@ -19,7 +19,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
                     var dict = new ReflectionDictionary();
                     dict.GetDataStoreSchema(
-                        typeof(DefaultSort.DataItem)
+                        typeof(DefaultSort.DataItem),
+                        typeof(RemoteGroupingStress.DataItem)
                     );
 
                     var provider = XpoDefault.GetConnectionProvider(

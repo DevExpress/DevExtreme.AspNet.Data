@@ -26,10 +26,11 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<Bug239_DataItem>();
             modelBuilder.Entity<Bug240_DataItem>();
 
-            modelBuilder.Entity<SelectNotMapped_DataItem>();
-
             modelBuilder.Entity<T640117_ParentItem>();
             modelBuilder.Entity<T640117_ChildItem>();
+
+            modelBuilder.Entity<SelectNotMapped_DataItem>();
+            modelBuilder.Entity<RemoteGroupingStress_DataItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {
