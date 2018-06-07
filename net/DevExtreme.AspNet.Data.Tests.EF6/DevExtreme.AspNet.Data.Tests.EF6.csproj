@@ -84,6 +84,7 @@
     <Compile Include="Bug235.cs" />
     <Compile Include="Bug239.cs" />
     <Compile Include="Bug240.cs" />
+    <Compile Include="RemoteGroupingStress.cs" />
     <Compile Include="SelectNotMapped.cs" />
     <Compile Include="T640117.cs" />
     <Compile Include="TestDbContext.cs" />

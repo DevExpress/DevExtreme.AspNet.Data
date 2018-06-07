@@ -59,6 +59,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             foreach(var type in new[] { "count", "min", "max", "sum", "avg" }) {
                 list.Add(new SummaryInfo { Selector = PROP_NUM, SummaryType = type });
                 list.Add(new SummaryInfo { Selector = PROP_NULL_NUM, SummaryType = type });
+            }
+
+            foreach(var type in new[] { "count", "min", "max" }) {
                 list.Add(new SummaryInfo { Selector = PROP_DATE, SummaryType = type });
                 list.Add(new SummaryInfo { Selector = PROP_NULL_DATE, SummaryType = type });
             }
