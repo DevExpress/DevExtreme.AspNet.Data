@@ -17,21 +17,17 @@ namespace DevExtreme.AspNet.Data {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadOptionsBase Options;
 
+        readonly QueryProviderInfo QueryProviderInfo;
         readonly DataSourceExpressionBuilder<S> Builder;
         readonly bool ShouldEmptyGroups;
         readonly bool CanUseRemoteGrouping;
         readonly bool SummaryIsTotalCountOnly;
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
-            var isLinqToObjects = source is EnumerableQuery;
-
-            // Until https://github.com/aspnet/EntityFramework/issues/2341 is implemented
-            // local grouping is more efficient for EF Core
-            var preferLocalGrouping = Compat.IsEFCore(source.Provider);
-
-            Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
+            QueryProviderInfo = new QueryProviderInfo(source.Provider);
+            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.IsLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping ?? !(isLinqToObjects || preferLocalGrouping);
+            CanUseRemoteGrouping = options.RemoteGrouping ?? !(QueryProviderInfo.IsLinqToObjects || QueryProviderInfo.IsEFCore && QueryProviderInfo.Version < new Version(2, 1, 1));
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
 
             Source = source;
@@ -60,9 +56,9 @@ namespace DevExtreme.AspNet.Data {
                     Options.PrimaryKey = Utils.GetPrimaryKey(typeof(S));
 
                 if(!Options.HasPrimaryKey && !Options.HasDefaultSort && (Options.Skip > 0 || Options.Take > 0)) {
-                    if(Compat.IsEntityFramework(Source.Provider))
+                    if(QueryProviderInfo.IsEFClassic || QueryProviderInfo.IsEFCore)
                         Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
-                    else if(Compat.IsXPO(Source.Provider))
+                    else if(QueryProviderInfo.IsXPO)
                         Options.DefaultSort = "this";
                 }
 
