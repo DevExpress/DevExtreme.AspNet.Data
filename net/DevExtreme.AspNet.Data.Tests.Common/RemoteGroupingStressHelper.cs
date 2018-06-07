@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             DateTime? NullDate { get; }
         }
 
-        public static IList<Group> Run(IQueryable<IEntity> data) {
+        public static IList<Group> Run<T>(IQueryable<T> data) where T : IEntity {
             var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 Group = BuildGroupParams(),
