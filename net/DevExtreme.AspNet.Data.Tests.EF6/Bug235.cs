@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = Bug235_DataItem;
 
     class Bug235_DataItem {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -14,20 +14,16 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public int Prop { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug235_DataItem> Bug235_Data { get; set; }
-    }
-
     public class Bug235 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug235_Data;
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new Bug235_DataItem { ID = 1, Prop = 0 });
-                dbSet.Add(new Bug235_DataItem { ID = 2, Prop = 2 });
-                dbSet.Add(new Bug235_DataItem { ID = 0, Prop = 1 });
+                dbSet.Add(new DataItem { ID = 1, Prop = 0 });
+                dbSet.Add(new DataItem { ID = 2, Prop = 2 });
+                dbSet.Add(new DataItem { ID = 0, Prop = 1 });
                 context.SaveChanges();
 
                 var projection = dbSet.Select(i => new { i.ID, i.Prop });

@@ -13,8 +13,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         readonly string _dbName;
         readonly string _dbFilePath;
 
-        public SqlServerTestDbHelper(string dbName) {
-            _dbName = dbName;
+        public SqlServerTestDbHelper(string id) {
+            _dbName = $"DevExtreme_AspNet_Data_Tests_{id}_DB";
             _dbFilePath = Path.Combine(
                 Path.GetDirectoryName(typeof(SqlServerTestDbHelper).GetTypeInfo().Assembly.Location),
                 _dbName + ".mdf"

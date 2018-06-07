@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
 
-    partial class TestDbContext : DbContext {
+    class TestDbContext : DbContext {
         static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
@@ -12,10 +12,15 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
             : base(options) {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Bug120.DataItem>();
+            modelBuilder.Entity<RemoteGrouping.DataItem>();
+        }
+
         public static void Exec(Action<TestDbContext> action) {
             lock(LOCK) {
                 if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_EFCore1_DB");
+                    var helper = new SqlServerTestDbHelper("EFCore1");
                     helper.ResetDatabase();
 
                     var options = new DbContextOptionsBuilder()

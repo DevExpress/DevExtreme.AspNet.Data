@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = SelectNotMapped_DataItem;
 
     class SelectNotMapped_DataItem {
         public int ID { get; set; }
@@ -20,18 +20,14 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         }
     }
 
-    partial class TestDbContext {
-        public DbSet<SelectNotMapped_DataItem> SelectNotMapped_Data { get; set; }
-    }
-
     public class SelectNotMapped {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.SelectNotMapped_Data;
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new SelectNotMapped_DataItem { Blob = new byte[] { 143, 93, 183 } });
+                dbSet.Add(new DataItem { Blob = new byte[] { 143, 93, 183 } });
                 context.SaveChanges();
 
                 var loadOptions = new SampleLoadOptions {
