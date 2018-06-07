@@ -31,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static Type CreateType(IList<Type> typeArguments) {
-            var result = typeof(object);
+            var result = typeof(int);
             var levelTypeArguments = new Type[typeArguments.Count < 8 ? typeArguments.Count : typeArguments.Count % 7];
             var levelIndex = levelTypeArguments.Length - 1;
 
@@ -65,9 +65,12 @@ namespace DevExtreme.AspNet.Data {
             throw new NotSupportedException();
         }
 
-        public static NewExpression CreateNewExpr(Type tupleType, IEnumerable<Expression> itemExpressions) {
+        public static Expression CreateNewExpr(Type tupleType, IEnumerable<Expression> itemExpressions) {
             var typeArguments = tupleType.GetTypeInfo().GenericTypeArguments;
             var size = typeArguments.Length;
+
+            if(size == 0)
+                return Expression.Constant(1);
 
             var newExprArguments = itemExpressions.Take(7);
             if(size == 8)
