@@ -13,8 +13,9 @@ namespace DevExtreme.AspNet.Data {
         static readonly PropertyInfo ITEM_PROP;
 
         static TupleUtils() {
-            // Indexer is available in .NET >= 4.7.1 & .NET Core >= 2
-            // See https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.ituple.item
+            // ITuple.Item is available in .NET >= 4.7.1 & .NET Core >= 2
+            // https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.ituple.item
+            // https://github.com/dotnet/standard/issues/628
             ITEM_PROP = Type.GetType("System.Runtime.CompilerServices.ITuple")?.GetProperty("Item");
         }
 
