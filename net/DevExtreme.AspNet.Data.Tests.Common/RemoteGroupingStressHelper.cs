@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    public static class RemoteGroupStressHelper {
+    public static class RemoteGroupingStressHelper {
         const string PROP_NUM = nameof(IEntity.Num);
         const string PROP_NULL_NUM = nameof(IEntity.NullNum);
         const string PROP_DATE = nameof(IEntity.Date);
