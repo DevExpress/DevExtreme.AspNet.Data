@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
-    partial class TestDbContext : DbContext {
+    class TestDbContext : DbContext {
         static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
@@ -15,10 +15,27 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             : base(connectionString) {
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder) {
+            // NOTE cannot use inner classes (e.g. Bug112.DataItem) because of
+            // https://github.com/aspnet/EntityFramework6/issues/362
+
+            modelBuilder.Entity<Bug112_DataItem>();
+            modelBuilder.Entity<Bug179_DataItem>();
+            modelBuilder.Entity<Bug184_DataItem>();
+            modelBuilder.Entity<Bug235_DataItem>();
+            modelBuilder.Entity<Bug239_DataItem>();
+            modelBuilder.Entity<Bug240_DataItem>();
+
+            modelBuilder.Entity<SelectNotMapped_DataItem>();
+
+            modelBuilder.Entity<T640117_ParentItem>();
+            modelBuilder.Entity<T640117_ChildItem>();
+        }
+
         public static void Exec(Action<TestDbContext> action) {
             lock(LOCK) {
                 if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("DevExtreme_AspNet_Data_Tests_EF6_DB");
+                    var helper = new SqlServerTestDbHelper("EF6");
                     helper.ResetDatabase();
 
                     INSTANCE = new TestDbContext(helper.ConnectionString);

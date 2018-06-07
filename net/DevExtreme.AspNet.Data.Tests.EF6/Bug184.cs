@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = Bug184_DataItem;
 
     class Bug184_DataItem {
         public int ID { get; set; }
@@ -16,26 +16,22 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public Byte? NullableByte { get; set; }
     }
 
-    partial class TestDbContext {
-        public DbSet<Bug184_DataItem> Bug184_Data { get; set; }
-    }
-
     public class Bug184 {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug184_Data;
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new Bug184_DataItem { Int32 = 1, NullableByte = 1 });
-                dbSet.Add(new Bug184_DataItem { Int32 = 2, NullableByte = 2 });
+                dbSet.Add(new DataItem { Int32 = 1, NullableByte = 1 });
+                dbSet.Add(new DataItem { Int32 = 2, NullableByte = 2 });
 
                 context.SaveChanges();
 
                 var loadResult = DataSourceLoader.Load(dbSet, new SampleLoadOptions {
                     TotalSummary = new[] {
-                        new SummaryInfo { SummaryType = "sum", Selector = nameof(Bug184_DataItem.Int32) },
-                        new SummaryInfo { SummaryType = "sum", Selector = nameof(Bug184_DataItem.NullableByte) }
+                        new SummaryInfo { SummaryType = "sum", Selector = nameof(DataItem.Int32) },
+                        new SummaryInfo { SummaryType = "sum", Selector = nameof(DataItem.NullableByte) }
                     }
                 });
 
