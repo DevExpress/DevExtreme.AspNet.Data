@@ -14,6 +14,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
+            modelBuilder.Entity<RemoteGroupingStress.DataItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {
