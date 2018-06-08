@@ -6,9 +6,6 @@ namespace DevExtreme.AspNet.Data.Types {
     class AnonType<T0> : AnonType {
         public readonly T0 I0;
 
-        public AnonType() {
-        }
-
         public AnonType(T0 i0) {
             I0 = i0;
         }
@@ -29,9 +26,6 @@ namespace DevExtreme.AspNet.Data.Types {
     class AnonType<T0, T1> : AnonType {
         public readonly T0 I0;
         public readonly T1 I1;
-
-        public AnonType() {
-        }
 
         public AnonType(T0 i0, T1 i1) {
             I0 = i0;
@@ -57,9 +51,6 @@ namespace DevExtreme.AspNet.Data.Types {
         public readonly T1 I1;
         public readonly T2 I2;
         public readonly T3 I3;
-
-        public AnonType() {
-        }
 
         public AnonType(T0 i0, T1 i1, T2 i2)
             : this(i0, i1, i2, default(T3)) {
@@ -97,9 +88,6 @@ namespace DevExtreme.AspNet.Data.Types {
         public readonly T5 I5;
         public readonly T6 I6;
         public readonly T7 I7;
-
-        public AnonType() {
-        }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4)
             : this(i0, i1, i2, i3, i4, default(T5)) {
@@ -161,9 +149,6 @@ namespace DevExtreme.AspNet.Data.Types {
         public readonly T13 I13;
         public readonly T14 I14;
         public readonly T15 I15;
-
-        public AnonType() {
-        }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8)
             : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, default(T9)) {
@@ -273,9 +258,6 @@ namespace DevExtreme.AspNet.Data.Types {
         public readonly T29 I29;
         public readonly T30 I30;
         public readonly T31 I31;
-
-        public AnonType() {
-        }
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16)
             : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, default(T17)) {

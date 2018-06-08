@@ -13,9 +13,6 @@ namespace DevExtreme.AspNet.Data.Types {
         public readonly T<#= i #> I<#= i #>;
 <# } #>
 
-        public AnonType() {
-        }
-
 <# for(var i = 1 + prevSize; i < size; i++) {#>
         public AnonType(<#= FormatCtorArgs(i) #>)
             : this(<#= FormatList(i, "i{0}") #>, default(T<#= i #>)) {
