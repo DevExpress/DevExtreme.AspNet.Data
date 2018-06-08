@@ -38,10 +38,8 @@ namespace DevExtreme.AspNet.Data.Types {
             // http://stackoverflow.com/a/1646913
             unchecked {
                 var result = 17;
-                for(var i = 0; i < Size; i++) {
-                    var item = this[i];
-                    result = result * 31 + (item == null ? 0 : item.GetHashCode());
-                }
+                for(var i = 0; i < Size; i++)
+                    result = result * 31 + EqualityComparer<object>.Default.GetHashCode(this[i]);
                 return result;
             }
         }
