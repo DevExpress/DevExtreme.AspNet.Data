@@ -16,10 +16,8 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override void Step(T container, string selector) {
-            var itemIndex = Int32.Parse(selector);
-
-            _countAggregator.Step(container, AnonType.ITEM_PREFIX + (itemIndex + 1));
-            _valueAggregator.Step(container, AnonType.ITEM_PREFIX + itemIndex);
+            _countAggregator.Step(container, AnonType.IndexToField(1 + AnonType.FieldToIndex(selector)));
+            _valueAggregator.Step(container, selector);
         }
 
         public override object Finish() {

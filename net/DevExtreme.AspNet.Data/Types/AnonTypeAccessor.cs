@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.Types {
         }
 
         public object Read(AnonType container, string selector) {
-            return container[int.Parse(selector.Substring(1))];
+            return container[AnonType.FieldToIndex(selector)];
         }
     }
 

@@ -17,7 +17,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(groupCount > 0) {
                 hierGroups = new GroupHelper<AnonType>(AnonTypeAccessor.Instance).Group(
                     flatGroups,
-                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (1 + i) }).ToArray()
+                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.IndexToField(1 + i) }).ToArray()
                 );
             }
 
@@ -60,13 +60,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 } else if(originalType == AggregateName.AVG) {
                     result.Add(new SummaryInfo {
                         SummaryType = AggregateName.REMOTE_AVG,
-                        Selector = fieldIndex.ToString()
+                        Selector = AnonType.IndexToField(fieldIndex)
                     });
                     fieldIndex += 2;
                 } else {
                     result.Add(new SummaryInfo {
                         SummaryType = originalType,
-                        Selector = AnonType.ITEM_PREFIX + fieldIndex
+                        Selector = AnonType.IndexToField(fieldIndex)
                     });
                     fieldIndex++;
                 }
