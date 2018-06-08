@@ -71,8 +71,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
                 // group summary
                 // (count skipped)
-                + "I8 = g.Sum(obj => obj.Nullable), "               // avg sum
-                + "I9 = g.Count(obj => (obj.Nullable != null)), "   // avg count
+                + "I8 = g.Sum(obj => obj.Nullable), "                               // avg sum
+                + "I9 = g.Select(obj => IIF((obj.Nullable != null), 1, 0)).Sum(), "  // avg count
                 + "I10 = g.Max(obj => obj.Nullable), "
                 + "I11 = g.Min(obj => obj.Nullable), "
                 + "I12 = g.Sum(obj => obj.Nullable)"
