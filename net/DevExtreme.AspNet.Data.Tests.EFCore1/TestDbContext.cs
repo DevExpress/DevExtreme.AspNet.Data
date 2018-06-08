@@ -15,6 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Bug120.DataItem>();
             modelBuilder.Entity<RemoteGrouping.DataItem>();
+            modelBuilder.Entity<Summary.DataItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {
