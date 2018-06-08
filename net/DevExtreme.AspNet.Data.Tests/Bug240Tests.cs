@@ -51,9 +51,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                     + $".OrderBy(obj => {FormatExpectedSelectorExpr(false, false)})"
 
                     // Select uses conversion to Nullable
-                    + ".Select(obj => new AnonType`1() {"
+                    + ".Select(obj => new AnonType`1("
                     + $"I0 = {FormatExpectedSelectorExpr(true, false)}"
-                    + "})",
+                    + "))",
                 expr.ToString()
             );
         }
@@ -67,9 +67,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                     // All selectors are guarded and use conversion to Nullable
                     + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == 123))"
                     + $".OrderBy(obj => {FormatExpectedSelectorExpr(true, true)})"
-                    + ".Select(obj => new AnonType`1() {"
+                    + ".Select(obj => new AnonType`1("
                     + $"I0 = {FormatExpectedSelectorExpr(true, true)}"
-                    + "})",
+                    + "))",
                 expr.ToString()
             );
         }
@@ -84,12 +84,12 @@ namespace DevExtreme.AspNet.Data.Tests {
                     + $".Where(obj => ({FormatExpectedSelectorExpr(false, false)} == 123))"
                     + $".GroupBy(obj => new AnonType`1(I0 = {FormatExpectedSelectorExpr(true, false)}))"
                     + ".OrderBy(g => g.Key.I0)"
-                    + ".Select(g => new AnonType`4() {"
+                    + ".Select(g => new AnonType`4("
                     + "I0 = g.Count(), "
                     + "I1 = g.Key.I0, "
                     + $"I2 = g.Max(obj => {FormatExpectedSelectorExpr(true, false)}), "
                     + $"I3 = g.Max(obj => {FormatExpectedSelectorExpr(true, false)})"
-                    + "})",
+                    + "))",
                 expr.ToString()
             );
         }
@@ -104,12 +104,12 @@ namespace DevExtreme.AspNet.Data.Tests {
                     + $".Where(obj => ({FormatExpectedSelectorExpr(true, true)} == 123))"
                     + $".GroupBy(obj => new AnonType`1(I0 = {FormatExpectedSelectorExpr(true, true)}))"
                     + ".OrderBy(g => g.Key.I0)"
-                    + ".Select(g => new AnonType`4() {"
+                    + ".Select(g => new AnonType`4("
                     + "I0 = g.Count(), "
                     + "I1 = g.Key.I0, "
                     + $"I2 = g.Max(obj => {FormatExpectedSelectorExpr(true, true)}), "
                     + $"I3 = g.Max(obj => {FormatExpectedSelectorExpr(true, true)})"
-                    + "})",
+                    + "))",
                 expr.ToString()
             );
         }

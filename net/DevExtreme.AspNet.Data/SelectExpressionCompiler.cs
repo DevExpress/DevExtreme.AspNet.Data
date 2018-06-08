@@ -16,22 +16,12 @@ namespace DevExtreme.AspNet.Data {
 
         public Expression Compile(Expression target, IEnumerable<string> clientExprList) {
             var itemExpr = CreateItemParam(typeof(T));
+            var lambda = Expression.Lambda(
+                AnonType.CreateNewExpression(clientExprList.Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))),
+                itemExpr
+            );
 
-            var accessors = clientExprList
-                .Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))
-                .ToArray();
-
-            var anonType = AnonType.Get(accessors.Select(i => i.Type).ToArray());
-
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { itemExpr.Type, anonType }, target, Expression.Quote(
-                Expression.Lambda(
-                    Expression.MemberInit(
-                        Expression.New(anonType.GetConstructor(Type.EmptyTypes)),
-                        accessors.Select((expr, i) => Expression.Bind(anonType.GetField(AnonType.ITEM_PREFIX + i), expr))
-                    ),
-                    itemExpr
-                )
-            ));
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { itemExpr.Type, lambda.ReturnType }, target, Expression.Quote(lambda));
         }
     }
 
