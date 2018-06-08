@@ -23,9 +23,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
                 dbSet.Add(new DataItem());
                 context.SaveChanges();
 
-                Assert.Null(Record.Exception(delegate {
-                    RemoteGroupingStressHelper.Run(dbSet);
-                }));
+                RemoteGroupingStressHelper.Run(dbSet);
             });
         }
 
