@@ -34,7 +34,7 @@ namespace DevExtreme.AspNet.Data.Types {
 <# for(var i = 0; i < size; i++)  { #>
                 if(index == <#= i #>) return I<#= i #>;
 <# } #>
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 

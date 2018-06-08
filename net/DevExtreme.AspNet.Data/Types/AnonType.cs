@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data.Types {
         }
 
         public virtual object this[int index] {
-            get { throw new ArgumentOutOfRangeException(); }
+            get { throw new IndexOutOfRangeException(); }
         }
 
         public override bool Equals(object obj) {
