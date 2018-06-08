@@ -1,8 +1,8 @@
-﻿using DevExtreme.AspNet.Data.ResponseModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
@@ -19,22 +19,16 @@ namespace DevExtreme.AspNet.Data.Tests {
             DateTime? NullDate { get; }
         }
 
-        public static IList<Group> Run<T>(IQueryable<T> data) where T : IEntity {
+        public static void Run<T>(IQueryable<T> data) where T : IEntity {
             var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 Group = BuildGroupParams(),
                 GroupSummary = BuildSummaryParams()
             };
 
-            if(data.Provider.GetType().Name == "XPQuery`1") {
-                // TODO
-                // Temporary disabled due to NotSupportedException in PropertyAlias
-                loadOptions.GroupSummary = loadOptions.GroupSummary
-                    .Where(i => i.SummaryType != "avg")
-                    .ToArray();
-            }
-
-            return (IList<Group>)DataSourceLoader.Load(data, loadOptions).data;
+            Assert.Null(Record.Exception(delegate {
+                DataSourceLoader.Load(data, loadOptions);
+            }));
         }
 
         static GroupingInfo[] BuildGroupParams() {

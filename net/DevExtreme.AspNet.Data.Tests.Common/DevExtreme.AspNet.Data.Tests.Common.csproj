@@ -8,6 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
     <PackageReference Include="System.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="xunit.assert" Version="2.3.1" />
+    <PackageReference Include="xunit.core" Version="2.3.1" />
   </ItemGroup>
 
 </Project>
