@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I0 = i0;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 1; }
         }
 
@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I1 = i1;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 2; }
         }
 
@@ -63,7 +63,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I3 = i3;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 4; }
         }
 
@@ -112,7 +112,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I7 = i7;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 8; }
         }
 
@@ -197,7 +197,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I15 = i15;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 16; }
         }
 
@@ -354,7 +354,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I31 = i31;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 32; }
         }
 

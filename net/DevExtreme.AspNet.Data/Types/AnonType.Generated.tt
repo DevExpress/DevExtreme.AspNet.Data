@@ -25,7 +25,7 @@ namespace DevExtreme.AspNet.Data.Types {
 <# } #>
         }
 
-        public override int Size {
+        protected override int Size {
             get { return <#= size #>; }
         }
 

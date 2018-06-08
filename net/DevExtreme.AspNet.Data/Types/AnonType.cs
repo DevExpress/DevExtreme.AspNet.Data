@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Types {
 
     partial class AnonType {
-        public virtual int Size {
+        protected virtual int Size {
             get { return 0; }
         }
 
