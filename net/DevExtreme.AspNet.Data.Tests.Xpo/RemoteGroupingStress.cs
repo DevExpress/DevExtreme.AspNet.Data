@@ -52,9 +52,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                 new DataItem(uow);
                 uow.CommitChanges();
 
-                Assert.Null(Record.Exception(delegate {
-                    RemoteGroupingStressHelper.Run(uow.Query<DataItem>());
-                }));
+                RemoteGroupingStressHelper.Run(uow.Query<DataItem>());
             });
         }
 

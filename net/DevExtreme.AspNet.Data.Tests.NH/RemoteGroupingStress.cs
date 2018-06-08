@@ -29,9 +29,7 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         public void Scenario() {
             SessionFactoryHelper.Exec(session => {
                 session.Save(new DataItem());
-                Assert.Null(Record.Exception(delegate {
-                    RemoteGroupingStressHelper.Run(session.Query<DataItem>());
-                }));
+                RemoteGroupingStressHelper.Run(session.Query<DataItem>());
             });
         }
 
