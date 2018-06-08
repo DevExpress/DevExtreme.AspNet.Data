@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Types {
@@ -60,6 +62,17 @@ namespace DevExtreme.AspNet.Data.Types {
                 typeArguments.Add(typeof(bool));
 
             return GetTemplate(size).MakeGenericType(typeArguments.ToArray());
+        }
+
+        public static NewExpression CreateNewExpression(IEnumerable<Expression> expressions) {
+            var typeArguments = expressions.Select(i => i.Type).ToArray();
+            var type = Get(typeArguments);
+
+            return Expression.New(
+                type.GetConstructor(typeArguments),
+                expressions,
+                Enumerable.Range(0, typeArguments.Length).Select(i => type.GetField(ITEM_PREFIX + i))
+            );
         }
 
     }

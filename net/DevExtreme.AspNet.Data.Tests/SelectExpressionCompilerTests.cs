@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void SimpleSelector() {
             var expr = Compile<Tuple<string>>("Item1");
-            Assert.Equal("data.Select(obj => new AnonType`1() {I0 = obj.Item1})", expr.ToString());
+            Assert.Equal("data.Select(obj => new AnonType`1(I0 = obj.Item1))", expr.ToString());
         }
 
     }

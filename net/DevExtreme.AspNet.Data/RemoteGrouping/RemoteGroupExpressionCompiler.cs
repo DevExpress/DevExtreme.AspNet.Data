@@ -44,31 +44,16 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 }
             }
 
-            var groupKeySelectorTypes = groupKeyExprList.Select(i => i.Type).ToArray();
-            var groupKeyType = AnonType.Get(groupKeySelectorTypes);
+            var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList), groupByParam);
+            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, typeof(T));
 
-            var groupKeyProps = Enumerable.Range(0, groupKeyExprList.Count)
-                .Select(i => groupKeyType.GetField(AnonType.ITEM_PREFIX + i))
-                .ToArray();
+            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
 
-            var groupKeyLambda = Expression.Lambda(
-                Expression.New(
-                    groupKeyType.GetConstructor(groupKeySelectorTypes),
-                    groupKeyExprList,
-                    groupKeyProps
-                ),
-                groupByParam
-            );
-
-            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
-
-            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, Expression.Quote(groupKeyLambda));
-
-            for(var i = 0; i < groupKeyProps.Length; i++) {
+            for(var i = 0; i < groupKeyExprList.Count; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
                 var orderAccessor = Expression.Field(
                     Expression.Property(orderParam, "Key"),
-                    groupKeyProps[i].Name
+                    AnonType.ITEM_PREFIX + i
                 );
 
                 target = Expression.Call(
@@ -98,17 +83,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
-            var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
+            var projectionLambda = Expression.Lambda(AnonType.CreateNewExpression(projectionExprList), param);
 
-            var projectionLambda = Expression.Lambda(
-                Expression.MemberInit(
-                    Expression.New(projectionType.GetConstructor(Type.EmptyTypes)),
-                    projectionExprList.Select((expr, i) => Expression.Bind(projectionType.GetField(AnonType.ITEM_PREFIX + i), expr))
-                ),
-                param
-            );
-
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionType }, target, Expression.Quote(projectionLambda));
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionLambda.ReturnType }, target, Expression.Quote(projectionLambda));
         }
 
         IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
