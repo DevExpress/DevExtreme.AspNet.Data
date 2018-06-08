@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Types {
 
     class AnonType<#= FormatTypeArgs(size) #> : AnonType {
 <# for(var i = 0; i < size; i++)  { #>
-        public T<#= i #> I<#= i #>;
+        public readonly T<#= i #> I<#= i #>;
 <# } #>
 
         public AnonType() {

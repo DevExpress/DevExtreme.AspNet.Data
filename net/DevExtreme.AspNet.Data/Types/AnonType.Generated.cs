@@ -4,7 +4,7 @@ using System;
 namespace DevExtreme.AspNet.Data.Types {
 
     class AnonType<T0> : AnonType {
-        public T0 I0;
+        public readonly T0 I0;
 
         public AnonType() {
         }
@@ -27,8 +27,8 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     class AnonType<T0, T1> : AnonType {
-        public T0 I0;
-        public T1 I1;
+        public readonly T0 I0;
+        public readonly T1 I1;
 
         public AnonType() {
         }
@@ -53,10 +53,10 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     class AnonType<T0, T1, T2, T3> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
 
         public AnonType() {
         }
@@ -89,14 +89,14 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
 
         public AnonType() {
         }
@@ -145,22 +145,22 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
-        public T8 I8;
-        public T9 I9;
-        public T10 I10;
-        public T11 I11;
-        public T12 I12;
-        public T13 I13;
-        public T14 I14;
-        public T15 I15;
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
+        public readonly T8 I8;
+        public readonly T9 I9;
+        public readonly T10 I10;
+        public readonly T11 I11;
+        public readonly T12 I12;
+        public readonly T13 I13;
+        public readonly T14 I14;
+        public readonly T15 I15;
 
         public AnonType() {
         }
@@ -241,38 +241,38 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
-        public T8 I8;
-        public T9 I9;
-        public T10 I10;
-        public T11 I11;
-        public T12 I12;
-        public T13 I13;
-        public T14 I14;
-        public T15 I15;
-        public T16 I16;
-        public T17 I17;
-        public T18 I18;
-        public T19 I19;
-        public T20 I20;
-        public T21 I21;
-        public T22 I22;
-        public T23 I23;
-        public T24 I24;
-        public T25 I25;
-        public T26 I26;
-        public T27 I27;
-        public T28 I28;
-        public T29 I29;
-        public T30 I30;
-        public T31 I31;
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
+        public readonly T8 I8;
+        public readonly T9 I9;
+        public readonly T10 I10;
+        public readonly T11 I11;
+        public readonly T12 I12;
+        public readonly T13 I13;
+        public readonly T14 I14;
+        public readonly T15 I15;
+        public readonly T16 I16;
+        public readonly T17 I17;
+        public readonly T18 I18;
+        public readonly T19 I19;
+        public readonly T20 I20;
+        public readonly T21 I21;
+        public readonly T22 I22;
+        public readonly T23 I23;
+        public readonly T24 I24;
+        public readonly T25 I25;
+        public readonly T26 I26;
+        public readonly T27 I27;
+        public readonly T28 I28;
+        public readonly T29 I29;
+        public readonly T30 I30;
+        public readonly T31 I31;
 
         public AnonType() {
         }
