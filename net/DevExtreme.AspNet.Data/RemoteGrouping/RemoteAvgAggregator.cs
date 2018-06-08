@@ -23,7 +23,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override object Finish() {
-            return (decimal?)_valueAggregator.Finish() / (decimal?)_countAggregator.Finish();
+            var count = (decimal?)_countAggregator.Finish();
+            if(count == 0)
+                return null;
+
+            return (decimal?)_valueAggregator.Finish() / count;
         }
     }
 
