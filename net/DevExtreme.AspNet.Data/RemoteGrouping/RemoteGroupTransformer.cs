@@ -1,5 +1,4 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
-using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Data.Types;
 using System;
@@ -16,9 +15,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
-                hierGroups = new GroupHelper<AnonType>(Accessors.AnonType).Group(
+                hierGroups = new GroupHelper<AnonType>(AnonTypeAccessor.Instance).Group(
                     flatGroups,
-                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.ITEM_PREFIX + (1 + i) }).ToArray()
+                    Enumerable.Range(0, groupCount).Select(i => new GroupingInfo { Selector = AnonType.IndexToField(1 + i) }).ToArray()
                 );
             }
 
@@ -32,7 +31,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = AggregateName.REMOTE_COUNT });
 
-            var totals = new AggregateCalculator<AnonType>(dataToAggregate, Accessors.AnonType, transformedTotalSummary, transformedGroupSummary).Run();
+            var totals = new AggregateCalculator<AnonType>(dataToAggregate, AnonTypeAccessor.Instance, transformedTotalSummary, transformedGroupSummary).Run();
             var totalCount = (int)totals.Last();
 
             totals = totals.Take(totals.Length - 1).ToArray();
@@ -61,13 +60,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 } else if(originalType == AggregateName.AVG) {
                     result.Add(new SummaryInfo {
                         SummaryType = AggregateName.REMOTE_AVG,
-                        Selector = fieldIndex.ToString()
+                        Selector = AnonType.IndexToField(fieldIndex)
                     });
                     fieldIndex += 2;
                 } else {
                     result.Add(new SummaryInfo {
                         SummaryType = originalType,
-                        Selector = AnonType.ITEM_PREFIX + fieldIndex
+                        Selector = AnonType.IndexToField(fieldIndex)
                     });
                     fieldIndex++;
                 }

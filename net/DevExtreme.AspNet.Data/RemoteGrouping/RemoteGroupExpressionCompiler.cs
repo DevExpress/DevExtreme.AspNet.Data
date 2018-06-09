@@ -53,7 +53,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 var orderParam = Expression.Parameter(groupingType, "g");
                 var orderAccessor = Expression.Field(
                     Expression.Property(orderParam, "Key"),
-                    AnonType.ITEM_PREFIX + i
+                    AnonType.IndexToField(i)
                 );
 
                 target = Expression.Call(
@@ -76,7 +76,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
 
             for(var i = 0; i < groupCount; i++)
-                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
+                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.IndexToField(i)));
 
             projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
 

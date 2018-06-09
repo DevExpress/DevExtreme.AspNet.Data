@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Types {
 
     partial class AnonType {
-        public const string ITEM_PREFIX = "I";
-
-        public virtual int Size {
+        protected virtual int Size {
             get { return 0; }
         }
 
         public virtual object this[int index] {
-            get { throw new ArgumentOutOfRangeException(); }
+            get { throw new IndexOutOfRangeException(); }
         }
 
         public override bool Equals(object obj) {
@@ -38,10 +36,8 @@ namespace DevExtreme.AspNet.Data.Types {
             // http://stackoverflow.com/a/1646913
             unchecked {
                 var result = 17;
-                for(var i = 0; i < Size; i++) {
-                    var item = this[i];
-                    result = result * 31 + (item == null ? 0 : item.GetHashCode());
-                }
+                for(var i = 0; i < Size; i++)
+                    result = result * 31 + EqualityComparer<object>.Default.GetHashCode(this[i]);
                 return result;
             }
         }
@@ -71,8 +67,16 @@ namespace DevExtreme.AspNet.Data.Types {
             return Expression.New(
                 type.GetConstructor(typeArguments),
                 expressions,
-                Enumerable.Range(0, typeArguments.Length).Select(i => type.GetField(ITEM_PREFIX + i))
+                Enumerable.Range(0, typeArguments.Length).Select(i => type.GetField(IndexToField(i)))
             );
+        }
+
+        public static string IndexToField(int index) {
+            return "I" + index;
+        }
+
+        public static int FieldToIndex(string field) {
+            return int.Parse(field.Substring(1));
         }
 
     }
