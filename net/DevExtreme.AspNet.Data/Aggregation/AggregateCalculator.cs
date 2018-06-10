@@ -12,6 +12,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     class AggregateCalculator<T> {
         IEnumerable _data;
         IAccessor<T> _accessor;
+        SumFix _sumFix;
         IList<SummaryInfo> _totalSummary;
         IList<SummaryInfo> _groupSummary;
 
@@ -24,6 +25,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             _accessor = accessor;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
+            _sumFix = new SumFix(typeof(T));
 
             _totalAggregators = _totalSummary?.Select(CreateAggregator).ToArray();
 
@@ -35,8 +37,11 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             foreach(var item in _data)
                 ProcessItem(item);
 
-            if(_totalAggregators != null)
-                return Finish(_totalAggregators);
+            if(_totalAggregators != null) {
+                var values = Finish(_totalAggregators);
+                _sumFix.Apply(_totalSummary, values);
+                return values;
+            }
 
             return null;
         }
@@ -62,8 +67,10 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             foreach(var i in group.items)
                 ProcessItem(i);
 
-            if(_groupAggregatorsStack != null)
+            if(_groupAggregatorsStack != null) {
                 group.summary = Finish(_groupAggregatorsStack.Pop());
+                _sumFix.Apply(_groupSummary, group.summary);
+            }
         }
 
         void Step(object obj, Aggregator<T>[] aggregators, IList<SummaryInfo> summary) {

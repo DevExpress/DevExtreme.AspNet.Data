@@ -81,7 +81,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new object[0],
                 // SQL: sum=N min=N max=N avg=N count=0
 
-                expectedSum: null,
+                expectedSum: 0m,    // SumFix
                 expectedMin: null,
                 expectedMax: null,
                 expectedAvg: null,
@@ -112,7 +112,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new object[] { null },
                 // SQL:  sum=N min=N max=N avg=N count=1
 
-                expectedSum: null,
+                expectedSum: 0m,    // SumFix
                 expectedMin: null,
                 expectedMax: null,
                 expectedAvg: null,
