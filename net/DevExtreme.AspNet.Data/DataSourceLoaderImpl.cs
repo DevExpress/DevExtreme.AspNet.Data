@@ -147,6 +147,7 @@ namespace DevExtreme.AspNet.Data {
 
         RemoteGroupingResult ExecRemoteGrouping() {
             return RemoteGroupTransformer.Run(
+                typeof(S),
                 ExecExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
                 Options.HasGroups ? Options.Group.Length : 0,
                 Options.TotalSummary,

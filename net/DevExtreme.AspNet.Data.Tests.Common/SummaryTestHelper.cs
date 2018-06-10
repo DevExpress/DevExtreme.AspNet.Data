@@ -71,8 +71,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Assert.Equal(new object[] { 2, 1, 1, 1m, 1m }, group_A_A.summary);
                 Assert.Equal(new object[] { 2, 3, 5, 8m, 4m }, group_A_B.summary);
 
-                Assert.Equal(new object[] { 1, null, null, null, null }, group_B.summary);
-                Assert.Equal(new object[] { 1, null, null, null, null }, group_B_A.summary);
+                Assert.Equal(new object[] { 1, null, null, 0m, null }, group_B.summary);
+                Assert.Equal(new object[] { 1, null, null, 0m, null }, group_B_A.summary);
 
                 Assert.Equal(new object[] { 5, 1, 5, 9m, 3m }, loadResult.summary);
             }
@@ -81,7 +81,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             {
                 var loadResult = DataSourceLoader.Load(data, loadOptions);
-                Assert.Equal(new object[] { 0, null, null, null, null }, loadResult.summary);
+                Assert.Equal(new object[] { 0, null, null, 0m, null }, loadResult.summary);
             }
         }
 
@@ -94,11 +94,12 @@ namespace DevExtreme.AspNet.Data.Tests {
                 B       Count=2, Min=3, Max=5, Sum=8, Avg=4
                     3
                     5
-            B           Count=1, Min=N, Max=N, Sum=N, Avg=N
-                A       Count=1, Min=N, Max=N, Sum=N, Avg=N
+            B           Count=1, Min=N, Max=N, Sum=0*, Avg=N
+                A       Count=1, Min=N, Max=N, Sum=0*, Avg=N
                     N
 
             TOTALS:     Count=5, Min=1, Max=5, Sum=9, Avg=3
+            * - see SumFix
         */
 
     }

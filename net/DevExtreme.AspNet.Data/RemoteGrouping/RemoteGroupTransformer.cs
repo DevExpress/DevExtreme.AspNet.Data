@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupTransformer {
 
-        public static RemoteGroupingResult Run(IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
+        public static RemoteGroupingResult Run(Type sourceItemType, IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
@@ -31,7 +31,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = AggregateName.REMOTE_COUNT });
 
-            var totals = new AggregateCalculator<AnonType>(dataToAggregate, AnonTypeAccessor.Instance, transformedTotalSummary, transformedGroupSummary).Run();
+            var sumFix = new SumFix(sourceItemType, totalSummary, groupSummary);
+            var totals = new AggregateCalculator<AnonType>(dataToAggregate, AnonTypeAccessor.Instance, transformedTotalSummary, transformedGroupSummary, sumFix).Run();
             var totalCount = (int)totals.Last();
 
             totals = totals.Take(totals.Length - 1).ToArray();

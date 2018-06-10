@@ -28,6 +28,9 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         void Apply(IList<SummaryInfo> summary, object[] values) {
+            if(summary == null)
+                return;
+
             for(var i = 0; i < summary.Count; i++) {
                 if(values[i] != null)
                     continue;

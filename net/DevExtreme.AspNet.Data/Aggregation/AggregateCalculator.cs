@@ -20,12 +20,12 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary, SumFix sumFix = null) {
             _data = data;
             _accessor = accessor;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
-            _sumFix = new SumFix(typeof(T), totalSummary, groupSummary);
+            _sumFix = sumFix ?? new SumFix(typeof(T), totalSummary, groupSummary);
 
             _totalAggregators = _totalSummary?.Select(CreateAggregator).ToArray();
 
