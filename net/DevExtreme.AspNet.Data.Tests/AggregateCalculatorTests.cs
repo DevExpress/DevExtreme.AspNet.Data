@@ -240,6 +240,46 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void SumFix() {
+            var summary = Enumerable.Range(1, 4)
+                .Select(i => new SummaryInfo { SummaryType = "sum", Selector = "Item" + i })
+                .ToArray();
+
+            var data = new[] {
+                new Group {
+                    items = new[] { new SumFixItem() }
+                },
+                new Group {
+                    items = new object[] { null }
+                },
+                new Group {
+                    items = Array.Empty<object>()
+                }
+            };
+
+            var totals = new AggregateCalculator<SumFixItem>(data, new DefaultAccessor<SumFixItem>(), summary, summary).Run();
+
+            foreach(var values in new[] {
+                totals,
+                data[0].summary,
+                data[1].summary,
+                data[2].summary
+            }) {
+                Assert.Equal(0m, values[0]);
+                Assert.Equal(0d, values[1]);
+                Assert.Equal(default(TimeSpan), values[2]);
+                Assert.Equal(0m, values[3]);
+            }
+        }
+
+        class SumFixItem {
+            public short? Item1 { get; set; }
+            public float? Item2 { get; set; }
+            public TimeSpan? Item3 { get; set; }
+            public object Item4 { get; set; }
+        }
+
+        [Fact]
         public void CustomAggregator() {
             CustomAggregatorsBarrier.Run(delegate {
                 CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
