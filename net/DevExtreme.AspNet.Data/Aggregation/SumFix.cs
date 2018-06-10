@@ -6,6 +6,12 @@ using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data.Aggregation {
 
+    // Rationale: normalization across LINQ providers
+    // https://github.com/aspnet/EntityFrameworkCore/issues/12307
+    // https://data.uservoice.com/forums/72025/suggestions/2410716
+    // https://dba.stackexchange.com/q/25435
+    // https://en.wikipedia.org/wiki/Empty_sum
+
     class SumFix : ExpressionCompiler {
         Expression _typeParam;
         IList<SummaryInfo> _totalSummary;
