@@ -25,7 +25,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             _accessor = accessor;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
-            _sumFix = new SumFix(typeof(T));
+            _sumFix = new SumFix(typeof(T), totalSummary, groupSummary);
 
             _totalAggregators = _totalSummary?.Select(CreateAggregator).ToArray();
 
@@ -39,7 +39,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
             if(_totalAggregators != null) {
                 var values = Finish(_totalAggregators);
-                _sumFix.Apply(_totalSummary, values);
+                _sumFix.ApplyToTotal(values);
                 return values;
             }
 
@@ -69,7 +69,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
             if(_groupAggregatorsStack != null) {
                 group.summary = Finish(_groupAggregatorsStack.Pop());
-                _sumFix.Apply(_groupSummary, group.summary);
+                _sumFix.ApplyToGroup(group.summary);
             }
         }
 

@@ -8,14 +8,26 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
     class SumFix : ExpressionCompiler {
         Expression _typeParam;
+        IList<SummaryInfo> _totalSummary;
+        IList<SummaryInfo> _groupSummary;
         IDictionary<string, object> _defaultValues;
 
-        public SumFix(Type type)
+        public SumFix(Type type, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary)
             : base(false) {
             _typeParam = Expression.Parameter(type);
+            _totalSummary = totalSummary;
+            _groupSummary = groupSummary;
         }
 
-        public void Apply(IList<SummaryInfo> summary, object[] values) {
+        public void ApplyToTotal(object[] values) {
+            Apply(_totalSummary, values);
+        }
+
+        public void ApplyToGroup(object[] values) {
+            Apply(_groupSummary, values);
+        }
+
+        void Apply(IList<SummaryInfo> summary, object[] values) {
             for(var i = 0; i < summary.Count; i++) {
                 if(values[i] != null)
                     continue;
