@@ -12,37 +12,36 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     class AggregateCalculator<T> {
         IEnumerable _data;
         IAccessor<T> _accessor;
+        SumFix _sumFix;
+        IList<SummaryInfo> _totalSummary;
+        IList<SummaryInfo> _groupSummary;
 
         Aggregator<T>[] _totalAggregators;
-        string[] _totalSelectors;
-
-        string[] _groupSummaryTypes;
-        string[] _groupSelectors;
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary, SumFix sumFix = null) {
             _data = data;
             _accessor = accessor;
+            _totalSummary = totalSummary;
+            _groupSummary = groupSummary;
+            _sumFix = sumFix ?? new SumFix(typeof(T), totalSummary, groupSummary);
 
-            if(totalSummary != null) {
-                _totalAggregators = totalSummary.Select(i => CreateAggregator(i.SummaryType)).ToArray();
-                _totalSelectors = totalSummary.Select(i => i.Selector).ToArray();
-            }
+            _totalAggregators = _totalSummary?.Select(CreateAggregator).ToArray();
 
-            if(groupSummary != null) {
-                _groupSummaryTypes = groupSummary.Select(i => i.SummaryType).ToArray();
-                _groupSelectors = groupSummary.Select(i => i.Selector).ToArray();
+            if(groupSummary != null)
                 _groupAggregatorsStack = new Stack<Aggregator<T>[]>();
-            }
         }
 
         public object[] Run() {
             foreach(var item in _data)
                 ProcessItem(item);
 
-            if(_totalAggregators != null)
-                return Finish(_totalAggregators);
+            if(_totalAggregators != null) {
+                var values = Finish(_totalAggregators);
+                _sumFix.ApplyToTotal(values);
+                return values;
+            }
 
             return null;
         }
@@ -53,29 +52,31 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             } else {
                 if(_groupAggregatorsStack != null) {
                     foreach(var groupAggregators in _groupAggregatorsStack)
-                        Step(item, groupAggregators, _groupSelectors);
+                        Step(item, groupAggregators, _groupSummary);
                 }
 
                 if(_totalAggregators != null)
-                    Step(item, _totalAggregators, _totalSelectors);
+                    Step(item, _totalAggregators, _totalSummary);
             }
         }
 
         void ProcessGroup(Group group) {
             if(_groupAggregatorsStack != null)
-                _groupAggregatorsStack.Push(_groupSummaryTypes.Select(CreateAggregator).ToArray());
+                _groupAggregatorsStack.Push(_groupSummary.Select(CreateAggregator).ToArray());
 
             foreach(var i in group.items)
                 ProcessItem(i);
 
-            if(_groupAggregatorsStack != null)
+            if(_groupAggregatorsStack != null) {
                 group.summary = Finish(_groupAggregatorsStack.Pop());
+                _sumFix.ApplyToGroup(group.summary);
+            }
         }
 
-        void Step(object obj, Aggregator<T>[] aggregators, string[] selectors) {
+        void Step(object obj, Aggregator<T>[] aggregators, IList<SummaryInfo> summary) {
             var typed = (T)obj;
             for(var i = 0; i < aggregators.Length; i++)
-                aggregators[i].Step(typed, selectors[i]);
+                aggregators[i].Step(typed, summary[i].Selector);
         }
 
         object[] Finish(Aggregator<T>[] aggregators) {
@@ -83,7 +84,9 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
 
-        Aggregator<T> CreateAggregator(string summaryType) {
+        Aggregator<T> CreateAggregator(SummaryInfo summaryInfo) {
+            var summaryType = summaryInfo.SummaryType;
+
             switch(summaryType) {
                 case AggregateName.SUM:
                     return new SumAggregator<T>(_accessor);

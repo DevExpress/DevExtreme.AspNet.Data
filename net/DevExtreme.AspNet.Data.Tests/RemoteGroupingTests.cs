@@ -327,7 +327,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             Assert.Equal(
-                new object[] { null, null, null, null, 0 },
+                new object[] { 0m /* SumFix */, null, null, null, 0 },
                 loadResult.summary
             );
         }
@@ -338,6 +338,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             // https://github.com/aspnet/EntityFrameworkCore/issues/12307
 
             var result = RemoteGrouping.RemoteGroupTransformer.Run(
+                typeof(Object),
                 new[] { new Types.AnonType<int, int, int, int>(
                     0, // count
                     0, // sum
