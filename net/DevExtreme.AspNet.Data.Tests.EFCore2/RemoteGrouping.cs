@@ -72,7 +72,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
                 Assert.Equal(
                     3m,
-                    DataSourceLoader.Load(dbSet.Select(i => new { i.Group }), loadOptions).summary[0]
+                    DataSourceLoader.Load(dbSet.Select(i => new { i.ID, i.Group }), loadOptions).summary[0]
                 );
             });
         }
