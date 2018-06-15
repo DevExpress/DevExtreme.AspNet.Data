@@ -27,6 +27,35 @@ namespace DevExtreme.AspNet.Data {
                 Version = new Version(typeInfo[2].Substring(8));
             }
         }
+
+        public bool RequiresNullSafety {
+            get {
+                if(IsLinqToObjects)
+                    return true;
+
+                // https://docs.microsoft.com/en-us/ef/core/querying/client-eval
+                // https://github.com/aspnet/EntityFrameworkCore/issues/12284
+                if(IsEFCore)
+                    return true;
+
+                return false;
+            }
+        }
+
+        public bool SupportsRemoteGrouping {
+            get {
+                if(IsLinqToObjects)
+                    return false;
+
+                // https://github.com/aspnet/EntityFrameworkCore/issues/2341
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11993
+                if(IsEFCore && Version < new Version(2, 1, 1))
+                    return false;
+
+                return true;
+            }
+        }
+
     }
 
 }

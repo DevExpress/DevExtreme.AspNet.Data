@@ -25,25 +25,13 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
             QueryProviderInfo = new QueryProviderInfo(source.Provider);
-            Builder = new DataSourceExpressionBuilder<S>(options, ShouldGuardNulls(QueryProviderInfo));
+            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.RequiresNullSafety);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping ?? !(QueryProviderInfo.IsLinqToObjects || QueryProviderInfo.IsEFCore && QueryProviderInfo.Version < new Version(2, 1, 1));
+            CanUseRemoteGrouping = options.RemoteGrouping ?? QueryProviderInfo.SupportsRemoteGrouping;
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
 
             Source = source;
             Options = options;
-        }
-
-        static bool ShouldGuardNulls(QueryProviderInfo provider) {
-            if(provider.IsLinqToObjects)
-                return true;
-
-            // https://docs.microsoft.com/en-us/ef/core/querying/client-eval
-            // https://github.com/aspnet/EntityFrameworkCore/issues/12284
-            if(provider.IsEFCore)
-                return true;
-
-            return false;
         }
 
         public LoadResult Load() {
