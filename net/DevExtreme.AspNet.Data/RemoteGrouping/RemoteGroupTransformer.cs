@@ -29,6 +29,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             var transformedTotalSummary = TransformSummary(totalSummary, ref fieldIndex);
             var transformedGroupSummary = TransformSummary(groupSummary, ref fieldIndex);
 
+            transformedTotalSummary = transformedTotalSummary ?? new List<SummaryInfo>();
             transformedTotalSummary.Add(new SummaryInfo { SummaryType = AggregateName.REMOTE_COUNT });
 
             var sumFix = new SumFix(sourceItemType, totalSummary, groupSummary);
@@ -47,9 +48,10 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         static List<SummaryInfo> TransformSummary(SummaryInfo[] original, ref int fieldIndex) {
-            var result = new List<SummaryInfo>();
             if(original == null)
-                return result;
+                return null;
+
+            var result = new List<SummaryInfo>();
 
             for(var originalIndex = 0; originalIndex < original.Length; originalIndex++) {
                 var originalType = original[originalIndex].SummaryType;

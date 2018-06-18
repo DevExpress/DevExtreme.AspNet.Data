@@ -203,6 +203,36 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, groups[0].count);
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_EmptySummary(bool remoteGrouping) {
+            var data = new[] {
+                new { g = 1 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = remoteGrouping,
+                Group = new[] {
+                    new GroupingInfo { Selector = "g", IsExpanded = false }
+                }
+            };
+
+            void Run() {
+                var loadResult = DataSourceLoader.Load(data, loadOptions);
+                Assert.Null(loadResult.summary);
+                Assert.Null(loadResult.data.Cast<Group>().First().summary);
+            }
+
+            Assert.Null(loadOptions.TotalSummary);
+            Assert.Null(loadOptions.GroupSummary);
+            Run();
+
+            loadOptions.TotalSummary = Array.Empty<SummaryInfo>();
+            loadOptions.GroupSummary = Array.Empty<SummaryInfo>();
+            Run();
+        }
+
         [Fact]
         public void RequireGroupCountWhenGroupsAreExpanded() {
             var data = new[] {
