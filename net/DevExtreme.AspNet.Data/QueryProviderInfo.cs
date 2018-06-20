@@ -28,20 +28,6 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        public bool RequiresNullSafety {
-            get {
-                if(IsLinqToObjects)
-                    return true;
-
-                // https://docs.microsoft.com/en-us/ef/core/querying/client-eval
-                // https://github.com/aspnet/EntityFrameworkCore/issues/12284
-                if(IsEFCore)
-                    return true;
-
-                return false;
-            }
-        }
-
         public bool SupportsRemoteGrouping {
             get {
                 if(IsLinqToObjects)

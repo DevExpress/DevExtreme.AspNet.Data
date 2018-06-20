@@ -25,7 +25,7 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
             QueryProviderInfo = new QueryProviderInfo(source.Provider);
-            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.RequiresNullSafety);
+            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.IsLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
             CanUseRemoteGrouping = options.RemoteGrouping ?? QueryProviderInfo.SupportsRemoteGrouping;
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
