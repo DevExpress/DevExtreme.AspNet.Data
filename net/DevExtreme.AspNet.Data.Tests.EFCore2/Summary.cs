@@ -22,7 +22,8 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
                 dbSet.AddRange(SummaryTestHelper.GenerateTestData(() => new DataItem()));
                 context.SaveChanges();
 
-                SummaryTestHelper.Run(dbSet);
+                SummaryTestHelper.Run(dbSet, new[] { "count", "min", "max", "sum" });
+                SummaryTestHelper.Run(dbSet, new[] { "avg" });
             });
         }
 

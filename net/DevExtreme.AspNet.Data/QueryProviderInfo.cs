@@ -28,20 +28,6 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        public bool SupportsRemoteGrouping {
-            get {
-                if(IsLinqToObjects)
-                    return false;
-
-                // https://github.com/aspnet/EntityFrameworkCore/issues/2341
-                // https://github.com/aspnet/EntityFrameworkCore/issues/11993
-                if(IsEFCore && Version < new Version(2, 1, 1))
-                    return false;
-
-                return true;
-            }
-        }
-
     }
 
 }

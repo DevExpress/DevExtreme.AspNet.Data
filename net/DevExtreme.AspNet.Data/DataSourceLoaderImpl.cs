@@ -27,11 +27,29 @@ namespace DevExtreme.AspNet.Data {
             QueryProviderInfo = new QueryProviderInfo(source.Provider);
             Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.IsLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping ?? QueryProviderInfo.SupportsRemoteGrouping;
+            CanUseRemoteGrouping = options.RemoteGrouping ?? ShouldUseRemoteGrouping(QueryProviderInfo, options);
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
 
             Source = source;
             Options = options;
+        }
+
+        static bool ShouldUseRemoteGrouping(QueryProviderInfo provider, DataSourceLoadOptionsBase options) {
+            if(provider.IsLinqToObjects)
+                return false;
+
+            if(provider.IsEFCore) {
+                // https://github.com/aspnet/EntityFrameworkCore/issues/2341
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11993
+                if(provider.Version < new Version(2, 1, 1))
+                    return false;
+
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11711
+                if(HasAvg(options.TotalSummary) || HasAvg(options.GroupSummary))
+                    return false;
+            }
+
+            return true;
         }
 
         public LoadResult Load() {
@@ -231,6 +249,11 @@ namespace DevExtreme.AspNet.Data {
                     ShrinkSelectResult(child, path, value, 1 + index);
             }
         }
+
+        static bool HasAvg(SummaryInfo[] summary) {
+            return summary != null && summary.Any(i => i.SummaryType == "avg");
+        }
+
     }
 
 }

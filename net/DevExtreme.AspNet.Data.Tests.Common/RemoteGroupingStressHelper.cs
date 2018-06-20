@@ -26,6 +26,12 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GroupSummary = BuildSummaryParams()
             };
 
+            if(data.Provider.GetType().FullName.StartsWith("Microsoft.EntityFrameworkCore")) {
+                loadOptions.GroupSummary = loadOptions.GroupSummary
+                    .Where(i => i.SummaryType != "avg")
+                    .ToArray();
+            }
+
             Assert.Null(Record.Exception(delegate {
                 DataSourceLoader.Load(data, loadOptions);
             }));
