@@ -41,10 +41,11 @@ namespace DevExtreme.AspNet.Data {
             if(provider.IsEFCore) {
                 // https://github.com/aspnet/EntityFrameworkCore/issues/2341
                 // https://github.com/aspnet/EntityFrameworkCore/issues/11993
-                if(provider.Version < new Version(2, 1, 1))
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11999
+                if(provider.Version < new Version(2, 2, 0))
                     return false;
 
-                // https://github.com/aspnet/EntityFrameworkCore/issues/11711
+                #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
                 if(HasAvg(options.TotalSummary) || HasAvg(options.GroupSummary))
                     return false;
             }

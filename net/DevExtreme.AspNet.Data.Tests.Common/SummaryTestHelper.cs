@@ -33,6 +33,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
         }
 
+        #warning Remove summaryTypes with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
         public static void Run<T>(IQueryable<T> data, string[] summaryTypes = null) where T : IEntity {
             summaryTypes = summaryTypes ?? new[] { "count", "min", "max", "sum", "avg" };
 
