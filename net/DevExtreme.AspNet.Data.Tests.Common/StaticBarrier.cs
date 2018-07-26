@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Helpers;
 using System;
 using System.Linq;
 
@@ -13,6 +14,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     action();
                 } finally {
                     CustomAggregators.Clear();
+                    CustomAccessorCompilers.Clear();
                 }
             }
 

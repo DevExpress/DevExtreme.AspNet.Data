@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
+            var customResult = CustomAccessorCompilers.Compile(target, clientExpr);
+            if(customResult != null)
+                return customResult;
+
             var progression = new List<Expression> { target };
 
             var clientExprItems = clientExpr.Split('.');
