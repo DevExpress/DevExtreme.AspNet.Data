@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    static class CustomAggregatorsBarrier {
+    public class StaticBarrier {
         static readonly object SYNC = new object();
 
         public static void Run(Action action) {

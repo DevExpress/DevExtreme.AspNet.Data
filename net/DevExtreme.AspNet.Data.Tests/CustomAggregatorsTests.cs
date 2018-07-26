@@ -8,14 +8,14 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void ShouldNotReturnUnexistingAggregator() {
-            CustomAggregatorsBarrier.Run(delegate {
+            StaticBarrier.Run(delegate {
                 Assert.Null(CustomAggregators.CreateAggregator("custom", new DefaultAccessor<int>()));
             });
         }
 
         [Fact]
         public void ShouldCreateRegisteredAggregator() {
-            CustomAggregatorsBarrier.Run(delegate {
+            StaticBarrier.Run(delegate {
                 CustomAggregators.RegisterAggregator(AggregateName.SUM, typeof(SumAggregator<>));
                 var aggregator = CustomAggregators.CreateAggregator(AggregateName.SUM, new DefaultAccessor<int>());
                 Assert.NotNull(aggregator);
@@ -25,7 +25,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void ShouldSupportMultipleAggregatorRegistrations() {
-            CustomAggregatorsBarrier.Run(delegate {
+            StaticBarrier.Run(delegate {
                 CustomAggregators.RegisterAggregator("any", typeof(SumAggregator<>));
                 CustomAggregators.RegisterAggregator("any", typeof(MinAggregator<>));
                 var aggregator = CustomAggregators.CreateAggregator("any", new DefaultAccessor<int>());
