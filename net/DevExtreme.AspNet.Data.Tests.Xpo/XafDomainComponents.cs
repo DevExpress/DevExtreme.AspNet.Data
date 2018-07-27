@@ -10,12 +10,21 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
     public class XafDomainComponents {
 
+        public abstract class DCBaseObject : XPCustomObject {
+            public DCBaseObject(Session session)
+                : base(session) {
+            }
+
+            [Key]
+            public Guid Oid { get; set; }
+        }
+
         interface IMyComponent {
             int Value { get; set; }
         }
 
         [Persistent(nameof(XafDomainComponents) + "_" + nameof(MyComponentImpl))]
-        public class MyComponentImpl : XPObject, IMyComponent {
+        public class MyComponentImpl : DCBaseObject, IMyComponent {
 
             public MyComponentImpl(Session session)
                 : base(session) {
@@ -34,7 +43,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                 CustomAccessorCompilers.Register((target, accessorText) => {
                     if(accessorText == OID) {
                         return Expression.Property(
-                            Expression.Convert(target, typeof(XPObject)),
+                            Expression.Convert(target, typeof(DCBaseObject)),
                             OID
                         );
                     }
@@ -51,11 +60,19 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                     return null;
                 });
 
+                var key = Guid.NewGuid();
+
                 UnitOfWorkHelper.Exec(uow => {
-                    uow.Save(new MyComponentImpl(uow) { Value = 123 });
+                    uow.Save(new MyComponentImpl(uow) {
+                        Oid = key,
+                        Value = 123
+                    });
+
                     uow.CommitChanges();
 
-                    var loadResult = DataSourceLoader.Load<IMyComponent>(uow.Query<MyComponentImpl>(), new SampleLoadOptions {
+                    IQueryable<IMyComponent> interfaceQuery = uow.Query<MyComponentImpl>();
+
+                    var loadResult = DataSourceLoader.Load(interfaceQuery, new SampleLoadOptions {
                         PrimaryKey = new[] { OID },
                         RemoteSelect = false,
                         PreSelect = new[] { OID, "Value", LOCK_FILED }
@@ -63,7 +80,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
                     var item = loadResult.data.Cast<IDictionary<string, object>>().First();
 
-                    Assert.Equal(1, item[OID]);
+                    Assert.Equal(key, item[OID]);
                     Assert.Equal(123, item["Value"]);
                     Assert.Equal(0, item[LOCK_FILED]);
                 });
