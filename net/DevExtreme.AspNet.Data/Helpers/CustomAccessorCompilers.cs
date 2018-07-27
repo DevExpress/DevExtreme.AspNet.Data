@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data.Helpers {
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class CustomAccessorCompilers {
         public delegate Expression CompilerFunc(Expression target, string accessorExpr);
 
