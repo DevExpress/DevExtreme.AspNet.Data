@@ -21,7 +21,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
-            var customResult = CustomAccessorCompilers.Compile(target, clientExpr);
+            var customResult = CustomAccessorCompilers.TryCompile(target, clientExpr);
             if(customResult != null)
                 return customResult;
 

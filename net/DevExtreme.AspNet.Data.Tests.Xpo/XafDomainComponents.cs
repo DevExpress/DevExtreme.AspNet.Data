@@ -31,15 +31,15 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         [Fact]
         public void Scenario() {
             StaticBarrier.Run(delegate {
-                CustomAccessorCompilers.Register((target, accessorExpr) => {
-                    if(accessorExpr == OID) {
+                CustomAccessorCompilers.Register((target, accessorText) => {
+                    if(accessorText == OID) {
                         return Expression.Property(
                             Expression.Convert(target, typeof(XPObject)),
                             OID
                         );
                     }
 
-                    if(accessorExpr == LOCK_FILED) {
+                    if(accessorText == LOCK_FILED) {
                         return Expression.Call(
                             Expression.Convert(target, typeof(PersistentBase)),
                             "GetPropertyValue",

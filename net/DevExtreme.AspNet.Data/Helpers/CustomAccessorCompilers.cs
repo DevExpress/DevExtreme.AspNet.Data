@@ -8,7 +8,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class CustomAccessorCompilers {
-        public delegate Expression CompilerFunc(Expression target, string accessorExpr);
+        public delegate Expression CompilerFunc(Expression target, string accessorText);
 
         static readonly ICollection<CompilerFunc> _compilers = new List<CompilerFunc>();
 
@@ -16,12 +16,12 @@ namespace DevExtreme.AspNet.Data.Helpers {
             _compilers.Add(compilerFunc);
         }
 
-        public static Expression Compile(Expression target, string accessorExpr) {
+        public static Expression TryCompile(Expression target, string accessorText) {
             if(_compilers.Count < 1)
                 return null;
 
             foreach(var compiler in _compilers) {
-                var result = compiler(target, accessorExpr);
+                var result = compiler(target, accessorText);
                 if(result != null)
                     return result;
             }
