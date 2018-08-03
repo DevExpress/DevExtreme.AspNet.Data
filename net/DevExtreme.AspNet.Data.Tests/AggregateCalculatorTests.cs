@@ -281,7 +281,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CustomAggregator() {
-            CustomAggregatorsBarrier.Run(delegate {
+            StaticBarrier.Run(delegate {
                 CustomAggregators.RegisterAggregator("comma", typeof(CommaAggregator<>));
 
                 var data = new[] {

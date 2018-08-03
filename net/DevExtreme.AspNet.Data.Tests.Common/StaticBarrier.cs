@@ -1,10 +1,11 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Helpers;
 using System;
 using System.Linq;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    static class CustomAggregatorsBarrier {
+    public class StaticBarrier {
         static readonly object SYNC = new object();
 
         public static void Run(Action action) {
@@ -13,6 +14,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     action();
                 } finally {
                     CustomAggregators.Clear();
+                    CustomAccessorCompilers.Clear();
                 }
             }
 
