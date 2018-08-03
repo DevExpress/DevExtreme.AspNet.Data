@@ -30,14 +30,15 @@
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.1.1",
     "typescript": "^2.0.10",
-    "webpack": "^1.14.0",
+    "webpack": "^4.0.0",
+    "webpack-cli": "^3.0.0",
     "xhr-mock": "^2.3.1"
   },
   "scripts": {
     "karma": "cd js-test && karma start",
-    "karma-bundled": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.js' test.js test-bundle.js && karma start --bundled",
-    "karma-bundled-nojquery": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' test.js test-bundle.js && karma start --bundled",
-    "karma-bundled-nojquery-cjs": "cd js-test && webpack --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' --define define=false test.js test-bundle.js && karma start --bundled",
+    "karma-bundled": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js/dx.aspnet.data.js' test.js -o test-bundle.js && karma start --bundled",
+    "karma-bundled-nojquery": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' test.js -o test-bundle.js && karma start --bundled",
+    "karma-bundled-nojquery-cjs": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' --define define=false test.js -o test-bundle.js && karma start --bundled",
     "dts": "cd js-test && tsc check-ts-compilation.ts && tsc check-ts-compilation.nojquery.ts",
     "jshint": "jshint --verbose js js-nojquery",
     "eclint": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !net/docfx/build/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**"
