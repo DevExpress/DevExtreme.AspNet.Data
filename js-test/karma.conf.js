@@ -19,10 +19,7 @@ module.exports = function(config) {
             "../node_modules/bluebird/js/browser/bluebird.core.min.js",
             "test.js"
         );
-        options.customLaunchers = {
-            IE9: { base: "IE", "x-ua-compatible": "IE=EmulateIE9" }
-        };
-        options.browsers.push("IE9");
+        options.browsers.push("IE");
         options.preprocessors = {
             "../js/*.js": "coverage"
         };
