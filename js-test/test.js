@@ -1,5 +1,5 @@
-// jshint strict: true, browser: true, undef: true, unused: true, eqeqeq: true
-/* global ASPNET_DATA_SCRIPT, DevExpress, define, module, Promise, require */
+/* eslint-env browser */
+/* global ASPNET_DATA_SCRIPT:false, DevExpress:false, Promise:false */
 
 (function(factory) {
     "use strict";

@@ -21,8 +21,8 @@
     "@types/jquery": "^2.0.39",
     "bluebird": "^3.5.1",
     "eclint": "^2.0.1",
+    "eslint": "^5.3.0",
     "jquery": "^3.3.1",
-    "jshint": "2.9.5",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
@@ -40,7 +40,7 @@
     "karma-bundled-nojquery": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' test.js -o test-bundle.js && karma start --bundled",
     "karma-bundled-nojquery-cjs": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' --define define=false test.js -o test-bundle.js && karma start --bundled",
     "dts": "cd js-test && tsc check-ts-compilation.ts && tsc check-ts-compilation.nojquery.ts",
-    "jshint": "jshint --verbose js js-nojquery",
+    "eslint": "eslint .",
     "eclint": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !net/docfx/build/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**"
   }
 }
