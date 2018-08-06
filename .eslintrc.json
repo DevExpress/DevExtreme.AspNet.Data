@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "define": false,
+    "module": false,
+    "require": false
+  },
+  "rules": {
+    "eqeqeq": [ "error", "allow-null" ],
+    "no-undef": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": "error",
+    "strict": [ "error", "safe" ]
+  }
+}

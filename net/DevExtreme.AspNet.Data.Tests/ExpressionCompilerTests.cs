@@ -33,9 +33,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             }
         }
 
-        string CompileAccessor(bool guardNulls, string selector, bool forceToString = false) {
+        string CompileAccessor(bool guardNulls, string selector, Action<List<Expression>> customizeProgression = null) {
             return new SampleCompiler(guardNulls)
-                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, forceToString)
+                .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, customizeProgression)
                 .ToString();
         }
 
@@ -51,14 +51,14 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Accessor_Guard_SingleComponent() {
-            Assert.Equal("IIF((t == null), 0, t.Value)", CompileAccessor(true, "Value"));
+            Assert.Equal($"IIF((t == null), null, {Compat.ExpectedConvert("t.Value", "Nullable`1")})", CompileAccessor(true, "Value"));
             Assert.Equal("IIF((t == null), null, t.Ref)", CompileAccessor(true, "Ref"));
         }
 
         [Fact]
         public void Accessor_Guard_String() {
             Assert.Equal(
-                "IIF(((t == null) OrElse (t.String == null)), 0, t.String.Length)",
+                $"IIF(((t == null) OrElse (t.String == null)), null, {Compat.ExpectedConvert("t.String.Length", "Nullable`1")})",
                 CompileAccessor(true, "String.Length")
             );
         }
@@ -74,36 +74,39 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor_Guard_Nullable() {
             Assert.Equal("IIF((t == null), null, t.Nullable)", CompileAccessor(true, "Nullable"));
-            Assert.Equal("IIF(((t == null) OrElse (t.Nullable == null)), 0, t.Nullable.Value.Year)", CompileAccessor(true, "Nullable.Year"));
+            Assert.Equal(
+                $"IIF(((t == null) OrElse (t.Nullable == null)), null, {Compat.ExpectedConvert("t.Nullable.Value.Year", "Nullable`1")})",
+                CompileAccessor(true, "Nullable.Year")
+            );
         }
 
         [Fact]
         public void Accessor_Guard_NullInStruct() {
             Assert.Equal(
-                "IIF(((t == null) OrElse (t.StructWithRef.Ref == null)), 0, t.StructWithRef.Ref.Value)",
+                $"IIF(((t == null) OrElse (t.StructWithRef.Ref == null)), null, {Compat.ExpectedConvert("t.StructWithRef.Ref.Value", "Nullable`1")})",
                 CompileAccessor(true, "StructWithRef.Ref.Value")
             );
         }
 
         [Fact]
         public void Accessor_ForceToString() {
-            Assert.Equal("t.String", CompileAccessor(false, "String", true));
-            Assert.Equal("t.Value.ToString()", CompileAccessor(false, "Value", true));
-            Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", true));
+            Assert.Equal("t.String", CompileAccessor(false, "String", ExpressionCompiler.ForceToString));
+            Assert.Equal("t.Value.ToString()", CompileAccessor(false, "Value", ExpressionCompiler.ForceToString));
+            Assert.Equal("t.Ref.ToString()", CompileAccessor(false, "Ref", ExpressionCompiler.ForceToString));
 
             Assert.Equal(
                 "IIF((t == null), null, t.String)",
-                CompileAccessor(true, "String", true)
+                CompileAccessor(true, "String", ExpressionCompiler.ForceToString)
             );
 
             Assert.Equal(
                 "IIF((t == null), null, t.Value.ToString())",
-                CompileAccessor(true, "Value", true)
+                CompileAccessor(true, "Value", ExpressionCompiler.ForceToString)
             );
 
             Assert.Equal(
                 "IIF((((t == null) OrElse (t.Ref == null)) OrElse (t.Ref.Ref == null)), null, t.Ref.Ref.ToString())",
-                CompileAccessor(true, "Ref.Ref", true)
+                CompileAccessor(true, "Ref.Ref", ExpressionCompiler.ForceToString)
             );
         }
 

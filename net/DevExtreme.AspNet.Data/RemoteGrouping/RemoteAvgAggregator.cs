@@ -16,20 +16,16 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override void Step(T container, string selector) {
-            var itemIndex = Int32.Parse(selector);
-
-            _countAggregator.Step(container, AnonType.ITEM_PREFIX + (itemIndex + 1));
-            _valueAggregator.Step(container, AnonType.ITEM_PREFIX + itemIndex);
+            _countAggregator.Step(container, AnonType.IndexToField(1 + AnonType.FieldToIndex(selector)));
+            _valueAggregator.Step(container, selector);
         }
 
         public override object Finish() {
-            var count = (decimal)_countAggregator.Finish();
-            var value = _valueAggregator.Finish();
-
-            if(count == 0m)
+            var count = (decimal?)_countAggregator.Finish();
+            if(count == 0)
                 return null;
 
-            return (decimal)value / count;
+            return (decimal?)_valueAggregator.Finish() / count;
         }
     }
 

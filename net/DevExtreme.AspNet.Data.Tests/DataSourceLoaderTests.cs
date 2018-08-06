@@ -1,6 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -204,6 +203,36 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, groups[0].count);
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_EmptySummary(bool remoteGrouping) {
+            var data = new[] {
+                new { g = 1 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = remoteGrouping,
+                Group = new[] {
+                    new GroupingInfo { Selector = "g", IsExpanded = false }
+                }
+            };
+
+            void Run() {
+                var loadResult = DataSourceLoader.Load(data, loadOptions);
+                Assert.Null(loadResult.summary);
+                Assert.Null(loadResult.data.Cast<Group>().First().summary);
+            }
+
+            Assert.Null(loadOptions.TotalSummary);
+            Assert.Null(loadOptions.GroupSummary);
+            Run();
+
+            loadOptions.TotalSummary = Array.Empty<SummaryInfo>();
+            loadOptions.GroupSummary = Array.Empty<SummaryInfo>();
+            Run();
+        }
+
         [Fact]
         public void RequireGroupCountWhenGroupsAreExpanded() {
             var data = new[] {
@@ -236,7 +265,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "f2" }
             };
 
-            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary>().First();
+            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary<string, object>>().First();
 
             Assert.Equal(1, item.Keys.Count);
             Assert.Equal(2, item["f2"]);
@@ -256,11 +285,11 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions).data;
-            var item = (IDictionary)groups[0].items[0];
+            var item = (IDictionary<string, object>)groups[0].items[0];
 
             Assert.Equal(2, item.Keys.Count);
-            Assert.True(item.Contains("g"));
-            Assert.True(item.Contains("f"));
+            Assert.True(item.ContainsKey("g"));
+            Assert.True(item.ContainsKey("f"));
         }
 
         [Fact]
@@ -308,11 +337,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" }
             };
 
-            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary>().First();
+            var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary<string, object>>().First();
 
-            var address = (IDictionary)item["Address"];
-            var addressStreet = (IDictionary)address["Street"];
-            var contacts = (IDictionary)item["Contacts"];
+            var address = (IDictionary<string, object>)item["Address"];
+            var addressStreet = (IDictionary<string, object>)address["Street"];
+            var contacts = (IDictionary<string, object>)item["Contacts"];
 
             Assert.Equal(3, item.Keys.Count);
             Assert.Equal(2, address.Keys.Count);
@@ -336,9 +365,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             );
 
-            var item = result.data.Cast<IDictionary>().First();
+            var item = result.data.Cast<IDictionary<string, object>>().First();
             Assert.Equal(1, item.Keys.Count);
-            Assert.True(item.Contains("Item1"));
+            Assert.True(item.ContainsKey("Item1"));
         }
 
         [Fact]
@@ -368,13 +397,13 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new { a = 1, b = 2, c = 3 }
             };
 
-            IDictionary Load(string[] preSelect, string[] select) {
+            IDictionary<string, object> Load(string[] preSelect, string[] select) {
                 var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
                     PreSelect = preSelect,
                     Select = select
                 });
 
-                return loadResult.data.Cast<IDictionary>().First();
+                return loadResult.data.Cast<IDictionary<string, object>>().First();
             }
 
             var item = Load(
@@ -383,8 +412,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             Assert.Equal(2, item.Keys.Count);
-            Assert.True(item.Contains("a"));
-            Assert.True(item.Contains("b"));
+            Assert.True(item.ContainsKey("a"));
+            Assert.True(item.ContainsKey("b"));
 
             item = Load(
                 preSelect: new[] { "a", "b" },
@@ -392,7 +421,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             Assert.Equal(1, item.Keys.Count);
-            Assert.True(item.Contains("b"));
+            Assert.True(item.ContainsKey("b"));
         }
 
         [Fact]
@@ -402,7 +431,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RemoteSelect = false
             });
 
-            var item = loadResult.data.Cast<IDictionary>().First();
+            var item = loadResult.data.Cast<IDictionary<string, object>>().First();
 
             Assert.Single(item.Keys);
             Assert.Equal(1, item["a"]);
@@ -451,6 +480,29 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var loadResult = DataSourceLoader.Load(data, loadOptions);
             Assert.NotEmpty(loadResult.data);
+        }
+
+        [Fact]
+        public void Issue246() {
+            var data = new[] {
+                new {
+                    Department = new { Title = "abc" }
+                }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "Department.Title" },
+                Group = new[] {
+                    new GroupingInfo { Selector = "Department.Title.Length" }
+                }
+            };
+
+            var groups = (IList<Group>)DataSourceLoader.Load(data, loadOptions).data;
+            Assert.Equal(3, groups[0].key);
+
+            var item = (IDictionary<string, object>)groups[0].items[0];
+            var department = (IDictionary<string, object>)item["Department"];
+            Assert.Equal("abc", department["Title"]);
         }
     }
 

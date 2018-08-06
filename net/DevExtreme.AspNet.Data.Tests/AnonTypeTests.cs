@@ -1,5 +1,4 @@
-﻿using DevExtreme.AspNet.Data.Helpers;
-using DevExtreme.AspNet.Data.Types;
+﻿using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,8 +61,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Accessor() {
             var o = new AnonType<int, int>(42, 84);
-            Assert.Equal(42, Accessors.AnonType.Read(o, "I0"));
-            Assert.Equal(84, Accessors.AnonType.Read(o, "I1"));
+            Assert.Equal(42, AnonTypeAccessor.Instance.Read(o, "I0"));
+            Assert.Equal(84, AnonTypeAccessor.Instance.Read(o, "I1"));
         }
 
     }

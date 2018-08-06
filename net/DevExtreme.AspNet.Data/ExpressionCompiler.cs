@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,9 +20,10 @@ namespace DevExtreme.AspNet.Data {
             get { return _guardNulls; }
         }
 
-        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, bool forceToString = false) {
-            if(clientExpr == "this")
-                return target;
+        protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
+            var customResult = CustomAccessorCompilers.TryCompile(target, clientExpr);
+            if(customResult != null)
+                return customResult;
 
             var progression = new List<Expression> { target };
 
@@ -30,12 +33,17 @@ namespace DevExtreme.AspNet.Data {
             for(var i = 0; i < clientExprItems.Length; i++) {
                 var clientExprItem = clientExprItems[i];
 
+                if(i == 0 && clientExprItem == "this")
+                    continue;
+
                 if(Utils.IsNullable(currentTarget.Type)) {
                     clientExprItem = "Value";
                     i--;
                 }
 
-                if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
+                if(currentTarget.Type == typeof(ExpandoObject))
+                    currentTarget = ReadExpando(currentTarget, clientExprItem);
+                else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
                     currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);
@@ -43,8 +51,14 @@ namespace DevExtreme.AspNet.Data {
                 progression.Add(currentTarget);
             }
 
-            if(forceToString && currentTarget.Type != typeof(String))
-                progression.Add(Expression.Call(currentTarget, typeof(Object).GetMethod(nameof(Object.ToString))));
+            customizeProgression?.Invoke(progression);
+
+            if(_guardNulls && progression.Count > 1 || liftToNullable && progression.Count > 2) {
+                var lastIndex = progression.Count - 1;
+                var last = progression[lastIndex];
+                if(Utils.CanAssignNull(target.Type) && !Utils.CanAssignNull(last.Type))
+                    progression[lastIndex] = Expression.Convert(last, Utils.MakeNullable(last.Type));
+            }
 
             return CompileNullGuard(progression);
         }
@@ -87,6 +101,19 @@ namespace DevExtreme.AspNet.Data {
             return Expression.Parameter(type, "obj");
         }
 
+        internal static void ForceToString(List<Expression> progression) {
+            var last = progression.Last();
+            if(last.Type != typeof(String))
+                progression.Add(Expression.Call(last, typeof(Object).GetMethod(nameof(Object.ToString))));
+        }
+
+        static Expression ReadExpando(Expression expando, string member) {
+            return Expression.Property(
+                Expression.Convert(expando, typeof(IDictionary<string, object>)),
+                "Item",
+                Expression.Constant(member)
+            );
+        }
     }
 
 }

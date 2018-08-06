@@ -78,7 +78,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var result = DataSourceLoader.Load(data, loadOptions);
 
             Assert.Single(loadOptions.ExpressionLog);
-            Assert.Contains("AnonType`2(I0 = obj.G1, I1 = obj.G2)", loadOptions.ExpressionLog[0]);
+            Assert.Matches(@"AnonType`2\(I0 = .+?, I1 = .+?\)", loadOptions.ExpressionLog[0]);
 
             Assert.Equal(new object[] { 6, 36M, 6M }, result.summary);
             Assert.Equal(6, result.totalCount);
@@ -155,15 +155,12 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GroupSummaryAndTotalCount() {
-            var exprList = new List<string>();
-
             var result = DataSourceLoader.Load(
                 new[] {
                     new { g = 1, v = 1 },
                     new { g = 1, v = 9 }
                 },
                 new SampleLoadOptions {
-                    ExpressionWatcher = x => exprList.Add(x.ToString()),
                     RequireTotalCount = true,
                     RemoteGrouping = true,
                     Group = new[] {
@@ -311,6 +308,48 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(valuesExpectation, DataSourceLoader.Load(values, loadOptions).summary);
             Assert.Equal(valuesExpectation, DataSourceLoader.Load(nullableValues, loadOptions).summary);
             Assert.Equal(nullsExpectation, DataSourceLoader.Load(nulls, loadOptions).summary);
+        }
+
+        [Fact]
+        public void Summary_Empty() {
+            // https://stackoverflow.com/a/1122839
+            // See also AggregateCalculatorTests.Calculation_Empty
+
+            var loadResult = DataSourceLoader.Load(new object[0], new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "any", SummaryType = "sum" },
+                    new SummaryInfo { Selector = "any", SummaryType = "min" },
+                    new SummaryInfo { Selector = "any", SummaryType = "max" },
+                    new SummaryInfo { Selector = "any", SummaryType = "avg" },
+                    new SummaryInfo { Selector = "any", SummaryType = "count" }
+                }
+            });
+
+            Assert.Equal(
+                new object[] { 0m /* SumFix */, null, null, null, 0 },
+                loadResult.summary
+            );
+        }
+
+        [Fact]
+        public void Summary_Average_EmptyWithZeroSum() {
+            // Remote SUM is not necessary NULL for empty sets
+            // https://github.com/aspnet/EntityFrameworkCore/issues/12307
+
+            var result = RemoteGrouping.RemoteGroupTransformer.Run(
+                typeof(Object),
+                new[] { new Types.AnonType<int, int, int, int>(
+                    0, // count
+                    0, // sum
+                    0  // count not null
+                ) },
+                0,
+                new[] { new SummaryInfo { SummaryType = "avg" } },
+                null
+            );
+
+            Assert.Null(result.Totals[0]);
         }
 
     }

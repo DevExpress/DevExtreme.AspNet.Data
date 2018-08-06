@@ -43,6 +43,10 @@
       <Project>{f91204f2-1f3a-433f-871d-5f31b769fa90}</Project>
       <Name>DevExtreme.AspNet.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DevExtreme.AspNet.Data.Tests.Common\DevExtreme.AspNet.Data.Tests.Common.csproj">
+      <Project>{f5878ad6-459f-4fce-9bfb-54ee94d2083f}</Project>
+      <Name>DevExtreme.AspNet.Data.Tests.Common</Name>
+    </ProjectReference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>

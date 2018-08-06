@@ -6,6 +6,7 @@ using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -58,22 +59,24 @@ namespace DevExtreme.AspNet.Data {
                 if(!Options.HasPrimaryKey)
                     Options.PrimaryKey = Utils.GetPrimaryKey(typeof(S));
 
-                if(!Options.HasPrimaryKey && (Options.Skip > 0 || Options.Take > 0) && Compat.IsEntityFramework(Source.Provider))
-                    Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
+                if(!Options.HasPrimaryKey && !Options.HasDefaultSort && (Options.Skip > 0 || Options.Take > 0)) {
+                    if(Compat.IsEntityFramework(Source.Provider))
+                        Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
+                    else if(Compat.IsXPO(Source.Provider))
+                        Options.DefaultSort = "this";
+                }
 
                 var deferPaging = Options.HasGroups || !CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary;
                 var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
 
                 if(Options.HasAnySelect) {
                     ContinueWithGrouping(
-                        ExecWithSelect(loadExpr).Select(ProjectionToDict),
-                        Accessors.Dict,
+                        ExecWithSelect(loadExpr).Select(ProjectionToExpando),
                         result
                     );
                 } else {
                     ContinueWithGrouping(
                         ExecExpr<S>(Source, loadExpr),
-                        new DefaultAccessor<S>(),
                         result
                     );
                 }
@@ -97,7 +100,8 @@ namespace DevExtreme.AspNet.Data {
             return ExecExpr<AnonType>(inMemoryQuery, selectExpr);
         }
 
-        void ContinueWithGrouping<R>(IEnumerable<R> loadResult, IAccessor<R> accessor, LoadResult result) {
+        void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {
+            var accessor = new DefaultAccessor<R>();
             if(Options.HasGroups) {
                 var groups = new GroupHelper<R>(accessor).Group(loadResult, Options.Group);
                 if(Options.RequireGroupCount)
@@ -143,6 +147,7 @@ namespace DevExtreme.AspNet.Data {
 
         RemoteGroupingResult ExecRemoteGrouping() {
             return RemoteGroupTransformer.Run(
+                typeof(S),
                 ExecExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
                 Options.HasGroups ? Options.Group.Length : 0,
                 Options.TotalSummary,
@@ -207,14 +212,14 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        Dictionary<string, object> ProjectionToDict(AnonType projection) {
-            var dict = new Dictionary<string, object>();
+        ExpandoObject ProjectionToExpando(AnonType projection) {
+            var expando = new ExpandoObject();
             var index = 0;
             foreach(var name in Options.GetFullSelect()) {
-                ShrinkSelectResult(dict, name.Split('.'), projection[index]);
+                ShrinkSelectResult(expando, name.Split('.'), projection[index]);
                 index++;
             }
-            return dict;
+            return expando;
         }
 
         static void ShrinkSelectResult(IDictionary<string, object> target, string[] path, object value, int index = 0) {
@@ -224,7 +229,7 @@ namespace DevExtreme.AspNet.Data {
                 target[key] = value;
             } else {
                 if(!target.ContainsKey(key))
-                    target[key] = new Dictionary<string, object>();
+                    target[key] = new ExpandoObject();
 
                 if(target[key] is IDictionary<string, object> child)
                     ShrinkSelectResult(child, path, value, 1 + index);

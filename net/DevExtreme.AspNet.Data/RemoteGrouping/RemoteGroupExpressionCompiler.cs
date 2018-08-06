@@ -15,12 +15,18 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : base(false) {
+        public RemoteGroupExpressionCompiler(bool guardNulls, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : base(guardNulls) {
             _grouping = grouping;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
         }
+
+#if DEBUG
+        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : this(false, grouping, totalSummary, groupSummary) {
+        }
+#endif
 
         public Expression Compile(Expression target) {
             var groupByParam = CreateItemParam(typeof(T));
@@ -29,38 +35,26 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
             if(_grouping != null) {
                 foreach(var i in _grouping) {
-                    var selectorExpr = CompileAccessorExpression(groupByParam, i.Selector);
-                    if(!String.IsNullOrEmpty(i.GroupInterval))
-                        selectorExpr = CompileGroupInterval(selectorExpr, i.GroupInterval);
+                    var selectorExpr = String.IsNullOrEmpty(i.GroupInterval)
+                        ? CompileAccessorExpression(groupByParam, i.Selector, liftToNullable: true)
+                        : CompileGroupInterval(groupByParam, i.Selector, i.GroupInterval);
 
                     groupKeyExprList.Add(selectorExpr);
                     descendingList.Add(i.Desc);
                 }
             }
 
-            var groupKeySelectorTypes = groupKeyExprList.Select(i => i.Type).ToArray();
-            var groupKeyType = AnonType.Get(groupKeySelectorTypes);
+            var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList), groupByParam);
+            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, typeof(T));
 
-            var groupKeyProps = Enumerable.Range(0, groupKeyExprList.Count)
-                .Select(i => groupKeyType.GetField(AnonType.ITEM_PREFIX + i))
-                .ToArray();
+            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
 
-            var groupKeyLambda = Expression.Lambda(
-                Expression.New(
-                    groupKeyType.GetConstructor(groupKeySelectorTypes),
-                    groupKeyExprList,
-                    groupKeyProps
-                ),
-                groupByParam
-            );
-
-            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyType, typeof(T));
-
-            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyType }, target, Expression.Quote(groupKeyLambda));
-
-            for(var i = 0; i < groupKeyProps.Length; i++) {
+            for(var i = 0; i < groupKeyExprList.Count; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
-                var orderAccessor = CompileAccessorExpression(orderParam, "Key." + groupKeyProps[i].Name);
+                var orderAccessor = Expression.Field(
+                    Expression.Property(orderParam, "Key"),
+                    AnonType.IndexToField(i)
+                );
 
                 target = Expression.Call(
                     typeof(Queryable),
@@ -82,45 +76,52 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
 
             for(var i = 0; i < groupCount; i++)
-                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.ITEM_PREFIX + i));
+                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.IndexToField(i)));
 
             projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
 
             if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
-            var projectionType = AnonType.Get(projectionExprList.Select(i => i.Type).ToArray());
+            var projectionLambda = Expression.Lambda(AnonType.CreateNewExpression(projectionExprList), param);
 
-            var projectionLambda = Expression.Lambda(
-                Expression.MemberInit(
-                    Expression.New(projectionType.GetConstructor(Type.EmptyTypes)),
-                    projectionExprList.Select((expr, i) => Expression.Bind(projectionType.GetField(AnonType.ITEM_PREFIX + i), expr))
-                ),
-                param
-            );
-
-            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionType }, target, Expression.Quote(projectionLambda));
+            return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionLambda.ReturnType }, target, Expression.Quote(projectionLambda));
         }
 
         IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
             foreach(var s in TransformSummary(summary)) {
                 var itemParam = CreateItemParam(typeof(T));
-                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector);
+                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftToNullable: true);
                 var selectorType = selectorExpr.Type;
 
                 var callType = typeof(Enumerable);
-                var callMethod = GetPreAggregateMethodName(s.SummaryType);
-                var callMethodTypeParams = new List<Type> { typeof(T) };
-                var callArgs = new List<Expression> { aggregateTarget };
+                var isCountNotNull = s.SummaryType == AggregateName.COUNT_NOT_NULL;
 
-                if(s.SummaryType == AggregateName.COUNT_NOT_NULL) {
-                    if(Utils.CanAssignNull(selectorType)) {
-                        callArgs.Add(Expression.Lambda(
-                            Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorType)),
-                            itemParam
-                        ));
-                    }
+                if(isCountNotNull && Utils.CanAssignNull(selectorType)) {
+                    yield return Expression.Call(
+                        callType,
+                        nameof(Enumerable.Sum),
+                        Type.EmptyTypes,
+                        Expression.Call(
+                            typeof(Enumerable),
+                            nameof(Enumerable.Select),
+                            new[] { typeof(T), typeof(int) },
+                            aggregateTarget,
+                            Expression.Lambda(
+                                Expression.Condition(
+                                    Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorType)),
+                                    Expression.Constant(1),
+                                    Expression.Constant(0)
+                                ),
+                                itemParam
+                            )
+                        )
+                    );
                 } else {
+                    var callMethod = GetPreAggregateMethodName(s.SummaryType);
+                    var callMethodTypeParams = new List<Type> { typeof(T) };
+                    var callArgs = new List<Expression> { aggregateTarget };
+
                     if(!IsWellKnownAggregateDataType(selectorType)) {
                         if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
                             callMethodTypeParams.Add(selectorType);
@@ -133,10 +134,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                             }
                         }
                     }
-                    callArgs.Add(Expression.Lambda(selectorExpr, itemParam));
-                }
 
-                yield return Expression.Call(callType, callMethod, callMethodTypeParams.ToArray(), callArgs.ToArray());
+                    if(!isCountNotNull)
+                        callArgs.Add(Expression.Lambda(selectorExpr, itemParam));
+
+                    yield return Expression.Call(callType, callMethod, callMethodTypeParams.ToArray(), callArgs.ToArray());
+                }
             }
         }
 
@@ -162,7 +165,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             }
 
             if(nullable)
-                type = typeof(Nullable<>).MakeGenericType(type);
+                return Utils.MakeNullable(type);
 
             return type;
         }
@@ -182,67 +185,57 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             throw new NotSupportedException();
         }
 
-        Expression CompileGroupInterval(Expression selectorExpr, string groupInterval) {
-            var groupIntervalExpr = CompileGroupIntervalCore(selectorExpr, groupInterval);
+        Expression CompileGroupInterval(Expression target, string selector, string intervalString) {
+            if(Char.IsDigit(intervalString[0]))
+                return CompileNumericGroupInterval(target, selector, intervalString);
 
-            if(Utils.CanAssignNull(selectorExpr.Type)) {
-                var nullableType = typeof(Nullable<>).MakeGenericType(groupIntervalExpr.Type);
-                var nullConst = Expression.Constant(null, nullableType);
-
-                return Expression.Condition(
-                    Expression.Equal(selectorExpr, nullConst),
-                    nullConst,
-                    Expression.Convert(groupIntervalExpr, nullableType)
-                );
-            }
-
-            return groupIntervalExpr;
+            return CompileDateGroupInterval(target, selector, intervalString);
         }
 
-        Expression CompileGroupIntervalCore(Expression selector, string intervalString) {
-            if(Char.IsDigit(intervalString[0])) {
-                return Expression.MakeBinary(
-                    ExpressionType.Subtract,
-                    selector,
-                    Expression.MakeBinary(
-                        ExpressionType.Modulo,
-                        selector,
-                        Expression.Convert(
-                            Expression.Constant(Int32.Parse(intervalString)),
-                            selector.Type
-                        )
-                    )
-                );
-            }
+        Expression CompileNumericGroupInterval(Expression target, string selector, string intervalString) {
+            return CompileAccessorExpression(
+                target,
+                selector,
+                progression => {
+                    var lastIndex = progression.Count - 1;
+                    var last = progression[lastIndex];
 
-            switch(intervalString) {
-                case "year":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Year));
-                case "quarter":
-                    return Expression.MakeBinary(
-                        ExpressionType.Divide,
-                        Expression.MakeBinary(
-                            ExpressionType.Add,
-                            CompileAccessorExpression(selector, nameof(DateTime.Month)),
-                            Expression.Constant(2)
-                        ),
-                        Expression.Constant(3)
+                    var intervalExpr = Expression.Constant(
+                        Utils.ConvertClientValue(intervalString, last.Type),
+                        last.Type
                     );
-                case "month":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Month));
-                case "day":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Day));
-                case "dayOfWeek":
-                    return Expression.Convert(CompileAccessorExpression(selector, nameof(DateTime.DayOfWeek)), typeof(int));
-                case "hour":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Hour));
-                case "minute":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Minute));
-                case "second":
-                    return CompileAccessorExpression(selector, nameof(DateTime.Second));
-            }
 
-            throw new NotSupportedException();
+                    progression[lastIndex] = Expression.MakeBinary(
+                        ExpressionType.Subtract,
+                        last,
+                        Expression.MakeBinary(ExpressionType.Modulo, last, intervalExpr)
+                    );
+                },
+                true
+            );
+        }
+
+        Expression CompileDateGroupInterval(Expression target, string selector, string intervalString) {
+            return CompileAccessorExpression(
+                target,
+                selector + "." + (intervalString == "quarter" ? "month" : intervalString),
+                progression => {
+                    var lastIndex = progression.Count - 1;
+                    var last = progression[lastIndex];
+
+                    if(intervalString == "quarter") {
+                        progression[lastIndex] = Expression.MakeBinary(
+                            ExpressionType.Divide,
+                            Expression.MakeBinary(ExpressionType.Add, last, Expression.Constant(2)),
+                            Expression.Constant(3)
+                        );
+                    } else if(intervalString == "dayOfWeek") {
+                        var hasNullable = progression.Any(i => Utils.CanAssignNull(i.Type));
+                        progression[lastIndex] = Expression.Convert(last, hasNullable ? typeof(int?) : typeof(int));
+                    }
+                },
+                true
+            );
         }
 
         static IEnumerable<SummaryInfo> TransformSummary(IEnumerable<SummaryInfo> source) {

@@ -44,7 +44,10 @@ namespace DevExtreme.AspNet.Data {
             var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
-            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, isStringOperation);
+            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
+                if(isStringOperation)
+                    ForceToString(progression);
+            });
 
             if(isStringOperation) {
                 return CompileStringFunction(accessorExpr, clientOperation, Convert.ToString(clientValue));
@@ -63,22 +66,20 @@ namespace DevExtreme.AspNet.Data {
 
                 if(clientValue == null && !Utils.CanAssignNull(accessorExpr.Type)) {
                     switch(expressionType) {
-                        case ExpressionType.NotEqual:
-                            return Expression.Constant(true);
-
-                        case ExpressionType.Equal:
                         case ExpressionType.GreaterThan:
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
                             return Expression.Constant(false);
+
+                        case ExpressionType.Equal:
+                        case ExpressionType.NotEqual:
+                            accessorExpr = Expression.Convert(accessorExpr, Utils.MakeNullable(accessorExpr.Type));
+                            break;
                     }
                 }
 
-                Expression valueExpr = Expression.Constant(clientValue);
-
-                if(accessorExpr.Type != null && clientValue != null && clientValue.GetType() != accessorExpr.Type)
-                    valueExpr = Expression.Convert(valueExpr, accessorExpr.Type);
+                Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
                     if(clientValue == null)

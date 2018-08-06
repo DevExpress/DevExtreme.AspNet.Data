@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = Bug112_DataItem;
 
     class Bug112_DataItem {
         public int ID { get; set; }
         public TimeSpan? Duration { get; set; }
-    }
-
-    partial class TestDbContext {
-        public DbSet<Bug112_DataItem> Bug112_Data { get; set; }
     }
 
     public class Bug112 {
@@ -24,12 +20,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.Bug112_Data;
+                var dbSet = context.Set<DataItem>();
 
                 dbSet.AddRange(new[] {
-                    new Bug112_DataItem { Duration = TimeSpan.Parse("01:23") },
-                    new Bug112_DataItem { Duration = TimeSpan.Parse("02:23") },
-                    new Bug112_DataItem { Duration = TimeSpan.Zero }
+                    new DataItem { Duration = TimeSpan.Parse("01:23") },
+                    new DataItem { Duration = TimeSpan.Parse("02:23") },
+                    new DataItem { Duration = TimeSpan.Zero }
                 });
 
                 context.SaveChanges();
@@ -38,7 +34,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                     Filter = new[] { "Duration", "contains", "23" }
                 });
 
-                var data = (IEnumerable<Bug112_DataItem>)loadResult.data;
+                var data = (IEnumerable<DataItem>)loadResult.data;
                 Assert.Equal(2, data.Count());
             });
         }

@@ -52,7 +52,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 + ".GroupBy(obj => new AnonType`2(I0 = obj.G1, I1 = obj.G2))"
                 + ".OrderBy(g => g.Key.I0)"
                 + ".ThenByDescending(g => g.Key.I1)"
-                + ".Select(g => new AnonType`16() {"
+                + ".Select(g => new AnonType`16("
 
                 // count
                 + "I0 = g.Count(), "
@@ -71,12 +71,12 @@ namespace DevExtreme.AspNet.Data.Tests {
 
                 // group summary
                 // (count skipped)
-                + "I8 = g.Sum(obj => obj.Nullable), "               // avg sum
-                + "I9 = g.Count(obj => (obj.Nullable != null)), "   // avg count
+                + "I8 = g.Sum(obj => obj.Nullable), "                               // avg sum
+                + "I9 = g.Select(obj => IIF((obj.Nullable != null), 1, 0)).Sum(), " // avg count
                 + "I10 = g.Max(obj => obj.Nullable), "
                 + "I11 = g.Min(obj => obj.Nullable), "
                 + "I12 = g.Sum(obj => obj.Nullable)"
-                + "})",
+                + "))",
                 expr.ToString()
             );
         }
@@ -87,7 +87,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(
                 "data"
                     + ".GroupBy(obj => new AnonType())"
-                    + ".Select(g => new AnonType`1() {I0 = g.Count()})",
+                    + ".Select(g => new AnonType`1(I0 = g.Count()))",
                 expr.ToString()
             );
         }
@@ -103,57 +103,96 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GroupInterval_Numeric() {
-            var compiler = new RemoteGroupExpressionCompiler<double>(
-                new[] {
-                    new GroupingInfo { Selector = "this", GroupInterval = "123" }
-                },
-                null, null
-            );
 
-            var expr = compiler.Compile(CreateTargetParam<double>()).ToString();
-            Assert.Contains("I0 = (obj - (obj % Convert(123))", expr);
+            string Compile<T>(string selector, bool guardNulls) {
+                var compiler = new RemoteGroupExpressionCompiler<T>(
+                    guardNulls,
+                    new[] {
+                        new GroupingInfo { Selector = selector, GroupInterval = "123" }
+                    },
+                    null, null
+                );
+
+                return compiler.Compile(CreateTargetParam<T>()).ToString();
+            }
+
+            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double>("this", false));
+            Assert.Contains("I0 = (obj - (obj % 123)", Compile<double?>("this", false));
+
+            Assert.Contains(
+                $"I0 = IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert("(obj.Item1.Length - (obj.Item1.Length % 123))", "Nullable`1")})",
+                Compile<Tuple<string>>("Item1.Length", true)
+            );
         }
 
         [Fact]
         public void GroupInterval_Date() {
-            var compiler = new RemoteGroupExpressionCompiler<DateTime>(
-                new[] {
-                    new GroupingInfo { Selector = "this", GroupInterval = "year" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "quarter" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "month" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "day" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "dayOfWeek" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "hour" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "minute" },
-                    new GroupingInfo { Selector = "this", GroupInterval = "second" }
-                },
-                null, null
-            );
 
-            var expr = compiler.Compile(CreateTargetParam<DateTime>()).ToString();
+            string Compile<T>(string selector, bool guardNulls) {
+                var compiler = new RemoteGroupExpressionCompiler<T>(
+                    guardNulls,
+                    new[] {
+                        new GroupingInfo { Selector = selector, GroupInterval = "year" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "quarter" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "month" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "day" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "dayOfWeek" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "hour" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "minute" },
+                        new GroupingInfo { Selector = selector, GroupInterval = "second" }
+                    },
+                    null, null
+                );
 
-            Assert.Contains("I0 = obj.Year", expr);
-            Assert.Contains("I1 = ((obj.Month + 2) / 3)", expr);
-            Assert.Contains("I2 = obj.Month", expr);
-            Assert.Contains("I3 = obj.Day", expr);
-            Assert.Contains("I4 = Convert(obj.DayOfWeek)", expr);
-            Assert.Contains("I5 = obj.Hour", expr);
-            Assert.Contains("I6 = obj.Minute", expr);
-            Assert.Contains("I7 = obj.Second", expr);
-        }
+                return compiler.Compile(CreateTargetParam<T>()).ToString();
+            }
 
-        [Fact]
-        public void GroupInterval_NullableDate() {
-            var compiler = new RemoteGroupExpressionCompiler<Nullable<DateTime>>(
-                new[] {
-                    new GroupingInfo { Selector = "this", GroupInterval = "year" }
-                },
-                null, null
-            );
+            {
+                var expr = Compile<DateTime>("this", false);
 
-            var expr = compiler.Compile(CreateTargetParam<Nullable<DateTime>>()).ToString();
+                Assert.Contains("I0 = obj.Year", expr);
+                Assert.Contains("I1 = ((obj.Month + 2) / 3)", expr);
+                Assert.Contains("I2 = obj.Month", expr);
+                Assert.Contains("I3 = obj.Day", expr);
+                Assert.Contains("I4 = " + Compat.ExpectedConvert("obj.DayOfWeek", "Int32"), expr);
+                Assert.Contains("I5 = obj.Hour", expr);
+                Assert.Contains("I6 = obj.Minute", expr);
+                Assert.Contains("I7 = obj.Second", expr);
+            }
 
-            Assert.Contains("I0 = IIF((obj == null), null, Convert(obj.Value.Year))", expr);
+            {
+                var expr = Compile<DateTime?>("this", false);
+
+                string Wrap(string coreSelector) {
+                    return Compat.ExpectedConvert(coreSelector, "Nullable`1");
+                }
+
+                Assert.Contains("I0 = " + Wrap("obj.Value.Year"), expr);
+                Assert.Contains("I1 = " + Wrap("((obj.Value.Month + 2) / 3)"), expr);
+                Assert.Contains("I2 = " + Wrap("obj.Value.Month"), expr);
+                Assert.Contains("I3 = " + Wrap("obj.Value.Day"), expr);
+                Assert.Contains("I4 = " + Wrap("obj.Value.DayOfWeek"), expr);
+                Assert.Contains("I5 = " + Wrap("obj.Value.Hour"), expr);
+                Assert.Contains("I6 = " + Wrap("obj.Value.Minute"), expr);
+                Assert.Contains("I7 = " + Wrap("obj.Value.Second"), expr);
+            }
+
+            {
+                var expr = Compile<Tuple<DateTime?>>("Item1", true);
+
+                string Wrap(string coreSelector) {
+                    return $"IIF(((obj == null) OrElse (obj.Item1 == null)), null, {Compat.ExpectedConvert(coreSelector, "Nullable`1")})";
+                }
+
+                Assert.Contains("I0 = " + Wrap("obj.Item1.Value.Year"), expr);
+                Assert.Contains("I1 = " + Wrap("((obj.Item1.Value.Month + 2) / 3)"), expr);
+                Assert.Contains("I2 = " + Wrap("obj.Item1.Value.Month"), expr);
+                Assert.Contains("I3 = " + Wrap("obj.Item1.Value.Day"), expr);
+                Assert.Contains("I4 = " + Wrap("obj.Item1.Value.DayOfWeek"), expr);
+                Assert.Contains("I5 = " + Wrap("obj.Item1.Value.Hour"), expr);
+                Assert.Contains("I6 = " + Wrap("obj.Item1.Value.Minute"), expr);
+                Assert.Contains("I7 = " + Wrap("obj.Item1.Value.Second"), expr);
+            }
         }
 
         [Fact]

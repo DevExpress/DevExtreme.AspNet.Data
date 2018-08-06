@@ -6,11 +6,12 @@ environment:
 
 install:
   - ps: Install-Product node 8
+  - npm i -g npm@5
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
   - node build/make-nojquery
-  - powershell -File build\replace-meta.ps1 %APPVEYOR_BUILD_NUMBER% %APPVEYOR_REPO_TAG_NAME%
+  - node build/replace-meta "%APPVEYOR_BUILD_NUMBER%" "%APPVEYOR_REPO_TAG_NAME%" "%APPVEYOR_REPO_NAME%"
   - npm install
   - dotnet restore net\DevExtreme.AspNet.Data.sln
   - nuget restore net\DevExtreme.AspNet.Data.sln -Verbosity quiet
@@ -20,7 +21,7 @@ build_script:
 
 test_script:
   - npm run eclint
-  - npm run jshint
+  - npm run eslint
 
   - npm i --no-save "devextreme@~16.2.0"
   - npm run karma
@@ -29,20 +30,20 @@ test_script:
   - npm run karma
   - npm run karma-bundled
   - npm run karma-bundled-nojquery
+  - npm run karma-bundled-nojquery-cjs
 
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
     -target:dotnet.exe
-    -targetargs:"test net\DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]*"
+    -targetargs:"vstest
+    net\DevExtreme.AspNet.Data.Tests\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.dll
+    net\DevExtreme.AspNet.Data.Tests.EFCore1\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore1.dll
+    net\DevExtreme.AspNet.Data.Tests.EFCore2\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.EFCore2.dll
+    net\DevExtreme.AspNet.Data.Tests.NH\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.NH.dll
+    net\DevExtreme.AspNet.Data.Tests.Xpo\bin\Debug\netcoreapp2.0\DevExtreme.AspNet.Data.Tests.Xpo.dll
+    "
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
     -output:coverage_netcore.xml
-
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
-    -target:dotnet.exe
-    -targetargs:"test net\DevExtreme.AspNet.Data.Tests.EFCore\DevExtreme.AspNet.Data.Tests.EFCore.csproj"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests.EFCore]*"
-    -output:coverage_efcore.xml
 
   - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user
@@ -61,7 +62,7 @@ after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
-  - codecov -X gcov -f coverage_netcore.xml coverage_efcore.xml coverage_netfx.xml js-test/coverage/lcov.info
+  - codecov -X gcov -f coverage_netcore.xml coverage_netfx.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg

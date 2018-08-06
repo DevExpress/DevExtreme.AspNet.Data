@@ -74,7 +74,7 @@ namespace DevExtreme.AspNet.Data {
         public bool? RemoteSelect;
 
         /// <summary>
-        /// A flag that indicates whether grouping must be performed on the server side.
+        /// A flag that indicates whether grouping parameters must be translated into LINQ.
         /// </summary>
         public bool? RemoteGrouping;
 

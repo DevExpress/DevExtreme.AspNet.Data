@@ -4,41 +4,35 @@ using System;
 namespace DevExtreme.AspNet.Data.Types {
 
     class AnonType<T0> : AnonType {
-        public T0 I0;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
 
         public AnonType(T0 i0) {
             I0 = i0;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 1; }
         }
 
         public override object this[int index] {
             get {
                 if(index == 0) return I0;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 
     }
 
     class AnonType<T0, T1> : AnonType {
-        public T0 I0;
-        public T1 I1;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
+        public readonly T1 I1;
 
         public AnonType(T0 i0, T1 i1) {
             I0 = i0;
             I1 = i1;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 2; }
         }
 
@@ -46,20 +40,17 @@ namespace DevExtreme.AspNet.Data.Types {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 
     }
 
     class AnonType<T0, T1, T2, T3> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
 
         public AnonType(T0 i0, T1 i1, T2 i2)
             : this(i0, i1, i2, default(T3)) {
@@ -72,7 +63,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I3 = i3;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 4; }
         }
 
@@ -82,24 +73,21 @@ namespace DevExtreme.AspNet.Data.Types {
                 if(index == 1) return I1;
                 if(index == 2) return I2;
                 if(index == 3) return I3;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4)
             : this(i0, i1, i2, i3, i4, default(T5)) {
@@ -124,7 +112,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I7 = i7;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 8; }
         }
 
@@ -138,32 +126,29 @@ namespace DevExtreme.AspNet.Data.Types {
                 if(index == 5) return I5;
                 if(index == 6) return I6;
                 if(index == 7) return I7;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
-        public T8 I8;
-        public T9 I9;
-        public T10 I10;
-        public T11 I11;
-        public T12 I12;
-        public T13 I13;
-        public T14 I14;
-        public T15 I15;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
+        public readonly T8 I8;
+        public readonly T9 I9;
+        public readonly T10 I10;
+        public readonly T11 I11;
+        public readonly T12 I12;
+        public readonly T13 I13;
+        public readonly T14 I14;
+        public readonly T15 I15;
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8)
             : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, default(T9)) {
@@ -212,7 +197,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I15 = i15;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 16; }
         }
 
@@ -234,48 +219,45 @@ namespace DevExtreme.AspNet.Data.Types {
                 if(index == 13) return I13;
                 if(index == 14) return I14;
                 if(index == 15) return I15;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 
     }
 
     class AnonType<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> : AnonType {
-        public T0 I0;
-        public T1 I1;
-        public T2 I2;
-        public T3 I3;
-        public T4 I4;
-        public T5 I5;
-        public T6 I6;
-        public T7 I7;
-        public T8 I8;
-        public T9 I9;
-        public T10 I10;
-        public T11 I11;
-        public T12 I12;
-        public T13 I13;
-        public T14 I14;
-        public T15 I15;
-        public T16 I16;
-        public T17 I17;
-        public T18 I18;
-        public T19 I19;
-        public T20 I20;
-        public T21 I21;
-        public T22 I22;
-        public T23 I23;
-        public T24 I24;
-        public T25 I25;
-        public T26 I26;
-        public T27 I27;
-        public T28 I28;
-        public T29 I29;
-        public T30 I30;
-        public T31 I31;
-
-        public AnonType() {
-        }
+        public readonly T0 I0;
+        public readonly T1 I1;
+        public readonly T2 I2;
+        public readonly T3 I3;
+        public readonly T4 I4;
+        public readonly T5 I5;
+        public readonly T6 I6;
+        public readonly T7 I7;
+        public readonly T8 I8;
+        public readonly T9 I9;
+        public readonly T10 I10;
+        public readonly T11 I11;
+        public readonly T12 I12;
+        public readonly T13 I13;
+        public readonly T14 I14;
+        public readonly T15 I15;
+        public readonly T16 I16;
+        public readonly T17 I17;
+        public readonly T18 I18;
+        public readonly T19 I19;
+        public readonly T20 I20;
+        public readonly T21 I21;
+        public readonly T22 I22;
+        public readonly T23 I23;
+        public readonly T24 I24;
+        public readonly T25 I25;
+        public readonly T26 I26;
+        public readonly T27 I27;
+        public readonly T28 I28;
+        public readonly T29 I29;
+        public readonly T30 I30;
+        public readonly T31 I31;
 
         public AnonType(T0 i0, T1 i1, T2 i2, T3 i3, T4 i4, T5 i5, T6 i6, T7 i7, T8 i8, T9 i9, T10 i10, T11 i11, T12 i12, T13 i13, T14 i14, T15 i15, T16 i16)
             : this(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, default(T17)) {
@@ -372,7 +354,7 @@ namespace DevExtreme.AspNet.Data.Types {
             I31 = i31;
         }
 
-        public override int Size {
+        protected override int Size {
             get { return 32; }
         }
 
@@ -410,7 +392,7 @@ namespace DevExtreme.AspNet.Data.Types {
                 if(index == 29) return I29;
                 if(index == 30) return I30;
                 if(index == 31) return I31;
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
         }
 

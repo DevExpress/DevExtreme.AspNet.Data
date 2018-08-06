@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
+    using DataItem = SelectNotMapped_DataItem;
 
     class SelectNotMapped_DataItem {
         public int ID { get; set; }
@@ -20,18 +20,14 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         }
     }
 
-    partial class TestDbContext {
-        public DbSet<SelectNotMapped_DataItem> SelectNotMapped_Data { get; set; }
-    }
-
     public class SelectNotMapped {
 
         [Fact]
         public void Scenario() {
             TestDbContext.Exec(context => {
-                var dbSet = context.SelectNotMapped_Data;
+                var dbSet = context.Set<DataItem>();
 
-                dbSet.Add(new SelectNotMapped_DataItem { Blob = new byte[] { 143, 93, 183 } });
+                dbSet.Add(new DataItem { Blob = new byte[] { 143, 93, 183 } });
                 context.SaveChanges();
 
                 var loadOptions = new SampleLoadOptions {
@@ -46,11 +42,11 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
                 loadOptions.RemoteSelect = false;
                 var loadResult = DataSourceLoader.Load(dbSet, loadOptions);
-                var item = loadResult.data.Cast<IDictionary>().First();
+                var item = loadResult.data.Cast<IDictionary<string, object>>().First();
 
                 Assert.Equal(3, item.Keys.Count);
-                Assert.True(item.Contains("ID"));
-                Assert.True(item.Contains("Name"));
+                Assert.True(item.ContainsKey("ID"));
+                Assert.True(item.ContainsKey("Name"));
                 Assert.Equal("blob:j123", item["BlobUrl"]);
             });
         }
