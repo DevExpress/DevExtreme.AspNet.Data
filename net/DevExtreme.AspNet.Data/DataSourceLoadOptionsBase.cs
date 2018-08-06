@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     /// <summary>
-    /// An abstract class with fields that specify data processing settings.
+    /// A class with fields that specify data processing settings.
     /// </summary>
-    public abstract class DataSourceLoadOptionsBase {
+    public class DataSourceLoadOptionsBase {
         /// <summary>
         /// A flag indicating whether the total number of data objects is required.
         /// </summary>
