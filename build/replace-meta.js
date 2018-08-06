@@ -1,5 +1,3 @@
-// jshint node:true, esversion:6
-
 "use strict";
 
 const fs = require("fs");
@@ -20,7 +18,7 @@ const REPO_NAME = process.argv[4];
 let META_VERSION_NUMERIC = "99.0.0";
 let META_VERSION_FULL;
 
-if(REPO_NAME == MAIN_REPO_NAME && /^v?(([.\d]+)[\w-]*)$/.test(TAG)) {
+if(REPO_NAME === MAIN_REPO_NAME && /^v?(([.\d]+)[\w-]*)$/.test(TAG)) {
     META_VERSION_FULL = RegExp.$1;
     META_VERSION_NUMERIC = RegExp.$2;
 } else if(BUILD_NUMBER) {

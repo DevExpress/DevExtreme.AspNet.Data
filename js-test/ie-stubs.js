@@ -1,3 +1,6 @@
+/* eslint-env browser */
+/* eslint strict: off */
+
 if(!Object.setPrototypeOf)
     Object.setPrototypeOf = function() { };
 

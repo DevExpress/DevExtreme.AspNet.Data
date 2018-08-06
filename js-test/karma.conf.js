@@ -1,3 +1,7 @@
+/* eslint-env node */
+
+"use strict";
+
 module.exports = function(config) {
     var options = {
         basePath: "",

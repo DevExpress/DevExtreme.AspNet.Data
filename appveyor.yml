@@ -21,7 +21,7 @@ build_script:
 
 test_script:
   - npm run eclint
-  - npm run jshint
+  - npm run eslint
 
   - npm i --no-save "devextreme@~16.2.0"
   - npm run karma

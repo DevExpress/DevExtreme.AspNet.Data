@@ -1,8 +1,7 @@
 // https://github.com/DevExpress/DevExtreme.AspNet.Data
 // Copyright (c) Developer Express Inc.
 
-// jshint strict: true, undef: true, unused: true, eqeqeq: true
-/* global DevExpress, jQuery, define, module, require */
+/* global DevExpress:false, jQuery:false */
 
 (function(factory) {
     "use strict";
