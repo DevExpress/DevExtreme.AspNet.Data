@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         /// <summary>
         /// Allows reading data item properties.
         /// </summary>
-        protected readonly IAccessor<T> Accessor;
+        protected IAccessor<T> Accessor { get; private set; }
 
         /// <summary>
         /// Initializes a new Aggregator class instance with an object that allows reading data item properties.

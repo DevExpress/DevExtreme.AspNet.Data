@@ -9,84 +9,84 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     /// <summary>
-    /// A class with fields that specify data processing settings.
+    /// A class with properties that specify data processing settings.
     /// </summary>
     public class DataSourceLoadOptionsBase {
         /// <summary>
         /// A flag indicating whether the total number of data objects is required.
         /// </summary>
-        public bool RequireTotalCount;
+        public bool RequireTotalCount { get; set; }
 
         /// <summary>
         /// A flag indicating whether the number of top-level groups is required.
         /// </summary>
-        public bool RequireGroupCount;
+        public bool RequireGroupCount { get; set; }
 
         /// <summary>
         /// A flag indicating whether the current query is made to get the total number of data objects.
         /// </summary>
-        public bool IsCountQuery;
+        public bool IsCountQuery { get; set; }
 
         /// <summary>
         /// The number of data objects to be skipped from the start of the resulting set.
         /// </summary>
-        public int Skip;
+        public int Skip { get; set; }
 
         /// <summary>
         /// The number of data objects to be loaded.
         /// </summary>
-        public int Take;
+        public int Take { get; set; }
 
         /// <summary>
         /// A sort expression.
         /// </summary>
-        public SortingInfo[] Sort;
+        public SortingInfo[] Sort { get; set; }
 
         /// <summary>
         /// A group expression.
         /// </summary>
-        public GroupingInfo[] Group;
+        public GroupingInfo[] Group { get; set; }
 
         /// <summary>
         /// A filter expression.
         /// </summary>
-        public IList Filter;
+        public IList Filter { get; set; }
 
         /// <summary>
         /// A total summary expression.
         /// </summary>
-        public SummaryInfo[] TotalSummary;
+        public SummaryInfo[] TotalSummary { get; set; }
 
         /// <summary>
         /// A group summary expression.
         /// </summary>
-        public SummaryInfo[] GroupSummary;
+        public SummaryInfo[] GroupSummary { get; set; }
 
         /// <summary>
         /// A select expression.
         /// </summary>
-        public string[] Select;
+        public string[] Select { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string[] PreSelect;
+        public string[] PreSelect { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool? RemoteSelect;
+        public bool? RemoteSelect { get; set; }
 
         /// <summary>
         /// A flag that indicates whether grouping parameters must be translated into LINQ.
         /// </summary>
-        public bool? RemoteGrouping;
+        public bool? RemoteGrouping { get; set; }
 
         /// <summary>
         /// An array of primary keys.
         /// </summary>
-        public string[] PrimaryKey;
+        public string[] PrimaryKey { get; set; }
 
         /// <summary>
         /// The data field to be used for sorting by default.
         /// </summary>
-        public string DefaultSort;
+        public string DefaultSort { get; set; }
 
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;

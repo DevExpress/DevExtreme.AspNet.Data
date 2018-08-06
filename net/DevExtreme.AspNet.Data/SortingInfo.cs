@@ -12,12 +12,12 @@ namespace DevExtreme.AspNet.Data {
         /// <summary>
         /// The data field to be used for sorting.
         /// </summary>
-        public string Selector;
+        public string Selector { get; set; }
 
         /// <summary>
         /// A flag indicating whether data should be sorted in a descending order.
         /// </summary>
-        public bool Desc;
+        public bool Desc { get; set; }
     }
 
 }
