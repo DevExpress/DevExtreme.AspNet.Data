@@ -12,12 +12,12 @@ namespace DevExtreme.AspNet.Data {
         /// <summary>
         /// The data field to be used for calculating the summary.
         /// </summary>
-        public string Selector;
+        public string Selector { get; set; }
 
         /// <summary>
         /// An aggregate function: "sum", "min", "max", "avg", or "count".
         /// </summary>
-        public string SummaryType;
+        public string SummaryType { get; set; }
     }
 
 }

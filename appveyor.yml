@@ -23,10 +23,7 @@ test_script:
   - npm run eclint
   - npm run eslint
 
-  - npm i --no-save "devextreme@~16.2.0"
-  - npm run karma
-
-  - npm i --no-save "devextreme@>=17.2.6-pre-18044"
+  - npm i --no-save "devextreme@>=18.1.0"
   - npm run karma
   - npm run karma-bundled
   - npm run karma-bundled-nojquery

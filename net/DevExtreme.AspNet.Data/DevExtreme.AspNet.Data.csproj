@@ -14,37 +14,22 @@
   <PropertyGroup>
     <AssemblyName>DevExtreme.AspNet.Data</AssemblyName>
     <AssemblyVersion>99.0</AssemblyVersion>
-    <TargetFrameworks>net40;netstandard1.0;netstandard1.3</TargetFrameworks>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.0' ">$(PackageTargetFallback);dnxcore50;portable-net45</PackageTargetFallback>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="Newtonsoft.Json" Version="5.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.0.0" />
-    <PackageReference Include="System.Linq.Expressions" Version="4.0.10" />
-    <PackageReference Include="System.Linq.Queryable" Version="4.0.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.0.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.0.0" />
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.0.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="5.0.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
-    <PackageReference Include="System.Linq.Queryable" Version="4.0.1" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
