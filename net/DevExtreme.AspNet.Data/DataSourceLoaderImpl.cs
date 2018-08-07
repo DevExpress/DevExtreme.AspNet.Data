@@ -45,6 +45,10 @@ namespace DevExtreme.AspNet.Data {
                 if(provider.Version < new Version(2, 2, 0))
                     return false;
 
+                bool HasAvg(SummaryInfo[] summary) {
+                    return summary != null && summary.Any(i => i.SummaryType == "avg");
+                }
+
                 #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
                 if(HasAvg(options.TotalSummary) || HasAvg(options.GroupSummary))
                     return false;
@@ -250,11 +254,6 @@ namespace DevExtreme.AspNet.Data {
                     ShrinkSelectResult(child, path, value, 1 + index);
             }
         }
-
-        static bool HasAvg(SummaryInfo[] summary) {
-            return summary != null && summary.Any(i => i.SummaryType == "avg");
-        }
-
     }
 
 }
