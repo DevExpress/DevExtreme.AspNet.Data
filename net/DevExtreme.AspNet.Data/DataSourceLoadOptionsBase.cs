@@ -67,10 +67,8 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public string[] Select { get; set; }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
         public string[] PreSelect { get; set; }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool? RemoteSelect { get; set; }
 
         /// <summary>

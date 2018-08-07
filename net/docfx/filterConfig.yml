@@ -2,6 +2,4 @@ apiRules:
 - exclude:
     uidRegex: ^DevExtreme\.AspNet\.Data\.Helpers\.CustomAccessorCompilers(\.|$)
 - exclude:
-    uidRegex: ^DevExtreme\.AspNet\.Data\.DataSourceLoadOptionsBase\.(Pre|Remote)Select$
-- exclude:
     uidRegex: ^System\.Object\.
