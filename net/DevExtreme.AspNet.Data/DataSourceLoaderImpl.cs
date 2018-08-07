@@ -17,25 +17,44 @@ namespace DevExtreme.AspNet.Data {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadOptionsBase Options;
 
+        readonly QueryProviderInfo QueryProviderInfo;
         readonly DataSourceExpressionBuilder<S> Builder;
         readonly bool ShouldEmptyGroups;
         readonly bool CanUseRemoteGrouping;
         readonly bool SummaryIsTotalCountOnly;
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
-            var isLinqToObjects = source is EnumerableQuery;
-
-            // Until https://github.com/aspnet/EntityFramework/issues/2341 is implemented
-            // local grouping is more efficient for EF Core
-            var preferLocalGrouping = Compat.IsEFCore(source.Provider);
-
-            Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
+            QueryProviderInfo = new QueryProviderInfo(source.Provider);
+            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.IsLinqToObjects);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping ?? !(isLinqToObjects || preferLocalGrouping);
+            CanUseRemoteGrouping = options.RemoteGrouping ?? ShouldUseRemoteGrouping(QueryProviderInfo, options);
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
 
             Source = source;
             Options = options;
+        }
+
+        static bool ShouldUseRemoteGrouping(QueryProviderInfo provider, DataSourceLoadOptionsBase options) {
+            if(provider.IsLinqToObjects)
+                return false;
+
+            if(provider.IsEFCore) {
+                // https://github.com/aspnet/EntityFrameworkCore/issues/2341
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11993
+                // https://github.com/aspnet/EntityFrameworkCore/issues/11999
+                if(provider.Version < new Version(2, 2, 0))
+                    return false;
+
+                bool HasAvg(SummaryInfo[] summary) {
+                    return summary != null && summary.Any(i => i.SummaryType == "avg");
+                }
+
+                #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
+                if(HasAvg(options.TotalSummary) || HasAvg(options.GroupSummary))
+                    return false;
+            }
+
+            return true;
         }
 
         public LoadResult Load() {
@@ -60,9 +79,9 @@ namespace DevExtreme.AspNet.Data {
                     Options.PrimaryKey = Utils.GetPrimaryKey(typeof(S));
 
                 if(!Options.HasPrimaryKey && !Options.HasDefaultSort && (Options.Skip > 0 || Options.Take > 0)) {
-                    if(Compat.IsEntityFramework(Source.Provider))
+                    if(QueryProviderInfo.IsEFClassic || QueryProviderInfo.IsEFCore)
                         Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
-                    else if(Compat.IsXPO(Source.Provider))
+                    else if(QueryProviderInfo.IsXPO)
                         Options.DefaultSort = "this";
                 }
 

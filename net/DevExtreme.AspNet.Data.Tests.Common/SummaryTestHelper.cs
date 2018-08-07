@@ -33,7 +33,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
         }
 
-        public static void Run<T>(IQueryable<T> data) where T : IEntity {
+        #warning Remove summaryTypes with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
+        public static void Run<T>(IQueryable<T> data, string[] summaryTypes = null) where T : IEntity {
+            summaryTypes = summaryTypes ?? new[] { "count", "min", "max", "sum", "avg" };
+
             var group = Array.ConvertAll(
                 new[] { nameof(IEntity.Group1), nameof(IEntity.Group2) },
                 i => new GroupingInfo {
@@ -43,7 +46,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var summary = Array.ConvertAll(
-                new[] { "count", "min", "max", "sum", "avg" },
+                summaryTypes,
                 i => new SummaryInfo {
                     Selector = nameof(IEntity.Value),
                     SummaryType = i
@@ -56,6 +59,30 @@ namespace DevExtreme.AspNet.Data.Tests {
                 TotalSummary = summary
             };
 
+            object[] CreateExpectation(int count, int? min, int? max, decimal? sum, decimal? avg) {
+                var list = new List<object>();
+                foreach(var i in summaryTypes) {
+                    switch(i) {
+                        case "count":
+                            list.Add(count);
+                            break;
+                        case "min":
+                            list.Add(min);
+                            break;
+                        case "max":
+                            list.Add(max);
+                            break;
+                        case "sum":
+                            list.Add(sum);
+                            break;
+                        case "avg":
+                            list.Add(avg);
+                            break;
+                    }
+                }
+                return list.ToArray();
+            }
+
             {
                 var loadResult = DataSourceLoader.Load(data, loadOptions);
                 var rootItems = (IList<Group>)loadResult.data;
@@ -67,21 +94,21 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var group_A_B = (Group)group_A.items[1];
                 var group_B_A = (Group)group_B.items[0];
 
-                Assert.Equal(new object[] { 4, 1, 5, 9m, 3m }, group_A.summary);
-                Assert.Equal(new object[] { 2, 1, 1, 1m, 1m }, group_A_A.summary);
-                Assert.Equal(new object[] { 2, 3, 5, 8m, 4m }, group_A_B.summary);
+                Assert.Equal(CreateExpectation(4, 1, 5, 9m, 3m), group_A.summary);
+                Assert.Equal(CreateExpectation(2, 1, 1, 1m, 1m), group_A_A.summary);
+                Assert.Equal(CreateExpectation(2, 3, 5, 8m, 4m), group_A_B.summary);
 
-                Assert.Equal(new object[] { 1, null, null, 0m, null }, group_B.summary);
-                Assert.Equal(new object[] { 1, null, null, 0m, null }, group_B_A.summary);
+                Assert.Equal(CreateExpectation(1, null, null, 0m, null), group_B.summary);
+                Assert.Equal(CreateExpectation(1, null, null, 0m, null), group_B_A.summary);
 
-                Assert.Equal(new object[] { 5, 1, 5, 9m, 3m }, loadResult.summary);
+                Assert.Equal(CreateExpectation(5, 1, 5, 9m, 3m), loadResult.summary);
             }
 
             loadOptions.Filter = new[] { nameof(IEntity.Group1), "nonexistent" };
 
             {
                 var loadResult = DataSourceLoader.Load(data, loadOptions);
-                Assert.Equal(new object[] { 0, null, null, 0m, null }, loadResult.summary);
+                Assert.Equal(CreateExpectation(0, null, null, 0m, null), loadResult.summary);
             }
         }
 

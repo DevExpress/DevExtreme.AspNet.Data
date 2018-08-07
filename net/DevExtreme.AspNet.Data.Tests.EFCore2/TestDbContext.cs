@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 
@@ -14,6 +15,8 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
+            modelBuilder.Entity<RemoteGroupingStress.DataItem>();
+            modelBuilder.Entity<Summary.DataItem>();
         }
 
         public static void Exec(Action<TestDbContext> action) {
@@ -24,6 +27,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
                     var options = new DbContextOptionsBuilder()
                         .UseSqlServer(helper.ConnectionString)
+                        .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
                         .Options;
 
                     INSTANCE = new TestDbContext(options);
