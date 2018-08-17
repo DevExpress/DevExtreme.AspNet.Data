@@ -287,19 +287,19 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var data = new[] {
                     new Group {
                         items = new[] {
-                            new Order { UnitPrice = 4.04M, Quantity = 5, Discount = 0.10M },
-                            new Order { UnitPrice = 10.10M, Quantity = 2, Discount = 0.20M }
+                            new CustomAggregatorDataItem { UnitPrice = 4.04M, Quantity = 5, Discount = 0.10M },
+                            new CustomAggregatorDataItem { UnitPrice = 10.10M, Quantity = 2, Discount = 0.20M }
                         }
                     },
                     new Group {
                         items = new[] {
-                            new Order { UnitPrice = 15.15M, Quantity = 4, Discount = 0.30M }
+                            new CustomAggregatorDataItem { UnitPrice = 15.15M, Quantity = 4, Discount = 0.30M }
                         }
                     },
-                    new Group { items = new Order[] { } }
+                    new Group { items = new CustomAggregatorDataItem[] { } }
                 };
 
-                var calculator = new AggregateCalculator<Order>(data, new DefaultAccessor<Order>(),
+                var calculator = new AggregateCalculator<CustomAggregatorDataItem>(data, new DefaultAccessor<CustomAggregatorDataItem>(),
                     new[] { new SummaryInfo { Selector = "this", SummaryType = "totalSales" } },
                     new[] { new SummaryInfo { Selector = "this", SummaryType = "totalSales" } }
                 );
@@ -313,9 +313,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
         }
 
-        class Order {
+        class CustomAggregatorDataItem {
             public decimal UnitPrice { get; set; }
-            public Int16 Quantity { get; set; }
+            public int Quantity { get; set; }
             public decimal Discount { get; set;}
         }
     }

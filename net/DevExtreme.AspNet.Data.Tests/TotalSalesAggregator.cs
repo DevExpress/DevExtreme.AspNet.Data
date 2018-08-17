@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    public class TotalSalesAggregator<T> : Aggregator<T> {
+    #region class
+    class TotalSalesAggregator<T> : Aggregator<T> {
         decimal _total = 0;
 
         public TotalSalesAggregator(IAccessor<T> accessor)
@@ -14,7 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         public override void Step(T container, string selector) {
-            var quantity = Convert.ToInt16(Accessor.Read(container, "Quantity"));
+            var quantity = Convert.ToInt32(Accessor.Read(container, "Quantity"));
             var unitPrice = Convert.ToDecimal(Accessor.Read(container, "UnitPrice"));
             var discount = Convert.ToDecimal(Accessor.Read(container, "Discount"));
             _total += quantity * unitPrice * (1 - discount);
@@ -24,4 +25,5 @@ namespace DevExtreme.AspNet.Data.Tests {
             return _total;
         }
     }
+    #endregion
 }
