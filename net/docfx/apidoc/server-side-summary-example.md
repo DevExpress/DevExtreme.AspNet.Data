@@ -2,7 +2,7 @@
 uid: DevExtreme.AspNet.Data.Aggregation.CustomAggregators
 remarks: *content
 ---
-When implementing a custom data aggregator, derive from the [`Aggregator<T>`](xref:DevExtreme.AspNet.Data.Aggregation.Aggregator`1) class as shown in the following example. The custom aggregator in it calculates total sales:
+When implementing a custom data aggregator, derive it from the [`Aggregator<T>`](xref:DevExtreme.AspNet.Data.Aggregation.Aggregator`1) class as shown in the following example. The custom aggregator in it calculates total sales:
 
 [!code-csharp[Main](../../DevExtreme.AspNet.Data.Tests/TotalSalesAggregator.cs#class)]
 
@@ -13,4 +13,4 @@ CustomAggregators.RegisterAggregator("totalSales", typeof(TotalSalesAggregator<>
 ```
 
 > [!Important]
-> Custom aggregators get ignored if the LINQ provider groups data and calculates summaries. Set [`RemoteGrouping`](xref:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping) to `false` for custom aggregators to apply.
+> Custom aggregators are ignored if the LINQ provider groups data and calculates summaries. Set [`RemoteGrouping`](xref:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping) to `false` for custom aggregators to apply.
