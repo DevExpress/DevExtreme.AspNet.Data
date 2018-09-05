@@ -87,6 +87,31 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static class CustomAggregators</code></pre>
   </div>
+  <h5 id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>When implementing a custom data aggregator, derive it from the <a class="xref" href="DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html"><code>Aggregator&lt;T&gt;</code></a> class as shown in the following example. The custom aggregator in it calculates total sales:</p>
+<pre><code class="lang-csharp" name="Main">class TotalSalesAggregator&lt;T&gt; : Aggregator&lt;T&gt; {
+    decimal _total = 0;
+
+    public TotalSalesAggregator(IAccessor&lt;T&gt; accessor)
+        : base(accessor) {
+    }
+
+    public override void Step(T container, string selector) {
+        var quantity = Convert.ToInt32(Accessor.Read(container, &quot;Quantity&quot;));
+        var unitPrice = Convert.ToDecimal(Accessor.Read(container, &quot;UnitPrice&quot;));
+        var discount = Convert.ToDecimal(Accessor.Read(container, &quot;Discount&quot;));
+        _total += quantity * unitPrice * (1 - discount);
+    }
+
+    public override object Finish() {
+        return _total;
+    }
+}
+</code></pre><p>Then, register the aggregator under a string identifier at the application&#39;s start (for instance, in Global.asax or Startup.cs):</p>
+<pre><code class="lang-csharp">CustomAggregators.RegisterAggregator(&quot;totalSales&quot;, typeof(TotalSalesAggregator&lt;&gt;));
+</code></pre><div class="IMPORTANT"><h5>Important</h5><p>Custom aggregators are ignored if the LINQ provider groups data and calculates summaries. Set <a class="xref" href="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping"><code>RemoteGrouping</code></a> to <code>false</code> for custom aggregators to apply.</p>
+</div>
+</div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
