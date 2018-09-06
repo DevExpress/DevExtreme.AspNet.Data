@@ -5,7 +5,7 @@
         {
           "src": "../DevExtreme.AspNet.Data",
           "files": [
-            "bin/Debug/net40/DevExtreme.AspNet.Data.dll"
+            "bin/Debug/net452/DevExtreme.AspNet.Data.dll"
           ]
         }
       ],
