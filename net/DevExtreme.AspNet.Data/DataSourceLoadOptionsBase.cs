@@ -67,12 +67,21 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public string[] Select { get; set; }
 
+        /// <summary>
+        /// An array of data fields that limits the <see cref="Select" /> expression.
+        /// The applied select expression is the intersection of <see cref="PreSelect" /> and <see cref="Select" />.
+        /// </summary>
         public string[] PreSelect { get; set; }
 
+        /// <summary>
+        /// A flag that indicates whether the LINQ provider should execute the select expression.
+        /// If set to false, the select operation is performed in memory.
+        /// </summary>
         public bool? RemoteSelect { get; set; }
 
         /// <summary>
-        /// A flag that indicates whether grouping parameters must be translated into LINQ.
+        /// A flag that indicates whether the LINQ provider should execute grouping.
+        /// If set to false, the entire dataset is loaded and grouped in memory.
         /// </summary>
         public bool? RemoteGrouping { get; set; }
 
