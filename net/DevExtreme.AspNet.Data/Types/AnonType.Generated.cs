@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 1; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 throw new IndexOutOfRangeException();
@@ -36,7 +36,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 2; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;
@@ -67,7 +67,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 4; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;
@@ -116,7 +116,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 8; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;
@@ -201,7 +201,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 16; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;
@@ -358,7 +358,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 32; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
                 if(index == 0) return I0;
                 if(index == 1) return I1;

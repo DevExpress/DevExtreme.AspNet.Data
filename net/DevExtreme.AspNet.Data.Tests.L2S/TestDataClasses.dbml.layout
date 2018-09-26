@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="TestDataClasses">
+  <DataContextMoniker Name="/TestDataContext" />
+  <nestedChildShapes>
+    <classShape Id="1332ebe5-4f49-4902-b0bd-cc3473f4ad2e" absoluteBounds="0.5, 0.5, 2.375, 1.7708968098958331">
+      <DataClassMoniker Name="/TestDataContext/RemoteGroupingStress_DataItem" />
+      <nestedChildShapes>
+        <elementListCompartment Id="89a38af0-4682-4c9a-9d46-c80b4ed776f5" absoluteBounds="0.515, 0.96, 2.3449999999999998, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

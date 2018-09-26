@@ -29,7 +29,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return <#= size #>; }
         }
 
-        public override object this[int index] {
+        internal override object this[int index] {
             get {
 <# for(var i = 0; i < size; i++)  { #>
                 if(index == <#= i #>) return I<#= i #>;
