@@ -8,4 +8,12 @@
       <Column Name="NullDate" Type="System.DateTime" DbType="datetime2" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="" Member="Summary_DataItems">
+    <Type Name="Summary_DataItem">
+      <Column Name="ID" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Group1" Type="System.String" CanBeNull="true" />
+      <Column Name="Group2" Type="System.String" CanBeNull="true" />
+      <Column Name="Value" Type="System.Int32" CanBeNull="true" />
+    </Type>
+  </Table>
 </Database>

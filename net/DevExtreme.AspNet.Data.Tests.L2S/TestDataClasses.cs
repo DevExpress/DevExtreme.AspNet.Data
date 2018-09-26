@@ -24,6 +24,15 @@ namespace DevExtreme.AspNet.Data.Tests.L2S {
                             {nameof(RemoteGroupingStress_DataItem.NullDate)} datetime2
                         )"
                     );
+
+                    INSTANCE.ExecuteCommand(
+                        $@"create table {nameof(Summary_DataItem)} (
+                            {nameof(Summary_DataItem.ID)} int identity primary key,
+                            {nameof(Summary_DataItem.Group1)} nvarchar,
+                            {nameof(Summary_DataItem.Group2)} nvarchar,
+                            {nameof(Summary_DataItem.Value)} int
+                        )"
+                    );
                 }
 
                 action(INSTANCE);
@@ -33,6 +42,9 @@ namespace DevExtreme.AspNet.Data.Tests.L2S {
     }
 
     partial class RemoteGroupingStress_DataItem : RemoteGroupingStressHelper.IEntity {
+    }
+
+    partial class Summary_DataItem : SummaryTestHelper.IEntity {
     }
 
 }

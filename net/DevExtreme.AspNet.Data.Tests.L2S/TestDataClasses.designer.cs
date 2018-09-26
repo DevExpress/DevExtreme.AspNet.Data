@@ -32,6 +32,9 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
     partial void InsertRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
     partial void UpdateRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
     partial void DeleteRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
+    partial void InsertSummary_DataItem(Summary_DataItem instance);
+    partial void UpdateSummary_DataItem(Summary_DataItem instance);
+    partial void DeleteSummary_DataItem(Summary_DataItem instance);
     #endregion
 		
 		public TestDataContext(string connection) : 
@@ -63,6 +66,14 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 			get
 			{
 				return this.GetTable<RemoteGroupingStress_DataItem>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Summary_DataItem> Summary_DataItems
+		{
+			get
+			{
+				return this.GetTable<Summary_DataItem>();
 			}
 		}
 	}
@@ -200,6 +211,140 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 					this._NullDate = value;
 					this.SendPropertyChanged("NullDate");
 					this.OnNullDateChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class Summary_DataItem : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _Group1;
+		
+		private string _Group2;
+		
+		private System.Nullable<int> _Value;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnGroup1Changing(string value);
+    partial void OnGroup1Changed();
+    partial void OnGroup2Changing(string value);
+    partial void OnGroup2Changed();
+    partial void OnValueChanging(System.Nullable<int> value);
+    partial void OnValueChanged();
+    #endregion
+		
+		public Summary_DataItem()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Group1")]
+		public string Group1
+		{
+			get
+			{
+				return this._Group1;
+			}
+			set
+			{
+				if ((this._Group1 != value))
+				{
+					this.OnGroup1Changing(value);
+					this.SendPropertyChanging();
+					this._Group1 = value;
+					this.SendPropertyChanged("Group1");
+					this.OnGroup1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Group2")]
+		public string Group2
+		{
+			get
+			{
+				return this._Group2;
+			}
+			set
+			{
+				if ((this._Group2 != value))
+				{
+					this.OnGroup2Changing(value);
+					this.SendPropertyChanging();
+					this._Group2 = value;
+					this.SendPropertyChanged("Group2");
+					this.OnGroup2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value")]
+		public System.Nullable<int> Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this.OnValueChanging(value);
+					this.SendPropertyChanging();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
 				}
 			}
 		}
