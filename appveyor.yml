@@ -51,6 +51,7 @@ test_script:
     -targetargs:"
     net\DevExtreme.AspNet.Data.Tests.NET4\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
     net\DevExtreme.AspNet.Data.Tests.EF6\bin\Debug\DevExtreme.AspNet.Data.Tests.EF6.dll
+    net\DevExtreme.AspNet.Data.Tests.L2S\bin\Debug\DevExtreme.AspNet.Data.Tests.L2S.dll
     -noshadow"
     -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
     -output:coverage_netfx.xml

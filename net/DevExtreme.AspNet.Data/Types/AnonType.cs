@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Types {
             get { return 0; }
         }
 
-        public virtual object this[int index] {
+        internal virtual object this[int index] {
             get { throw new IndexOutOfRangeException(); }
         }
 
