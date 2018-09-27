@@ -86,7 +86,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = new RemoteGroupExpressionCompiler<DataItem>(null, null, null).Compile(CreateTargetParam<DataItem>());
             Assert.Equal(
                 "data"
-                    + ".GroupBy(obj => new AnonType())"
+                    + ".GroupBy(obj => 1)"
                     + ".Select(g => new AnonType`1(I0 = g.Count()))",
                 expr.ToString()
             );
