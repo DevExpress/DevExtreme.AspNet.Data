@@ -33,12 +33,22 @@ namespace DevExtreme.AspNet.Data.Tests.L2S {
                             {nameof(Summary_DataItem.Value)} int
                         )"
                     );
+
+                    INSTANCE.ExecuteCommand(
+                        $@"create table {nameof(GenericTestDataItem)} (
+                            {nameof(GenericTestDataItem.ID)} int identity primary key,
+                            {nameof(GenericTestDataItem.Num)} int
+                        )"
+                    );
                 }
 
                 action(INSTANCE);
             }
         }
 
+        public void PurgeGenericTestTable() {
+            ExecuteCommand("delete from " + nameof(GenericTestDataItem));
+        }
     }
 
     partial class RemoteGroupingStress_DataItem : RemoteGroupingStressHelper.IEntity {
