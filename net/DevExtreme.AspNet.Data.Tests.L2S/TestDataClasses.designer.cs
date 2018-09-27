@@ -35,6 +35,9 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
     partial void InsertSummary_DataItem(Summary_DataItem instance);
     partial void UpdateSummary_DataItem(Summary_DataItem instance);
     partial void DeleteSummary_DataItem(Summary_DataItem instance);
+    partial void InsertGenericTestDataItem(GenericTestDataItem instance);
+    partial void UpdateGenericTestDataItem(GenericTestDataItem instance);
+    partial void DeleteGenericTestDataItem(GenericTestDataItem instance);
     #endregion
 		
 		public TestDataContext(string connection) : 
@@ -74,6 +77,14 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 			get
 			{
 				return this.GetTable<Summary_DataItem>();
+			}
+		}
+		
+		public System.Data.Linq.Table<GenericTestDataItem> GenericTestDataItems
+		{
+			get
+			{
+				return this.GetTable<GenericTestDataItem>();
 			}
 		}
 	}
@@ -345,6 +356,92 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 					this._Value = value;
 					this.SendPropertyChanged("Value");
 					this.OnValueChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class GenericTestDataItem : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _Num;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnNumChanging(int value);
+    partial void OnNumChanged();
+    #endregion
+		
+		public GenericTestDataItem()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Num")]
+		public int Num
+		{
+			get
+			{
+				return this._Num;
+			}
+			set
+			{
+				if ((this._Num != value))
+				{
+					this.OnNumChanging(value);
+					this.SendPropertyChanging();
+					this._Num = value;
+					this.SendPropertyChanged("Num");
+					this.OnNumChanged();
 				}
 			}
 		}

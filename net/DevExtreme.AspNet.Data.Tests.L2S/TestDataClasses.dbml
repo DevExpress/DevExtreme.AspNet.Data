@@ -16,4 +16,10 @@
       <Column Name="Value" Type="System.Int32" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="" Member="GenericTestDataItems">
+    <Type Name="GenericTestDataItem">
+      <Column Member="ID" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Member="Num" Type="System.Int32" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>
