@@ -146,8 +146,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("Take", loadOptions.ExpressionLog[0]);
 
             // 2 - load summaries
-            Assert.Contains(".GroupBy(", loadOptions.ExpressionLog[1]);
-            Assert.Contains(".Sum(", loadOptions.ExpressionLog[1]);
+            Assert.Contains("AnonType()", loadOptions.ExpressionLog[1]);
 
             Assert.Equal(4M, result.summary[0]);
             Assert.Single(result.data.Cast<object>());

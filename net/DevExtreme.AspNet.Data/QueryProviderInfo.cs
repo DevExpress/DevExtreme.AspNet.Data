@@ -8,6 +8,7 @@ namespace DevExtreme.AspNet.Data {
         public readonly bool IsEFClassic;
         public readonly bool IsEFCore;
         public readonly bool IsXPO;
+        public readonly bool IsL2S;
         public readonly Version Version;
 
         public QueryProviderInfo(IQueryProvider provider) {
@@ -23,6 +24,8 @@ namespace DevExtreme.AspNet.Data {
                     IsEFCore = true;
                 else if(typeName.StartsWith("DevExpress.Xpo.XPQuery"))
                     IsXPO = true;
+                else if(typeName.StartsWith("System.Data.Linq."))
+                    IsL2S = true;
 
                 Version = new Version(typeInfo[2].Substring(8));
             }

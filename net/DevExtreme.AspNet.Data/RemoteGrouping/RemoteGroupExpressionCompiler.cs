@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
+        AnonTypeNewTweaks _anonTypeNewTweaks;
         IEnumerable<GroupingInfo> _grouping;
         IEnumerable<SummaryInfo>
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(bool guardNulls, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+        public RemoteGroupExpressionCompiler(bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
             : base(guardNulls) {
+            _anonTypeNewTweaks = anonTypeNewTweaks;
             _grouping = grouping;
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
@@ -24,7 +26,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
 #if DEBUG
         public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : this(false, grouping, totalSummary, groupSummary) {
+            : this(false, null, grouping, totalSummary, groupSummary) {
         }
 #endif
 
@@ -44,14 +46,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 }
             }
 
-            Expression CreateGroupKeyLambdaBody() {
-                if(groupKeyExprList.Count < 1)
-                    return Expression.Constant(1);
-
-                return AnonType.CreateNewExpression(groupKeyExprList);
-            }
-
-            var groupKeyLambda = Expression.Lambda(CreateGroupKeyLambdaBody(), groupByParam);
+            var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList, _anonTypeNewTweaks), groupByParam);
             var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, typeof(T));
 
             target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
@@ -90,7 +85,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
-            var projectionLambda = Expression.Lambda(AnonType.CreateNewExpression(projectionExprList), param);
+            var projectionLambda = Expression.Lambda(AnonType.CreateNewExpression(projectionExprList, _anonTypeNewTweaks), param);
 
             return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionLambda.ReturnType }, target, Expression.Quote(projectionLambda));
         }

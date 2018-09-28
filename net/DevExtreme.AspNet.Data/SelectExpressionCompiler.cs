@@ -9,15 +9,22 @@ using System.Text;
 namespace DevExtreme.AspNet.Data {
 
     class SelectExpressionCompiler<T> : ExpressionCompiler {
+        AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public SelectExpressionCompiler(bool guardNulls)
+        public SelectExpressionCompiler(bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks = null)
             : base(guardNulls) {
+            _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
         public Expression Compile(Expression target, IEnumerable<string> clientExprList) {
             var itemExpr = CreateItemParam(typeof(T));
+
+            var memberExprList = clientExprList
+                .Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))
+                .ToArray();
+
             var lambda = Expression.Lambda(
-                AnonType.CreateNewExpression(clientExprList.Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))),
+                AnonType.CreateNewExpression(memberExprList, _anonTypeNewTweaks),
                 itemExpr
             );
 
