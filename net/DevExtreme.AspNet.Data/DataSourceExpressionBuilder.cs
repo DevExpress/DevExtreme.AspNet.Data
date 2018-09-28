@@ -13,10 +13,12 @@ namespace DevExtreme.AspNet.Data {
     class DataSourceExpressionBuilder<T> {
         DataSourceLoadOptionsBase _loadOptions;
         bool _guardNulls;
+        AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls) {
+        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
             _loadOptions = loadOptions;
             _guardNulls = guardNulls;
+            _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
         public Expression BuildLoadExpr(Expression source, bool paginate = true) {
@@ -47,7 +49,7 @@ namespace DevExtreme.AspNet.Data {
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks, _loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {

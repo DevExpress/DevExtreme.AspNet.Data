@@ -8,13 +8,9 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class DataSourceExpressionBuilderTests {
 
-        static DataSourceExpressionBuilder<T> CreateBuilder<T>(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false) {
-            return new DataSourceExpressionBuilder<T>(loadOptions, guardNulls);
-        }
-
         [Fact]
         public void Build_SkipTake() {
-            var builder = CreateBuilder<int>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222
             });
@@ -26,7 +22,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Filter() {
-            var builder = CreateBuilder<int>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Filter = new object[] { "this", ">", 123 }
             });
 
@@ -39,7 +35,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Build_FilterAsEmptyList() {
             // To mitigate cases like https://devexpress.com/issue=T483154
 
-            var builder = CreateBuilder<int>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Filter = new object[0]
             });
 
@@ -48,7 +44,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_CountQuery() {
-            var builder = CreateBuilder<int>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222,
                 Filter = new object[] { "this", 123 },
@@ -69,7 +65,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Build_Sorting() {
-            var builder = CreateBuilder<Tuple<int, string>>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<Tuple<int, string>>(new SampleLoadOptions {
                 Sort = new[] {
                     new SortingInfo {
                         Selector="Item1"
@@ -98,7 +94,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var builder = CreateBuilder<Tuple<int, int, int>>(loadOptions);
+            var builder = new DataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
@@ -111,7 +107,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void MultiIntervalGroupsSortedOnce() {
-            var builder = CreateBuilder<int>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Group = new[] {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }
@@ -123,7 +119,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GuardNulls() {
-            var builder = CreateBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
+            var builder = new DataSourceExpressionBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
                 Filter = new[] {
                     new[] { "Item1", ">", "0" },
                     new[] { "Item2", "contains", "z" },

@@ -106,7 +106,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls,
+                    guardNulls, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "123" }
                     },
@@ -130,7 +130,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls,
+                    guardNulls, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "year" },
                         new GroupingInfo { Selector = selector, GroupInterval = "quarter" },
