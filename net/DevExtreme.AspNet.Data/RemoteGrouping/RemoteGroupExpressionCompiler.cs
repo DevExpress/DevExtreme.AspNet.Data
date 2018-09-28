@@ -44,14 +44,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 }
             }
 
-            Expression CreateGroupKeyLambdaBody() {
-                if(groupKeyExprList.Count < 1)
-                    return Expression.Constant(1);
-
-                return AnonType.CreateNewExpression(groupKeyExprList);
-            }
-
-            var groupKeyLambda = Expression.Lambda(CreateGroupKeyLambdaBody(), groupByParam);
+            var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList), groupByParam);
             var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, typeof(T));
 
             target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
