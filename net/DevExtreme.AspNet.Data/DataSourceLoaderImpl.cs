@@ -24,12 +24,18 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
             var isLinqToObjects = source is EnumerableQuery;
+            var isL2S = Compat.IsL2S(source.Provider);
 
             // Until https://github.com/aspnet/EntityFramework/issues/2341 is implemented
             // local grouping is more efficient for EF Core
             var preferLocalGrouping = Compat.IsEFCore(source.Provider);
 
-            Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects);
+            var tweaks = new AnonTypeNewTweaks {
+                AllowEmpty = !isL2S,
+                AllowUnusedMembers = !isL2S
+            };
+
+            Builder = new DataSourceExpressionBuilder<S>(options, isLinqToObjects, tweaks);
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
             CanUseRemoteGrouping = options.RemoteGrouping ?? !(isLinqToObjects || preferLocalGrouping);
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);

@@ -86,7 +86,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = new RemoteGroupExpressionCompiler<DataItem>(null, null, null).Compile(CreateTargetParam<DataItem>());
             Assert.Equal(
                 "data"
-                    + ".GroupBy(obj => 1)"
+                    + ".GroupBy(obj => new AnonType())"
                     + ".Select(g => new AnonType`1(I0 = g.Count()))",
                 expr.ToString()
             );
@@ -106,7 +106,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls,
+                    guardNulls, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "123" }
                     },
@@ -130,7 +130,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls,
+                    guardNulls, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "year" },
                         new GroupingInfo { Selector = selector, GroupInterval = "quarter" },

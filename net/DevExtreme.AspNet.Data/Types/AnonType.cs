@@ -60,7 +60,24 @@ namespace DevExtreme.AspNet.Data.Types {
             return GetTemplate(size).MakeGenericType(typeArguments.ToArray());
         }
 
-        public static NewExpression CreateNewExpression(IEnumerable<Expression> expressions) {
+        public static Expression CreateNewExpression(ICollection<Expression> expressions, AnonTypeNewTweaks tweaks) {
+            if(tweaks != null) {
+                if(!tweaks.AllowEmpty && expressions.Count < 1)
+                    return Expression.Constant(1);
+
+                if(!tweaks.AllowUnusedMembers) {
+                    var unusedCount = SnapSize(expressions.Count) - expressions.Count;
+
+                    if(unusedCount > 0)
+                        expressions = new List<Expression>(expressions);
+
+                    while(unusedCount > 0) {
+                        expressions.Add(Expression.Constant(false));
+                        unusedCount--;
+                    }
+                }
+            }
+
             var typeArguments = expressions.Select(i => i.Type).ToArray();
             var type = Get(typeArguments);
 

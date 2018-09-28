@@ -27,6 +27,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
         internal static bool IsXPO(IQueryProvider provider) {
             return provider.GetType().FullName.StartsWith("DevExpress.Xpo.XPQuery");
         }
+
+        internal static bool IsL2S(IQueryProvider provider) {
+            return provider.GetType().FullName.StartsWith("System.Data.Linq.");
+        }
     }
 
 }
