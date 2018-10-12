@@ -16,8 +16,11 @@ namespace DevExtreme.AspNet.Data {
             STARTS_WITH = "startswith",
             ENDS_WITH = "endswith";
 
-        public FilterExpressionCompiler(bool guardNulls)
+        bool _stringToLower;
+
+        public FilterExpressionCompiler(bool guardNulls, bool stringToLower = false)
             : base(guardNulls) {
+            _stringToLower = stringToLower;
         }
 
         public LambdaExpression Compile(IList criteriaJson) {
@@ -47,6 +50,9 @@ namespace DevExtreme.AspNet.Data {
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
                 if(isStringOperation)
                     ForceToString(progression);
+
+                if(_stringToLower)
+                    AddToLower(progression);
             });
 
             if(isStringOperation) {
@@ -79,6 +85,9 @@ namespace DevExtreme.AspNet.Data {
                     }
                 }
 
+                if(_stringToLower && clientValue is String)
+                    clientValue = ((string)clientValue).ToLower();
+
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
@@ -103,6 +112,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
+            if(_stringToLower && value != null)
+                value = value.ToLower();
+
             var invert = false;
 
             if(clientOperation == NOT_CONTAINS) {
@@ -200,6 +212,18 @@ namespace DevExtreme.AspNet.Data {
                 return nameof(String.EndsWith);
 
             return nameof(String.Contains);
+        }
+
+        static void AddToLower(List<Expression> progression) {
+            var last = progression.Last();
+
+            if(last.Type != typeof(String))
+                return;
+
+            var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
+            var toLowerCall = Expression.Call(last, toLowerMethod);
+
+            progression.Add(toLowerCall);
         }
     }
 

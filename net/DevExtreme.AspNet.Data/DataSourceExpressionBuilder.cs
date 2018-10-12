@@ -13,11 +13,13 @@ namespace DevExtreme.AspNet.Data {
     class DataSourceExpressionBuilder<T> {
         DataSourceLoadOptionsBase _loadOptions;
         bool _guardNulls;
+        bool _stringToLower;
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
+        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false, bool stringToLower = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
             _loadOptions = loadOptions;
             _guardNulls = guardNulls;
+            _stringToLower = stringToLower;
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
@@ -38,7 +40,7 @@ namespace DevExtreme.AspNet.Data {
             var genericTypeArguments = new[] { typeof(T) };
 
             if(_loadOptions.HasFilter)
-                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls).Compile(_loadOptions.Filter)));
+                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _stringToLower).Compile(_loadOptions.Filter)));
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {

@@ -95,6 +95,9 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public string DefaultSort { get; set; }
 
+#warning TODO docs
+        public bool? StringToLower { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;
