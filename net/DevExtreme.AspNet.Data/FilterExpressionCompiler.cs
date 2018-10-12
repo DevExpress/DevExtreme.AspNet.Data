@@ -223,6 +223,9 @@ namespace DevExtreme.AspNet.Data {
             var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
             var toLowerCall = Expression.Call(last, toLowerMethod);
 
+            if(last is MethodCallExpression lastCall && lastCall.Method.Name == nameof(ToString))
+                progression.RemoveAt(progression.Count - 1);
+
             progression.Add(toLowerCall);
         }
     }

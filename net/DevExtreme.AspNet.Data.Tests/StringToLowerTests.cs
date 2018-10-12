@@ -18,7 +18,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [InlineData("contains", "obj.ToLower().Contains('t')")]
         [InlineData("notcontains", "Not(obj.ToLower().Contains('t'))")]
         public void True(string op, string expectedExpr) {
-            AssertFilter(false, true, op, expectedExpr);
+            AssertFilter<string>(false, true, op, expectedExpr);
         }
 
         [Fact]
@@ -31,12 +31,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, loadResult.totalCount);
         }
 
-        void AssertFilter(bool guardNulls, bool stringToLower, string op, string expectedExpr) {
+        [Fact]
+        public void ForceToString_ToLower_GuardNulls() {
+            AssertFilter<int?>(true, true, "contains", "(IIF((obj == null), null, obj.ToString().ToLower()) ?? '').Contains('t')");
+        }
+
+        void AssertFilter<T>(bool guardNulls, bool stringToLower, string op, string expectedExpr) {
             expectedExpr = expectedExpr.Replace("'", "\"");
 
             Assert.Equal(
                 expectedExpr,
-                new FilterExpressionCompiler<string>(guardNulls, stringToLower)
+                new FilterExpressionCompiler<T>(guardNulls, stringToLower)
                     .Compile(new[] { "this", op, "T" })
                     .Body.ToString()
             );
