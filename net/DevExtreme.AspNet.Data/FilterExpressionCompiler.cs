@@ -48,7 +48,7 @@ namespace DevExtreme.AspNet.Data {
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
-                if(isStringOperation)
+                if(isStringOperation || clientAccessor is String && progression.Last().Type == typeof(Object))
                     ForceToString(progression);
 
                 if(_stringToLower)

@@ -36,6 +36,32 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertFilter<int?>(true, true, "contains", "(IIF((obj == null), null, obj.ToString().ToLower()) ?? '').Contains('t')");
         }
 
+        [Fact]
+        public void Dynamic() {
+            var compiler = new FilterExpressionCompiler<dynamic>(true, true);
+            var expr = compiler.Compile(new object[] {
+                new[] { "this", "startswith", "1" },
+                "or",
+                new[] { "this", "b" },
+                "or",
+                new[] { "this", ">=", "c" }
+            });
+
+            var expectedExpr = "(((IIF((obj == null), null, obj.ToString().ToLower()) ?? '').StartsWith('1')"
+                    + " OrElse (IIF((obj == null), null, obj.ToString().ToLower()) == 'b'))"
+                    + " OrElse (Compare(IIF((obj == null), null, obj.ToString().ToLower()), 'c') >= 0))";
+
+            Assert.Equal(
+                expectedExpr.Replace("'", "\""),
+                expr.Body.ToString()
+            );
+
+            var method = expr.Compile();
+            Assert.True((bool)method.DynamicInvoke(1));
+            Assert.True((bool)method.DynamicInvoke("b"));
+            Assert.True((bool)method.DynamicInvoke('c'));
+        }
+
         void AssertFilter<T>(bool guardNulls, bool stringToLower, string op, string expectedExpr) {
             expectedExpr = expectedExpr.Replace("'", "\"");
 
