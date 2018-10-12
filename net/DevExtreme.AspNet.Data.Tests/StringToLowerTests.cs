@@ -21,6 +21,21 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertFilter<string>(false, true, op, expectedExpr);
         }
 
+        [Theory]
+        [InlineData("=", "(obj == 'T')")]
+        [InlineData("<>", "(obj != 'T')")]
+        [InlineData(">", "(Compare(obj, 'T') > 0)")]
+        [InlineData("<", "(Compare(obj, 'T') < 0)")]
+        [InlineData(">=", "(Compare(obj, 'T') >= 0)")]
+        [InlineData("<=", "(Compare(obj, 'T') <= 0)")]
+        [InlineData("startswith", "obj.StartsWith('T')")]
+        [InlineData("endswith", "obj.EndsWith('T')")]
+        [InlineData("contains", "obj.Contains('T')")]
+        [InlineData("notcontains", "Not(obj.Contains('T'))")]
+        public void False(string op, string expectedExpr) {
+            AssertFilter<string>(false, false, op, expectedExpr);
+        }
+
         [Fact]
         public void ImplicitTrueForL2O() {
             var loadResult = DataSourceLoader.Load(new[] { "T" }, new SampleLoadOptions {
