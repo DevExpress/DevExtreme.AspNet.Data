@@ -103,9 +103,6 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
-            if(value != null)
-                value = value.ToLower();
-
             var invert = false;
 
             if(clientOperation == NOT_CONTAINS) {
@@ -116,14 +113,9 @@ namespace DevExtreme.AspNet.Data {
             if(GuardNulls)
                 accessorExpr = Expression.Coalesce(accessorExpr, Expression.Constant(""));
 
-            var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
             var operationMethod = typeof(String).GetMethod(GetStringOperationMethodName(clientOperation), new[] { typeof(String) });
 
-            Expression result = Expression.Call(
-                Expression.Call(accessorExpr, toLowerMethod),
-                operationMethod,
-                Expression.Constant(value)
-            );
+            Expression result = Expression.Call(accessorExpr, operationMethod, Expression.Constant(value));
 
             if(invert)
                 result = Expression.Not(result);

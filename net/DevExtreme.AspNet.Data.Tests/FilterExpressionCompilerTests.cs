@@ -51,42 +51,42 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void StringContains() {
             var expr = Compile<DataItem1>(new[] { "StringProp", "contains", "Abc" });
-            Assert.Equal("obj.StringProp.ToLower().Contains(\"abc\")", expr.Body.ToString());
+            Assert.Equal("obj.StringProp.Contains(\"Abc\")", expr.Body.ToString());
         }
 
         [Fact]
         public void StringNotContains() {
             var expr = Compile<DataItem1>(new[] { "StringProp", "notContains", "Abc" });
-            Assert.Equal("Not(obj.StringProp.ToLower().Contains(\"abc\"))", expr.Body.ToString());
+            Assert.Equal("Not(obj.StringProp.Contains(\"Abc\"))", expr.Body.ToString());
         }
 
         [Fact]
         public void StartsWith() {
             var expr = Compile<DataItem1>(new[] { "StringProp", "startsWith", "Prefix" });
-            Assert.Equal("obj.StringProp.ToLower().StartsWith(\"prefix\")", expr.Body.ToString());
+            Assert.Equal("obj.StringProp.StartsWith(\"Prefix\")", expr.Body.ToString());
         }
 
         [Fact]
         public void EndsWith() {
             var expr = Compile<DataItem1>(new[] { "StringProp", "endsWith", "Postfix" });
-            Assert.Equal("obj.StringProp.ToLower().EndsWith(\"postfix\")", expr.Body.ToString());
+            Assert.Equal("obj.StringProp.EndsWith(\"Postfix\")", expr.Body.ToString());
         }
 
         [Fact]
         public void StringFunctionOnNonStringData() {
             var expr = Compile<DataItem1>(new[] { "IntProp", "contains", "Abc" });
-            Assert.Equal("obj.IntProp.ToString().ToLower().Contains(\"abc\")", expr.Body.ToString());
+            Assert.Equal("obj.IntProp.ToString().Contains(\"Abc\")", expr.Body.ToString());
         }
 
         [Fact]
         public void StringFunctionGuardNulls() {
             Assert.Equal(
-                @"(IIF((obj == null), null, obj.StringProp) ?? """").ToLower().StartsWith(""abc"")",
+                @"(IIF((obj == null), null, obj.StringProp) ?? """").StartsWith(""abc"")",
                 Compile<DataItem1>(new[] { "StringProp", "startswith", "abc" }, true).Body.ToString()
             );
 
             Assert.Equal(
-                @"(IIF((obj == null), null, obj.IntProp.ToString()) ?? """").ToLower().StartsWith(""abc"")",
+                @"(IIF((obj == null), null, obj.IntProp.ToString()) ?? """").StartsWith(""abc"")",
                 Compile<DataItem1>(new[] { "IntProp", "startswith", "abc" }, true).Body.ToString()
             );
         }
