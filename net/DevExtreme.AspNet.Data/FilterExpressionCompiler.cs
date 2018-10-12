@@ -91,9 +91,6 @@ namespace DevExtreme.AspNet.Data {
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
-                    if(clientValue == null)
-                        valueExpr = Expression.Constant(null, typeof(String));
-
                     var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
