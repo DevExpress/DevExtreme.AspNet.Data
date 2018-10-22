@@ -95,6 +95,12 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public string DefaultSort { get; set; }
 
+        /// <summary>
+        /// A flag that indicates whether filter expressions should include a ToLower() call that makes string comparison case-insensitive.
+        /// Defaults to true for LINQ to Objects, false for any other provider.
+        /// </summary>
+        public bool? StringToLower { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;

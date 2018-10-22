@@ -25,10 +25,15 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
             QueryProviderInfo = new QueryProviderInfo(source.Provider);
-            Builder = new DataSourceExpressionBuilder<S>(options, QueryProviderInfo.IsLinqToObjects, new AnonTypeNewTweaks {
-                AllowEmpty = !QueryProviderInfo.IsL2S,
-                AllowUnusedMembers = !QueryProviderInfo.IsL2S
-            });
+            Builder = new DataSourceExpressionBuilder<S>(
+                options,
+                QueryProviderInfo.IsLinqToObjects,
+                options.StringToLower.GetValueOrDefault(QueryProviderInfo.IsLinqToObjects),
+                new AnonTypeNewTweaks {
+                    AllowEmpty = !QueryProviderInfo.IsL2S,
+                    AllowUnusedMembers = !QueryProviderInfo.IsL2S
+                }
+            );
             ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
             CanUseRemoteGrouping = options.RemoteGrouping ?? ShouldUseRemoteGrouping(QueryProviderInfo, options);
             SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);

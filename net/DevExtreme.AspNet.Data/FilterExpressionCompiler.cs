@@ -16,8 +16,11 @@ namespace DevExtreme.AspNet.Data {
             STARTS_WITH = "startswith",
             ENDS_WITH = "endswith";
 
-        public FilterExpressionCompiler(bool guardNulls)
+        bool _stringToLower;
+
+        public FilterExpressionCompiler(bool guardNulls, bool stringToLower = false)
             : base(guardNulls) {
+            _stringToLower = stringToLower;
         }
 
         public LambdaExpression Compile(IList criteriaJson) {
@@ -45,8 +48,11 @@ namespace DevExtreme.AspNet.Data {
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
-                if(isStringOperation)
+                if(isStringOperation || clientAccessor is String && progression.Last().Type == typeof(Object))
                     ForceToString(progression);
+
+                if(_stringToLower)
+                    AddToLower(progression);
             });
 
             if(isStringOperation) {
@@ -79,12 +85,12 @@ namespace DevExtreme.AspNet.Data {
                     }
                 }
 
+                if(_stringToLower && clientValue is String)
+                    clientValue = ((string)clientValue).ToLower();
+
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
-                    if(clientValue == null)
-                        valueExpr = Expression.Constant(null, typeof(String));
-
                     var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
                     accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
                     valueExpr = Expression.Constant(0);
@@ -103,7 +109,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
-            if(value != null)
+            if(_stringToLower && value != null)
                 value = value.ToLower();
 
             var invert = false;
@@ -116,14 +122,9 @@ namespace DevExtreme.AspNet.Data {
             if(GuardNulls)
                 accessorExpr = Expression.Coalesce(accessorExpr, Expression.Constant(""));
 
-            var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
             var operationMethod = typeof(String).GetMethod(GetStringOperationMethodName(clientOperation), new[] { typeof(String) });
 
-            Expression result = Expression.Call(
-                Expression.Call(accessorExpr, toLowerMethod),
-                operationMethod,
-                Expression.Constant(value)
-            );
+            Expression result = Expression.Call(accessorExpr, operationMethod, Expression.Constant(value));
 
             if(invert)
                 result = Expression.Not(result);
@@ -208,6 +209,21 @@ namespace DevExtreme.AspNet.Data {
                 return nameof(String.EndsWith);
 
             return nameof(String.Contains);
+        }
+
+        static void AddToLower(List<Expression> progression) {
+            var last = progression.Last();
+
+            if(last.Type != typeof(String))
+                return;
+
+            var toLowerMethod = typeof(String).GetMethod(nameof(String.ToLower), Type.EmptyTypes);
+            var toLowerCall = Expression.Call(last, toLowerMethod);
+
+            if(last is MethodCallExpression lastCall && lastCall.Method.Name == nameof(ToString))
+                progression.RemoveAt(progression.Count - 1);
+
+            progression.Add(toLowerCall);
         }
     }
 
