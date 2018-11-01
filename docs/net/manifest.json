@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html",
-          "hash": "XR3NWME83CzuUj8uD7eFfg=="
+          "hash": "LQUaBoa3GhFGGOzzSYIM5Q=="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html",
-          "hash": "NfCa90haqwjl1U25ExATPQ=="
+          "hash": "C7np7sljxlcIMXRYriozEg=="
         }
       },
       "is_incremental": false,
@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.GroupingInfo.html",
-          "hash": "R+QQR0ksBwSp66id/VyPBA=="
+          "hash": "LMX5DZ7blkyWMtWEZO1t6Q=="
         }
       },
       "is_incremental": false,
@@ -117,7 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.Group.html",
-          "hash": "Hxj0jIGMNCzpRArmSjoTfQ=="
+          "hash": "hCGFiJOogpycm6TISaZn+w=="
         }
       },
       "is_incremental": false,
@@ -129,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html",
-          "hash": "+iXrPT1NZNaTQKgT4wT3LA=="
+          "hash": "+zmpDTtd6jZO/yMsKsPOSA=="
         }
       },
       "is_incremental": false,
@@ -153,7 +153,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.SortingInfo.html",
-          "hash": "WyWSqyAddzGoKjeHK55+ow=="
+          "hash": "BZ2RkwPWjnoDKmOdclaEHw=="
         }
       },
       "is_incremental": false,
@@ -165,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.SummaryInfo.html",
-          "hash": "pGWjl4pBG0KTeN8oolU70w=="
+          "hash": "v5VFeET4iELY1rCeR16F4w=="
         }
       },
       "is_incremental": false,
@@ -177,7 +177,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.html",
-          "hash": "vYrMT7udfH9Xot2Ko8UyXg=="
+          "hash": "k78MnS3hZy3jUSdSRHgQRw=="
         }
       },
       "is_incremental": false,
@@ -238,18 +238,18 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
-        "ResourceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

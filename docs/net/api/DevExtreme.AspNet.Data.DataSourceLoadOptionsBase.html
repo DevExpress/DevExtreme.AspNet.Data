@@ -73,7 +73,7 @@
   
   <h1 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase" class="text-break">Class DataSourceLoadOptionsBase
   </h1>
-  <div class="markdown level0 summary"><p>An abstract class with fields that specify data processing settings.</p>
+  <div class="markdown level0 summary"><p>A class with properties that specify data processing settings.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -85,7 +85,7 @@
   <h6><strong>Assembly</strong>: DevExtreme.AspNet.Data.dll</h6>
   <h5 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class DataSourceLoadOptionsBase</code></pre>
+    <pre><code class="lang-csharp hljs">public class DataSourceLoadOptionsBase</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -100,24 +100,25 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected DataSourceLoadOptionsBase()</code></pre>
+    <pre><code class="lang-csharp hljs">public DataSourceLoadOptionsBase()</code></pre>
   </div>
-  <h3 id="fields">Fields
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort">DefaultSort</h4>
   <div class="markdown level1 summary"><p>The data field to be used for sorting by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DefaultSort</code></pre>
+    <pre><code class="lang-csharp hljs">public string DefaultSort { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -137,15 +138,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter">Filter</h4>
   <div class="markdown level1 summary"><p>A filter expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList Filter</code></pre>
+    <pre><code class="lang-csharp hljs">public IList Filter { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -165,15 +167,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Group.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Group_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Group" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group">Group</h4>
   <div class="markdown level1 summary"><p>A group expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GroupingInfo[] Group</code></pre>
+    <pre><code class="lang-csharp hljs">public GroupingInfo[] Group { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -193,15 +196,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_GroupSummary.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_GroupSummary_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_GroupSummary" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary">GroupSummary</h4>
   <div class="markdown level1 summary"><p>A group summary expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SummaryInfo[] GroupSummary</code></pre>
+    <pre><code class="lang-csharp hljs">public SummaryInfo[] GroupSummary { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -221,15 +225,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_IsCountQuery.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_IsCountQuery_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_IsCountQuery" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery">IsCountQuery</h4>
   <div class="markdown level1 summary"><p>A flag indicating whether the current query is made to get the total number of data objects.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsCountQuery</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsCountQuery { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -246,18 +251,49 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect*"></a>
+  <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect">PreSelect</h4>
+  <div class="markdown level1 summary"><p>An array of data fields that limits the <a class="xref" href="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select">Select</a> expression.
+The applied select expression is the intersection of <a class="xref" href="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect">PreSelect</a> and <a class="xref" href="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select">Select</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string[] PreSelect { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://msdn.microsoft.com/en-us/library/system.string(v=vs.110).aspx">String</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PrimaryKey.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PrimaryKey_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PrimaryKey" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey">PrimaryKey</h4>
   <div class="markdown level1 summary"><p>An array of primary keys.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] PrimaryKey</code></pre>
+    <pre><code class="lang-csharp hljs">public string[] PrimaryKey { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -277,15 +313,47 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping">RemoteGrouping</h4>
-  <div class="markdown level1 summary"><p>A flag that indicates whether grouping parameters must be translated into LINQ.</p>
+  <div class="markdown level1 summary"><p>A flag that indicates whether the LINQ provider should execute grouping.
+If set to false, the entire dataset is loaded and grouped in memory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ? RemoteGrouping</code></pre>
+    <pre><code class="lang-csharp hljs">public bool ? RemoteGrouping { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://msdn.microsoft.com/en-us/library/b3h38hb0(v=vs.110).aspx">Nullable</a>&lt;<a class="xref" href="https://msdn.microsoft.com/en-us/library/system.boolean(v=vs.110).aspx">Boolean</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteSelect.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteSelect_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect*"></a>
+  <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteSelect" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect">RemoteSelect</h4>
+  <div class="markdown level1 summary"><p>A flag that indicates whether the LINQ provider should execute the select expression.
+If set to false, the select operation is performed in memory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ? RemoteSelect { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -305,15 +373,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireGroupCount.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireGroupCount_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireGroupCount" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount">RequireGroupCount</h4>
   <div class="markdown level1 summary"><p>A flag indicating whether the number of top-level groups is required.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RequireGroupCount</code></pre>
+    <pre><code class="lang-csharp hljs">public bool RequireGroupCount { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -333,15 +402,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireTotalCount.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireTotalCount_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireTotalCount" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount">RequireTotalCount</h4>
   <div class="markdown level1 summary"><p>A flag indicating whether the total number of data objects is required.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RequireTotalCount</code></pre>
+    <pre><code class="lang-csharp hljs">public bool RequireTotalCount { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -361,15 +431,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select">Select</h4>
   <div class="markdown level1 summary"><p>A select expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] Select</code></pre>
+    <pre><code class="lang-csharp hljs">public string[] Select { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -389,15 +460,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Skip.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Skip_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Skip" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip">Skip</h4>
   <div class="markdown level1 summary"><p>The number of data objects to be skipped from the start of the resulting set.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Skip</code></pre>
+    <pre><code class="lang-csharp hljs">public int Skip { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -417,15 +489,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Sort.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Sort_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Sort" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort">Sort</h4>
   <div class="markdown level1 summary"><p>A sort expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SortingInfo[] Sort</code></pre>
+    <pre><code class="lang-csharp hljs">public SortingInfo[] Sort { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -442,18 +515,49 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower*"></a>
+  <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower">StringToLower</h4>
+  <div class="markdown level1 summary"><p>A flag that indicates whether filter expressions should include a ToLower() call that makes string comparison case-insensitive.
+Defaults to true for LINQ to Objects, false for any other provider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ? StringToLower { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://msdn.microsoft.com/en-us/library/b3h38hb0(v=vs.110).aspx">Nullable</a>&lt;<a class="xref" href="https://msdn.microsoft.com/en-us/library/system.boolean(v=vs.110).aspx">Boolean</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take">Take</h4>
   <div class="markdown level1 summary"><p>The number of data objects to be loaded.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Take</code></pre>
+    <pre><code class="lang-csharp hljs">public int Take { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -473,15 +577,16 @@
     <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_TotalSummary.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
+  <a id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_TotalSummary_" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary*"></a>
   <h4 id="DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_TotalSummary" data-uid="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary">TotalSummary</h4>
   <div class="markdown level1 summary"><p>A total summary expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SummaryInfo[] TotalSummary</code></pre>
+    <pre><code class="lang-csharp hljs">public SummaryInfo[] TotalSummary { get; set; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
