@@ -42,7 +42,15 @@ references:
 - uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
   name: Accessor
   href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Accessor
-  commentId: F:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
+  commentId: P:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
+  fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Accessor
+  fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Accessor
+  nameWithType: Aggregator<T>.Accessor
+  nameWithType.vb: Aggregator(Of T).Accessor
+- uid: DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor*
+  name: Accessor
+  href: api/DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html#DevExtreme_AspNet_Data_Aggregation_Aggregator_1_Accessor_
+  commentId: Overload:DevExtreme.AspNet.Data.Aggregation.Aggregator`1.Accessor
   fullName: DevExtreme.AspNet.Data.Aggregation.Aggregator<T>.Accessor
   fullName.vb: DevExtreme.AspNet.Data.Aggregation.Aggregator(Of T).Accessor
   nameWithType: Aggregator<T>.Accessor
@@ -160,85 +168,205 @@ references:
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   name: DefaultSort
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
+  nameWithType: DataSourceLoadOptionsBase.DefaultSort
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort*
+  name: DefaultSort
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   nameWithType: DataSourceLoadOptionsBase.DefaultSort
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
   name: Filter
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
+  nameWithType: DataSourceLoadOptionsBase.Filter
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter*
+  name: Filter
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
   nameWithType: DataSourceLoadOptionsBase.Filter
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
   name: Group
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Group
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
+  nameWithType: DataSourceLoadOptionsBase.Group
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group*
+  name: Group
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Group_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Group
   nameWithType: DataSourceLoadOptionsBase.Group
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
   name: GroupSummary
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_GroupSummary
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
+  nameWithType: DataSourceLoadOptionsBase.GroupSummary
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary*
+  name: GroupSummary
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_GroupSummary_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.GroupSummary
   nameWithType: DataSourceLoadOptionsBase.GroupSummary
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
   name: IsCountQuery
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_IsCountQuery
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
   nameWithType: DataSourceLoadOptionsBase.IsCountQuery
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery*
+  name: IsCountQuery
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_IsCountQuery_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
+  nameWithType: DataSourceLoadOptionsBase.IsCountQuery
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
+  name: PreSelect
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
+  nameWithType: DataSourceLoadOptionsBase.PreSelect
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect*
+  name: PreSelect
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
+  nameWithType: DataSourceLoadOptionsBase.PreSelect
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
   name: PrimaryKey
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PrimaryKey
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
+  nameWithType: DataSourceLoadOptionsBase.PrimaryKey
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey*
+  name: PrimaryKey
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PrimaryKey_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PrimaryKey
   nameWithType: DataSourceLoadOptionsBase.PrimaryKey
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
   name: RemoteGrouping
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
   nameWithType: DataSourceLoadOptionsBase.RemoteGrouping
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping*
+  name: RemoteGrouping
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping
+  nameWithType: DataSourceLoadOptionsBase.RemoteGrouping
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect
+  name: RemoteSelect
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteSelect
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect
+  nameWithType: DataSourceLoadOptionsBase.RemoteSelect
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect*
+  name: RemoteSelect
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteSelect_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteSelect
+  nameWithType: DataSourceLoadOptionsBase.RemoteSelect
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
   name: RequireGroupCount
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireGroupCount
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
+  nameWithType: DataSourceLoadOptionsBase.RequireGroupCount
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount*
+  name: RequireGroupCount
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireGroupCount_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireGroupCount
   nameWithType: DataSourceLoadOptionsBase.RequireGroupCount
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
   name: RequireTotalCount
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireTotalCount
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
+  nameWithType: DataSourceLoadOptionsBase.RequireTotalCount
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount*
+  name: RequireTotalCount
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RequireTotalCount_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RequireTotalCount
   nameWithType: DataSourceLoadOptionsBase.RequireTotalCount
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
   name: Select
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
+  nameWithType: DataSourceLoadOptionsBase.Select
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select*
+  name: Select
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Select_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Select
   nameWithType: DataSourceLoadOptionsBase.Select
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
   name: Skip
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Skip
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
+  nameWithType: DataSourceLoadOptionsBase.Skip
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip*
+  name: Skip
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Skip_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Skip
   nameWithType: DataSourceLoadOptionsBase.Skip
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
   name: Sort
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Sort
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
   nameWithType: DataSourceLoadOptionsBase.Sort
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort*
+  name: Sort
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Sort_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
+  nameWithType: DataSourceLoadOptionsBase.Sort
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
+  name: StringToLower
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
+  nameWithType: DataSourceLoadOptionsBase.StringToLower
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower*
+  name: StringToLower
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
+  nameWithType: DataSourceLoadOptionsBase.StringToLower
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
   name: Take
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
+  nameWithType: DataSourceLoadOptionsBase.Take
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take*
+  name: Take
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
   nameWithType: DataSourceLoadOptionsBase.Take
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
   name: TotalSummary
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_TotalSummary
-  commentId: F:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
+  nameWithType: DataSourceLoadOptionsBase.TotalSummary
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary*
+  name: TotalSummary
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_TotalSummary_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.TotalSummary
   nameWithType: DataSourceLoadOptionsBase.TotalSummary
 - uid: DevExtreme.AspNet.Data.GroupingInfo
@@ -274,13 +402,25 @@ references:
 - uid: DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
   name: GroupInterval
   href: api/DevExtreme.AspNet.Data.GroupingInfo.html#DevExtreme_AspNet_Data_GroupingInfo_GroupInterval
-  commentId: F:DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
+  commentId: P:DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
+  fullName: DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
+  nameWithType: GroupingInfo.GroupInterval
+- uid: DevExtreme.AspNet.Data.GroupingInfo.GroupInterval*
+  name: GroupInterval
+  href: api/DevExtreme.AspNet.Data.GroupingInfo.html#DevExtreme_AspNet_Data_GroupingInfo_GroupInterval_
+  commentId: Overload:DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
   fullName: DevExtreme.AspNet.Data.GroupingInfo.GroupInterval
   nameWithType: GroupingInfo.GroupInterval
 - uid: DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
   name: IsExpanded
   href: api/DevExtreme.AspNet.Data.GroupingInfo.html#DevExtreme_AspNet_Data_GroupingInfo_IsExpanded
-  commentId: F:DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
+  commentId: P:DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
+  fullName: DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
+  nameWithType: GroupingInfo.IsExpanded
+- uid: DevExtreme.AspNet.Data.GroupingInfo.IsExpanded*
+  name: IsExpanded
+  href: api/DevExtreme.AspNet.Data.GroupingInfo.html#DevExtreme_AspNet_Data_GroupingInfo_IsExpanded_
+  commentId: Overload:DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
   fullName: DevExtreme.AspNet.Data.GroupingInfo.IsExpanded
   nameWithType: GroupingInfo.IsExpanded
 - uid: DevExtreme.AspNet.Data.Helpers
@@ -428,25 +568,49 @@ references:
 - uid: DevExtreme.AspNet.Data.ResponseModel.Group.count
   name: count
   href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_count
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.Group.count
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.Group.count
+  fullName: DevExtreme.AspNet.Data.ResponseModel.Group.count
+  nameWithType: Group.count
+- uid: DevExtreme.AspNet.Data.ResponseModel.Group.count*
+  name: count
+  href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_count_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.Group.count
   fullName: DevExtreme.AspNet.Data.ResponseModel.Group.count
   nameWithType: Group.count
 - uid: DevExtreme.AspNet.Data.ResponseModel.Group.items
   name: items
   href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_items
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.Group.items
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.Group.items
+  fullName: DevExtreme.AspNet.Data.ResponseModel.Group.items
+  nameWithType: Group.items
+- uid: DevExtreme.AspNet.Data.ResponseModel.Group.items*
+  name: items
+  href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_items_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.Group.items
   fullName: DevExtreme.AspNet.Data.ResponseModel.Group.items
   nameWithType: Group.items
 - uid: DevExtreme.AspNet.Data.ResponseModel.Group.key
   name: key
   href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_key
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.Group.key
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.Group.key
+  fullName: DevExtreme.AspNet.Data.ResponseModel.Group.key
+  nameWithType: Group.key
+- uid: DevExtreme.AspNet.Data.ResponseModel.Group.key*
+  name: key
+  href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_key_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.Group.key
   fullName: DevExtreme.AspNet.Data.ResponseModel.Group.key
   nameWithType: Group.key
 - uid: DevExtreme.AspNet.Data.ResponseModel.Group.summary
   name: summary
   href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_summary
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.Group.summary
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.Group.summary
+  fullName: DevExtreme.AspNet.Data.ResponseModel.Group.summary
+  nameWithType: Group.summary
+- uid: DevExtreme.AspNet.Data.ResponseModel.Group.summary*
+  name: summary
+  href: api/DevExtreme.AspNet.Data.ResponseModel.Group.html#DevExtreme_AspNet_Data_ResponseModel_Group_summary_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.Group.summary
   fullName: DevExtreme.AspNet.Data.ResponseModel.Group.summary
   nameWithType: Group.summary
 - uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult
@@ -470,25 +634,49 @@ references:
 - uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
   name: data
   href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_data
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
+  fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
+  nameWithType: LoadResult.data
+- uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.data*
+  name: data
+  href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_data_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
   fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.data
   nameWithType: LoadResult.data
 - uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
   name: groupCount
   href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_groupCount
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
+  fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
+  nameWithType: LoadResult.groupCount
+- uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount*
+  name: groupCount
+  href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_groupCount_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
   fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.groupCount
   nameWithType: LoadResult.groupCount
 - uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
   name: summary
   href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_summary
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
+  fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
+  nameWithType: LoadResult.summary
+- uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary*
+  name: summary
+  href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_summary_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
   fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.summary
   nameWithType: LoadResult.summary
 - uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
   name: totalCount
   href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_totalCount
-  commentId: F:DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
+  commentId: P:DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
+  fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
+  nameWithType: LoadResult.totalCount
+- uid: DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount*
+  name: totalCount
+  href: api/DevExtreme.AspNet.Data.ResponseModel.LoadResult.html#DevExtreme_AspNet_Data_ResponseModel_LoadResult_totalCount_
+  commentId: Overload:DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
   fullName: DevExtreme.AspNet.Data.ResponseModel.LoadResult.totalCount
   nameWithType: LoadResult.totalCount
 - uid: DevExtreme.AspNet.Data.SortingInfo
@@ -512,13 +700,25 @@ references:
 - uid: DevExtreme.AspNet.Data.SortingInfo.Desc
   name: Desc
   href: api/DevExtreme.AspNet.Data.SortingInfo.html#DevExtreme_AspNet_Data_SortingInfo_Desc
-  commentId: F:DevExtreme.AspNet.Data.SortingInfo.Desc
+  commentId: P:DevExtreme.AspNet.Data.SortingInfo.Desc
+  fullName: DevExtreme.AspNet.Data.SortingInfo.Desc
+  nameWithType: SortingInfo.Desc
+- uid: DevExtreme.AspNet.Data.SortingInfo.Desc*
+  name: Desc
+  href: api/DevExtreme.AspNet.Data.SortingInfo.html#DevExtreme_AspNet_Data_SortingInfo_Desc_
+  commentId: Overload:DevExtreme.AspNet.Data.SortingInfo.Desc
   fullName: DevExtreme.AspNet.Data.SortingInfo.Desc
   nameWithType: SortingInfo.Desc
 - uid: DevExtreme.AspNet.Data.SortingInfo.Selector
   name: Selector
   href: api/DevExtreme.AspNet.Data.SortingInfo.html#DevExtreme_AspNet_Data_SortingInfo_Selector
-  commentId: F:DevExtreme.AspNet.Data.SortingInfo.Selector
+  commentId: P:DevExtreme.AspNet.Data.SortingInfo.Selector
+  fullName: DevExtreme.AspNet.Data.SortingInfo.Selector
+  nameWithType: SortingInfo.Selector
+- uid: DevExtreme.AspNet.Data.SortingInfo.Selector*
+  name: Selector
+  href: api/DevExtreme.AspNet.Data.SortingInfo.html#DevExtreme_AspNet_Data_SortingInfo_Selector_
+  commentId: Overload:DevExtreme.AspNet.Data.SortingInfo.Selector
   fullName: DevExtreme.AspNet.Data.SortingInfo.Selector
   nameWithType: SortingInfo.Selector
 - uid: DevExtreme.AspNet.Data.SummaryInfo
@@ -542,12 +742,24 @@ references:
 - uid: DevExtreme.AspNet.Data.SummaryInfo.Selector
   name: Selector
   href: api/DevExtreme.AspNet.Data.SummaryInfo.html#DevExtreme_AspNet_Data_SummaryInfo_Selector
-  commentId: F:DevExtreme.AspNet.Data.SummaryInfo.Selector
+  commentId: P:DevExtreme.AspNet.Data.SummaryInfo.Selector
+  fullName: DevExtreme.AspNet.Data.SummaryInfo.Selector
+  nameWithType: SummaryInfo.Selector
+- uid: DevExtreme.AspNet.Data.SummaryInfo.Selector*
+  name: Selector
+  href: api/DevExtreme.AspNet.Data.SummaryInfo.html#DevExtreme_AspNet_Data_SummaryInfo_Selector_
+  commentId: Overload:DevExtreme.AspNet.Data.SummaryInfo.Selector
   fullName: DevExtreme.AspNet.Data.SummaryInfo.Selector
   nameWithType: SummaryInfo.Selector
 - uid: DevExtreme.AspNet.Data.SummaryInfo.SummaryType
   name: SummaryType
   href: api/DevExtreme.AspNet.Data.SummaryInfo.html#DevExtreme_AspNet_Data_SummaryInfo_SummaryType
-  commentId: F:DevExtreme.AspNet.Data.SummaryInfo.SummaryType
+  commentId: P:DevExtreme.AspNet.Data.SummaryInfo.SummaryType
+  fullName: DevExtreme.AspNet.Data.SummaryInfo.SummaryType
+  nameWithType: SummaryInfo.SummaryType
+- uid: DevExtreme.AspNet.Data.SummaryInfo.SummaryType*
+  name: SummaryType
+  href: api/DevExtreme.AspNet.Data.SummaryInfo.html#DevExtreme_AspNet_Data_SummaryInfo_SummaryType_
+  commentId: Overload:DevExtreme.AspNet.Data.SummaryInfo.SummaryType
   fullName: DevExtreme.AspNet.Data.SummaryInfo.SummaryType
   nameWithType: SummaryInfo.SummaryType
