@@ -142,6 +142,12 @@
             return result;
         }
 
+        function handleInsertUpdateSuccess(d, res, xhr) {
+            var mime = xhr.getResponseHeader("Content-Type"),
+                isJSON = mime && mime.indexOf("application/json") > -1;
+            d.resolve(isJSON ? JSON.parse(res) : res);
+        }
+
         return {
             key: keyExpr,
 
@@ -197,14 +203,19 @@
             },
 
             update: updateUrl && function(key, values) {
-                return send("update", true, {
-                    url: updateUrl,
-                    method: options.updateMethod || "PUT",
-                    data: {
-                        key: serializeKey(key),
-                        values: JSON.stringify(values)
-                    }
-                });
+                return send(
+                    "update",
+                    true,
+                    {
+                        url: updateUrl,
+                        method: options.updateMethod || "PUT",
+                        data: {
+                            key: serializeKey(key),
+                            values: JSON.stringify(values)
+                        }
+                    },
+                    handleInsertUpdateSuccess
+                );
             },
 
             insert: insertUrl && function(values) {
@@ -216,11 +227,7 @@
                         method: options.insertMethod || "POST",
                         data: { values: JSON.stringify(values) }
                     },
-                    function(d, res, xhr) {
-                        var mime = xhr.getResponseHeader("Content-Type"),
-                            isJSON = mime && mime.indexOf("application/json") > -1;
-                        d.resolve(isJSON ? JSON.parse(res) : res);
-                    }
+                    handleInsertUpdateSuccess
                 );
             },
 
