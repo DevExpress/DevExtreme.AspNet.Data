@@ -117,14 +117,12 @@ namespace DevExtreme.AspNet.Data {
         }
 
         IEnumerable<IDictionary<string, object>> ExecWithSelect(Expression loadExpr) {
+            var select = Options.GetFullSelect();
+
             if(Options.UseRemoteSelect)
-                return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), Options.GetFullSelect());
+                return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), select);
 
-            var inMemoryQuery = ForceExecution(ExecExpr<S>(Source, loadExpr)).AsQueryable();
-            var selectExpr = new SelectExpressionCompiler<S>(true).Compile(inMemoryQuery.Expression, Options.GetFullSelect());
-
-            // TODO
-            return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(inMemoryQuery, selectExpr), Options.GetFullSelect());
+            return SelectHelper.Evaluate(ExecExpr<S>(Source, loadExpr), select);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {

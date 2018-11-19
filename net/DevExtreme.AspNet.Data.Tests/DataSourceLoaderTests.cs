@@ -437,6 +437,19 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, item["a"]);
         }
 
+        [Fact]
+        public void Load_RemoteSelectFalse_NoAnonTypeLimits() {
+            var loadResult = DataSourceLoader.Load(new[] { "a" }, new SampleLoadOptions {
+                Select = Enumerable.Repeat("this", 123).ToArray(),
+                RemoteSelect = false
+            });
+
+            Assert.All(
+                loadResult.data.Cast<IDictionary<string, object>>(),
+                i => Assert.Equal("a", i["this"])
+            );
+        }
+
         [Theory]
         [InlineData(false, true)]
         [InlineData(false, false)]
