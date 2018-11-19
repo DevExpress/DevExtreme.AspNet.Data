@@ -6,6 +6,7 @@ using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -116,7 +117,7 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        IEnumerable<IDictionary<string, object>> ExecWithSelect(Expression loadExpr) {
+        IEnumerable<ExpandoObject> ExecWithSelect(Expression loadExpr) {
             var select = Options.GetFullSelect();
 
             if(Options.UseRemoteSelect)
