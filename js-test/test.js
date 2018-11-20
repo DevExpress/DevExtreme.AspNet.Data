@@ -8,6 +8,7 @@
         define(function(require) {
             factory(
                 require("xhr-mock").default,
+                require("devextreme/core/version"),
                 require("devextreme/data/data_source"),
                 require(ASPNET_DATA_SCRIPT)
             );
@@ -15,18 +16,20 @@
     } else if (typeof module === "object" && module.exports) {
         module.exports = factory(
             require("xhr-mock").default,
+            require("devextreme/core/version"),
             require("devextreme/data/data_source"),
             require(ASPNET_DATA_SCRIPT)
         );
     } else {
         factory(
             window.XHRMock,
+            DevExpress.VERSION,
             DevExpress.data.DataSource,
             DevExpress.data.AspNet
         );
     }
 
-})(function(XHRMock, DataSource, AspNet) {
+})(function(XHRMock, devextremeVersion, DataSource, AspNet) {
     "use strict";
 
     // https://github.com/karma-runner/karma-qunit/issues/57
@@ -48,6 +51,14 @@
         XHRMock.use(function() {
             return NEVER_RESOLVE;
         });
+    }
+
+    function useLegacyStoreResult() {
+        var versionArray = devextremeVersion.split("."),
+            major = Number(versionArray[0]),
+            minor = Number(versionArray[1]);
+
+        return major < 18 || major === 18 && minor < 2;
     }
 
     QUnit.testStart(function() {
@@ -627,29 +638,59 @@
             return res
                 .header("Content-Type", "text/plain")
                 .status(200)
-                .body("key-text");
+                .body("insert-response");
         });
 
         createStore({ key: "any", insertUrl: "/" })
             .insert({ })
-            .done(function(values, key) {
-                assert.equal(key, "key-text");
-                done();
-            });
+            .done(useLegacyStoreResult()
+                ? function(values, key) {
+                    assert.equal(key, "insert-response");
+                    done();
+                }
+                : function(responseData, key) {
+                    assert.equal(responseData, "insert-response");
+                    assert.equal(key, undefined);
+                    done();
+                }
+            );
     });
 
     QUnit.test("insert responds with JSON", function(assert) {
         var done = assert.async();
 
-        willRespondWithJson({ keyProp: "keyValue" });
+        willRespondWithJson({ id: 123 });
 
-        createStore({ key: "any", insertUrl: "/" })
+        createStore({ key: "id", insertUrl: "/" })
             .insert({ })
-            .done(function(values, key) {
-                assert.deepEqual(key, { keyProp: "keyValue" });
-                done();
-            });
+            .done(useLegacyStoreResult()
+                ? function(values, key) {
+                    assert.deepEqual(key, { id: 123 });
+                    done();
+                }
+                : function(responseData, key) {
+                    assert.deepEqual(responseData, { id: 123 });
+                    assert.equal(key, 123);
+                    done();
+                }
+            );
     });
+
+    if(!useLegacyStoreResult()) {
+        QUnit.test("update's promise arguments", function(assert) {
+            var done = assert.async();
+
+            willRespondWithJson({ id: 123 });
+
+            createStore({ key: "id", updateUrl: "/" })
+                .update(123, { })
+                .done(function(responseData, key) {
+                    assert.deepEqual(responseData, { id: 123 });
+                    assert.equal(key, 123);
+                    done();
+                });
+        });
+    }
 
     QUnit.test("insert, update, delete accept empty response", function(assert) {
         var done = assert.async();
