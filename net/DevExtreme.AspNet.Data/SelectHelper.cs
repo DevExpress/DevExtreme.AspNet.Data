@@ -9,32 +9,33 @@ namespace DevExtreme.AspNet.Data {
 
     static class SelectHelper {
 
-        public static IEnumerable<ExpandoObject> Evaluate<T>(IEnumerable<T> data, IEnumerable<string> names) {
-            var bufferedNames = names.ToArray();
+        public static IEnumerable<ExpandoObject> Evaluate<T>(IEnumerable<T> data, IEnumerable<string> select) {
+            var bufferedSelect = select.ToArray();
+            var paths = SelectToPaths(bufferedSelect);
             var accessor = new DefaultAccessor<T>();
 
-            foreach(var item in data) {
-                var expando = new ExpandoObject();
-                var dict = (IDictionary<string, object>)expando;
-
-                foreach(var name in bufferedNames)
-                    dict[name] = accessor.Read(item, name);
-
-                yield return expando;
-            }
+            foreach(var item in data)
+                yield return PathsToExpando(paths, i => accessor.Read(item, bufferedSelect[i]));
         }
 
-        public static IEnumerable<ExpandoObject> ConvertRemoteResult(IEnumerable<AnonType> selectResult, IEnumerable<string> names) {
-            var paths = names.Select(n => n.Split('.')).ToArray();
+        public static IEnumerable<ExpandoObject> ConvertRemoteResult(IEnumerable<AnonType> selectResult, IEnumerable<string> select) {
+            var paths = SelectToPaths(select);
 
-            foreach(var anonObj in selectResult) {
-                var expando = new ExpandoObject();
+            foreach(var anonObj in selectResult)
+                yield return PathsToExpando(paths, i => anonObj[i]);
+        }
 
-                for(var i = 0; i < paths.Length; i++)
-                    Shrink(expando, paths[i], anonObj[i]);
+        static string[][] SelectToPaths(IEnumerable<string> select) {
+            return select.Select(i => i.Split('.')).ToArray();
+        }
 
-                yield return expando;
-            }
+        static ExpandoObject PathsToExpando(string[][] paths, Func<int, object> pathValueByIndex) {
+            var expando = new ExpandoObject();
+
+            for(var i = 0; i < paths.Length; i++)
+                Shrink(expando, paths[i], pathValueByIndex(i));
+
+            return expando;
         }
 
         static void Shrink(IDictionary<string, object> target, string[] path, object value, int index = 0) {

@@ -255,14 +255,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, result.groupCount);
         }
 
-        [Fact]
-        public void Load_Select() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_Select(bool remoteSelect) {
             var data = new[] {
                 new { f1 = 1, f2 = 2 }
             };
 
             var loadOptions = new SampleLoadOptions {
-                Select = new[] { "f2" }
+                Select = new[] { "f2" },
+                RemoteSelect = remoteSelect
             };
 
             var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary<string, object>>().First();
@@ -271,14 +274,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2, item["f2"]);
         }
 
-        [Fact]
-        public void Load_SelectWithGrouping() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_SelectWithGrouping(bool remoteSelect) {
             var data = new[] {
                 new { g = 1, f = 1, waste = "any" }
             };
 
             var loadOptions = new SampleLoadOptions {
                 Select = new[] { "g", "f" },
+                RemoteSelect = remoteSelect,
                 Group = new[] {
                     new GroupingInfo { Selector = "g" }
                 }
@@ -292,8 +298,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.ContainsKey("f"));
         }
 
-        [Fact]
-        public void Load_SelectWithPaging() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_SelectWithPaging(bool remoteSelect) {
             var data = new[] {
                 new { f = 1 },
                 new { f = 2 }
@@ -301,6 +309,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var loadOptions = new SampleLoadOptions {
                 Select = new[] { "f" },
+                RemoteSelect = remoteSelect,
                 Skip = 1,
                 Take = 1
             };
@@ -312,8 +321,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(x);
         }
 
-        [Fact]
-        public void Load_SelectNested() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_SelectNested(bool remoteSelect) {
             var data = new[] {
                 new {
                     Name = "Alex",
@@ -334,7 +345,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadOptions = new SampleLoadOptions {
-                Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" }
+                Select = new[] { "Name", "Address.City", "Address.Street.Line1", "Contacts.Email" },
+                RemoteSelect = remoteSelect
             };
 
             var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary<string, object>>().First();
@@ -354,14 +366,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(data[0].Contacts.Email, contacts["Email"]);
         }
 
-        [Fact]
-        public void Load_SelectWithConflict() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_SelectWithConflict(bool remoteSelect) {
             var result = DataSourceLoader.Load(
                 new[] {
                     Tuple.Create(Tuple.Create("abc"))
                 },
                 new SampleLoadOptions {
-                    Select = new[] { "Item1.Item1.Length", "Item1", "Item1.Item1.Length" }
+                    Select = new[] { "Item1.Item1.Length", "Item1", "Item1.Item1.Length" },
+                    RemoteSelect = remoteSelect
                 }
             );
 
@@ -370,14 +385,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.ContainsKey("Item1"));
         }
 
-        [Fact]
-        public void Load_SelectWithSummary_NoDoubleEnumeration() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_SelectWithSummary_NoDoubleEnumeration(bool remoteSelect) {
             var data = new[] {
                 new { f = 1 }
             };
 
             var loadOptions = new SampleLoadOptions {
                 Select = new[] { "f" },
+                RemoteSelect = remoteSelect,
                 TotalSummary = new[] {
                     new SummaryInfo { Selector = "f", SummaryType = "sum" }
                 }
@@ -391,8 +409,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(x);
         }
 
-        [Fact]
-        public void Load_PreSelect() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Load_PreSelect(bool remoteSelect) {
             var data = new[] {
                 new { a = 1, b = 2, c = 3 }
             };
@@ -400,7 +420,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             IDictionary<string, object> Load(string[] preSelect, string[] select) {
                 var loadResult = DataSourceLoader.Load(data, new SampleLoadOptions {
                     PreSelect = preSelect,
-                    Select = select
+                    Select = select,
+                    RemoteSelect = remoteSelect
                 });
 
                 return loadResult.data.Cast<IDictionary<string, object>>().First();
@@ -422,19 +443,6 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(1, item.Keys.Count);
             Assert.True(item.ContainsKey("b"));
-        }
-
-        [Fact]
-        public void Load_RemoteSelectFalse() {
-            var loadResult = DataSourceLoader.Load(new[] { new { a = 1, b = 2 } }, new SampleLoadOptions {
-                Select = new[] { "a" },
-                RemoteSelect = false
-            });
-
-            var item = loadResult.data.Cast<IDictionary<string, object>>().First();
-
-            Assert.Single(item.Keys);
-            Assert.Equal(1, item["a"]);
         }
 
         [Fact]
@@ -495,8 +503,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.NotEmpty(loadResult.data);
         }
 
-        [Fact]
-        public void Issue246() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Issue246(bool remoteSelect) {
             var data = new[] {
                 new {
                     Department = new { Title = "abc" }
@@ -505,6 +515,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var loadOptions = new SampleLoadOptions {
                 Select = new[] { "Department.Title" },
+                RemoteSelect = remoteSelect,
                 Group = new[] {
                     new GroupingInfo { Selector = "Department.Title.Length" }
                 }
