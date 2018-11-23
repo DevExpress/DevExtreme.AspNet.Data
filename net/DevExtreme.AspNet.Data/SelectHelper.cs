@@ -18,10 +18,10 @@ namespace DevExtreme.AspNet.Data {
                 yield return PathsToExpando(paths, i => accessor.Read(item, bufferedSelect[i]));
         }
 
-        public static IEnumerable<ExpandoObject> ConvertRemoteResult(IEnumerable<AnonType> selectResult, IEnumerable<string> select) {
+        public static IEnumerable<ExpandoObject> ConvertRemoteResult(IEnumerable<AnonType> remoteResult, IEnumerable<string> select) {
             var paths = SelectToPaths(select);
 
-            foreach(var anonObj in selectResult)
+            foreach(var anonObj in remoteResult)
                 yield return PathsToExpando(paths, i => anonObj[i]);
         }
 
