@@ -15,9 +15,10 @@ namespace DevExtreme.AspNet.Data {
 
             foreach(var item in data) {
                 var expando = new ExpandoObject();
+                var dict = (IDictionary<string, object>)expando;
 
                 foreach(var name in bufferedNames)
-                    (expando as IDictionary<string, object>)[name] = accessor.Read(item, name);
+                    dict[name] = accessor.Read(item, name);
 
                 yield return expando;
             }
