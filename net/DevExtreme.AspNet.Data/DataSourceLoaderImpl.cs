@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -98,7 +97,7 @@ namespace DevExtreme.AspNet.Data {
 
                 if(Options.HasAnySelect) {
                     ContinueWithGrouping(
-                        ExecWithSelect(loadExpr).Select(ProjectionToExpando),
+                        ExecWithSelect(loadExpr),
                         result
                     );
                 } else {
@@ -118,13 +117,13 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        IEnumerable<AnonType> ExecWithSelect(Expression loadExpr) {
-            if(Options.UseRemoteSelect)
-                return ExecExpr<AnonType>(Source, loadExpr);
+        IEnumerable<ExpandoObject> ExecWithSelect(Expression loadExpr) {
+            var select = Options.GetFullSelect();
 
-            var inMemoryQuery = ForceExecution(ExecExpr<S>(Source, loadExpr)).AsQueryable();
-            var selectExpr = new SelectExpressionCompiler<S>(true).Compile(inMemoryQuery.Expression, Options.GetFullSelect());
-            return ExecExpr<AnonType>(inMemoryQuery, selectExpr);
+            if(Options.UseRemoteSelect)
+                return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), select);
+
+            return SelectHelper.Evaluate(ExecExpr<S>(Source, loadExpr), select);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {
@@ -236,30 +235,6 @@ namespace DevExtreme.AspNet.Data {
                 } else {
                     EmptyGroups(g.items, level - 1);
                 }
-            }
-        }
-
-        ExpandoObject ProjectionToExpando(AnonType projection) {
-            var expando = new ExpandoObject();
-            var index = 0;
-            foreach(var name in Options.GetFullSelect()) {
-                ShrinkSelectResult(expando, name.Split('.'), projection[index]);
-                index++;
-            }
-            return expando;
-        }
-
-        static void ShrinkSelectResult(IDictionary<string, object> target, string[] path, object value, int index = 0) {
-            var key = path[index];
-
-            if(index == path.Length - 1) {
-                target[key] = value;
-            } else {
-                if(!target.ContainsKey(key))
-                    target[key] = new ExpandoObject();
-
-                if(target[key] is IDictionary<string, object> child)
-                    ShrinkSelectResult(child, path, value, 1 + index);
             }
         }
     }
