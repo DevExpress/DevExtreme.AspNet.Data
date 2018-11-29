@@ -150,6 +150,7 @@
 
         return {
             key: keyExpr,
+            errorHandler: options.errorHandler,
 
             load: function(loadOptions) {
                 return send(
