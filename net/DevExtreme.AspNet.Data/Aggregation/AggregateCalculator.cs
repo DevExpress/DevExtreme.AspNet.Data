@@ -13,14 +13,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         IEnumerable _data;
         IAccessor<T> _accessor;
         SumFix _sumFix;
-        IList<SummaryInfo> _totalSummary;
-        IList<SummaryInfo> _groupSummary;
+        IReadOnlyList<SummaryInfo> _totalSummary;
+        IReadOnlyList<SummaryInfo> _groupSummary;
 
         Aggregator<T>[] _totalAggregators;
         Stack<Aggregator<T>[]> _groupAggregatorsStack;
 
 
-        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IList<SummaryInfo> totalSummary, IList<SummaryInfo> groupSummary, SumFix sumFix = null) {
+        public AggregateCalculator(IEnumerable data, IAccessor<T> accessor, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary, SumFix sumFix = null) {
             _data = data;
             _accessor = accessor;
             _sumFix = sumFix ?? new SumFix(typeof(T), totalSummary, groupSummary);
@@ -75,7 +75,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             }
         }
 
-        void Step(object obj, Aggregator<T>[] aggregators, IList<SummaryInfo> summary) {
+        void Step(object obj, Aggregator<T>[] aggregators, IReadOnlyList<SummaryInfo> summary) {
             var typed = (T)obj;
             for(var i = 0; i < aggregators.Length; i++)
                 aggregators[i].Step(typed, summary[i].Selector);
