@@ -1,25 +1,19 @@
 ﻿using DevExtreme.AspNet.Data.RemoteGrouping;
 using DevExtreme.AspNet.Data.Types;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
     class DataSourceExpressionBuilder<T> {
-        DataSourceLoadOptionsBase _loadOptions;
+        DataSourceLoadContext _context;
         bool _guardNulls;
-        bool _stringToLower;
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public DataSourceExpressionBuilder(DataSourceLoadOptionsBase loadOptions, bool guardNulls = false, bool stringToLower = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
-            _loadOptions = loadOptions;
+        public DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
+            _context = context;
             _guardNulls = guardNulls;
-            _stringToLower = stringToLower;
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
@@ -39,27 +33,27 @@ namespace DevExtreme.AspNet.Data {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
-            if(_loadOptions.HasFilter)
-                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _stringToLower).Compile(_loadOptions.Filter)));
+            if(_context.HasFilter)
+                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(_context.Filter)));
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
-                    if(_loadOptions.HasAnySort)
-                        expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.GetFullSort());
-                    if(_loadOptions.HasAnySelect && _loadOptions.UseRemoteSelect) {
-                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _loadOptions.GetFullSelect());
+                    if(_context.HasAnySort)
+                        expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _context.GetFullSort());
+                    if(_context.HasAnySelect && _context.UseRemoteSelect) {
+                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _context.GetFullSelect());
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks, _loadOptions.Group, _loadOptions.TotalSummary, _loadOptions.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {
-                    if(_loadOptions.Skip > 0)
-                        expr = Expression.Call(queryableType, "Skip", genericTypeArguments, expr, Expression.Constant(_loadOptions.Skip));
+                    if(_context.Skip > 0)
+                        expr = Expression.Call(queryableType, "Skip", genericTypeArguments, expr, Expression.Constant(_context.Skip));
 
-                    if(_loadOptions.Take > 0)
-                        expr = Expression.Call(queryableType, "Take", genericTypeArguments, expr, Expression.Constant(_loadOptions.Take));
+                    if(_context.Take > 0)
+                        expr = Expression.Call(queryableType, "Take", genericTypeArguments, expr, Expression.Constant(_context.Take));
                 }
             }
 
