@@ -7,19 +7,12 @@ using System.Linq;
 
 namespace DevExtreme.AspNet.Data {
 
-    class DataSourceLoadContext {
+    partial class DataSourceLoadContext {
         readonly DataSourceLoadOptionsBase _options;
         readonly QueryProviderInfo _providerInfo;
         readonly Type _itemType;
 
-        bool _primaryKeyAndDefaultSortEnsured;
-        string[] _primaryKey;
-        string _defaultSort;
-
-        bool?
-            _shouldEmptyGroups,
-            _useRemoteGrouping,
-            _summaryIsTotalCountOnly;
+        bool? _summaryIsTotalCountOnly;
 
         public DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType) {
             _options = options;
@@ -27,25 +20,39 @@ namespace DevExtreme.AspNet.Data {
             _itemType = itemType;
         }
 
+        static bool Empty<T>(IReadOnlyCollection<T> collection) {
+            return collection == null || collection.Count < 1;
+        }
+    }
+
+    // Total count
+    partial class DataSourceLoadContext {
         public bool RequireTotalCount => _options.RequireTotalCount;
+        public bool IsCountQuery => _options.IsCountQuery;
+    }
+
+    // Paging
+    partial class DataSourceLoadContext {
+        public int Skip => _options.Skip;
+        public int Take => _options.Take;
+    }
+
+    // Filter
+    partial class DataSourceLoadContext {
+        public IList Filter => _options.Filter;
+        public bool HasFilter => _options.Filter != null && _options.Filter.Count > 0;
+        public bool UseStringToLower => _options.StringToLower.GetValueOrDefault(_providerInfo.IsLinqToObjects);
+    }
+
+    // Grouping
+    partial class DataSourceLoadContext {
+        bool?
+            _shouldEmptyGroups,
+            _useRemoteGrouping;
 
         public bool RequireGroupCount => _options.RequireGroupCount;
 
-        public bool IsCountQuery => _options.IsCountQuery;
-
-        public int Skip => _options.Skip;
-
-        public int Take => _options.Take;
-
         public IReadOnlyList<GroupingInfo> Group => _options.Group;
-
-        public IList Filter => _options.Filter;
-
-        public IReadOnlyList<SummaryInfo> TotalSummary => _options.TotalSummary;
-
-        public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
-
-        public bool HasFilter => _options.Filter != null && _options.Filter.Count > 0;
 
         public bool HasGroups => !Empty(Group);
 
@@ -89,6 +96,15 @@ namespace DevExtreme.AspNet.Data {
                 return _useRemoteGrouping.Value;
             }
         }
+    }
+
+    // Sorting & Primary Key
+    partial class DataSourceLoadContext {
+        bool _primaryKeyAndDefaultSortEnsured;
+        string[] _primaryKey;
+        string _defaultSort;
+
+        public bool HasAnySort => HasGroups || HasSort || HasPrimaryKey || HasDefaultSort;
 
         bool HasSort => !Empty(_options.Sort);
 
@@ -109,30 +125,6 @@ namespace DevExtreme.AspNet.Data {
         bool HasPrimaryKey => !Empty(PrimaryKey);
 
         bool HasDefaultSort => !String.IsNullOrEmpty(DefaultSort);
-
-        public bool HasSummary => !Empty(TotalSummary) || HasGroupSummary;
-
-        public bool HasGroupSummary => !Empty(GroupSummary);
-
-        public bool SummaryIsTotalCountOnly {
-            get {
-                if(!_summaryIsTotalCountOnly.HasValue)
-                    _summaryIsTotalCountOnly = !HasGroupSummary && HasSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
-                return _summaryIsTotalCountOnly.Value;
-            }
-        }
-
-        public bool HasAnySort => HasGroups || HasSort || HasPrimaryKey || HasDefaultSort;
-
-        public bool HasAnySelect => HasPreSelect || HasSelect;
-
-        bool HasPreSelect => !Empty(_options.PreSelect);
-
-        bool HasSelect => !Empty(_options.Select);
-
-        public bool UseRemoteSelect => _options.RemoteSelect.GetValueOrDefault(true);
-
-        public bool UseStringToLower => _options.StringToLower.GetValueOrDefault(_providerInfo.IsLinqToObjects);
 
         public IEnumerable<SortingInfo> GetFullSort() {
             var memo = new HashSet<string>();
@@ -169,19 +161,6 @@ namespace DevExtreme.AspNet.Data {
             return Utils.AddRequiredSort(result, requiredSort);
         }
 
-        public IEnumerable<string> GetFullSelect() {
-            if(HasPreSelect && HasSelect)
-                return Enumerable.Intersect(_options.PreSelect, _options.Select);
-
-            if(HasPreSelect)
-                return _options.PreSelect;
-
-            if(HasSelect)
-                return _options.Select;
-
-            return Enumerable.Empty<string>();
-        }
-
         void EnsurePrimaryKeyAndDefaultSort() {
             if(_primaryKeyAndDefaultSortEnsured)
                 return;
@@ -203,10 +182,48 @@ namespace DevExtreme.AspNet.Data {
             _defaultSort = defaultSort;
             _primaryKeyAndDefaultSortEnsured = true;
         }
+    }
 
-        static bool Empty<T>(IReadOnlyCollection<T> collection) {
-            return collection == null || collection.Count < 1;
+    // Summary
+    partial class DataSourceLoadContext {
+        public IReadOnlyList<SummaryInfo> TotalSummary => _options.TotalSummary;
+
+        public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
+
+        public bool HasSummary => !Empty(TotalSummary) || HasGroupSummary;
+
+        public bool HasGroupSummary => !Empty(GroupSummary);
+
+        public bool SummaryIsTotalCountOnly {
+            get {
+                if(!_summaryIsTotalCountOnly.HasValue)
+                    _summaryIsTotalCountOnly = !HasGroupSummary && HasSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
+                return _summaryIsTotalCountOnly.Value;
+            }
         }
     }
 
+    // Select
+    partial class DataSourceLoadContext {
+        public bool HasAnySelect => HasPreSelect || HasSelect;
+
+        public bool UseRemoteSelect => _options.RemoteSelect.GetValueOrDefault(true);
+
+        bool HasPreSelect => !Empty(_options.PreSelect);
+
+        bool HasSelect => !Empty(_options.Select);
+
+        public IEnumerable<string> GetFullSelect() {
+            if(HasPreSelect && HasSelect)
+                return Enumerable.Intersect(_options.PreSelect, _options.Select);
+
+            if(HasPreSelect)
+                return _options.PreSelect;
+
+            if(HasSelect)
+                return _options.Select;
+
+            return Enumerable.Empty<string>();
+        }
+    }
 }
