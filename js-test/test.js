@@ -190,6 +190,25 @@
             store.totalCount().fail(handleFail);
             store.byKey("any").fail(handleFail);
         });
+
+        QUnit.test("errorHandler option", function(assert) {
+            var done = assert.async();
+            var reason = "Test Reason";
+
+            XHRMock.use(function(req, res) {
+                return res.status(500).reason(reason);
+            });
+
+            var store = createStore({
+                loadUrl: "/",
+                errorHandler: function(error) {
+                    assert.equal(error.message, reason);
+                    done();
+                }
+            });
+
+            store.load();
+        });
     });
 
     QUnit.module("load options", function() {
