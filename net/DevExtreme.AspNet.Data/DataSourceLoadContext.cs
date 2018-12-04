@@ -20,7 +20,7 @@ namespace DevExtreme.AspNet.Data {
             _itemType = itemType;
         }
 
-        static bool Empty<T>(IReadOnlyCollection<T> collection) {
+        static bool IsEmpty<T>(IReadOnlyCollection<T> collection) {
             return collection == null || collection.Count < 1;
         }
     }
@@ -54,7 +54,7 @@ namespace DevExtreme.AspNet.Data {
 
         public IReadOnlyList<GroupingInfo> Group => _options.Group;
 
-        public bool HasGroups => !Empty(Group);
+        public bool HasGroups => !IsEmpty(Group);
 
         public bool ShouldEmptyGroups {
             get {
@@ -106,7 +106,7 @@ namespace DevExtreme.AspNet.Data {
 
         public bool HasAnySort => HasGroups || HasSort || HasPrimaryKey || HasDefaultSort;
 
-        bool HasSort => !Empty(_options.Sort);
+        bool HasSort => !IsEmpty(_options.Sort);
 
         IReadOnlyList<string> PrimaryKey {
             get {
@@ -122,7 +122,7 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        bool HasPrimaryKey => !Empty(PrimaryKey);
+        bool HasPrimaryKey => !IsEmpty(PrimaryKey);
 
         bool HasDefaultSort => !String.IsNullOrEmpty(DefaultSort);
 
@@ -168,10 +168,10 @@ namespace DevExtreme.AspNet.Data {
             var primaryKey = _options.PrimaryKey;
             var defaultSort = _options.DefaultSort;
 
-            if(Empty(primaryKey))
+            if(IsEmpty(primaryKey))
                 primaryKey = Utils.GetPrimaryKey(_itemType);
 
-            if((Skip > 0 || Take > 0) && String.IsNullOrEmpty(defaultSort) && Empty(primaryKey)) {
+            if((Skip > 0 || Take > 0) && String.IsNullOrEmpty(defaultSort) && IsEmpty(primaryKey)) {
                 if(_providerInfo.IsEFClassic || _providerInfo.IsEFCore)
                     defaultSort = EFSorting.FindSortableMember(_itemType);
                 else if(_providerInfo.IsXPO)
@@ -190,9 +190,9 @@ namespace DevExtreme.AspNet.Data {
 
         public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
 
-        public bool HasSummary => !Empty(TotalSummary) || HasGroupSummary;
+        public bool HasSummary => !IsEmpty(TotalSummary) || HasGroupSummary;
 
-        public bool HasGroupSummary => !Empty(GroupSummary);
+        public bool HasGroupSummary => !IsEmpty(GroupSummary);
 
         public bool SummaryIsTotalCountOnly {
             get {
@@ -209,9 +209,9 @@ namespace DevExtreme.AspNet.Data {
 
         public bool UseRemoteSelect => _options.RemoteSelect.GetValueOrDefault(true);
 
-        bool HasPreSelect => !Empty(_options.PreSelect);
+        bool HasPreSelect => !IsEmpty(_options.PreSelect);
 
-        bool HasSelect => !Empty(_options.Select);
+        bool HasSelect => !IsEmpty(_options.Select);
 
         public IEnumerable<string> GetFullSelect() {
             if(HasPreSelect && HasSelect)
