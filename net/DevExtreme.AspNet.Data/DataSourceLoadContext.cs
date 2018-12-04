@@ -23,6 +23,10 @@ namespace DevExtreme.AspNet.Data {
         static bool IsEmpty<T>(IReadOnlyCollection<T> collection) {
             return collection == null || collection.Count < 1;
         }
+
+        static bool IsEmptyList(IList list) {
+            return list == null || list.Count < 1;
+        }
     }
 
     // Total count
@@ -40,7 +44,7 @@ namespace DevExtreme.AspNet.Data {
     // Filter
     partial class DataSourceLoadContext {
         public IList Filter => _options.Filter;
-        public bool HasFilter => _options.Filter != null && _options.Filter.Count > 0;
+        public bool HasFilter => !IsEmptyList(_options.Filter);
         public bool UseStringToLower => _options.StringToLower.GetValueOrDefault(_providerInfo.IsLinqToObjects);
     }
 
