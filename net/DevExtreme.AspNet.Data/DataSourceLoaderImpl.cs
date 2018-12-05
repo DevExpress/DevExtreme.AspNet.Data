@@ -14,88 +14,56 @@ namespace DevExtreme.AspNet.Data {
 
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
-        readonly DataSourceLoadOptionsBase Options;
-
-        readonly QueryProviderInfo QueryProviderInfo;
+        readonly DataSourceLoadContext Context;
         readonly DataSourceExpressionBuilder<S> Builder;
-        readonly bool ShouldEmptyGroups;
-        readonly bool CanUseRemoteGrouping;
-        readonly bool SummaryIsTotalCountOnly;
+
+#if DEBUG
+        readonly Action<Expression> ExpressionWatcher;
+        readonly bool UseEnumerableOnce;
+#endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
-            QueryProviderInfo = new QueryProviderInfo(source.Provider);
-            Builder = new DataSourceExpressionBuilder<S>(
-                options,
-                QueryProviderInfo.IsLinqToObjects,
-                options.StringToLower.GetValueOrDefault(QueryProviderInfo.IsLinqToObjects),
-                new AnonTypeNewTweaks {
-                    AllowEmpty = !QueryProviderInfo.IsL2S,
-                    AllowUnusedMembers = !QueryProviderInfo.IsL2S
-                }
-            );
-            ShouldEmptyGroups = options.HasGroups && !options.Group.Last().GetIsExpanded();
-            CanUseRemoteGrouping = options.RemoteGrouping ?? ShouldUseRemoteGrouping(QueryProviderInfo, options);
-            SummaryIsTotalCountOnly = !options.HasGroupSummary && options.HasSummary && options.TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
+#if DEBUG
+            ExpressionWatcher = options.ExpressionWatcher;
+            UseEnumerableOnce = options.UseEnumerableOnce;
+#endif
+
+            var providerInfo = new QueryProviderInfo(source.Provider);
 
             Source = source;
-            Options = options;
-        }
-
-        static bool ShouldUseRemoteGrouping(QueryProviderInfo provider, DataSourceLoadOptionsBase options) {
-            if(provider.IsLinqToObjects)
-                return false;
-
-            if(provider.IsEFCore) {
-                // https://github.com/aspnet/EntityFrameworkCore/issues/2341
-                // https://github.com/aspnet/EntityFrameworkCore/issues/11993
-                // https://github.com/aspnet/EntityFrameworkCore/issues/11999
-                if(provider.Version < new Version(2, 2, 0))
-                    return false;
-
-                bool HasAvg(SummaryInfo[] summary) {
-                    return summary != null && summary.Any(i => i.SummaryType == "avg");
+            Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
+            Builder = new DataSourceExpressionBuilder<S>(
+                Context,
+                providerInfo.IsLinqToObjects,
+                new AnonTypeNewTweaks {
+                    AllowEmpty = !providerInfo.IsL2S,
+                    AllowUnusedMembers = !providerInfo.IsL2S
                 }
-
-                #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
-                if(HasAvg(options.TotalSummary) || HasAvg(options.GroupSummary))
-                    return false;
-            }
-
-            return true;
+            );
         }
 
         public LoadResult Load() {
-            if(Options.IsCountQuery)
+            if(Context.IsCountQuery)
                 return new LoadResult { totalCount = ExecCount() };
 
             var result = new LoadResult();
 
-            if(CanUseRemoteGrouping && ShouldEmptyGroups) {
+            if(Context.UseRemoteGrouping && Context.ShouldEmptyGroups) {
                 var groupingResult = ExecRemoteGrouping();
 
-                EmptyGroups(groupingResult.Groups, Options.Group.Length);
+                EmptyGroups(groupingResult.Groups, Context.Group.Count);
 
-                result.data = Paginate(groupingResult.Groups, Options.Skip, Options.Take);
+                result.data = Paginate(groupingResult.Groups, Context.Skip, Context.Take);
                 result.summary = groupingResult.Totals;
                 result.totalCount = groupingResult.TotalCount;
 
-                if(Options.RequireGroupCount)
+                if(Context.RequireGroupCount)
                     result.groupCount = groupingResult.Groups.Count();
             } else {
-                if(!Options.HasPrimaryKey)
-                    Options.PrimaryKey = Utils.GetPrimaryKey(typeof(S));
-
-                if(!Options.HasPrimaryKey && !Options.HasDefaultSort && (Options.Skip > 0 || Options.Take > 0)) {
-                    if(QueryProviderInfo.IsEFClassic || QueryProviderInfo.IsEFCore)
-                        Options.DefaultSort = EFSorting.FindSortableMember(typeof(S));
-                    else if(QueryProviderInfo.IsXPO)
-                        Options.DefaultSort = "this";
-                }
-
-                var deferPaging = Options.HasGroups || !CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary;
+                var deferPaging = Context.HasGroups || !Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary;
                 var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
 
-                if(Options.HasAnySelect) {
+                if(Context.HasAnySelect) {
                     ContinueWithGrouping(
                         ExecWithSelect(loadExpr),
                         result
@@ -108,19 +76,19 @@ namespace DevExtreme.AspNet.Data {
                 }
 
                 if(deferPaging)
-                    result.data = Paginate(result.data, Options.Skip, Options.Take);
+                    result.data = Paginate(result.data, Context.Skip, Context.Take);
 
-                if(ShouldEmptyGroups)
-                    EmptyGroups(result.data, Options.Group.Length);
+                if(Context.ShouldEmptyGroups)
+                    EmptyGroups(result.data, Context.Group.Count);
             }
 
             return result;
         }
 
         IEnumerable<ExpandoObject> ExecWithSelect(Expression loadExpr) {
-            var select = Options.GetFullSelect();
+            var select = Context.GetFullSelect();
 
-            if(Options.UseRemoteSelect)
+            if(Context.UseRemoteSelect)
                 return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), select);
 
             return SelectHelper.Evaluate(ExecExpr<S>(Source, loadExpr), select);
@@ -128,9 +96,9 @@ namespace DevExtreme.AspNet.Data {
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {
             var accessor = new DefaultAccessor<R>();
-            if(Options.HasGroups) {
-                var groups = new GroupHelper<R>(accessor).Group(loadResult, Options.Group);
-                if(Options.RequireGroupCount)
+            if(Context.HasGroups) {
+                var groups = new GroupHelper<R>(accessor).Group(loadResult, Context.Group);
+                if(Context.RequireGroupCount)
                     result.groupCount = groups.Count;
                 ContinueWithAggregation(groups, accessor, result);
             } else {
@@ -139,24 +107,24 @@ namespace DevExtreme.AspNet.Data {
         }
 
         void ContinueWithAggregation<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
-            if(CanUseRemoteGrouping && !SummaryIsTotalCountOnly && Options.HasSummary && !Options.HasGroups) {
+            if(Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary && !Context.HasGroups) {
                 var groupingResult = ExecRemoteGrouping();
                 result.totalCount = groupingResult.TotalCount;
                 result.summary = groupingResult.Totals;
             } else {
                 var totalCount = -1;
 
-                if(Options.RequireTotalCount || SummaryIsTotalCountOnly)
+                if(Context.RequireTotalCount || Context.SummaryIsTotalCountOnly)
                     totalCount = ExecCount();
 
-                if(Options.RequireTotalCount)
+                if(Context.RequireTotalCount)
                     result.totalCount = totalCount;
 
-                if(SummaryIsTotalCountOnly) {
-                    result.summary = Enumerable.Repeat((object)totalCount, Options.TotalSummary.Length).ToArray();
-                } else if(Options.HasSummary) {
+                if(Context.SummaryIsTotalCountOnly) {
+                    result.summary = Enumerable.Repeat((object)totalCount, Context.TotalSummary.Count).ToArray();
+                } else if(Context.HasSummary) {
                     data = Buffer<R>(data);
-                    result.summary = new AggregateCalculator<R>(data, accessor, Options.TotalSummary, Options.GroupSummary).Run();
+                    result.summary = new AggregateCalculator<R>(data, accessor, Context.TotalSummary, Context.GroupSummary).Run();
                 }
             }
 
@@ -166,7 +134,7 @@ namespace DevExtreme.AspNet.Data {
         int ExecCount() {
             var expr = Builder.BuildCountExpr(Source.Expression);
 #if DEBUG
-            Options.ExpressionWatcher?.Invoke(expr);
+            ExpressionWatcher?.Invoke(expr);
 #endif
             return Source.Provider.Execute<int>(expr);
         }
@@ -175,9 +143,9 @@ namespace DevExtreme.AspNet.Data {
             return RemoteGroupTransformer.Run(
                 typeof(S),
                 ExecExpr<AnonType>(Source, Builder.BuildLoadGroupsExpr(Source.Expression)),
-                Options.HasGroups ? Options.Group.Length : 0,
-                Options.TotalSummary,
-                Options.GroupSummary
+                Context.HasGroups ? Context.Group.Count : 0,
+                Context.TotalSummary,
+                Context.GroupSummary
             );
         }
 
@@ -185,10 +153,10 @@ namespace DevExtreme.AspNet.Data {
             IEnumerable<R> result = source.Provider.CreateQuery<R>(expr);
 
 #if DEBUG
-            if(Options.UseEnumerableOnce)
+            if(UseEnumerableOnce)
                 result = new EnumerableOnce<R>(result);
 
-            Options.ExpressionWatcher?.Invoke(expr);
+            ExpressionWatcher?.Invoke(expr);
 #endif
 
             return result;

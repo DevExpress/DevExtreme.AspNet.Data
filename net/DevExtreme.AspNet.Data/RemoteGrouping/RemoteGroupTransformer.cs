@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupTransformer {
 
-        public static RemoteGroupingResult Run(Type sourceItemType, IEnumerable<AnonType> flatGroups, int groupCount, SummaryInfo[] totalSummary, SummaryInfo[] groupSummary) {
+        public static RemoteGroupingResult Run(Type sourceItemType, IEnumerable<AnonType> flatGroups, int groupCount, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary) {
             List<Group> hierGroups = null;
 
             if(groupCount > 0) {
@@ -47,13 +47,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             };
         }
 
-        static List<SummaryInfo> TransformSummary(SummaryInfo[] original, ref int fieldIndex) {
+        static List<SummaryInfo> TransformSummary(IReadOnlyList<SummaryInfo> original, ref int fieldIndex) {
             if(original == null)
                 return null;
 
             var result = new List<SummaryInfo>();
 
-            for(var originalIndex = 0; originalIndex < original.Length; originalIndex++) {
+            for(var originalIndex = 0; originalIndex < original.Count; originalIndex++) {
                 var originalType = original[originalIndex].SummaryType;
 
                 if(originalType == AggregateName.COUNT) {
