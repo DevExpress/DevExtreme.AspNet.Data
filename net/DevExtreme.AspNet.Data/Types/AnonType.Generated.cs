@@ -399,7 +399,7 @@ namespace DevExtreme.AspNet.Data.Types {
     }
 
     partial class AnonType {
-        const int MAX_SIZE = 32;
+        internal const int MAX_SIZE = 32;
 
         static Type GetTemplate(int size) {
             if(size == 1) return typeof(AnonType<>);

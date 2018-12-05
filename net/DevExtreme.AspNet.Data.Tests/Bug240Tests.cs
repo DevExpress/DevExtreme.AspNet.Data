@@ -16,6 +16,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new SortingInfo { Selector = selector }
                 },
                 Select = new[] { selector },
+                RemoteSelect = true,
                 Group = new[] {
                     new GroupingInfo { Selector = selector, IsExpanded = false }
                 },

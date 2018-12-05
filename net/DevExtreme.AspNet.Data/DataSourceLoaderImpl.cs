@@ -86,12 +86,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         IEnumerable<ExpandoObject> ExecWithSelect(Expression loadExpr) {
-            var select = Context.GetFullSelect();
-
             if(Context.UseRemoteSelect)
-                return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), select);
+                return SelectHelper.ConvertRemoteResult(ExecExpr<AnonType>(Source, loadExpr), Context.FullSelect);
 
-            return SelectHelper.Evaluate(ExecExpr<S>(Source, loadExpr), select);
+            return SelectHelper.Evaluate(ExecExpr<S>(Source, loadExpr), Context.FullSelect);
         }
 
         void ContinueWithGrouping<R>(IEnumerable<R> loadResult, LoadResult result) {

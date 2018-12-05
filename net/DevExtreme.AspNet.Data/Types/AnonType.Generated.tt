@@ -43,7 +43,7 @@ namespace DevExtreme.AspNet.Data.Types {
 <# } #>
 
     partial class AnonType {
-        const int MAX_SIZE = <#= SIZES.Max() #>;
+        internal const int MAX_SIZE = <#= SIZES.Max() #>;
 
         static Type GetTemplate(int size) {
 <# foreach(var size in SIZES) { #>
