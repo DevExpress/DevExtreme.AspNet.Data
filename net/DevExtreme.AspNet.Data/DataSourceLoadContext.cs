@@ -12,8 +12,6 @@ namespace DevExtreme.AspNet.Data {
         readonly QueryProviderInfo _providerInfo;
         readonly Type _itemType;
 
-        bool? _summaryIsTotalCountOnly;
-
         public DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType) {
             _options = options;
             _providerInfo = providerInfo;
@@ -190,6 +188,8 @@ namespace DevExtreme.AspNet.Data {
 
     // Summary
     partial class DataSourceLoadContext {
+        bool? _summaryIsTotalCountOnly;
+
         public IReadOnlyList<SummaryInfo> TotalSummary => _options.TotalSummary;
 
         public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
