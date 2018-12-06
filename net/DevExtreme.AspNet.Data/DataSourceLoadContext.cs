@@ -1,5 +1,6 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
+using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -209,25 +210,43 @@ namespace DevExtreme.AspNet.Data {
 
     // Select
     partial class DataSourceLoadContext {
-        public bool HasAnySelect => HasPreSelect || HasSelect;
+        string[] _fullSelect;
+        bool? _useRemoteSelect;
 
-        public bool UseRemoteSelect => _options.RemoteSelect.GetValueOrDefault(true);
+        public bool HasAnySelect => FullSelect.Count > 0;
 
-        bool HasPreSelect => !IsEmpty(_options.PreSelect);
+        public bool UseRemoteSelect {
+            get {
+                if(!_useRemoteSelect.HasValue)
+                    _useRemoteSelect = _options.RemoteSelect ?? (!_providerInfo.IsLinqToObjects && FullSelect.Count <= AnonType.MAX_SIZE);
 
-        bool HasSelect => !IsEmpty(_options.Select);
+                return _useRemoteSelect.Value;
+            }
+        }
 
-        public IEnumerable<string> GetFullSelect() {
-            if(HasPreSelect && HasSelect)
-                return Enumerable.Intersect(_options.PreSelect, _options.Select);
+        public IReadOnlyList<string> FullSelect {
+            get {
+                string[] Init() {
+                    var hasSelect = !IsEmpty(_options.Select);
+                    var hasPreSelect = !IsEmpty(_options.PreSelect);
 
-            if(HasPreSelect)
-                return _options.PreSelect;
+                    if(hasPreSelect && hasSelect)
+                        return Enumerable.Intersect(_options.PreSelect, _options.Select).ToArray();
 
-            if(HasSelect)
-                return _options.Select;
+                    if(hasPreSelect)
+                        return _options.PreSelect;
 
-            return Enumerable.Empty<string>();
+                    if(hasSelect)
+                        return _options.Select;
+
+                    return new string[0];
+                }
+
+                if(_fullSelect == null)
+                    _fullSelect = Init();
+
+                return _fullSelect;
+            }
         }
     }
 }

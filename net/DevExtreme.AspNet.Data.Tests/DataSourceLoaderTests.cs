@@ -445,11 +445,13 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.ContainsKey("b"));
         }
 
-        [Fact]
-        public void Load_RemoteSelectFalse_NoAnonTypeLimits() {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(null)]
+        public void Load_Select_NoAnonTypeLimits(bool? remoteSelect) {
             var loadResult = DataSourceLoader.Load(new[] { "a" }, new SampleLoadOptions {
                 Select = Enumerable.Repeat("this", 123).ToArray(),
-                RemoteSelect = false
+                RemoteSelect = remoteSelect
             });
 
             Assert.All(
