@@ -17,7 +17,8 @@ interface Options {
     deleteUrl?: string,
     deleteMethod?: string,
 
-    onBeforeSend?: (operation: string, ajaxSettings: JQueryAjaxSettings) => void
+    onBeforeSend?: (operation: string, ajaxSettings: JQueryAjaxSettings) => void,
+    onAjaxError?: (e: { xhr: JQueryXHR, error: string | Error }) => void
 }
 
 export function createStore(options: Options): CustomStore;
