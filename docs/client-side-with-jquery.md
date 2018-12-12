@@ -53,17 +53,18 @@ The client-side API consists of a single method, `DevExpress.data.AspNet.createS
 - `insertMethod` - the HTTP method for insert requests; "POST" by default;
 - `deleteMethod` - the HTTP method for delete requests; "DELETE" by default;
 - `onBeforeSend` - a function that customizes the request before it is sent; accepts the following parameters:
-    - `operation`: string       
+    - `operation`: `string`       
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
-    - `jQueryAjaxSettings`: object      
+    - `jQueryAjaxSettings`: `object`      
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
 - `onAjaxError` - a function to be called when an Ajax request fails; accepts the following parameter:
-    - `e`: object
-    Information about the event; contains the following fields:
-        - `xhr`: [jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR)
+    - `e`: `object`   
+    Information about the event; contains the following properties:
+        - `xhr`: [`jqXHR`](http://api.jquery.com/jQuery.ajax/#jqXHR) when using jQuery;  [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) otherwise    
         The request object.
-        - `error`: string | [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
-        The error message. You can assign a custom error message or JavaScript Error object to this field.
+        - `error`: `string` | [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)    
+        The error message. You can assign a custom error message or JavaScript Error object to this property.
+- `errorHandler` - a function to be executed when the store throws an error; accepts a JavaScript [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) object as the parameter.
 
 You can find an example with jQuery [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
