@@ -57,6 +57,13 @@ The client-side API consists of a single method, `DevExpress.data.AspNet.createS
     The operation to be performed by the request. Can be "load", "update", "insert" or "delete".
     - `jQueryAjaxSettings`: object      
     Settings configuring the request. For details, refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description.
+- `onAjaxError` - a function to be called when an Ajax request fails; accepts the following parameter:
+    - `e`: object
+    Information about the event; contains the following fields:
+        - `xhr`: [jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR)
+        The request object.
+        - `error`: string | [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+        The error message. You can assign a custom error message or JavaScript Error object to this field.
 
 You can find an example with jQuery [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
 
