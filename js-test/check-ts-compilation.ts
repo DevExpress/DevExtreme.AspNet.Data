@@ -6,6 +6,10 @@ let store = AspNetData.createStore({
     loadUrl: "http://example.com",
     onBeforeSend: (operation, ajax) => {
         ajax.headers['X-Custom'] = 'value'
+    },
+    onAjaxError: e => {
+        e.error = e.xhr.responseText;
+        e.error = new Error();
     }
 })
 

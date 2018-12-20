@@ -209,6 +209,50 @@
 
             store.load();
         });
+
+        QUnit.module("onAjaxError", function() {
+
+            function testCase(handler, checker) {
+                return function(assert) {
+                    var done = assert.async();
+
+                    XHRMock.use(function(req, res) {
+                        return res.status(500).body('{ "code": 123 }');
+                    });
+
+                    var store = createStore({
+                        loadUrl: "/",
+                        onAjaxError: handler
+                    });
+
+                    store.load().fail(function(error) {
+                        checker(assert, error);
+                        done();
+                    });
+                }
+            };
+
+            QUnit.test("error = String", testCase(
+                function(e) {
+                    e.error = "Code " + JSON.parse(e.xhr.responseText).code;
+                },
+                function(assert, error) {
+                    assert.equal(error.message, "Code 123");
+                }
+            ));
+
+            QUnit.test("error = Error object", testCase(
+                function(e) {
+                    e.error = new Error("abc");
+                    e.error.code = JSON.parse(e.xhr.responseText).code;
+                },
+                function(assert, error) {
+                    assert.equal(error.message, "abc");
+                    assert.equal(error.code, 123)
+                }
+            ));
+
+        });
     });
 
     QUnit.module("load options", function() {

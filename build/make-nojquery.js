@@ -53,6 +53,7 @@ fs.writeFileSync(
     path.join(outputPath, "index.d.ts"),
     fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.d.ts"), "utf-8")
         .replace("JQueryAjaxSettings", AJAX_SETTINGS_SURROGATE)
+        .replace("JQueryXHR", "XMLHttpRequest")
 );
 
 fs.writeFileSync(
