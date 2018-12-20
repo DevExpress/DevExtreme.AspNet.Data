@@ -45,7 +45,8 @@
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
             deleteUrl = options.deleteUrl,
-            onBeforeSend = options.onBeforeSend;
+            onBeforeSend = options.onBeforeSend,
+            onAjaxError = options.onAjaxError;
 
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
             var d = $.Deferred();
@@ -71,9 +72,16 @@
                             d.resolve();
                     })
                     .fail(function(xhr, textStatus) {
-                        var message = getErrorMessageFromXhr(xhr);
-                        if(message)
-                            d.reject(message);
+                        var error = getErrorMessageFromXhr(xhr);
+
+                        if(onAjaxError) {
+                            var e = { xhr: xhr, error: error };
+                            onAjaxError(e);
+                            error = e.error;
+                        }
+
+                        if(error)
+                            d.reject(error);
                         else
                             d.reject(xhr, textStatus);
                     });
