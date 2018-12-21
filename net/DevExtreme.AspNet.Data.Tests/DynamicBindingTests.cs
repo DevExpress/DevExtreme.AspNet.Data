@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
-    public class DynamicObjectTests {
+    public class DynamicBindingTests {
         const string P1 = "p1";
 
         static ExpandoObject CreateExpando(object p1) {
