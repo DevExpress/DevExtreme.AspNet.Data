@@ -213,6 +213,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Single(loadResult.data);
         }
 
+        [Fact]
+        public void NoToStringForNumbers() {
+            var compiler = new FilterExpressionCompiler<dynamic>(false);
+
+            void Case(IList clientFilter, string expectedExpr, object trueTestValue) {
+                var expr = compiler.Compile(clientFilter);
+                Assert.Equal(expectedExpr, expr.Body.ToString());
+                Assert.True((bool)expr.Compile().DynamicInvoke(trueTestValue));
+            }
+
+            Case(
+                new object[] { "this", ">", new JValue(9) },
+                "(DynamicCompare(obj, 9) > 0)",
+                10
+            );
+
+            Case(
+                new object[] { "this", new JValue("a") },
+                @"(obj.ToString() == ""a"")",
+                "a"
+            );
+        }
     }
 
 }
