@@ -77,6 +77,18 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True((bool)method.DynamicInvoke('c'));
         }
 
+        [Fact]
+        public void GlobalSwitch() {
+            StaticBarrier.Run(delegate {
+                var options = new SampleLoadOptions {
+                    Filter = new[] { "this", "contains", "A" }
+                };
+                DataSourceLoader.StringToLowerDefault = false;
+                DataSourceLoader.Load(new[] { "" }, options).data.Cast<object>().ToArray();
+                Assert.DoesNotContain(options.ExpressionLog, line => line.Contains("ToLower"));
+            });
+        }
+
         void AssertFilter<T>(bool guardNulls, bool stringToLower, string op, string expectedExpr) {
             expectedExpr = expectedExpr.Replace("'", "\"");
 
