@@ -15,7 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 } finally {
                     CustomAggregators.Clear();
                     CustomAccessorCompilers.Clear();
-                    DataSourceLoader.StringToLowerDefault = null;
+                    DataSourceLoadOptionsBase.StringToLowerDefault = null;
                 }
             }
 

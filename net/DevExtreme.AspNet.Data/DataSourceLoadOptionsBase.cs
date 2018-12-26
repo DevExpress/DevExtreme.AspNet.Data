@@ -10,6 +10,11 @@ namespace DevExtreme.AspNet.Data {
     /// </summary>
     public class DataSourceLoadOptionsBase {
         /// <summary>
+        /// TODO
+        /// </summary>
+        public static bool? StringToLowerDefault { get; set; }
+
+        /// <summary>
         /// A flag indicating whether the total number of data objects is required.
         /// </summary>
         public bool RequireTotalCount { get; set; }

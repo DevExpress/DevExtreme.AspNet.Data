@@ -83,7 +83,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var options = new SampleLoadOptions {
                     Filter = new[] { "this", "contains", "A" }
                 };
-                DataSourceLoader.StringToLowerDefault = false;
+                DataSourceLoadOptionsBase.StringToLowerDefault = false;
                 DataSourceLoader.Load(new[] { "" }, options).data.Cast<object>().ToArray();
                 Assert.DoesNotContain(options.ExpressionLog, line => line.Contains("ToLower"));
             });

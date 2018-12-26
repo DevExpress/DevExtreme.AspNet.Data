@@ -9,7 +9,6 @@ namespace DevExtreme.AspNet.Data {
     /// Provides static methods for loading data from collections that implement the IEnumerable&lt;T&gt; or IQueryable&lt;T&gt; interface.
     /// </summary>
     public class DataSourceLoader {
-        public static bool? StringToLowerDefault { get; set; }
 
         /// <summary>
         /// Loads data from a collection that implements the IEnumerable&lt;T&gt; interface.
