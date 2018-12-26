@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data {
     /// </summary>
     public class DataSourceLoadOptionsBase {
         /// <summary>
-        /// TODO
+        /// A global default value for the <see cref="StringToLower" /> property
         /// </summary>
         public static bool? StringToLowerDefault { get; set; }
 
