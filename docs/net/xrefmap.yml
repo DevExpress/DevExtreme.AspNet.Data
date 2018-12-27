@@ -345,6 +345,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
   nameWithType: DataSourceLoadOptionsBase.StringToLower
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault
+  name: StringToLowerDefault
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLowerDefault
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault
+  nameWithType: DataSourceLoadOptionsBase.StringToLowerDefault
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault*
+  name: StringToLowerDefault
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLowerDefault_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLowerDefault
+  nameWithType: DataSourceLoadOptionsBase.StringToLowerDefault
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Take
   name: Take
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Take
