@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data {
     partial class DataSourceLoadContext {
         public IList Filter => _options.Filter;
         public bool HasFilter => !IsEmptyList(_options.Filter);
-        public bool UseStringToLower => _options.StringToLower.GetValueOrDefault(_providerInfo.IsLinqToObjects);
+        public bool UseStringToLower => _options.StringToLower ?? DataSourceLoadOptionsBase.StringToLowerDefault ?? _providerInfo.IsLinqToObjects;
     }
 
     // Grouping
