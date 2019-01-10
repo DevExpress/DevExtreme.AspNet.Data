@@ -7,7 +7,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
 
     class RemoteAvgAggregator<T> : Aggregator<T> {
         Aggregator<T> _countAggregator;
-        Aggregator<T> _valueAggregator;
+        SumAggregator<T> _valueAggregator;
 
         public RemoteAvgAggregator(IAccessor<T> accessor)
             : base(accessor) {
@@ -21,11 +21,13 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         }
 
         public override object Finish() {
-            var count = (decimal?)_countAggregator.Finish();
+            var count = Convert.ToInt32(_countAggregator.Finish());
             if(count == 0)
                 return null;
 
-            return (decimal?)_valueAggregator.Finish() / count;
+            var valueAccumulator = _valueAggregator.GetAccumulator();
+            valueAccumulator.Divide(count);
+            return valueAccumulator.GetValue();
         }
     }
 
