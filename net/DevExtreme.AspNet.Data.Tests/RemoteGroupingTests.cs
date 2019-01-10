@@ -352,6 +352,18 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Null(result.Totals[0]);
         }
 
+        [Fact]
+        public void Issue324() {
+            var loadResult = DataSourceLoader.Load(new float?[] { 1, 3 }, new SampleLoadOptions {
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "avg" }
+                }
+            });
+
+            Assert.Equal(2d, loadResult.summary[0]);
+        }
+
     }
 
 }
