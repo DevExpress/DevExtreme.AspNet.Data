@@ -17,6 +17,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
             modelBuilder.Entity<RemoteGroupingStress.DataItem>();
             modelBuilder.Entity<Summary.DataItem>();
+            modelBuilder.Entity<Bug326.Entity>();
         }
 
         public static void Exec(Action<TestDbContext> action) {
