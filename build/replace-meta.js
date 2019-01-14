@@ -8,7 +8,6 @@ const MAIN_REPO_NAME = "DevExpress/DevExtreme.AspNet.Data";
 const META_COMPANY = "Developer Express Inc.";
 const META_COPYRIGHT = "Copyright (c) " + META_COMPANY;
 const META_DESCRIPTION = "DevExtreme data layer extension for ASP.NET";
-const META_LICENSE_URL = `https://raw.githubusercontent.com/${MAIN_REPO_NAME}/master/LICENSE`;
 const META_PROJECT_URL = "https://github.com/" + MAIN_REPO_NAME;
 
 const BUILD_NUMBER = process.argv[2];
@@ -51,7 +50,6 @@ if(REPO_NAME === MAIN_REPO_NAME && /^v?(([.\d]+)[\w-]*)$/.test(TAG)) {
             .replace("%meta_company%", META_COMPANY)
             .replace("%meta_copyright%", META_COPYRIGHT)
             .replace("%meta_description%", META_DESCRIPTION)
-            .replace("%meta_license_url%", META_LICENSE_URL)
             .replace("%meta_project_url%", META_PROJECT_URL)
     );
 });

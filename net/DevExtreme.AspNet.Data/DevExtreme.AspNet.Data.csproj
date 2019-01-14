@@ -7,7 +7,7 @@
     <Authors>%meta_company%</Authors>
     <Copyright>%meta_copyright%</Copyright>
     <PackageProjectUrl>%meta_project_url%</PackageProjectUrl>
-    <PackageLicenseUrl>%meta_license_url%</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://secure.gravatar.com/avatar/6b38f1e9ffd8b069bcdc2741934fdbcf?s=512&amp;r=g</PackageIconUrl>
   </PropertyGroup>
 
