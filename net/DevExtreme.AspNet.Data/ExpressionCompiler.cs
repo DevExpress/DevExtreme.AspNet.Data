@@ -46,7 +46,7 @@ namespace DevExtreme.AspNet.Data {
                 else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
-                    currentTarget = Expression.PropertyOrField(currentTarget, clientExprItem);
+                    currentTarget = FixReflectedType(Expression.PropertyOrField(currentTarget, clientExprItem));
 
                 progression.Add(currentTarget);
             }
@@ -113,6 +113,22 @@ namespace DevExtreme.AspNet.Data {
                 "Item",
                 Expression.Constant(member)
             );
+        }
+
+        static MemberExpression FixReflectedType(MemberExpression expr) {
+            var member = expr.Member;
+            var declaringType = member.DeclaringType;
+
+            if(member.ReflectedType != declaringType) {
+                switch(member.MemberType) {
+                    case MemberTypes.Property:
+                        return Expression.Property(expr.Expression, declaringType, member.Name);
+                    case MemberTypes.Field:
+                        return Expression.Field(expr.Expression, declaringType, member.Name);
+                }
+            }
+
+            return expr;
         }
     }
 
