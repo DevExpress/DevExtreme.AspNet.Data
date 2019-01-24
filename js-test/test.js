@@ -6,6 +6,8 @@
 
     if(typeof define === "function" && define.amd) {
         define(function(require) {
+            require("../experiments/ng-http-client-fixture");
+
             factory(
                 require("xhr-mock").default,
                 require("devextreme/core/version"),
@@ -14,6 +16,8 @@
             );
         });
     } else if (typeof module === "object" && module.exports) {
+        //require("../experiments/ng-http-client-fixture");
+
         module.exports = factory(
             require("xhr-mock").default,
             require("devextreme/core/version"),
