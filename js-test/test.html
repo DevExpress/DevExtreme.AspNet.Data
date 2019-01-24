@@ -3,6 +3,15 @@
     if(!window.Promise)
         TEST_DEPS.push("../node_modules/bluebird/js/browser/bluebird.core.min.js");
 
+    if(location.search.indexOf("ng-http-client") > -1) {
+        TEST_DEPS.push(
+            "../node_modules/rxjs/bundles/rxjs.umd.js",
+            "../node_modules/@angular/core/bundles/core.umd.js",
+            "../node_modules/@angular/common/bundles/common-http.umd.js",
+            "../experiments/ng-http-client-fixture.js"
+        );
+    }
+
     TEST_DEPS.forEach(function(i) {
         document.write("<script src='" + i + "'></scr" + "ipt>");
     });
@@ -10,6 +19,13 @@
 
 <link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css">
 <script src="../node_modules/qunit/qunit/qunit.js"></script>
+
+<script>
+    QUnit.config.urlConfig.push({
+        id: "ng-http-client",
+        label: "NG Http Client"
+    });
+</script>
 
 <div id="qunit"></div>
 

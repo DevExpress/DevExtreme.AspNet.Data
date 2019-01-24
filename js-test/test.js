@@ -120,7 +120,7 @@
             store.remove(123).fail(onFail);
         });
 
-        QUnit.test("timeout", function(assert) {
+        QUnit.skip("timeout", function(assert) {
             var done = assert.async();
 
             wontRespond();
@@ -692,6 +692,37 @@
         store.insert({});
         store.update(123, {});
         store.remove(123);
+    });
+
+
+    QUnit.test("additional ajaxOptions", function(assert) {
+        var done = assert.async();
+
+        var withCredentials;
+        var _send = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.send = function() {
+            withCredentials = this.withCredentials;
+            _send.apply(this, arguments);
+        };
+
+        XHRMock.use(function(req) {
+            assert.notOk("_" in req.url().query);
+            assert.equal(req.header("X-Test"), "OK");
+            assert.equal(withCredentials, true);
+            XMLHttpRequest.prototype.send = _send;
+            done();
+            return NEVER_RESOLVE;
+        });
+
+        createStore({
+            loadUrl: "/",
+            onBeforeSend: function(op, ajaxOptions) {
+                ajaxOptions.cache = true;
+                ajaxOptions.headers = { "X-Test": "OK" };
+                ajaxOptions.xhrFields = { withCredentials: true };
+            }
+        }).load();
     });
 
     QUnit.test("insert responds with text", function(assert) {

@@ -108,7 +108,7 @@
             if(options) {
 
                 ["skip", "take", "requireTotalCount", "requireGroupCount"].forEach(function(i) {
-                    if(i in options)
+                    if(options[i] !== undefined)
                         result[i] = options[i];
                 });
 
