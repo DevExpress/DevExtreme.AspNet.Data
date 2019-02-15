@@ -14,7 +14,18 @@ namespace DevExtreme.AspNet.Data {
         static IEnumerable<CSharpArgumentInfo> EMPTY_ARGUMENT_INFO;
 
         public static bool ShouldUseDynamicBinding(Type type) {
-            return type == typeof(object) || typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type);
+            if(type == typeof(object))
+                return true;
+
+            if(typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type)) {
+                var name = type.AssemblyQualifiedName;
+                if(name.Contains("f__AnonymousType") && name.Contains("System.Linq.Dynamic.Core.DynamicClasses"))
+                    return false;
+
+                return true;
+            }
+
+            return false;
         }
 
         public static Expression CompileGetMember(Expression target, string clientExpr) {

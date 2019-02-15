@@ -235,6 +235,16 @@ namespace DevExtreme.AspNet.Data.Tests {
                 "a"
             );
         }
+
+        [Fact]
+        public void T714342() {
+            var data = System.Linq.Dynamic.Core.DynamicQueryableExtensions.Select(
+                new[] { new { CategoryID = 1 } }.AsQueryable(),
+                "new { CategoryID }"
+            );
+
+            Assert.False(DynamicBindingHelper.ShouldUseDynamicBinding(data.ElementType));
+        }
     }
 
 }
