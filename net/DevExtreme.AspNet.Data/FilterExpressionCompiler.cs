@@ -92,11 +92,20 @@ namespace DevExtreme.AspNet.Data {
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
                     var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
-                    accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
-                    valueExpr = Expression.Constant(0);
-                } else if(useDynamicBinding) {
-                    accessorExpr = Expression.Call(typeof(Utils).GetMethod(nameof(Utils.DynamicCompare)), accessorExpr, valueExpr);
-                    valueExpr = Expression.Constant(0);
+                    return Expression.MakeBinary(
+                        expressionType,
+                        Expression.Call(compareMethod, accessorExpr, valueExpr),
+                        Expression.Constant(0)
+                    );
+                }
+
+                if(useDynamicBinding) {
+                    var compareMethod = typeof(Utils).GetMethod(nameof(Utils.DynamicCompare));
+                    return Expression.MakeBinary(
+                        expressionType,
+                        Expression.Call(compareMethod, accessorExpr, valueExpr),
+                        Expression.Constant(0)
+                    );
                 }
 
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
