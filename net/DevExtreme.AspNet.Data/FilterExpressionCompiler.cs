@@ -88,6 +88,9 @@ namespace DevExtreme.AspNet.Data {
                 if(_stringToLower && clientValue is String)
                     clientValue = ((string)clientValue).ToLower();
 
+                if((accessorExpr.Type == typeof(Guid) || accessorExpr.Type == typeof(Guid?)) && IsInequality(expressionType))
+                    return CompileGuidComparison(accessorExpr, expressionType, clientValue);
+
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
@@ -115,6 +118,31 @@ namespace DevExtreme.AspNet.Data {
 
         bool IsInequality(ExpressionType type) {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
+        }
+
+        Expression CompileGuidComparison(Expression accessorExpr, ExpressionType expressionType, object clientValue) {
+            if(clientValue == null)
+                return Expression.Constant(false);
+
+            var result = Expression.MakeBinary(
+                expressionType,
+                Expression.Call(
+                    Utils.IsNullable(accessorExpr.Type) ? Expression.Property(accessorExpr, "Value") : accessorExpr,
+                    typeof(Guid).GetMethod(nameof(Guid.CompareTo), new[] { typeof(Guid) }),
+                    Expression.Constant(clientValue, typeof(Guid))
+                ),
+                Expression.Constant(0)
+            );
+
+            if(GuardNulls) {
+                return Expression.Condition(
+                    Expression.MakeBinary(ExpressionType.Equal, accessorExpr, Expression.Constant(null)),
+                    Expression.Constant(false),
+                    result
+                );
+            }
+
+            return result;
         }
 
         Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
