@@ -290,6 +290,33 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("False", CompileOperation("<="));
         }
 
+        [Fact]
+        public void GuidComparison() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/339
+
+            var sampleGuid = Guid.Empty.ToString();
+
+            Assert.Equal(
+                $"(obj.CompareTo({sampleGuid}) > 0)",
+                Compile<Guid>(new[] { "this", ">", sampleGuid }).Body.ToString()
+            );
+
+            Assert.Equal(
+                $"(obj.Value.CompareTo({sampleGuid}) < 0)",
+                Compile<Guid?>(new[] { "this", "<", sampleGuid }).Body.ToString()
+            );
+
+            Assert.Equal(
+                $"IIF((obj == null), False, (obj.Value.CompareTo({sampleGuid}) >= 0))",
+                Compile<Guid?>(new[] { "this", ">=", sampleGuid }, true).Body.ToString()
+            );
+
+            Assert.Equal(
+                "False",
+                Compile<Guid?>(new[] { "this", "<=", null }).Body.ToString()
+            );
+        }
+
     }
 
 }
