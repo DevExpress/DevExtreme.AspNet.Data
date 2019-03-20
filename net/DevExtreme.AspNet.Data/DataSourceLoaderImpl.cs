@@ -23,18 +23,20 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
+            var providerInfo = new QueryProviderInfo(source.Provider);
+            var guardNulls = providerInfo.IsLinqToObjects;
+
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
+            guardNulls = guardNulls && !options.SuppressGuardNulls;
 #endif
-
-            var providerInfo = new QueryProviderInfo(source.Provider);
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
             Builder = new DataSourceExpressionBuilder<S>(
                 Context,
-                providerInfo.IsLinqToObjects,
+                guardNulls,
                 new AnonTypeNewTweaks {
                     AllowEmpty = !providerInfo.IsL2S,
                     AllowUnusedMembers = !providerInfo.IsL2S

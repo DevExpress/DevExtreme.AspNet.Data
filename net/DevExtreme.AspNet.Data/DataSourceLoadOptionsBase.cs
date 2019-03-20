@@ -106,6 +106,7 @@ namespace DevExtreme.AspNet.Data {
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;
+        internal bool SuppressGuardNulls;
 #endif
     }
 
