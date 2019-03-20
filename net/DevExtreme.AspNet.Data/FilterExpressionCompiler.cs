@@ -88,8 +88,17 @@ namespace DevExtreme.AspNet.Data {
                 if(_stringToLower && clientValue is String)
                     clientValue = ((string)clientValue).ToLower();
 
-                if((accessorExpr.Type == typeof(Guid) || accessorExpr.Type == typeof(Guid?)) && IsInequality(expressionType))
-                    return CompileGuidComparison(accessorExpr, expressionType, clientValue);
+                if(IsInequality(expressionType)) {
+                    if(accessorExpr.Type == typeof(Guid) || accessorExpr.Type == typeof(Guid?)) {
+                        var method = typeof(Guid).GetMethod(nameof(Guid.CompareTo), new[] { typeof(Guid) });
+                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
+                    }
+
+                    if(Utils.StripNullableType(accessorExpr.Type).IsEnum) {
+                        var method = typeof(Enum).GetMethod(nameof(Enum.CompareTo), new[] { typeof(object) });
+                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
+                    }
+                }
 
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
@@ -120,7 +129,7 @@ namespace DevExtreme.AspNet.Data {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
         }
 
-        Expression CompileGuidComparison(Expression accessorExpr, ExpressionType expressionType, object clientValue) {
+        Expression CompileCompareToCall(Expression accessorExpr, ExpressionType expressionType, object clientValue, MethodInfo compareToMethod) {
             if(clientValue == null)
                 return Expression.Constant(false);
 
@@ -128,8 +137,8 @@ namespace DevExtreme.AspNet.Data {
                 expressionType,
                 Expression.Call(
                     Utils.IsNullable(accessorExpr.Type) ? Expression.Property(accessorExpr, "Value") : accessorExpr,
-                    typeof(Guid).GetMethod(nameof(Guid.CompareTo), new[] { typeof(Guid) }),
-                    Expression.Constant(clientValue, typeof(Guid))
+                    compareToMethod,
+                    Expression.Constant(clientValue, compareToMethod.GetParameters()[0].ParameterType)
                 ),
                 Expression.Constant(0)
             );
