@@ -103,6 +103,8 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? StringToLower { get; set; }
 
+        public bool? PaginateViaPrimaryKey { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;

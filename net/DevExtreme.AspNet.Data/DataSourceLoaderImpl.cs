@@ -63,7 +63,20 @@ namespace DevExtreme.AspNet.Data {
                     result.groupCount = groupingResult.Groups.Count();
             } else {
                 var deferPaging = Context.HasGroups || !Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary;
-                var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+
+                Expression loadExpr;
+
+                if(!deferPaging && Context.PaginateViaPrimaryKey) {
+                    if(!Context.HasPrimaryKey)
+                        throw new InvalidOperationException("TODO");
+
+                    var loadKeysExpr = Builder.BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
+                    var keyTuples = ExecExpr<AnonType>(Source, loadKeysExpr);
+
+                    loadExpr = Builder.BuildLoadExpr(Source.Expression, false, filterOverride: FilterFromKeys(keyTuples));
+                } else {
+                    loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+                }
 
                 if(Context.HasAnySelect) {
                     ContinueWithGrouping(
@@ -158,6 +171,24 @@ namespace DevExtreme.AspNet.Data {
 
             ExpressionWatcher?.Invoke(expr);
 #endif
+
+            return result;
+        }
+
+        IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
+            var result = new List<object>();
+            var isSingleKey = Context.PrimaryKey.Count == 1;
+
+            foreach(var tuple in keyTuples) {
+                if(result.Count > 0)
+                    result.Add("or");
+
+                if(isSingleKey) {
+                    result.Add(new object[] { Context.PrimaryKey[0], tuple[0] });
+                } else {
+                    throw new NotImplementedException();
+                }
+            }
 
             return result;
         }

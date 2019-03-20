@@ -38,6 +38,7 @@ namespace DevExtreme.AspNet.Data {
     partial class DataSourceLoadContext {
         public int Skip => _options.Skip;
         public int Take => _options.Take;
+        public bool PaginateViaPrimaryKey => _options.PaginateViaPrimaryKey.GetValueOrDefault(false);
     }
 
     // Filter
@@ -111,7 +112,7 @@ namespace DevExtreme.AspNet.Data {
 
         bool HasSort => !IsEmpty(_options.Sort);
 
-        IReadOnlyList<string> PrimaryKey {
+        public IReadOnlyList<string> PrimaryKey {
             get {
                 EnsurePrimaryKeyAndDefaultSort();
                 return _primaryKey;
@@ -125,7 +126,7 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        bool HasPrimaryKey => !IsEmpty(PrimaryKey);
+        public bool HasPrimaryKey => !IsEmpty(PrimaryKey);
 
         bool HasDefaultSort => !String.IsNullOrEmpty(DefaultSort);
 
