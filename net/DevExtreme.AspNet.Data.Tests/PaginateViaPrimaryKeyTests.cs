@@ -50,6 +50,30 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void MultiKey() {
+            var data = Enumerable.Range(0, 5)
+                .Select(i => new { K1 = i, K2 = 5 - i })
+                .ToArray();
+
+            var loadOptions = new SampleLoadOptions {
+                SuppressGuardNulls = true,
+
+                PrimaryKey = new[] { "K1", "K2" },
+                PaginateViaPrimaryKey = true,
+
+                Skip = 3,
+                Take = 2
+            };
+
+            DataSourceLoader.Load(data, loadOptions);
+
+            Assert.Contains(
+                ".Where(obj => (((obj.K1 == 3) AndAlso (obj.K2 == 2)) OrElse ((obj.K1 == 4) AndAlso (obj.K2 == 1))))",
+                loadOptions.ExpressionLog[1]
+            );
+        }
+
+        [Fact]
         public void NotUsedWoSkip() {
             var loadOptions = new SampleLoadOptions {
                 PaginateViaPrimaryKey = true,

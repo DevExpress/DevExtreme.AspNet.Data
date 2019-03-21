@@ -177,16 +177,24 @@ namespace DevExtreme.AspNet.Data {
 
         IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
             var result = new List<object>();
-            var isSingleKey = Context.PrimaryKey.Count == 1;
+            var key = Context.PrimaryKey;
+            var keyLength = key.Count;
 
             foreach(var tuple in keyTuples) {
                 if(result.Count > 0)
                     result.Add("or");
 
-                if(isSingleKey) {
-                    result.Add(new object[] { Context.PrimaryKey[0], tuple[0] });
+                void AddCondition(IList container, int index) {
+                    container.Add(new object[] { key[index], tuple[index] });
+                }
+
+                if(keyLength == 1) {
+                    AddCondition(result, 0);
                 } else {
-                    throw new NotImplementedException();
+                    var group = new List<object>();
+                    for(var i = 0; i < keyLength; i++)
+                        AddCondition(group, i);
+                    result.Add(group);
                 }
             }
 
