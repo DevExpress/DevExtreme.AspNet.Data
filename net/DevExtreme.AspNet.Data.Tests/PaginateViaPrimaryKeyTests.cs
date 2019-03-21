@@ -49,6 +49,18 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void NotUsedWoSkip() {
+            var loadOptions = new SampleLoadOptions {
+                PaginateViaPrimaryKey = true,
+                Take = 123
+            };
+
+            DataSourceLoader.Load(new object[0], loadOptions);
+
+            Assert.Single(loadOptions.ExpressionLog);
+        }
+
         static string DataToString(object data) {
             return JsonConvert.SerializeObject(data).Replace("\"", "");
         }
