@@ -82,7 +82,10 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             DataSourceLoader.Load(new object[0], loadOptions);
 
-            Assert.Single(loadOptions.ExpressionLog);
+            Assert.All(
+                loadOptions.ExpressionLog,
+                i => Assert.DoesNotContain(".Select(", i)
+            );
         }
 
         static string DataToString(object data) {
