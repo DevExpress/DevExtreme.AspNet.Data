@@ -264,6 +264,46 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Compat.CreateDataSourceExpressionBuilder<object>(options, false).BuildLoadExpr().ToString()
             );
         }
+
+        [Fact]
+        public void PaginateViaPrimaryKey() {
+            var options = new SampleLoadOptions {
+                PrimaryKey = new[] { "Item1" },
+                Filter = new[] { "Item2", "<>", null },
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item2" }
+                },
+                Select = new[] { "Item1", "Item3" },
+                RemoteSelect = true,
+                Skip = 20,
+                Take = 10,
+                PaginateViaPrimaryKey = true
+            };
+
+            string Compile() {
+                return Compat.CreateDataSourceExpressionBuilder<Tuple<int, string, string>>(options).BuildLoadExpr().ToString();
+            }
+
+            Assert.Equal(
+                "data.Join(data" +
+                            ".Where(obj => (obj.Item2.ToLower() != null))" +
+                            ".OrderBy(obj => obj.Item2)" +
+                            ".ThenBy(obj => obj.Item1)" +
+                            ".Skip(20).Take(10), " +
+                        "obj => obj.Item1, " +
+                        "obj => obj.Item1, " +
+                        "(outer, inner) => outer" +
+                    ")" +
+                    ".OrderBy(obj => obj.Item2)" +
+                    ".ThenBy(obj => obj.Item1)" +
+                    ".Select(obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item3))",
+                Compile()
+            );
+
+
+            options.Skip = 0;
+            Assert.DoesNotContain(".Join(", Compile());
+        }
     }
 
 }

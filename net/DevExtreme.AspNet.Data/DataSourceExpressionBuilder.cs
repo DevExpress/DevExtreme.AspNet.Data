@@ -18,6 +18,20 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public Expression BuildLoadExpr(Expression source, bool paginate = true) {
+            if(paginate && _context.Skip > 0 && _context.PaginateViaPrimaryKey) {
+                if(!_context.HasPrimaryKey)
+                    throw new InvalidOperationException("TODO");
+
+                return BuildCore(
+                    new JoinByPKExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks).Compile(
+                        source,
+                        BuildCore(source, paginate: true, ignoreSelect: true),
+                        _context.PrimaryKey
+                    ),
+                    ignoreFilter: true
+                );
+            }
+
             return BuildCore(source, paginate: paginate);
         }
 
@@ -29,18 +43,18 @@ namespace DevExtreme.AspNet.Data {
             return BuildCore(source, remoteGrouping: true);
         }
 
-        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false) {
+        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false, bool ignoreFilter = false, bool ignoreSelect = false) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
-            if(_context.HasFilter)
+            if(!ignoreFilter && _context.HasFilter)
                 expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(_context.Filter)));
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
                     if(_context.HasAnySort)
                         expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _context.GetFullSort());
-                    if(_context.HasAnySelect && _context.UseRemoteSelect) {
+                    if(!ignoreSelect && _context.HasAnySelect && _context.UseRemoteSelect) {
                         expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _context.FullSelect);
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
