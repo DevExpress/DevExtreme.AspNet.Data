@@ -43,14 +43,20 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var expr = compiler.Compile(
                 SOURCE.Expression,
-                SOURCE.Expression,
+                SOURCE.Skip(1).Take(2).Expression,
                 new[] { "K1" }
             );
 
-            var exprText = expr.ToString();
+            Assert.Equal(typeof(IQueryable<DataItem>), expr.Type);
 
-            Assert.DoesNotContain("AnonType", exprText);
-            Assert.Contains("obj => obj.K1", exprText);
+            Assert.Equal(
+                "source.Where(obj => source" +
+                    ".Skip(1).Take(2)" +
+                    ".Select(obj => obj.K1)" +
+                    ".Contains(obj.K1)" +
+                ")",
+                ShortenSource(expr.ToString())
+            );
         }
 
 

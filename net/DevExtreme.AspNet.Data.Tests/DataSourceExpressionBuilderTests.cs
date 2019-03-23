@@ -267,42 +267,78 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void PaginateViaPrimaryKey() {
-            var options = new SampleLoadOptions {
-                PrimaryKey = new[] { "Item1" },
-                Filter = new[] { "Item2", "<>", null },
-                Sort = new[] {
-                    new SortingInfo { Selector = "Item2" }
-                },
-                Select = new[] { "Item1", "Item3" },
-                RemoteSelect = true,
-                Skip = 20,
-                Take = 10,
-                PaginateViaPrimaryKey = true
-            };
 
-            string Compile() {
+            DataSourceLoadOptionsBase CreateLoadOptions(string[] pk, int skip) {
+                return new SampleLoadOptions {
+                    PrimaryKey = pk,
+                    Filter = new[] { "Item3", "<>", null },
+                        Sort = new[] {
+                        new SortingInfo { Selector = "Item3" }
+                    },
+                    Select = new[] { "Item1", "Item3" },
+                    RemoteSelect = true,
+                    Skip = skip,
+                    Take = 10,
+                    PaginateViaPrimaryKey = true
+                };
+            }
+
+            string Compile(DataSourceLoadOptionsBase options) {
                 return Compat.CreateDataSourceExpressionBuilder<Tuple<int, string, string>>(options).BuildLoadExpr().ToString();
             }
 
-            Assert.Equal(
-                "data.Join(data" +
-                            ".Where(obj => (obj.Item2.ToLower() != null))" +
-                            ".OrderBy(obj => obj.Item2)" +
+            {
+                // inactive without skip
+                var expr1 = Compile(CreateLoadOptions(new[] { "Item1" }, 0));
+                var expr2 = Compile(CreateLoadOptions(new[] { "Item1", "Item2" }, 0));
+                Assert.DoesNotContain(".Join(", expr1 + expr2);
+                Assert.DoesNotContain(".Contains(", expr1 + expr2);
+            }
+
+            {
+                // requires primary key
+                var error = Record.Exception(delegate {
+                    Compile(CreateLoadOptions(null, 123));
+                });
+                Assert.True(error is InvalidOperationException);
+            }
+
+            {
+                Assert.Equal(
+                    "data.Where(obj => data" +
+                            ".Where(obj => (obj.Item3.ToLower() != null))" +
+                            ".OrderBy(obj => obj.Item3)" +
                             ".ThenBy(obj => obj.Item1)" +
-                            ".Skip(20).Take(10), " +
-                        "obj => obj.Item1, " +
-                        "obj => obj.Item1, " +
-                        "(outer, inner) => outer" +
-                    ")" +
-                    ".OrderBy(obj => obj.Item2)" +
-                    ".ThenBy(obj => obj.Item1)" +
-                    ".Select(obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item3))",
-                Compile()
-            );
+                            ".Skip(20).Take(10)" +
+                            ".Select(obj => obj.Item1)" +
+                            ".Contains(obj.Item1)" +
+                        ")" +
+                        ".OrderBy(obj => obj.Item3)" +
+                        ".ThenBy(obj => obj.Item1)" +
+                        ".Select(obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item3))",
+                    Compile(CreateLoadOptions(new[] { "Item1" }, 20))
+                );
+            }
 
-
-            options.Skip = 0;
-            Assert.DoesNotContain(".Join(", Compile());
+            {
+                Assert.Equal(
+                    "data.Join(data" +
+                                ".Where(obj => (obj.Item3.ToLower() != null))" +
+                                ".OrderBy(obj => obj.Item3)" +
+                                ".ThenBy(obj => obj.Item1)" +
+                                ".ThenBy(obj => obj.Item2)" +
+                                ".Skip(20).Take(10), " +
+                            "obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item2), " +
+                            "obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item2), " +
+                            "(outer, inner) => outer" +
+                        ")" +
+                        ".OrderBy(obj => obj.Item3)" +
+                        ".ThenBy(obj => obj.Item1)" +
+                        ".ThenBy(obj => obj.Item2)" +
+                        ".Select(obj => new AnonType`2(I0 = obj.Item1, I1 = obj.Item3))",
+                    Compile(CreateLoadOptions(new[] { "Item1", "Item2" }, 20))
+                );
+            }
         }
     }
 

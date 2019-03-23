@@ -14,20 +14,43 @@ namespace DevExtreme.AspNet.Data {
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
-        public Expression Compile(Expression outer, Expression inner, IReadOnlyList<string> pk) {
-            var dataItemExpr = CreateItemParam(typeof(T));
+        public Expression Compile(Expression outer, Expression inner, IReadOnlyList<string> key) {
+            if(key.Count < 2)
+                return CompileForSingleKey(outer, inner, key);
 
-            var pkParam = CreateItemParam(typeof(T));
-            var pkLambda = Expression.Lambda(
-                pk.Count < 2
-                    ? CompileAccessorExpression(pkParam, pk[0])
-                    : AnonType.CreateNewExpression(
-                        pk.Select(i => CompileAccessorExpression(pkParam, i)).ToArray(),
-                        _anonTypeNewTweaks
-                    ),
-                pkParam
+            return CompileForMultiKey(outer, inner, key);
+        }
+
+        Expression CompileForSingleKey(Expression outer, Expression inner, IReadOnlyList<string> key) {
+            var keyLambda = CompileKeyLambda(key);
+            var whereParam = CreateItemParam(typeof(T));
+
+            var selectCall = Expression.Call(
+                typeof(Queryable),
+                nameof(Queryable.Select),
+                new[] { typeof(T), keyLambda.ReturnType },
+                inner, Expression.Quote(keyLambda)
             );
 
+            var containsCall = Expression.Call(
+                typeof(Queryable),
+                nameof(Queryable.Contains),
+                new[] { keyLambda.ReturnType },
+                selectCall,
+                CompileAccessorExpression(whereParam, key[0])
+            );
+
+            return Expression.Call(
+                typeof(Queryable),
+                nameof(Queryable.Where),
+                new[] { typeof(T) },
+                outer,
+                Expression.Quote(Expression.Lambda(containsCall, whereParam))
+            );
+        }
+
+        Expression CompileForMultiKey(Expression outer, Expression inner, IReadOnlyList<string> key) {
+            var keyLambda = CompileKeyLambda(key);
             var resultOuterParam = Expression.Parameter(typeof(T), "outer");
             var resultInnerParam = Expression.Parameter(typeof(T), "inner");
             var resultLambda = Expression.Lambda(resultOuterParam, resultOuterParam, resultInnerParam);
@@ -35,10 +58,23 @@ namespace DevExtreme.AspNet.Data {
             return Expression.Call(
                 typeof(Queryable),
                 nameof(Queryable.Join),
-                new[] { typeof(T), typeof(T), pkLambda.ReturnType, typeof(T) },
+                new[] { typeof(T), typeof(T), keyLambda.ReturnType, typeof(T) },
                 outer, inner,
-                Expression.Quote(pkLambda), Expression.Quote(pkLambda),
+                Expression.Quote(keyLambda), Expression.Quote(keyLambda),
                 Expression.Quote(resultLambda)
+            );
+        }
+
+        LambdaExpression CompileKeyLambda(IReadOnlyList<string> key) {
+            var param = CreateItemParam(typeof(T));
+            return Expression.Lambda(
+                key.Count < 2
+                    ? CompileAccessorExpression(param, key[0])
+                    : AnonType.CreateNewExpression(
+                        key.Select(i => CompileAccessorExpression(param, i)).ToArray(),
+                        _anonTypeNewTweaks
+                    ),
+                param
             );
         }
 
