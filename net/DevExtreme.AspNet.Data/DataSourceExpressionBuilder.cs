@@ -19,8 +19,11 @@ namespace DevExtreme.AspNet.Data {
 
         public Expression BuildLoadExpr(Expression source, bool paginate = true) {
             if(paginate && _context.Skip > 0 && _context.PaginateViaPrimaryKey) {
-                if(!_context.HasPrimaryKey)
-                    throw new InvalidOperationException("TODO");
+                if(!_context.HasPrimaryKey) {
+                    throw new InvalidOperationException(nameof(DataSourceLoadOptionsBase.PaginateViaPrimaryKey)
+                        + " requires a primary key."
+                        + " Specify it via the " + nameof(DataSourceLoadOptionsBase.PrimaryKey) + " property.");
+                }
 
                 return BuildCore(
                     new JoinByPKExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks).Compile(
