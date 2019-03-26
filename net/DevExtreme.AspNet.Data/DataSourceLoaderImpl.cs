@@ -67,8 +67,11 @@ namespace DevExtreme.AspNet.Data {
                 Expression loadExpr;
 
                 if(!deferPaging && Context.PaginateViaPrimaryKey && Context.Skip > 0) {
-                    if(!Context.HasPrimaryKey)
-                        throw new InvalidOperationException("TODO");
+                    if(!Context.HasPrimaryKey) {
+                        throw new InvalidOperationException(nameof(DataSourceLoadOptionsBase.PaginateViaPrimaryKey)
+                            + " requires a primary key."
+                            + " Specify it via the " + nameof(DataSourceLoadOptionsBase.PrimaryKey) + " property.");
+                    }
 
                     var loadKeysExpr = Builder.BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
                     var keyTuples = ExecExpr<AnonType>(Source, loadKeysExpr);

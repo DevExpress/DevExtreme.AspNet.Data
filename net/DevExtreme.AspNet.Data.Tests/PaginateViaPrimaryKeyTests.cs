@@ -88,6 +88,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void RequiresPrimaryKey() {
+            var error = Record.Exception(delegate {
+                DataSourceLoader.Load(new string[0], new SampleLoadOptions {
+                    PaginateViaPrimaryKey = true,
+                    Skip = 1
+                });
+            });
+            Assert.True(error is InvalidOperationException);
+        }
+
         static string DataToString(object data) {
             return JsonConvert.SerializeObject(data).Replace("\"", "");
         }
