@@ -32,6 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<SelectNotMapped_DataItem>();
             modelBuilder.Entity<RemoteGroupingStress_DataItem>();
             modelBuilder.Entity<Summary_DataItem>();
+            modelBuilder.Entity<PaginateViaPrimaryKey_DataItem>().HasKey(i => new { i.K1, i.K2 });
         }
 
         public static void Exec(Action<TestDbContext> action) {
