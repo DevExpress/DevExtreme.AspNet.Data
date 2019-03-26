@@ -18,6 +18,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             modelBuilder.Entity<RemoteGroupingStress.DataItem>();
             modelBuilder.Entity<Summary.DataItem>();
             modelBuilder.Entity<Bug326.Entity>();
+            modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
         }
 
         public static void Exec(Action<TestDbContext> action) {
