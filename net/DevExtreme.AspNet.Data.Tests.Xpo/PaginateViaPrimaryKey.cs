@@ -17,9 +17,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         [Fact]
         public void Scenario() {
             UnitOfWorkHelper.Exec(uow => {
-                uow.Save(new DataItem { K1 = 1, K2 = 1 });
-                uow.Save(new DataItem { K1 = 2, K2 = 2 });
-                uow.Save(new DataItem { K1 = 3, K2 = 3 });
+                foreach(var i in PaginateViaPrimaryKeyTestHelper.CreateTestData<DataItem>())
+                    uow.Save(i);
                 uow.CommitChanges();
 
                 var query = uow.Query<DataItem>();

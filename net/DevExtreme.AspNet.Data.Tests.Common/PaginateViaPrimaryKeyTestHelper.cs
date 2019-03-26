@@ -12,6 +12,11 @@ namespace DevExtreme.AspNet.Data.Tests {
             long K2 { get; set; }
         }
 
+        public static IEnumerable<T> CreateTestData<T>() where T : IDataItem, new() {
+            for(var i = 1; i <= 3; i++)
+                yield return new T { K1 = i, K2 = i };
+        }
+
         public static void Run<T>(IQueryable<T> source) {
             Run(source, new[] { "K1" });
             Run(source, new[] { "K1", "K2" });

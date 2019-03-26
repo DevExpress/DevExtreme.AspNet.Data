@@ -17,11 +17,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         public void Scenario() {
             TestDbContext.Exec(context => {
                 var set = context.Set<DataItem>();
-                set.AddRange(
-                    new DataItem { K1 = 1, K2 = 1 },
-                    new DataItem { K1 = 2, K2 = 2 },
-                    new DataItem { K1 = 3, K2 = 3 }
-                );
+                set.AddRange(PaginateViaPrimaryKeyTestHelper.CreateTestData<DataItem>());
                 context.SaveChanges();
 
                 PaginateViaPrimaryKeyTestHelper.Run(set);

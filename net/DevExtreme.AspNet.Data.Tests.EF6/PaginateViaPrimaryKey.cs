@@ -16,11 +16,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         public void Scenario() {
             TestDbContext.Exec(context => {
                 var set = context.Set<PaginateViaPrimaryKey_DataItem>();
-                set.AddRange(new[] {
-                    new PaginateViaPrimaryKey_DataItem { K1 = 1, K2 = 1 },
-                    new PaginateViaPrimaryKey_DataItem { K1 = 2, K2 = 2 },
-                    new PaginateViaPrimaryKey_DataItem { K1 = 3, K2 = 3 }
-                });
+                foreach(var i in PaginateViaPrimaryKeyTestHelper.CreateTestData<PaginateViaPrimaryKey_DataItem>())
+                    set.Add(i);
                 context.SaveChanges();
 
                 PaginateViaPrimaryKeyTestHelper.Run(set);

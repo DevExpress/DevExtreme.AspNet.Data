@@ -23,9 +23,8 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         [Fact]
         public void Scenario() {
             SessionFactoryHelper.Exec(session => {
-                session.Save(new DataItem { K1 = 1, K2 = 1 });
-                session.Save(new DataItem { K1 = 2, K2 = 2 });
-                session.Save(new DataItem { K1 = 3, K2 = 3 });
+                foreach(var i in PaginateViaPrimaryKeyTestHelper.CreateTestData<DataItem>())
+                    session.Save(i);
 
                 var query = session.Query<DataItem>();
                 PaginateViaPrimaryKeyTestHelper.Run(query);
