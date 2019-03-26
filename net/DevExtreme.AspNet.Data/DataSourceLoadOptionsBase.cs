@@ -103,6 +103,9 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? StringToLower { get; set; }
 
+        /// <summary>
+        /// If this flag is enabled, a more complex LINQ query is generated which, however, may result in a more efficient SQL execution plan.
+        /// </summary>
         public bool? PaginateViaPrimaryKey { get; set; }
 
 #if DEBUG
