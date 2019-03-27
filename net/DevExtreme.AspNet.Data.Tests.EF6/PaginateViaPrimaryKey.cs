@@ -25,7 +25,6 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             });
         }
 
-
     }
 
 }
