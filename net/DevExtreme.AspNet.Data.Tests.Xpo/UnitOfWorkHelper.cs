@@ -22,7 +22,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                         typeof(DefaultSort.DataItem),
                         typeof(RemoteGroupingStress.DataItem),
                         typeof(Summary.DataItem),
-                        typeof(Bug339.DataItem)
+                        typeof(Bug339.DataItem),
+                        typeof(PaginateViaPrimaryKey.DataItem)
                     );
 
                     var provider = XpoDefault.GetConnectionProvider(

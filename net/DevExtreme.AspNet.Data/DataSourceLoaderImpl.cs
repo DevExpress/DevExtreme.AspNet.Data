@@ -23,18 +23,20 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options) {
+            var providerInfo = new QueryProviderInfo(source.Provider);
+            var guardNulls = providerInfo.IsLinqToObjects;
+
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
+            guardNulls = guardNulls && !options.SuppressGuardNulls;
 #endif
-
-            var providerInfo = new QueryProviderInfo(source.Provider);
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
             Builder = new DataSourceExpressionBuilder<S>(
                 Context,
-                providerInfo.IsLinqToObjects,
+                guardNulls,
                 new AnonTypeNewTweaks {
                     AllowEmpty = !providerInfo.IsL2S,
                     AllowUnusedMembers = !providerInfo.IsL2S
@@ -61,7 +63,23 @@ namespace DevExtreme.AspNet.Data {
                     result.groupCount = groupingResult.Groups.Count();
             } else {
                 var deferPaging = Context.HasGroups || !Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary;
-                var loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+
+                Expression loadExpr;
+
+                if(!deferPaging && Context.PaginateViaPrimaryKey && Context.Skip > 0) {
+                    if(!Context.HasPrimaryKey) {
+                        throw new InvalidOperationException(nameof(DataSourceLoadOptionsBase.PaginateViaPrimaryKey)
+                            + " requires a primary key."
+                            + " Specify it via the " + nameof(DataSourceLoadOptionsBase.PrimaryKey) + " property.");
+                    }
+
+                    var loadKeysExpr = Builder.BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
+                    var keyTuples = ExecExpr<AnonType>(Source, loadKeysExpr);
+
+                    loadExpr = Builder.BuildLoadExpr(Source.Expression, false, filterOverride: FilterFromKeys(keyTuples));
+                } else {
+                    loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+                }
 
                 if(Context.HasAnySelect) {
                     ContinueWithGrouping(
@@ -156,6 +174,32 @@ namespace DevExtreme.AspNet.Data {
 
             ExpressionWatcher?.Invoke(expr);
 #endif
+
+            return result;
+        }
+
+        IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
+            var result = new List<object>();
+            var key = Context.PrimaryKey;
+            var keyLength = key.Count;
+
+            foreach(var tuple in keyTuples) {
+                if(result.Count > 0)
+                    result.Add("or");
+
+                void AddCondition(IList container, int index) {
+                    container.Add(new object[] { key[index], tuple[index] });
+                }
+
+                if(keyLength == 1) {
+                    AddCondition(result, 0);
+                } else {
+                    var group = new List<object>();
+                    for(var i = 0; i < keyLength; i++)
+                        AddCondition(group, i);
+                    result.Add(group);
+                }
+            }
 
             return result;
         }

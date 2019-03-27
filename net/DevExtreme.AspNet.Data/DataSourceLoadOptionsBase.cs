@@ -103,9 +103,15 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? StringToLower { get; set; }
 
+        /// <summary>
+        /// If this flag is enabled, keys and data are loaded via separate queries. This may result in a more efficient SQL execution plan.
+        /// </summary>
+        public bool? PaginateViaPrimaryKey { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;
+        internal bool SuppressGuardNulls;
 #endif
     }
 

@@ -30,6 +30,9 @@ namespace Sample.Controllers {
                 o.ShipVia
             });
 
+            loadOptions.PrimaryKey = new[] { "OrderId" };
+            loadOptions.PaginateViaPrimaryKey = true;
+
             return DataSourceLoader.Load(source, loadOptions);
         }
 
