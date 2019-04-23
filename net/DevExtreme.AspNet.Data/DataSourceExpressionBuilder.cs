@@ -35,8 +35,13 @@ namespace DevExtreme.AspNet.Data {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
-            if(filterOverride != null || _context.HasFilter)
-                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter)));
+            if(filterOverride != null || _context.HasFilter) {
+                var filterExpr = filterOverride != null && filterOverride.Count < 1
+                    ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(typeof(T)))
+                    : new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter);
+
+                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(filterExpr));
+            }
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
