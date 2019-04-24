@@ -99,6 +99,21 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(error is InvalidOperationException);
         }
 
+        [Fact]
+        public void Bug349() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/349
+
+            var loadResult = DataSourceLoader.Load(new[] { new { ID = 1 } }, new SampleLoadOptions {
+                PaginateViaPrimaryKey = true,
+                PrimaryKey = new[] { "ID" },
+                RequireTotalCount = true,
+                Skip = 1,
+                Take = 1
+            });
+
+            Assert.Empty(loadResult.data);
+        }
+
         static string DataToString(object data) {
             return JsonConvert.SerializeObject(data).Replace("\"", "");
         }
