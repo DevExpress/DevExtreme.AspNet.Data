@@ -27,6 +27,10 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             return null;
         }
 
+        internal static bool IsRegistered(string summaryType) {
+            return _aggregatorTypes.ContainsKey(summaryType);
+        }
+
 #if DEBUG
         internal static void Clear() {
             _aggregatorTypes.Clear();
