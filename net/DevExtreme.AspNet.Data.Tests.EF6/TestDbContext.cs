@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
     class TestDbContext : DbContext {
-        static readonly object LOCK = new object();
+        static readonly SemaphoreSlim LOCK = new SemaphoreSlim(1, 1);
         static TestDbContext INSTANCE;
 
         private TestDbContext(string connectionString)
@@ -33,10 +34,12 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<RemoteGroupingStress_DataItem>();
             modelBuilder.Entity<Summary_DataItem>();
             modelBuilder.Entity<PaginateViaPrimaryKey_DataItem>().HasKey(i => new { i.K1, i.K2 });
+            modelBuilder.Entity<Async_DataItem>();
         }
 
-        public static void Exec(Action<TestDbContext> action) {
-            lock(LOCK) {
+        public static async Task ExecAsync(Func<TestDbContext, Task> action) {
+            await LOCK.WaitAsync();
+            try {
                 if(INSTANCE == null) {
                     var helper = new SqlServerTestDbHelper("EF6");
                     helper.ResetDatabase();
@@ -45,8 +48,17 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                     INSTANCE.Database.CreateIfNotExists();
                 }
 
-                action(INSTANCE);
+                await action(INSTANCE);
+            } finally {
+                LOCK.Release();
             }
+        }
+
+        public static async Task ExecAsync(Action<TestDbContext> action) {
+            await ExecAsync(context => {
+                action(context);
+                return Task.CompletedTask;
+            });
         }
 
     }

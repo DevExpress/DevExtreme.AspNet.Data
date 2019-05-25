@@ -3,15 +3,18 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.NH {
 
     static class SessionFactoryHelper {
         static ISessionFactory FACTORY;
-        static object LOCK = new object();
+        static readonly SemaphoreSlim LOCK = new SemaphoreSlim(1, 1);
 
-        public static void Exec(Action<ISession> action) {
-            lock(LOCK) {
+        public static async Task ExecAsync(Func<ISession, Task> action) {
+            await LOCK.WaitAsync();
+            try {
                 if(FACTORY == null) {
                     var sqlHelper = new SqlServerTestDbHelper("NH");
                     sqlHelper.ResetDatabase();
@@ -24,9 +27,18 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
                 }
 
                 using(var session = FACTORY.OpenSession()) {
-                    action(session);
+                    await action(session);
                 }
+            } finally {
+                LOCK.Release();
             }
+        }
+
+        public static async Task ExecAsync(Action<ISession> action) {
+            await ExecAsync(context => {
+                action(context);
+                return Task.CompletedTask;
+            });
         }
 
     }

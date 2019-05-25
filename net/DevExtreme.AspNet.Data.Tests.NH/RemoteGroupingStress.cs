@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.NH {
@@ -26,8 +27,8 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         }
 
         [Fact]
-        public void Scenario() {
-            SessionFactoryHelper.Exec(session => {
+        public async Task Scenario() {
+            await SessionFactoryHelper.ExecAsync(session => {
                 session.Save(new DataItem());
                 RemoteGroupingStressHelper.Run(session.Query<DataItem>());
             });

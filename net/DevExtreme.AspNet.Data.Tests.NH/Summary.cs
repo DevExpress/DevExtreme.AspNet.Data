@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.NH {
@@ -24,8 +25,8 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         }
 
         [Fact]
-        public void Scenario() {
-            SessionFactoryHelper.Exec(session => {
+        public async Task Scenario() {
+            await SessionFactoryHelper.ExecAsync(session => {
                 using(var tx = session.BeginTransaction()) {
                     foreach(var i in SummaryTestHelper.GenerateTestData(() => new DataItem()))
                         session.Save(i);
