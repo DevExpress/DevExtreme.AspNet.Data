@@ -12,44 +12,24 @@ namespace DevExtreme.AspNet.Data.Async {
         readonly QueryProviderInfo ProviderInfo;
         readonly CancellationToken CancellationToken;
 
-        AsyncAdapter _adapter;
-
         public AsyncHelper(IQueryProvider provider, QueryProviderInfo providerInfo, CancellationToken cancellationToken) {
             Provider = provider;
             ProviderInfo = providerInfo;
             CancellationToken = cancellationToken;
         }
 
-        AsyncAdapter Adapter {
-            get {
-                if(_adapter == null)
-                    _adapter = CreateAdapter();
-                return _adapter;
-            }
-        }
-
         public Task<int> CountAsync(Expression expr) {
             CancellationToken.ThrowIfCancellationRequested();
-            return Adapter.CountAsync(expr);
+            return CreateAdapter().CountAsync(Provider, expr, CancellationToken);
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(Expression expr) {
             CancellationToken.ThrowIfCancellationRequested();
-            return Adapter.ToEnumerableAsync<T>(expr);
+            return CreateAdapter().ToEnumerableAsync<T>(Provider, expr, CancellationToken);
         }
 
-        AsyncAdapter CreateAdapter() {
-            if(ProviderInfo.IsEFClassic)
-                return new EFClassicAsyncAdapter(Provider, CancellationToken);
-
-            if(ProviderInfo.IsEFCore && ProviderInfo.Version.Major >= 2)
-                return new EFCore2AsyncAdapter(Provider, CancellationToken);
-
-            if(ProviderInfo.IsNH)
-                return new NHAsyncAdapter(Provider, CancellationToken);
-
-#warning TODO message
-            throw new NotSupportedException();
+        IAsyncAdapter CreateAdapter() {
+            return new ReflectionAsyncAdapter(ProviderInfo);
         }
 
     }
