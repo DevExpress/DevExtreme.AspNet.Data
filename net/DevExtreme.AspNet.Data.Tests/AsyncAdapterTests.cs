@@ -22,6 +22,22 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public async Task Canceled() {
+            var token = new CancellationToken(true);
+
+            async Task Case(DataSourceLoadOptionsBase loadOptions) {
+                var error = await Record.ExceptionAsync(async delegate {
+                    await DataSourceLoader.LoadAsync(SAMPLE_DATA, loadOptions, token);
+                });
+
+                Assert.True(error is OperationCanceledException);
+            }
+
+            await Case(new SampleLoadOptions());
+            await Case(new SampleLoadOptions { IsCountQuery = true });
+        }
+
+        [Fact]
         public async Task RegisterAdapter() {
             await StaticBarrier.RunAsync(async delegate {
                 var adapter = new MyAdapter();
