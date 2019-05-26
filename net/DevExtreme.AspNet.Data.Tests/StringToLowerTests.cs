@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -78,8 +79,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void GlobalSwitch() {
-            StaticBarrier.Run(delegate {
+        public async Task GlobalSwitch() {
+            await StaticBarrier.RunAsync(delegate {
                 var options = new SampleLoadOptions {
                     Filter = new[] { "this", "contains", "A" }
                 };

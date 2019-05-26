@@ -280,8 +280,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void CustomAggregator() {
-            StaticBarrier.Run(delegate {
+        public async Task CustomAggregator() {
+            await StaticBarrier.RunAsync(delegate {
                 CustomAggregators.RegisterAggregator("totalSales", typeof(TotalSalesAggregator<>));
 
                 var data = new[] {

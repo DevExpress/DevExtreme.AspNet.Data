@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
@@ -38,8 +39,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
             LOCK_FILED = "OptimisticLockFieldInDataLayer";
 
         [Fact]
-        public void Scenario() {
-            StaticBarrier.Run(delegate {
+        public async Task Scenario() {
+            await StaticBarrier.RunAsync(delegate {
                 CustomAccessorCompilers.Register((target, accessorText) => {
                     if(accessorText == OID) {
                         return Expression.Property(
