@@ -29,7 +29,8 @@ namespace DevExtreme.AspNet.Data.Async {
         }
 
         IAsyncAdapter CreateAdapter() {
-            return new ReflectionAsyncAdapter(ProviderInfo);
+            return CustomAsyncAdapters.GetAdapter(Provider.GetType())
+                ?? new ReflectionAsyncAdapter(ProviderInfo);
         }
 
     }

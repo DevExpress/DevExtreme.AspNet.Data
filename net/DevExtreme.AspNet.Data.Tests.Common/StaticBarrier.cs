@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Aggregation;
+using DevExtreme.AspNet.Data.Async;
 using DevExtreme.AspNet.Data.Helpers;
 using System;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             } finally {
                 CustomAggregators.Clear();
                 CustomAccessorCompilers.Clear();
+                CustomAsyncAdapters.Clear();
                 DataSourceLoadOptionsBase.StringToLowerDefault = null;
                 SYNC.Release();
             }
