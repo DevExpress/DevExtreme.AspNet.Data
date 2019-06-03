@@ -530,6 +530,26 @@ namespace DevExtreme.AspNet.Data.Tests {
             var department = (IDictionary<string, object>)item["Department"];
             Assert.Equal("abc", department["Title"]);
         }
+
+        [Fact]
+        public void CustomAggregatorWithRemoteGrouping() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/341
+
+            StaticBarrier.Run(delegate {
+                Aggregation.CustomAggregators.RegisterAggregator("my1", typeof(Object));
+
+                var exception = Record.Exception(delegate {
+                    DataSourceLoader.Load(new object[0], new SampleLoadOptions {
+                        RemoteGrouping = true,
+                        TotalSummary = new[] {
+                            new SummaryInfo { Selector = "this", SummaryType = "my1" }
+                        }
+                    });
+                });
+
+                Assert.Contains("custom aggregate 'my1' cannot be translated", exception.Message);
+            });
+        }
     }
 
 }
