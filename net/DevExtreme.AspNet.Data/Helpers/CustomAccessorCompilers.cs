@@ -16,7 +16,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             _compilers.Add(compilerFunc);
         }
 
-        public static Expression TryCompile(Expression target, string accessorText) {
+        internal static Expression TryCompile(Expression target, string accessorText) {
             if(_compilers.Count < 1)
                 return null;
 
