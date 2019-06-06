@@ -535,7 +535,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void CustomAggregatorWithRemoteGrouping() {
             // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/341
 
-            StaticBarrier.Run(delegate {
+            try {
                 Aggregation.CustomAggregators.RegisterAggregator("my1", typeof(Object));
 
                 var exception = Record.Exception(delegate {
@@ -548,7 +548,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 });
 
                 Assert.Contains("custom aggregate 'my1' cannot be translated", exception.Message);
-            });
+            } finally {
+                Aggregation.CustomAggregators.Clear();
+            }
         }
     }
 

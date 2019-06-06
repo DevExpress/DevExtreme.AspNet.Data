@@ -39,7 +39,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
         [Fact]
         public void Scenario() {
-            StaticBarrier.Run(delegate {
+            try {
                 CustomAccessorCompilers.Register((target, accessorText) => {
                     if(accessorText == OID) {
                         return Expression.Property(
@@ -84,7 +84,9 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                     Assert.Equal(123, item["Value"]);
                     Assert.Equal(0, item[LOCK_FILED]);
                 });
-            });
+            } finally {
+                CustomAccessorCompilers.Clear();
+            }
         }
 
     }
