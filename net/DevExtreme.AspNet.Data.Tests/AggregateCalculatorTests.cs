@@ -281,7 +281,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CustomAggregator() {
-            StaticBarrier.Run(delegate {
+            try {
                 CustomAggregators.RegisterAggregator("totalSales", typeof(TotalSalesAggregator<>));
 
                 var data = new[] {
@@ -310,7 +310,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Assert.Equal(34.34M, data[0].summary[0]);
                 Assert.Equal(42.42M, data[1].summary[0]);
                 Assert.Equal(0M, data[2].summary[0]);
-            });
+            } finally {
+                CustomAggregators.Clear();
+            }
         }
 
         class CustomAggregatorDataItem {

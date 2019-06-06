@@ -364,6 +364,27 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2d, loadResult.summary[0]);
         }
 
+        [Fact]
+        public void AggregateTranslationError() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/331
+
+            var data = new[] {
+                new { P1 = "abc" }
+            };
+
+            var exception = Record.Exception(delegate {
+                DataSourceLoader.Load(data, new SampleLoadOptions {
+                    RemoteGrouping = true,
+                    TotalSummary = new[] {
+                        new SummaryInfo { Selector = "P1", SummaryType = "avg" }
+                    }
+                });
+            });
+
+            Assert.Equal("Failed to translate the 'sum' aggregate for the 'P1' member (System.String). See InnerException for details.", exception.Message);
+            Assert.Contains("No coercion operator", exception.InnerException.Message);
+        }
+
     }
 
 }

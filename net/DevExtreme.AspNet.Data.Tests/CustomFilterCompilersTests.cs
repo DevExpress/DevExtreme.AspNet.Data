@@ -15,8 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void OneToManyContains() {
             // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/277#issuecomment-497249871
 
-            StaticBarrier.Run(delegate {
-
+            try {
                 CustomFilterCompilers.RegisterBinary(info => {
                     if(info.DataItemExpression.Type == typeof(Category) && info.AccessorText == "Products" && info.Operation == "contains") {
                         var text = Convert.ToString(info.Value);
@@ -45,7 +44,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var loadResult = DataSourceLoader.Load(source, loadOptions);
                 Assert.Equal(1, loadResult.totalCount);
                 Assert.Contains(loadOptions.ExpressionLog, line => line.Contains(".Products.Any(p => p.Name.ToLower().Contains("));
-            });
+            } finally {
+                CustomFilterCompilers.Clear();
+            }
         }
 
 
