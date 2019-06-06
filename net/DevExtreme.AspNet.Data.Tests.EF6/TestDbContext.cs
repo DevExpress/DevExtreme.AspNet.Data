@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
     class TestDbContext : DbContext {
-        static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
         private TestDbContext(string connectionString)
@@ -36,17 +35,15 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         }
 
         public static void Exec(Action<TestDbContext> action) {
-            lock(LOCK) {
-                if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("EF6");
-                    helper.ResetDatabase();
+            if(INSTANCE == null) {
+                var helper = new SqlServerTestDbHelper("EF6");
+                helper.ResetDatabase();
 
-                    INSTANCE = new TestDbContext(helper.ConnectionString);
-                    INSTANCE.Database.CreateIfNotExists();
-                }
-
-                action(INSTANCE);
+                INSTANCE = new TestDbContext(helper.ConnectionString);
+                INSTANCE.Database.CreateIfNotExists();
             }
+
+            action(INSTANCE);
         }
 
     }
