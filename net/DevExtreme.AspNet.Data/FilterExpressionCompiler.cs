@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,11 +45,23 @@ namespace DevExtreme.AspNet.Data {
 
             var clientAccessor = Convert.ToString(criteriaJson[0]);
             var clientOperation = hasExplicitOperation ? Convert.ToString(criteriaJson[1]).ToLower() : "=";
-            var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
+            var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
+            if(CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
+                var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
+                    DataItemExpression = dataItemExpr,
+                    AccessorText = clientAccessor,
+                    Operation = clientOperation,
+                    Value = clientValue
+                });
+
+                if(customResult != null)
+                    return customResult;
+            }
+
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
-                if(isStringOperation || progression.Last().Type == typeof(Object) && Utils.UnwrapNewtonsoftValue(clientValue) is String)
+                if(isStringOperation || progression.Last().Type == typeof(Object) && clientValue is String)
                     ForceToString(progression);
 
                 if(_stringToLower)
@@ -270,6 +283,13 @@ namespace DevExtreme.AspNet.Data {
                 progression.RemoveAt(progression.Count - 1);
 
             progression.Add(toLowerCall);
+        }
+
+        class BinaryExpressionInfo : IBinaryExpressionInfo {
+            public Expression DataItemExpression { get; set; }
+            public string AccessorText { get; set; }
+            public string Operation { get; set; }
+            public object Value { get; set; }
         }
     }
 
