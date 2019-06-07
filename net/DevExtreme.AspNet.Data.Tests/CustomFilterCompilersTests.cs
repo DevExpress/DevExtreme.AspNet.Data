@@ -49,6 +49,48 @@ namespace DevExtreme.AspNet.Data.Tests {
             }
         }
 
+        [Fact]
+        public void ArrayContainsWithNullGuard() {
+            try {
+                CustomFilterCompilers.RegisterBinary(info => {
+                    if(info.DataItemExpression.Type == typeof(Post) && info.AccessorText == "Tags" && info.Operation == "contains") {
+                        var text = Convert.ToString(info.Value);
+
+                        var tagsAccessor = Expression.Property(info.DataItemExpression, "Tags");
+
+                        var containsCall = Expression.Call(
+                            typeof(Enumerable), nameof(Enumerable.Contains), new[] { typeof(string) },
+                            tagsAccessor, Expression.Constant(text) /*, Expression.Constant(StringComparer.InvariantCultureIgnoreCase)*/
+                        );
+
+                        return Expression.Condition(
+                            Expression.MakeBinary(ExpressionType.NotEqual, tagsAccessor, Expression.Constant(null, typeof(string[]))),
+                            containsCall,
+                            Expression.Constant(false)
+                        );
+                    }
+
+                    return null;
+                });
+
+                var source = new[] {
+                    new Post { Tags = new[] { "news", "article" } },
+                    new Post { Tags = new[] { "announcement" } }
+                };
+
+                var loadOptions = new SampleLoadOptions {
+                    Filter = new[] { "Tags", "contains", "news" },
+                    RequireTotalCount = true
+                };
+
+                var loadResult = DataSourceLoader.Load(source, loadOptions);
+                Assert.Equal(1, loadResult.totalCount);
+                Assert.Contains(loadOptions.ExpressionLog, line => line.Contains(@".Where(obj => IIF((obj.Tags != null), obj.Tags.Contains(""news""), False))"));
+            } finally {
+                CustomFilterCompilers.Clear();
+            }
+        }
+
 
         class Product {
             public string Name { get; set; }
@@ -56,6 +98,10 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class Category {
             public ICollection<Product> Products { get; } = new List<Product>();
+        }
+
+        class Post {
+            public string[] Tags { get; set; }
         }
 
     }
