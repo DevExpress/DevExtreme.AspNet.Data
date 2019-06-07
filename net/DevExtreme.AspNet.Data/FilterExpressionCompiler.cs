@@ -48,15 +48,17 @@ namespace DevExtreme.AspNet.Data {
             var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
-            var customResult = CustomFilterCompilers.TryCompileBinary(new CustomFilterCompilers.BinaryExpressionInfo {
-                DataItemExpression = dataItemExpr,
-                AccessorText = clientAccessor,
-                Operation = clientOperation,
-                Value = clientValue
-            });
+            if(CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
+                var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
+                    DataItemExpression = dataItemExpr,
+                    AccessorText = clientAccessor,
+                    Operation = clientOperation,
+                    Value = clientValue
+                });
 
-            if(customResult != null)
-                return customResult;
+                if(customResult != null)
+                    return customResult;
+            }
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
                 if(isStringOperation || progression.Last().Type == typeof(Object) && clientValue is String)
@@ -281,6 +283,13 @@ namespace DevExtreme.AspNet.Data {
                 progression.RemoveAt(progression.Count - 1);
 
             progression.Add(toLowerCall);
+        }
+
+        class BinaryExpressionInfo : IBinaryExpressionInfo {
+            public Expression DataItemExpression { get; set; }
+            public string AccessorText { get; set; }
+            public string Operation { get; set; }
+            public object Value { get; set; }
         }
     }
 

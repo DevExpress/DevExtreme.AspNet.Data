@@ -4,39 +4,27 @@ using System.Linq;
 using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data.Helpers {
-    using CompilerFunc = Func<CustomFilterCompilers.BinaryExpressionInfo, Expression>;
+    using BinaryExpressionCompilerFunc = Func<IBinaryExpressionInfo, Expression>;
 
     public static class CustomFilterCompilers {
 
-        public class BinaryExpressionInfo {
-            public Expression DataItemExpression { get; internal set; }
-            public string AccessorText { get; internal set; }
-            public string Operation { get; internal set; }
-            public object Value { get; internal set; }
-        }
+        internal static class Binary {
+            internal readonly static ICollection<BinaryExpressionCompilerFunc> CompilerFuncs = new List<BinaryExpressionCompilerFunc>();
 
-        readonly static ICollection<CompilerFunc> _binaryCompilers = new List<CompilerFunc>();
-
-        internal static bool HasBinaryCompilers => _binaryCompilers.Count > 0;
-
-        public static void RegisterBinary(CompilerFunc compilerFunc) {
-            _binaryCompilers.Add(compilerFunc);
-        }
-
-        internal static Expression TryCompileBinary(BinaryExpressionInfo info) {
-            foreach(var compiler in _binaryCompilers) {
-                var result = compiler(info);
-                if(result != null)
-                    return result;
+            internal static Expression TryCompile(IBinaryExpressionInfo info) {
+                foreach(var func in CompilerFuncs) {
+                    var result = func(info);
+                    if(result != null)
+                        return result;
+                }
+                return null;
             }
-            return null;
         }
 
-#if DEBUG
-        internal static void Clear() {
-            _binaryCompilers.Clear();
+        public static void RegisterBinaryExpressionCompiler(BinaryExpressionCompilerFunc compilerFunc) {
+            Binary.CompilerFuncs.Add(compilerFunc);
         }
-#endif
+
     }
 
 }

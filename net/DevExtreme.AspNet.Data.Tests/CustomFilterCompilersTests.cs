@@ -16,7 +16,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/277#issuecomment-497249871
 
             try {
-                CustomFilterCompilers.RegisterBinary(info => {
+                CustomFilterCompilers.RegisterBinaryExpressionCompiler(info => {
                     if(info.DataItemExpression.Type == typeof(Category) && info.AccessorText == "Products" && info.Operation == "contains") {
                         var text = Convert.ToString(info.Value);
 
@@ -45,14 +45,14 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Assert.Equal(1, loadResult.totalCount);
                 Assert.Contains(loadOptions.ExpressionLog, line => line.Contains(".Products.Any(p => p.Name.ToLower().Contains("));
             } finally {
-                CustomFilterCompilers.Clear();
+                CustomFilterCompilers.Binary.CompilerFuncs.Clear();
             }
         }
 
         [Fact]
         public void ArrayContainsWithNullGuard() {
             try {
-                CustomFilterCompilers.RegisterBinary(info => {
+                CustomFilterCompilers.RegisterBinaryExpressionCompiler(info => {
                     if(info.DataItemExpression.Type == typeof(Post) && info.AccessorText == "Tags" && info.Operation == "contains") {
                         var text = Convert.ToString(info.Value);
 
@@ -87,7 +87,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Assert.Equal(1, loadResult.totalCount);
                 Assert.Contains(loadOptions.ExpressionLog, line => line.Contains(@".Where(obj => IIF((obj.Tags != null), obj.Tags.Contains(""news""), False))"));
             } finally {
-                CustomFilterCompilers.Clear();
+                CustomFilterCompilers.Binary.CompilerFuncs.Clear();
             }
         }
 
