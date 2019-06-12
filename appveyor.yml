@@ -6,8 +6,6 @@ environment:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 install:
-  - ps: Install-Product node 8
-  - npm i -g npm@6
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
