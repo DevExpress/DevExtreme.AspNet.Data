@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Async.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Bug179.cs" />
     <Compile Include="Bug184.cs" />
     <Compile Include="Bug235.cs" />

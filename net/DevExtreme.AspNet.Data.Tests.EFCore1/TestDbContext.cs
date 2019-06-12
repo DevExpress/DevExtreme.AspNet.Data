@@ -5,7 +5,6 @@ using System.Collections.Generic;
 namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
 
     class TestDbContext : DbContext {
-        static readonly object LOCK = new object();
         static TestDbContext INSTANCE;
 
         private TestDbContext(DbContextOptions options)
@@ -19,21 +18,19 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         }
 
         public static void Exec(Action<TestDbContext> action) {
-            lock(LOCK) {
-                if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("EFCore1");
-                    helper.ResetDatabase();
+            if(INSTANCE == null) {
+                var helper = new SqlServerTestDbHelper("EFCore1");
+                helper.ResetDatabase();
 
-                    var options = new DbContextOptionsBuilder()
-                        .UseSqlServer(helper.ConnectionString)
-                        .Options;
+                var options = new DbContextOptionsBuilder()
+                    .UseSqlServer(helper.ConnectionString)
+                    .Options;
 
-                    INSTANCE = new TestDbContext(options);
-                    INSTANCE.Database.EnsureCreated();
-                }
-
-                action(INSTANCE);
+                INSTANCE = new TestDbContext(options);
+                INSTANCE.Database.EnsureCreated();
             }
+
+            action(INSTANCE);
         }
 
     }

@@ -10,27 +10,21 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
 
     static class SessionFactoryHelper {
         static ISessionFactory FACTORY;
-        static readonly SemaphoreSlim LOCK = new SemaphoreSlim(1, 1);
 
         public static async Task ExecAsync(Func<ISession, Task> action) {
-            await LOCK.WaitAsync();
-            try {
-                if(FACTORY == null) {
-                    var sqlHelper = new SqlServerTestDbHelper("NH");
-                    sqlHelper.ResetDatabase();
+            if(FACTORY == null) {
+                var sqlHelper = new SqlServerTestDbHelper("NH");
+                sqlHelper.ResetDatabase();
 
-                    FACTORY = Fluently.Configure()
-                        .Database(MsSqlConfiguration.MsSql2012.ConnectionString(sqlHelper.ConnectionString))
-                        .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(SessionFactoryHelper).Assembly))
-                        .ExposeConfiguration(config => new SchemaExport(config).Create(false, true))
-                        .BuildSessionFactory();
-                }
+                FACTORY = Fluently.Configure()
+                    .Database(MsSqlConfiguration.MsSql2012.ConnectionString(sqlHelper.ConnectionString))
+                    .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(SessionFactoryHelper).Assembly))
+                    .ExposeConfiguration(config => new SchemaExport(config).Create(false, true))
+                    .BuildSessionFactory();
+            }
 
-                using(var session = FACTORY.OpenSession()) {
-                    await action(session);
-                }
-            } finally {
-                LOCK.Release();
+            using(var session = FACTORY.OpenSession()) {
+                await action(session);
             }
         }
 

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
     class TestDbContext : DbContext {
-        static readonly SemaphoreSlim LOCK = new SemaphoreSlim(1, 1);
         static TestDbContext INSTANCE;
 
         private TestDbContext(string connectionString)
@@ -38,20 +37,15 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
-            await LOCK.WaitAsync();
-            try {
-                if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("EF6");
-                    helper.ResetDatabase();
+            if(INSTANCE == null) {
+                var helper = new SqlServerTestDbHelper("EF6");
+                helper.ResetDatabase();
 
-                    INSTANCE = new TestDbContext(helper.ConnectionString);
-                    INSTANCE.Database.CreateIfNotExists();
-                }
-
-                await action(INSTANCE);
-            } finally {
-                LOCK.Release();
+                INSTANCE = new TestDbContext(helper.ConnectionString);
+                INSTANCE.Database.CreateIfNotExists();
             }
+
+            await action(INSTANCE);
         }
 
         public static async Task ExecAsync(Action<TestDbContext> action) {

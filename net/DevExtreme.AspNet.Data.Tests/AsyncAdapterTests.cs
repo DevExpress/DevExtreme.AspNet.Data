@@ -39,7 +39,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public async Task RegisterAdapter() {
-            await StaticBarrier.RunAsync(async delegate {
+            try {
                 var adapter = new MyAdapter();
                 CustomAsyncAdapters.RegisterAdapter(typeof(EnumerableQuery), adapter);
 
@@ -49,7 +49,9 @@ namespace DevExtreme.AspNet.Data.Tests {
 
                 Assert.True(adapter.CountCalled);
                 Assert.True(adapter.ToEnumerableCalled);
-            });
+            } finally {
+                CustomAsyncAdapters.Clear();
+            }
         }
 
         class MyAdapter : IAsyncAdapter {

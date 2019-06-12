@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
     class TestDbContext : DbContext {
-        static readonly SemaphoreSlim LOCK = new SemaphoreSlim(1, 1);
         static TestDbContext INSTANCE;
 
         private TestDbContext(DbContextOptions options)
@@ -25,25 +24,20 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
-            await LOCK.WaitAsync();
-            try {
-                if(INSTANCE == null) {
-                    var helper = new SqlServerTestDbHelper("EFCore2");
-                    helper.ResetDatabase();
+            if(INSTANCE == null) {
+                var helper = new SqlServerTestDbHelper("EFCore2");
+                helper.ResetDatabase();
 
-                    var options = new DbContextOptionsBuilder()
-                        .UseSqlServer(helper.ConnectionString)
-                        .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
-                        .Options;
+                var options = new DbContextOptionsBuilder()
+                    .UseSqlServer(helper.ConnectionString)
+                    .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                    .Options;
 
-                    INSTANCE = new TestDbContext(options);
-                    INSTANCE.Database.EnsureCreated();
-                }
-
-                await action(INSTANCE);
-            } finally {
-                LOCK.Release();
+                INSTANCE = new TestDbContext(options);
+                INSTANCE.Database.EnsureCreated();
             }
+
+            await action(INSTANCE);
         }
 
         public static async Task ExecAsync(Action<TestDbContext> action) {

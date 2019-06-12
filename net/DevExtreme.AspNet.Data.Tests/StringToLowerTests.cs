@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -79,15 +78,18 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public async Task GlobalSwitch() {
-            await StaticBarrier.RunAsync(delegate {
+        public void GlobalSwitch() {
+            var origStringToLowerDefault = DataSourceLoadOptionsBase.StringToLowerDefault;
+            try {
                 var options = new SampleLoadOptions {
                     Filter = new[] { "this", "contains", "A" }
                 };
                 DataSourceLoadOptionsBase.StringToLowerDefault = false;
                 DataSourceLoader.Load(new[] { "" }, options).data.Cast<object>().ToArray();
                 Assert.DoesNotContain(options.ExpressionLog, line => line.Contains("ToLower"));
-            });
+            } finally {
+                DataSourceLoadOptionsBase.StringToLowerDefault = origStringToLowerDefault;
+            }
         }
 
         void AssertFilter<T>(bool guardNulls, bool stringToLower, string op, string expectedExpr) {
