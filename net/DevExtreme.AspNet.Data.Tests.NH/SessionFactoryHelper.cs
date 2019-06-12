@@ -3,7 +3,6 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.NH {

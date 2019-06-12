@@ -1,6 +1,7 @@
 ﻿using DevExpress.Xpo;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
@@ -15,8 +16,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         }
 
         [Fact]
-        public void Scenario() {
-            UnitOfWorkHelper.Exec(uow => {
+        public async Task Scenario() {
+            await UnitOfWorkHelper.ExecAsync(uow => {
                 foreach(var i in PaginateViaPrimaryKeyTestHelper.CreateTestData<DataItem>())
                     uow.Save(i);
                 uow.CommitChanges();

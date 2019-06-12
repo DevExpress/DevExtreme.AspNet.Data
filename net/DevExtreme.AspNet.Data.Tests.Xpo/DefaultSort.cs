@@ -1,6 +1,7 @@
 ﻿using DevExpress.Xpo;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
@@ -29,8 +30,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         }
 
         [Fact]
-        public void Scenario() {
-            UnitOfWorkHelper.Exec(uow => {
+        public async Task Scenario() {
+            await UnitOfWorkHelper.ExecAsync(uow => {
                 new DataItem(uow) { ID = 1, Text = "1" };
                 new DataItem(uow) { ID = 3, Text = "3" };
                 new DataItem(uow) { ID = 2, Text = "2" };
