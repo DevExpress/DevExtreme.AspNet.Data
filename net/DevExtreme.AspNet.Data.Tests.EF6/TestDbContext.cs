@@ -34,7 +34,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<PaginateViaPrimaryKey_DataItem>().HasKey(i => new { i.K1, i.K2 });
         }
 
-        public static void Exec(Action<TestDbContext> action) {
+        public static async Task ExecAsync(Func<TestDbContext, Task> action) {
             if(INSTANCE == null) {
                 var helper = new SqlServerTestDbHelper("EF6");
                 helper.ResetDatabase();
@@ -43,7 +43,14 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 INSTANCE.Database.CreateIfNotExists();
             }
 
-            action(INSTANCE);
+            await action(INSTANCE);
+        }
+
+        public static async Task ExecAsync(Action<TestDbContext> action) {
+            await ExecAsync(context => {
+                action(context);
+                return Task.CompletedTask;
+            });
         }
 
     }

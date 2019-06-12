@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
@@ -13,8 +14,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
     public class PaginateViaPrimaryKey {
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var set = context.Set<PaginateViaPrimaryKey_DataItem>();
                 foreach(var i in PaginateViaPrimaryKeyTestHelper.CreateTestData<PaginateViaPrimaryKey_DataItem>())
                     set.Add(i);

@@ -2,13 +2,14 @@
 using DevExpress.Xpo.DB;
 using DevExpress.Xpo.Metadata;
 using System;
+using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
 
     static class UnitOfWorkHelper {
         static IDataLayer DATA_LAYER;
 
-        public static void Exec(Action<UnitOfWork> action) {
+        public static async Task ExecAsync(Func<UnitOfWork, Task> action) {
             XpoDefault.Session = null;
 
             if(DATA_LAYER == null) {
@@ -33,8 +34,15 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
             }
 
             using(var uow = new UnitOfWork(DATA_LAYER)) {
-                action(uow);
+                await action(uow);
             }
+        }
+
+        public static async Task ExecAsync(Action<UnitOfWork> action) {
+            await ExecAsync(context => {
+                action(context);
+                return Task.CompletedTask;
+            });
         }
     }
 

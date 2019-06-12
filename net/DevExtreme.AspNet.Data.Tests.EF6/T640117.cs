@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
@@ -28,8 +29,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
     public class T640117 {
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var parents = context.Set<ParentItem>();
                 var children = context.Set<ChildItem>();
 

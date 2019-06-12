@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
@@ -23,8 +24,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
     public class SelectNotMapped {
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 dbSet.Add(new DataItem { Blob = new byte[] { 143, 93, 183 } });
