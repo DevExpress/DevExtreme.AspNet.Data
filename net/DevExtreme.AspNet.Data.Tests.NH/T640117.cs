@@ -3,6 +3,7 @@ using FluentNHibernate.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.NH {
@@ -42,8 +43,8 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
         }
 
         [Fact]
-        public void Scenario() {
-            SessionFactoryHelper.Exec(session => {
+        public async Task Scenario() {
+            await SessionFactoryHelper.ExecAsync(session => {
                 var proj = new Project();
                 proj.Name = "P1";
                 session.Save(proj);

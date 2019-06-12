@@ -1,6 +1,7 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
@@ -15,8 +16,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
     public class Bug239 {
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 dbSet.Add(new DataItem());

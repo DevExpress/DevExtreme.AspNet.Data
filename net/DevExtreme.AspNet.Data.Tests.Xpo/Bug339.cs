@@ -1,5 +1,6 @@
 ﻿using DevExpress.Xpo;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
@@ -13,11 +14,11 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         }
 
         [Fact]
-        public void Scenario() {
+        public async Task Scenario() {
             var guid1 = "".PadLeft(32, '1');
             var guid2 = "".PadLeft(32, '2');
 
-            UnitOfWorkHelper.Exec(uow => {
+            await UnitOfWorkHelper.ExecAsync(uow => {
                 uow.Save(new DataItem { ID = new Guid(guid1) });
                 uow.Save(new DataItem { ID = new Guid(guid2) });
 

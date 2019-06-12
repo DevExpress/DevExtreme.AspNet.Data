@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
@@ -20,7 +21,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
         }
 
-        public static void Exec(Action<TestDbContext> action) {
+        public static async Task ExecAsync(Func<TestDbContext, Task> action) {
             if(INSTANCE == null) {
                 var helper = new SqlServerTestDbHelper("EFCore2");
                 helper.ResetDatabase();
@@ -34,7 +35,14 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
                 INSTANCE.Database.EnsureCreated();
             }
 
-            action(INSTANCE);
+            await action(INSTANCE);
+        }
+
+        public static async Task ExecAsync(Action<TestDbContext> action) {
+            await ExecAsync(context => {
+                action(context);
+                return Task.CompletedTask;
+            });
         }
 
     }

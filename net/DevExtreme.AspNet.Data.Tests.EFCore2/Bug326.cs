@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
@@ -21,8 +22,8 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         }
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dtoQuery = context.Set<Entity>().Select(i => new DTO { ID = i.ID, Prop = i.Prop });
 
                 Assert.Null(Record.Exception(delegate {
