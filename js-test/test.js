@@ -466,6 +466,31 @@
             });
         });
 
+        QUnit.test("loadMode=raw", function(assert) {
+            var done = assert.async();
+
+            var store = createStore({
+                loadUrl: "/",
+                loadMode: "raw",
+                onBeforeSend: function(op, ajax) {
+                    assert.deepEqual(ajax.data, { });
+                }
+            });
+
+            var loadOptions = {
+                skip: 1,
+                take: 2,
+                filter: [ "this", ">", 0 ],
+                sort: [ { selector: "this", desc: true } ]
+            };
+
+            willRespondWithJson({ data: [ 0, 1, 2, 3 ]});
+
+            store.load(loadOptions).done(function(r) {
+                assert.deepEqual(r, [ 2, 1 ]);
+                done();
+            });
+        });
     });
 
     QUnit.module("check request data onBeforeSend", { beforeEach: wontRespond }, function() {
