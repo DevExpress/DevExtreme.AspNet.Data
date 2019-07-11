@@ -823,11 +823,6 @@
             };
         });
 
-        options.onPush = function() {
-            assert.equal(Object.keys(trace).length, eventNames.length);
-            done();
-        };
-
         var store = createStore(options);
 
         willRespondWithJson({ });
@@ -838,9 +833,28 @@
             store.update(123, { }),
             store.remove(123)
         ]).then(function() {
+            assert.equal(Object.keys(trace).length, eventNames.length);
+            done();
+        })
+    });
+
+    QUnit.test("onPush", function(assert) {
+        var done = assert.async();
+
+        assert.expect(0);
+
+        var store = createStore({
+            onPush: function() {
+                done();
+            }
+        });
+
+        if("push" in store) {
             store.push([
                 { type: "insert", data: { } }]
             );
-        })
+        } else {
+            done();
+        }
     });
 });
