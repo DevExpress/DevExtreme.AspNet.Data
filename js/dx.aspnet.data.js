@@ -31,11 +31,16 @@
 })(function($, CustomStore, dataUtils) {
     "use strict";
 
-    function createStore(options) {
-        var store = new CustomStore(createStoreConfig(options));
-        store._useDefaultSearch = true;
-        return store;
-    }
+    var CUSTOM_STORE_OPTIONS = [
+        "onLoading", "onLoaded",
+        "onInserting", "onInserted",
+        "onUpdating", "onUpdated",
+        "onRemoving", "onRemoved",
+        "onModifying", "onModified",
+        "onPush",
+        "loadMode", "cacheRawData",
+        "errorHandler"
+    ];
 
     function createStoreConfig(options) {
         var keyExpr = options.key,
@@ -156,10 +161,9 @@
             d.resolve(isJSON ? JSON.parse(res) : res);
         }
 
-        return {
+        var result = {
             key: keyExpr,
-            errorHandler: options.errorHandler,
-            loadMode: options.loadMode,
+            useDefaultSearch: true,
 
             load: function(loadOptions) {
                 return send(
@@ -250,6 +254,14 @@
             }
 
         };
+
+        CUSTOM_STORE_OPTIONS.forEach(function(name) {
+            var value = options[name];
+            if(value !== undefined)
+                result[name] = value;
+        });
+
+        return result;
     }
 
     function processLoadResponse(d, res, getResolveArgs) {
@@ -367,6 +379,8 @@
     }
 
     return {
-        createStore: createStore
+        createStore: function(options) {
+            return new CustomStore(createStoreConfig(options));
+        }
     };
 });
