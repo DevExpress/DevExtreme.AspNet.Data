@@ -802,4 +802,59 @@
             store.remove(123)
         ]).then(done);
     });
+
+    QUnit.test("store events", function(assert) {
+        var done = assert.async();
+
+        var eventNames = [ "onLoading", "onLoaded", "onInserting", "onInserted", "onUpdating", "onUpdated", "onRemoving", "onRemoved", "onModifying", "onModified" ];
+        var trace = { };
+
+        var options = {
+            key: "any",
+            loadUrl: "/",
+            insertUrl: "/",
+            updateUrl: "/",
+            deleteUrl: "/"
+        };
+
+        eventNames.forEach(function(name) {
+            options[name] = function() {
+                trace[name] = true;
+            };
+        });
+
+        var store = createStore(options);
+
+        willRespondWithJson({ });
+
+        Promise.all([
+            store.load(),
+            store.insert({ }),
+            store.update(123, { }),
+            store.remove(123)
+        ]).then(function() {
+            assert.equal(Object.keys(trace).length, eventNames.length);
+            done();
+        })
+    });
+
+    QUnit.test("onPush", function(assert) {
+        var done = assert.async();
+
+        assert.expect(0);
+
+        var store = createStore({
+            onPush: function() {
+                done();
+            }
+        });
+
+        if("push" in store) {
+            store.push([
+                { type: "insert", data: { } }]
+            );
+        } else {
+            done();
+        }
+    });
 });
