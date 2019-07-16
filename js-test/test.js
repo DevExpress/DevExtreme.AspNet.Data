@@ -470,6 +470,7 @@
             var done = assert.async();
 
             var store = createStore({
+                key: "this",
                 loadUrl: "/",
                 loadMode: "raw",
                 onBeforeSend: function(op, ajax) {
@@ -486,10 +487,21 @@
 
             willRespondWithJson({ data: [ 0, 1, 2, 3 ]});
 
-            store.load(loadOptions).done(function(r) {
-                assert.deepEqual(r, [ 2, 1 ]);
-                done();
-            });
+            Promise.all([
+
+                store.load(loadOptions).done(function(r) {
+                    assert.deepEqual(r, [ 2, 1 ]);
+                }),
+
+                store.byKey(3).done(function(obj) {
+                    assert.equal(obj, 3);
+                }),
+
+                store.totalCount().done(function(count) {
+                    assert.equal(count, 4);
+                })
+
+            ]).then(done);
         });
     });
 
