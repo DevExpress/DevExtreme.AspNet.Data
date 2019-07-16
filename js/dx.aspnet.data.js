@@ -47,6 +47,7 @@
             loadUrl = options.loadUrl,
             loadMethod = options.loadMethod || "GET",
             loadParams = options.loadParams,
+            isRawLoadMode = options.loadMode === "raw",
             updateUrl = options.updateUrl,
             insertUrl = options.insertUrl,
             deleteUrl = options.deleteUrl,
@@ -182,7 +183,7 @@
                 );
             },
 
-            totalCount: function(loadOptions) {
+            totalCount: !isRawLoadMode && function(loadOptions) {
                 return send(
                     "load",
                     false,
@@ -199,7 +200,7 @@
                 );
             },
 
-            byKey: function(key) {
+            byKey: !isRawLoadMode && function(key) {
                 return send(
                     "load",
                     true,
