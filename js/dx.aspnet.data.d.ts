@@ -1,5 +1,4 @@
 import CustomStore from "devextreme/data/custom_store";
-import { LoadOptions } from "devextreme/data/load_options";
 
 interface Options {
     key?: string|Array<string>,
@@ -24,7 +23,7 @@ interface Options {
     onBeforeSend?: (operation: string, ajaxSettings: JQueryAjaxSettings) => void,
     onAjaxError?: (e: { xhr: JQueryXHR, error: string | Error }) => void
 
-    onLoading?: (loadOptions: LoadOptions) => void;
+    onLoading?: (loadOptions: any) => void;
     onLoaded?: (result: Array<any>) => void;
 
     onInserting?: (values: any) => void;
