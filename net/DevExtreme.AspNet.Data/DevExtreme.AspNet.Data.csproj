@@ -17,7 +17,7 @@
     <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <NoWarn></NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
