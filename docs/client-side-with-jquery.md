@@ -45,8 +45,7 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
         <script src="/bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
         ```
 
-    > [!NOTE]
-    > Since Bower is deprecated we do not recommend you use this approach.
+        > Since Bower is deprecated we do not recommend you use this approach.
 
 #### See Also
 - [Install DevExtreme Using npm](https://js.devexpress.com/Documentation/Guide/Getting_Started/Installation/npm_Package/)
@@ -102,7 +101,7 @@ When you call the `DevExpress.data.AspNet.createStore` method, pass an object wi
 - `onModified` - A function that is executed after a data item is added, updated, or removed from the store. Refer to [CustomStore.onModified](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModified).
 - `onModifying` - A function that is executed before a data item is added, updated, or removed from the store. Refer to [CustomStore.onModifying](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModifying).
 - `onPush` - The function executed before changes are pushed to the store.
-Refer to [onPush](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush).
+Refer to [CustomStore.onPush](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush).
 - `onRemoved` - A function that is executed after a data item is removed from the store. Refer to [CustomStore.onRemoved](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoved).
 - `onRemoving` - A function that is executed before a data item is removed from the store. Refer to [CustomStore.onRemoving](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoving).
 - `onUpdated` - A function that is executed after a data item is updated in the store. Refer to [CustomStore.onUpdated](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdated).
