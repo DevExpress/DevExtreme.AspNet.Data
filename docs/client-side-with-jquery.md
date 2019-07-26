@@ -97,8 +97,6 @@ The following properties are specific to ASP.NET CustomStore:
         - `error`: `string` | [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
         The error message. You can assign a custom error message or JavaScript Error object to this property.
 
-
-
 ### Example
 
 You can find a jQuery example [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/Sample/Views/Home/Index.cshtml).
