@@ -8,7 +8,11 @@
 
 This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server. This significantly improves the performance of DevExtreme widgets.
 
-The extension can be used with the widgets directly or with [DevExtreme-based ASP.NET Core](https://docs.devexpress.com/AspNetCore/400263) and [DevExtreme ASP.NET MVC 5](https://docs.devexpress.com/DevExtremeAspNetMvc/400943/) controls.
+The extension can be used with:
+
+* [DevExtreme client-side widgets](https://js.devexpress.com)
+* [DevExtreme-based ASP.NET Core controls](https://docs.devexpress.com/AspNetCore/400263)
+* [DevExtreme ASP.NET MVC 5 controls](https://docs.devexpress.com/DevExtremeAspNetMvc/400943/)
 
 ## Installation and Configuration
 
@@ -20,6 +24,4 @@ The `DevExtreme.AspNet.Data` extension consists of two parts: server-side and cl
 
 ## CI Builds
 
-CI builds are used to get urgent bug fixes and to test not-yet-released functionality. In other cases, prefer release builds.
-
-Follow [these instructions](docs/using-ci-builds.md) to get CI builds.
+It is recommended to use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test not-yet-released functionality.

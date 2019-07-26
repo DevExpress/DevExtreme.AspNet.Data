@@ -2,42 +2,51 @@
 
 ## Installation
 
-The `dx.aspnet.data.js` script is the client-side part. You can install it in one of the following ways:
+The `dx.aspnet.data.js` script is the client-side part. You can install it in one of the following ways.
 
-* Use [npm](https://www.npmjs.com/package/devextreme-aspnet-data). 
+* Use [npm](https://www.npmjs.com/package/devextreme-aspnet-data).
 
-    Run the following command in the command line:
+    1. Run the following command in the command line:
 
-        npm install devextreme-aspnet-data
+            npm install devextreme-aspnet-data
+        
+    2. Link the `dx.aspnet.data.js` script on your page:
 
-* Use [bower](https://libraries.io/bower/devextreme-aspnet-data).     
-
-    Run the following command in the command line:
-
-        bower install devextreme-aspnet-data
-
-    ... or add `devextreme-aspnet-data` to the *bower.json* file's `dependencies` section.
-
-    ```
-    "dependencies": {
-        ...
-        "devextreme-aspnet-data": "^2"
-    }
-    ```
+        ```HTML
+        <script src="/node_modules/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
+        ```
 
 * Use [unpkg](https://unpkg.com/).
 
-    Use the following URL to load the `dx.aspnet.data.js` script: [https://unpkg.com/devextreme-aspnet-data@2.4.2/js/dx.aspnet.data.js](https://unpkg.com/devextreme-aspnet-data@2.4.2/js/dx.aspnet.data.js).
+    Link the `dx.aspnet.data.js` script on your page in the following way:
 
+    ```HTML
+    <script src="https://unpkg.com/devextreme-aspnet-data@2.4.2/js/dx.aspnet.data.js"></script>
+    ```
 
-After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme scripts on your page.
+* Use [bower](https://libraries.io/bower/devextreme-aspnet-data).
 
-```HTML
-<!-- if you used npm -->
-<script src="/node_modules/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
-<!-- if you used bower -->
-<script src="/bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
-```
+    1. Run the following command in the command line:
+
+            bower install devextreme-aspnet-data
+
+        ... or add `devextreme-aspnet-data` to the *bower.json* file's `dependencies` section.
+
+        ```
+        "dependencies": {
+            ...
+            "devextreme-aspnet-data": "^2"
+        }
+        ```
+
+    2. Link the `dx.aspnet.data.js` script on your page:
+
+        ```HTML
+        <script src="/bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
+        ```
+
+    > [!NOTE]
+    > Since Bower is deprecated we do not recommend you use this approach.
 
 #### See Also
 - [Install DevExtreme Using npm](https://js.devexpress.com/Documentation/Guide/Getting_Started/Installation/npm_Package/)
@@ -45,57 +54,65 @@ After installation, link the `dx.aspnet.data.js` script *after* the DevExtreme s
 
 ## API Reference
 
-The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, that creates a [CustomStore](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/), configures it to reach a controller from the client side, and returns its instance.
+The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, that returns an instance of a [CustomStore](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/) configured to reach a controller.
 
 ### Configuration
 
-When you call the `DevExpress.data.AspNet.createStore` method, pass an object with the properties described below:
+When you call the `DevExpress.data.AspNet.createStore` method, pass an object with the properties described below. There are properties that are directly mapped from DevExtreme and properties specific to ASP.NET.
 
-#### DevExtreme Properties
+- `cacheRawData` - Specifies whether raw data should be saved in the cache. Applies only if `loadMode` is *raw*. Refer to [customStore.cacheRawData](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#cacheRawData).
+- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default.
+- `deleteUrl` - the URL used to delete data.
+- `errorHandler` - Specifies the function that is executed when the store throws an error. Refer to [errorHandler](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#errorHandler).
+- `insertMethod` - the HTTP method for insert requests; "POST" by default.
+- `insertUrl` - the URL used to insert data.
+- `key`- Specifies the key property (or properties) used to access data items. Refer to [key](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#key).
+- `loadMethod` - the HTTP method for load requests; "GET" by default.
+- `loadMode` - Specifies how data returned by the `load` function is treated. [loadMode](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#loadMode).
+- `loadParams` - additional parameters that should be passed to `loadUrl`.
+- `loadUrl` - the URL used to load data.
+- `onAjaxError` - a function to be called when an AJAX request fails.
+  
+    ```js
+    onAjaxError: (e: { xhr, error }) => void
+    ```
 
-The following properties are directly mapped from [properties of DevExtreme CustomStore](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/):
+    The `e` object has the following properties:
 
-- [cacheRawData](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#cacheRawData)
-- [errorHandler](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#errorHandler)
-- [key](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#key)
-- [loadMode](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#loadMode)
-- [onInserted](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserted)
-- [onInserting](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserting)
-- [onLoaded](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoaded)
-- [onLoading](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoading)
-- [onModified](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModified)
-- [onModifying](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModifying)
-- [onPush](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush)
-- [onRemoved](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoved)
-- [onRemoving](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoving)
-- [onUpdated](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdated)
-- [onUpdating](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdating)
+    Property  | Type | Description
+    --- | -- | ----
+    `xhr` | [`jqXHR`](http://api.jquery.com/jQuery.ajax/#jqXHR) for jQuery;  [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) otherwise | The request object.
+    `error` | `string` or [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) | The error object. You can assign a custom error message or a JavaScript `Error` object.
 
-#### Properties Specific to ASP.NET CustomStore
+- `onBeforeSend` - a function that customizes the request before it is sent.
 
-The following properties are specific to ASP.NET CustomStore:
+    ```js
+    onBeforeSend: (operation, ajaxSettings) => void
+    ```
 
-- `loadUrl` - the URL used to load data;
-- `loadParams` - additional parameters that should be passed to `loadUrl`;
-- `updateUrl` - the URL used to update data;
-- `insertUrl` - the URL used to insert data;
-- `deleteUrl` - the URL used to delete data;
-- `loadMethod` - the HTTP method for load requests; "GET" by default;
-- `updateMethod` - the HTTP method for update requests; "PUT" by default;
-- `insertMethod` - the HTTP method for insert requests; "POST" by default;
-- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default;
-- `onBeforeSend` - a function that customizes the request before it is sent; accepts the following parameters:
-    - `operation`: `string`
-    The operation the request should perform. Can be "load", "update", "insert" or "delete".
-    - `jQueryAjaxSettings`: `object`
-    Settings configuring the request. Refer to the [jQuery.ajax()](http://api.jquery.com/jquery.ajax/) description for more information.
-- `onAjaxError` - a function to be called when an Ajax request fails; accepts the following parameter:
-    - `e`: `object`
-    Information about the event; contains the following properties:
-        - `xhr`: [`jqXHR`](http://api.jquery.com/jQuery.ajax/#jqXHR) when using jQuery;  [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) otherwise
-        The request object.
-        - `error`: `string` | [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
-        The error message. You can assign a custom error message or JavaScript Error object to this property.
+    Parameter  | Type | Description
+    --- | -- | ----
+    `operation` | `string` | The operation to be performed by the request: `"load"`, `"update"`, `"insert"`, or `"delete"`.
+    `ajaxSettings` | `object` | Request settings. Refer to [`jQuery.ajax()`](http://api.jquery.com/jquery.ajax/).
+
+- `onInserted` - A function that is executed after a data item is added to the store. [onInserted](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserted).
+- `onInserting` - A function that is executed before a data item is added to the store. [onInserting](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserting).
+- `onLoaded` - A function that is executed after data is loaded to the store. [onLoaded](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoaded).
+- `onLoading` - A function that is executed before data is loaded to the store. [onLoading](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoading).
+- `onModified` - A function that is executed after a data item is added, updated, or removed from the store. Refer to [onModified](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModified).
+- `onModifying` - A function that is executed before a data item is added, updated, or removed from the store. Refer to [onModifying](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModifying).
+- `onPush` - The function executed before changes are pushed to the store.
+Refer to [onPush](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush).
+- `onRemoved` - A function that is executed after a data item is removed from the store. [onRemoved](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoved).
+- `onRemoving` - A function that is executed before a data item is removed from the store. [onRemoving](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoving).
+- `onUpdated` - A function that is executed after a data item is updated in the store. [onUpdated](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdated).
+- `onUpdating` - A function that is executed before a data item is updated in the store. Refer to [onUpdating](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdating).
+- `updateMethod` - the HTTP method for update requests; "PUT" by default.
+- `updateUrl` - the URL used to update data.
+
+### Methods and Events
+
+All methods and events are directly mapped from DevExtreme [methods](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Methods/) and [events](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Events/).
 
 ### Example
 
