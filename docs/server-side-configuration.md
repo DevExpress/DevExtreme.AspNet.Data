@@ -28,5 +28,5 @@ The server-side API is documented [here](https://devexpress.github.io/DevExtreme
 
 ## See Also
 
-- [Sample ASP.NET Core MVC project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)
+- [Sample ASP.NET Core project](https://github.com/DevExpress/DevExtreme.AspNet.Data/tree/master/net/Sample)
 - [KB T334360 - How to implement a data service that supports remote operations for dxDataGrid](https://www.devexpress.com/Support/Center/Example/Details/T334360)
