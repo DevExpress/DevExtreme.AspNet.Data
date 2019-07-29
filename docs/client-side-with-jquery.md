@@ -21,7 +21,7 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
     Link the `dx.aspnet.data.js` script on your page in the following way:
 
     ```HTML
-    <script src="https://unpkg.com/devextreme-aspnet-data@2.4.2/js/dx.aspnet.data.js"></script>
+    <script src="https://unpkg.com/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
     ```
 
 * Use [bower](https://libraries.io/bower/devextreme-aspnet-data).
