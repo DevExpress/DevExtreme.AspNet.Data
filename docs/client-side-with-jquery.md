@@ -8,11 +8,13 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
 
     1. Run the following command in the command line:
 
-            npm install devextreme-aspnet-data
+        ```
+        npm install devextreme-aspnet-data
+        ```
         
     2. Link the `dx.aspnet.data.js` script on your page:
 
-        ```HTML
+        ```html
         <script src="/node_modules/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
         ```
 
@@ -20,15 +22,19 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
 
     Link the `dx.aspnet.data.js` script on your page in the following way:
 
-    ```HTML
+    ```html
     <script src="https://unpkg.com/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
     ```
 
 * Use [bower](https://libraries.io/bower/devextreme-aspnet-data).
 
+    **NOTE: Since Bower is deprecated we do not recommend you use this approach.**
+
     1. Run the following command in the command line:
 
-            bower install devextreme-aspnet-data
+        ```
+        bower install devextreme-aspnet-data
+        ```
 
         ... or add `devextreme-aspnet-data` to the *bower.json* file's `dependencies` section.
 
@@ -41,11 +47,9 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
 
     2. Link the `dx.aspnet.data.js` script on your page:
 
-        ```HTML
+        ```html
         <script src="/bower_components/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
         ```
-
-        > Since Bower is deprecated we do not recommend you use this approach.
 
 #### See Also
 - [Install DevExtreme Using npm](https://js.devexpress.com/Documentation/Guide/Getting_Started/Installation/npm_Package/)
