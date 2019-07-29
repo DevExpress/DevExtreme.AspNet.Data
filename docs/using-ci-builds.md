@@ -23,7 +23,7 @@ Alternatively, you get the JavaScript file directly [from the master branch](htt
 
 ## NuGet Package
 
-Follow [these instructions](https://stackoverflow.com/a/35753968) to install a downloaded .nupkg file.
+Follow [these instructions](https://stackoverflow.com/a/35753968) to install the downloaded .nupkg file.
 
 ## Add an Assembly Binding Redirect
 
