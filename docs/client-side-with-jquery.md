@@ -61,17 +61,17 @@ The client-side API consists of a single method, `DevExpress.data.AspNet.createS
 
 ### Configuration
 
-When you call the `DevExpress.data.AspNet.createStore` method, pass an object with the properties described below. There are properties that are directly mapped from DevExtreme and properties specific to ASP.NET.
+When you call the `DevExpress.data.AspNet.createStore` method, pass an object with the properties described below.
 
-- `cacheRawData` - Specifies whether raw data should be saved in the cache. Applies only if `loadMode` is *raw*. Refer to [CustomStore.cacheRawData](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#cacheRawData).
-- `deleteMethod` - the HTTP method for delete requests; "DELETE" by default.
+- `cacheRawData` - refer to [`CustomStore.cacheRawData`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#cacheRawData).
+- `deleteMethod` - the HTTP method for delete requests; `"DELETE"` by default.
 - `deleteUrl` - the URL used to delete data.
-- `errorHandler` - Specifies the function that is executed when the store throws an error. Refer to [CustomStore.errorHandler](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#errorHandler).
-- `insertMethod` - the HTTP method for insert requests; "POST" by default.
+- `errorHandler` - refer to [`CustomStore.errorHandler`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#errorHandler).
+- `insertMethod` - the HTTP method for insert requests; `"POST"` by default.
 - `insertUrl` - the URL used to insert data.
-- `key`- Specifies the key property (or properties) used to access data items. Refer to [CustomStore.key](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#key).
-- `loadMethod` - the HTTP method for load requests; "GET" by default.
-- `loadMode` - Specifies how data returned by the `load` function is treated. Refer to [CustomStore.loadMode](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#loadMode).
+- `key`- refer to [`CustomStore.key`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#key).
+- `loadMethod` - the HTTP method for load requests; `"GET"` by default.
+- `loadMode` - refer to [`CustomStore.loadMode`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#loadMode).
 - `loadParams` - additional parameters that should be passed to `loadUrl`.
 - `loadUrl` - the URL used to load data.
 - `onAjaxError` - a function to be called when an AJAX request fails.
@@ -83,7 +83,7 @@ When you call the `DevExpress.data.AspNet.createStore` method, pass an object wi
     The `e` object has the following properties:
 
     Property  | Type | Description
-    --- | -- | ----
+    -- | -- | --
     `xhr` | [`jqXHR`](http://api.jquery.com/jQuery.ajax/#jqXHR) for jQuery;  [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) otherwise | The request object.
     `error` | `string` or [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) | The error object. You can assign a custom error message or a JavaScript `Error` object.
 
@@ -98,24 +98,23 @@ When you call the `DevExpress.data.AspNet.createStore` method, pass an object wi
     `operation` | `string` | The operation to be performed by the request: `"load"`, `"update"`, `"insert"`, or `"delete"`.
     `ajaxSettings` | `object` | Request settings. Refer to [`jQuery.ajax()`](http://api.jquery.com/jquery.ajax/).
 
-- `onInserted` - A function that is executed after a data item is added to the store. Refer to [CustomStore.onInserted](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserted).
-- `onInserting` - A function that is executed before a data item is added to the store. Refer to [CustomStore.onInserting](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserting).
-- `onLoaded` - A function that is executed after data is loaded to the store. Refer to [CustomStore.onLoaded](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoaded).
-- `onLoading` - A function that is executed before data is loaded to the store. Refer to [CustomStore.onLoading](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoading).
-- `onModified` - A function that is executed after a data item is added, updated, or removed from the store. Refer to [CustomStore.onModified](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModified).
-- `onModifying` - A function that is executed before a data item is added, updated, or removed from the store. Refer to [CustomStore.onModifying](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModifying).
-- `onPush` - The function executed before changes are pushed to the store.
-Refer to [CustomStore.onPush](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush).
-- `onRemoved` - A function that is executed after a data item is removed from the store. Refer to [CustomStore.onRemoved](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoved).
-- `onRemoving` - A function that is executed before a data item is removed from the store. Refer to [CustomStore.onRemoving](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoving).
-- `onUpdated` - A function that is executed after a data item is updated in the store. Refer to [CustomStore.onUpdated](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdated).
-- `onUpdating` - A function that is executed before a data item is updated in the store. Refer to [CustomStore.onUpdating](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdating).
-- `updateMethod` - the HTTP method for update requests; "PUT" by default.
+- `onInserted` - refer to [`CustomStore.onInserted`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserted).
+- `onInserting` - refer to [`CustomStore.onInserting`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onInserting).
+- `onLoaded` - refer to [`CustomStore.onLoaded`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoaded).
+- `onLoading` - refer to [`CustomStore.onLoading`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onLoading).
+- `onModified` - refer to [`CustomStore.onModified`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModified).
+- `onModifying` - refer to [`CustomStore.onModifying`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onModifying).
+- `onPush` - refer to [`CustomStore.onPush`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onPush).
+- `onRemoved` - refer to [`CustomStore.onRemoved`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoved).
+- `onRemoving` - refer to [`CustomStore.onRemoving`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onRemoving).
+- `onUpdated` - refer to [`CustomStore.onUpdated`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdated).
+- `onUpdating` - refer to [`CustomStore.onUpdating`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Configuration/#onUpdating).
+- `updateMethod` - the HTTP method for update requests; `"PUT"` by default.
 - `updateUrl` - the URL used to update data.
 
 ### Methods and Events
 
-All methods and events are directly mapped from DevExtreme [methods](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Methods/) and [events](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Events/).
+Refer to CustomStore [methods](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Methods/) and [events](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Events/).
 
 ### Example
 
