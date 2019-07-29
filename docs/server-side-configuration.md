@@ -14,7 +14,7 @@ The server needs a custom model binder that receives data loading options from t
 - [Web API](https://github.com/DevExpress/devextreme-examples/blob/17_2/datagrid-webapi/datagrid-webapi/DataSourceLoadOptions.cs)
 - [ASP.NET MVC 5](https://github.com/DevExpress/devextreme-examples/blob/17_2/datagrid-mvc5/datagrid-mvc5/DataSourceLoadOptions.cs)
 
-> If you use `DevExtreme.AspNet.Data` along with [DevExtreme-based ASP.NET Core controls](https://docs.devexpress.com/AspNetCore/400263) or [DevExtreme ASP.NET MVC 5 controls](https://docs.devexpress.com/DevExtremeAspNetMvc/400943/), you do not need to implement the custom model binder, because these libraries already include required binders.
+**NOTE:** If you use `DevExtreme.AspNet.Data` along with [DevExtreme-based ASP.NET Core controls](https://docs.devexpress.com/AspNetCore/400263) or [DevExtreme ASP.NET MVC 5 controls](https://docs.devexpress.com/DevExtremeAspNetMvc/400943/), you do not need to implement the custom model binder, because these libraries already include required binders.
 
 ## Controller Example
 
