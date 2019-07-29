@@ -6,9 +6,13 @@
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
 [![npm nojquery](https://img.shields.io/npm/v/devextreme-aspnet-data-nojquery.svg?maxAge=43200&label=npm+nojquery)](https://www.npmjs.com/package/devextreme-aspnet-data-nojquery)
 
-This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server. This significantly improves the performance of DevExtreme widgets.
+This library enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data ASP.NET controllers and handlers. A widget communicates with the server in the following manner: 
+- The widget sends data loading options (filtering, grouping, sorting, etc) to the server.
+- The server processes data according to these options and then sends processed data back to the widget.
 
-The extension can be used with:
+In this way, you delegate all intensive data operations from the client to the server.
+
+Can be used with:
 
 * [DevExtreme client-side widgets](https://js.devexpress.com)
 * [DevExtreme-based ASP.NET Core controls](https://docs.devexpress.com/AspNetCore/400263)
@@ -16,7 +20,7 @@ The extension can be used with:
 
 ## Installation and Configuration
 
-The `DevExtreme.AspNet.Data` extension consists of two parts: server-side and client-side. Learn how to install and configure both the parts from the following topics:
+`DevExtreme.AspNet.Data` consists of the server-side and client-side parts. Learn how to install and configure both the parts from the following topics:
 
 - [Server Side Configuration](docs/server-side-configuration.md)
 - [Client Side with jQuery](docs/client-side-with-jquery.md)
@@ -24,4 +28,4 @@ The `DevExtreme.AspNet.Data` extension consists of two parts: server-side and cl
 
 ## CI Builds
 
-It is recommended to use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test not-yet-released functionality.
+We recommend to use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test not-yet-released functionality.
