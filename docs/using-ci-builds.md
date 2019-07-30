@@ -23,7 +23,7 @@ Alternatively, you get the JavaScript file directly [from the master branch](htt
 
 ## NuGet Package
 
-Install the `.nupkg` package using the instructions from [How to install a Nuget Package .nupkg file locally](https://stackoverflow.com/a/35753968).
+Follow [these instructions](https://stackoverflow.com/a/35753968) to install the downloaded .nupkg file.
 
 ## Add an Assembly Binding Redirect
 
