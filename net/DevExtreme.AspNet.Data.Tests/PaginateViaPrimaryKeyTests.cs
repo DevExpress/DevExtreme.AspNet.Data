@@ -74,18 +74,23 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
-        public void NotUsedWoSkip() {
+        public void ActiveForFirstPage() {
+            var data = new[] {
+                new { ID = 123 }
+            };
+
             var loadOptions = new SampleLoadOptions {
+                SuppressGuardNulls = true,
+                PrimaryKey = new[] { "ID" },
                 PaginateViaPrimaryKey = true,
+
+                Skip = 0,
                 Take = 123
             };
 
-            DataSourceLoader.Load(new object[0], loadOptions);
+            DataSourceLoader.Load(data, loadOptions);
 
-            Assert.All(
-                loadOptions.ExpressionLog,
-                i => Assert.DoesNotContain(".Select(", i)
-            );
+            Assert.Contains(".Select(obj => new AnonType`1", loadOptions.ExpressionLog[0]);
         }
 
         [Fact]
