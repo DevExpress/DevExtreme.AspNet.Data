@@ -31,7 +31,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
                 var options = new DbContextOptionsBuilder()
                     .UseSqlServer(helper.ConnectionString)
-#if !EFCORE1
+#if EFCORE2
                     .ConfigureWarnings(warnings => warnings.Throw(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.QueryClientEvaluationWarning))
 #endif
                     .Options;
