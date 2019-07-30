@@ -1,11 +1,16 @@
 version: '{build}'
-image: Visual Studio 2017
+image: Visual Studio 2019 Preview
 
 environment:
   RELEASE_KEY_SECRET:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 install:
+  # TODO remove when .NET Core 3.0 stable is available
+  - nuget update -self
+  - ps: "Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -UseBasicParsing -OutFile $env:temp\\dotnet-install.ps1"
+  - ps: "& $env:temp\\dotnet-install.ps1 -Architecture x64 -Version 3.0.100-preview7-012821 -InstallDir $env:ProgramFiles\\dotnet"
+
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
@@ -47,6 +52,15 @@ test_script:
     -output:coverage_netcore.xml
 
   - >-
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
+    -target:dotnet.exe
+    -targetargs:"vstest
+    net\DevExtreme.AspNet.Data.Tests.EFCore3\bin\Debug\netcoreapp3.0\DevExtreme.AspNet.Data.Tests.EFCore3.dll
+    "
+    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
+    -output:coverage_netcore3.xml
+
+  - >-
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user
     -target:%xunit20%\xunit.console.exe
     -targetargs:"
@@ -64,7 +78,7 @@ after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
-  - codecov -X gcov -f coverage_netcore.xml coverage_netfx.xml js-test/coverage/lcov.info
+  - codecov -X gcov -f coverage_netcore.xml coverage_netcore3.xml coverage_netfx.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
