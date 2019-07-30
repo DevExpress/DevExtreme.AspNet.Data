@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if !EFCORE1
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class RemoteGroupingStress {
 
@@ -16,7 +17,11 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             public DateTime? NullDate { get; set; }
         }
 
-        [Fact]
+        [Fact(
+#if EFCORE3
+            Skip = "https://github.com/aspnet/EntityFrameworkCore/issues/16844"
+#endif
+        )]
         public async Task Scenario() {
             await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
@@ -31,3 +36,4 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
     }
 
 }
+#endif
