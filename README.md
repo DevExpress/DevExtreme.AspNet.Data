@@ -8,7 +8,7 @@
 
 This library enables [DevExtreme client-side widgets](https://js.devexpress.com) to perform CRUD operations via ASP.NET controllers and handlers and allows you to delegate all data-intensive operations to the server:
 
-* the widget sends data loading options (filtering, grouping, sorting, etc.) to the server;
+* a widget sends data loading options (filtering, grouping, sorting, etc.) to the server;
 * the server processes data according to these options;
 * the processed data is sent back to the widget.
 
