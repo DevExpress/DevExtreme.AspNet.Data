@@ -114,7 +114,7 @@ When you call the `DevExpress.data.AspNet.createStore` method, pass an object wi
 
 ### Methods and Events
 
-Refer to `CustomStore` [methods](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Methods/) and [events](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Events/).
+Refer to the `CustomStore` [methods](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Methods/) and [events](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/Events/).
 
 ### Example
 

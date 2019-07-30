@@ -20,7 +20,7 @@ Can be used with:
 
 ## Installation and Configuration
 
-`DevExtreme.AspNet.Data` consists of the server-side and client-side parts. Learn how to install and configure both the parts from the following topics:
+`DevExtreme.AspNet.Data` consists of server-side and client-side parts. The following topics explain how to install and configure these parts:
 
 - [Server Side Configuration](docs/server-side-configuration.md)
 - [Client Side with jQuery](docs/client-side-with-jquery.md)
@@ -28,4 +28,4 @@ Can be used with:
 
 ## CI Builds
 
-We recommend to use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test not-yet-released functionality.
+We recommend that you use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can also use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test unreleased functionality.
