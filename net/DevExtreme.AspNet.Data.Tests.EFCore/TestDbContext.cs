@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     class TestDbContext : DbContext {
         static TestDbContext INSTANCE;
@@ -15,20 +14,26 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
+#if !EFCORE1
             modelBuilder.Entity<RemoteGroupingStress.DataItem>();
+#endif
             modelBuilder.Entity<Summary.DataItem>();
+            modelBuilder.Entity<Bug120.DataItem>();
             modelBuilder.Entity<Bug326.Entity>();
             modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
             if(INSTANCE == null) {
-                var helper = new SqlServerTestDbHelper("EFCore2");
+                var efVersion = typeof(DbContext).Assembly.GetName().Version.Major;
+                var helper = new SqlServerTestDbHelper("EFCore" + efVersion);
                 helper.ResetDatabase();
 
                 var options = new DbContextOptionsBuilder()
                     .UseSqlServer(helper.ConnectionString)
-                    .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
+#if !EFCORE1
+                    .ConfigureWarnings(warnings => warnings.Throw(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.QueryClientEvaluationWarning))
+#endif
                     .Options;
 
                 INSTANCE = new TestDbContext(options);
