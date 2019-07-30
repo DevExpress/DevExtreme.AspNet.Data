@@ -57,7 +57,7 @@ The `dx.aspnet.data.js` script is the client-side part. You can install it in on
 
 ## API Reference
 
-The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, that returns an instance of a [`CustomStore`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/) configured to reach a controller.
+The client-side API consists of a single method, `DevExpress.data.AspNet.createStore`, that returns an instance of a [`CustomStore`](https://js.devexpress.com/DevExtreme/ApiReference/Data_Layer/CustomStore/) configured to access a controller.
 
 ### Configuration
 

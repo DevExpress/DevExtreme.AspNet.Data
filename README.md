@@ -6,11 +6,11 @@
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
 [![npm nojquery](https://img.shields.io/npm/v/devextreme-aspnet-data-nojquery.svg?maxAge=43200&label=npm+nojquery)](https://www.npmjs.com/package/devextreme-aspnet-data-nojquery)
 
-This library enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from ASP.NET controllers and handlers. A widget communicates with the server in the following manner: 
-- The widget sends data loading options (filtering, grouping, sorting, etc) to the server.
-- The server processes data according to these options and then sends processed data back to the widget.
+This library enables [DevExtreme client-side widgets](https://js.devexpress.com) to perform CRUD operations via ASP.NET controllers and handlers and allows you to delegate all data-intensive operations to the server:
 
-In this way, you delegate all intensive data operations to the server.
+* the widget sends data loading options (filtering, grouping, sorting, etc.) to the server;
+* the server processes data according to these options;
+* the processed data is sent back to the widget.
 
 Can be used with:
 
