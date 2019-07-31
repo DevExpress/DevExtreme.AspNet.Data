@@ -16,8 +16,8 @@ namespace DevExtreme.AspNet.Data {
             if(provider is EnumerableQuery) {
                 IsLinqToObjects = true;
             } else {
-                var typeInfo = provider.GetType().AssemblyQualifiedName.Split(new[] { ", " }, 4, StringSplitOptions.None);
-                var typeName = typeInfo[0];
+                var type = provider.GetType();
+                var typeName = type.FullName;
 
                 if(typeName == "Microsoft.Data.Entity.Query.Internal.EntityQueryProvider" || typeName == "System.Data.Entity.Internal.Linq.DbQueryProvider")
                     IsEFClassic = true;
@@ -30,7 +30,7 @@ namespace DevExtreme.AspNet.Data {
                 else if(typeName.StartsWith("System.Data.Linq."))
                     IsL2S = true;
 
-                Version = new Version(typeInfo[2].Substring(8));
+                Version = type.Assembly.GetName().Version;
             }
         }
 

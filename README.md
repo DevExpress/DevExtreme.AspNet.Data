@@ -6,16 +6,26 @@
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
 [![npm nojquery](https://img.shields.io/npm/v/devextreme-aspnet-data-nojquery.svg?maxAge=43200&label=npm+nojquery)](https://www.npmjs.com/package/devextreme-aspnet-data-nojquery)
 
-This extension enables [DevExtreme client-side widgets](https://js.devexpress.com) to consume data from the server in ASP.NET applications. A widget communicates with the server in the following manner: the widget sends data loading options (filtering, grouping, sorting, and other options) to the server, the server processes data according to these options and then sends processed data back to the widget. In this way, you delegate all intensive data operations from the client to the server, thus significantly improving the performance of DevExtreme widgets. This extension can be used directly with the widgets as well as with [ASP.NET MVC Controls](https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/).
+This library enables [DevExtreme client-side widgets](https://js.devexpress.com) to perform CRUD operations via ASP.NET controllers and handlers and allows you to delegate all data-intensive operations to the server:
+
+* a widget sends data loading options (filtering, grouping, sorting, etc.) to the server;
+* the server processes data according to these options;
+* the processed data is sent back to the widget.
+
+Can be used with:
+
+* [DevExtreme client-side widgets](https://js.devexpress.com)
+* [DevExtreme-based ASP.NET Core controls](https://docs.devexpress.com/AspNetCore/400263)
+* [DevExtreme ASP.NET MVC 5 controls](https://docs.devexpress.com/DevExtremeAspNetMvc/400943/)
 
 ## Installation and Configuration
 
-The `DevExtreme.AspNet.Data` extension consists of two parts: server-side and client-side. Learn how to install and configure both the parts from the following topics:
+`DevExtreme.AspNet.Data` consists of server-side and client-side parts. The following topics explain how to install and configure these parts:
 
 - [Server Side Configuration](docs/server-side-configuration.md)
 - [Client Side with jQuery](docs/client-side-with-jquery.md)
 - [Client Side without jQuery (Angular, etc.)](docs/client-side-without-jquery.md)
 
-## Using CI Builds
+## CI Builds
 
-To get CI builds, follow the instructions given [here](docs/using-ci-builds.md). Note that these builds are supposed to be used for getting urgent bug fixes and testing not-yet-released functionality. In other cases, prefer release builds.
+We recommend that you use [release builds](https://github.com/DevExpress/DevExtreme.AspNet.Data/releases). However, you can also use [CI builds](docs/using-ci-builds.md) to get urgent bug fixes or to test unreleased functionality.

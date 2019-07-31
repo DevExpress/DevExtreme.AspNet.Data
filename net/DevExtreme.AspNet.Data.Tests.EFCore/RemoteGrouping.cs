@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class RemoteGrouping : IAsyncLifetime {
 
@@ -31,6 +31,31 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
                 await context.SaveChangesAsync();
             });
         }
+
+#if EFCORE1
+
+        [Fact]
+        public async Task DisabledByDefault() {
+            await TestDbContext.ExecAsync(context => {
+                var dbSet = context.Set<DataItem>();
+
+                var loadOptions = new SampleLoadOptions {
+                    Group = new[] {
+                        new GroupingInfo {
+                            Selector = "Group",
+                            IsExpanded = false
+                        }
+                    }
+                };
+
+                DataSourceLoader.Load(dbSet, loadOptions);
+
+                Assert.NotEmpty(loadOptions.ExpressionLog);
+                Assert.DoesNotContain(loadOptions.ExpressionLog, i => i.Contains(".GroupBy"));
+            });
+        }
+
+#else
 
         [Fact]
         public async Task EnabledByDefault() {
@@ -78,6 +103,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             });
         }
 
+#endif
     }
 
 }

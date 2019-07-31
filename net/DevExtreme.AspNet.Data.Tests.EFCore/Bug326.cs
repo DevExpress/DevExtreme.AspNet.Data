@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
     public class Bug326 {
 
         public abstract class EntityBase {
