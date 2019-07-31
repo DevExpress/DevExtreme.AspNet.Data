@@ -16,11 +16,11 @@ namespace DevExtreme.AspNet.Data.Async {
         }
 
         bool IsEF6 => _providerInfo.IsEFClassic && _providerInfo.Version.Major >= 6;
-        bool IsEFCore2 => _providerInfo.IsEFCore && _providerInfo.Version.Major >= 2;
+        bool IsEFCore => _providerInfo.IsEFCore;
         bool IsNH => _providerInfo.IsNH;
 
         public Task<int> CountAsync(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
-            if(IsEFCore2)
+            if(IsEFCore)
                 return InvokeCountAsync(EFCore2Methods.CountAsyncMethod, provider, expr, cancellationToken);
 
             if(IsEF6)
@@ -33,7 +33,7 @@ namespace DevExtreme.AspNet.Data.Async {
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
-            if(IsEFCore2)
+            if(IsEFCore)
                 return InvokeToArrayAsync<T>(EFCore2Methods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
             if(IsEF6)

@@ -24,6 +24,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var loadOptions = new SampleLoadOptions {
                 RequireTotalCount = true,
                 Take = 1,
+                RemoteGrouping = true
             };
 
             {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class Async {
 
