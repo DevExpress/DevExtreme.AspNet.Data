@@ -8,14 +8,6 @@ const README = `# DevExtreme ASP.NET Data
 jQuery-free version of [devextreme-aspnet-data](https://www.npmjs.com/package/devextreme-aspnet-data).
 `;
 
-const JQ_SURROGATE_MODULAR = `$1{
-$1    ajax: require("devextreme/core/utils/ajax").sendRequest,
-$1    Deferred: require("devextreme/core/utils/deferred").Deferred,
-$1    extend: require("devextreme/core/utils/extend").extend
-$1}`;
-
-const JQ_SURROGATE_GLOBAL = `throw "This script should be used with an AMD or CommonJS loader"`;
-
 const AJAX_SETTINGS_SURROGATE = `{
         cache?: boolean;
         contentType?: any;
@@ -44,8 +36,10 @@ fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(nojqueryP
 fs.writeFileSync(
     path.join(outputPath, "index.js"),
     fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.js"), "utf-8")
-        .replace(/( +)require\("jquery"\)/g, JQ_SURROGATE_MODULAR)
-        .replace(/DevExpress\.data\.AspNet = [^]+?\)/, JQ_SURROGATE_GLOBAL)
+        .replace(/\brequire\("jquery"\).ajax/g, `require("devextreme/core/utils/ajax").sendRequest`)
+        .replace(/\brequire\("jquery"\).Deferred/g, `require("devextreme/core/utils/deferred").Deferred`)
+        .replace(/\brequire\("jquery"\).extend/g, `require("devextreme/core/utils/extend").extend`)
+        .replace(/DevExpress\.data\.AspNet = [^]+?\)/, `throw "This script should be used with an AMD or CommonJS loader"`)
         .replace(/\/\* global .+?\*\//, "/* global define, module, require */")
 );
 
