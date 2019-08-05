@@ -9,7 +9,7 @@
     if(typeof define === "function" && define.amd) {
         define(function(require, exports, module) {
             module.exports = factory(
-                require("jquery").ajax,
+                require("devextreme/core/utils/ajax"),
                 require("jquery").Deferred,
                 require("jquery").extend,
                 require("devextreme/data/custom_store"),
@@ -18,7 +18,7 @@
         });
     } else if (typeof module === "object" && module.exports) {
         module.exports = factory(
-            require("jquery").ajax,
+            require("devextreme/core/utils/ajax"),
             require("jquery").Deferred,
             require("jquery").extend,
             require("devextreme/data/custom_store"),
@@ -26,7 +26,7 @@
         );
     } else {
         DevExpress.data.AspNet = factory(
-            jQuery.ajax,
+            DevExpress.utils.ajax || { sendRequest: jQuery.ajax },
             jQuery.Deferred,
             jQuery.extend,
             DevExpress.data.CustomStore,
@@ -34,7 +34,7 @@
         );
     }
 
-})(function(ajax, Deferred, extend, CustomStore, dataUtils) {
+})(function(ajaxUtility, Deferred, extend, CustomStore, dataUtils) {
     "use strict";
 
     var CUSTOM_STORE_OPTIONS = [
@@ -76,7 +76,7 @@
                 if(onBeforeSend)
                     onBeforeSend(operation, ajaxSettings);
 
-                ajax(ajaxSettings)
+                ajaxUtility.sendRequest(ajaxSettings)
                     .done(function(res, textStatus, xhr) {
                         if(customSuccessHandler)
                             customSuccessHandler(d, res, xhr);

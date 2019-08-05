@@ -36,7 +36,6 @@ fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(nojqueryP
 fs.writeFileSync(
     path.join(outputPath, "index.js"),
     fs.readFileSync(path.join(__dirname, "../js/dx.aspnet.data.js"), "utf-8")
-        .replace(/\brequire\("jquery"\).ajax/g, `require("devextreme/core/utils/ajax").sendRequest`)
         .replace(/\brequire\("jquery"\).Deferred/g, `require("devextreme/core/utils/deferred").Deferred`)
         .replace(/\brequire\("jquery"\).extend/g, `require("devextreme/core/utils/extend").extend`)
         .replace(/DevExpress\.data\.AspNet = [^]+?\)/, `throw "This script should be used with an AMD or CommonJS loader"`)
