@@ -76,14 +76,14 @@
                 if(onBeforeSend)
                     onBeforeSend(operation, ajaxSettings);
 
-                ajaxUtility.sendRequest(ajaxSettings)
-                    .done(function(res, textStatus, xhr) {
+                ajaxUtility.sendRequest(ajaxSettings).then(
+                    function(res, textStatus, xhr) {
                         if(customSuccessHandler)
                             customSuccessHandler(d, res, xhr);
                         else
                             d.resolve();
-                    })
-                    .fail(function(xhr, textStatus) {
+                    },
+                    function(xhr, textStatus) {
                         var error = getErrorMessageFromXhr(xhr);
 
                         if(onAjaxError) {
@@ -96,7 +96,8 @@
                             d.reject(error);
                         else
                             d.reject(xhr, textStatus);
-                    });
+                    }
+                );
             }
 
             return d.promise();

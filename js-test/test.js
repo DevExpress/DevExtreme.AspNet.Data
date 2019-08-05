@@ -880,6 +880,7 @@
                 ajaxUtility.resetInjection();
                 assert.expect(0);
                 done();
+                return NEVER_RESOLVE;
             }
 
             ajaxUtility.inject({ sendRequest: customSendRequest });
