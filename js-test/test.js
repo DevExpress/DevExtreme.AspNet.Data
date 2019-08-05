@@ -35,6 +35,8 @@
     // https://github.com/karma-runner/karma-qunit/issues/57
     var QUnit = window.QUnit;
 
+    devextremeVersion = devextremeVersion.split(".").map(Number);
+
     var createStore = AspNet.createStore,
         NEVER_RESOLVE = new Promise(function() { });
 
@@ -54,11 +56,8 @@
     }
 
     function useLegacyStoreResult() {
-        var versionArray = devextremeVersion.split("."),
-            major = Number(versionArray[0]),
-            minor = Number(versionArray[1]);
-
-        return major < 18 || major === 18 && minor < 2;
+        return devextremeVersion[0] < 18
+            || devextremeVersion[0] === 18 && devextremeVersion[1] < 2;
     }
 
     QUnit.testStart(function() {
