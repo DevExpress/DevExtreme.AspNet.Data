@@ -94,11 +94,24 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void DisabledWithoutTake() {
+            var loadOptions = new SampleLoadOptions {
+                SuppressGuardNulls = true,
+                PaginateViaPrimaryKey = true
+            };
+
+            DataSourceLoader.Load(new object[0], loadOptions);
+
+            Assert.NotEmpty(loadOptions.ExpressionLog);
+            Assert.DoesNotContain(loadOptions.ExpressionLog, line => line.Contains(".Select"));
+        }
+
+        [Fact]
         public void RequiresPrimaryKey() {
             var error = Record.Exception(delegate {
                 DataSourceLoader.Load(new string[0], new SampleLoadOptions {
                     PaginateViaPrimaryKey = true,
-                    Skip = 1
+                    Take = 1
                 });
             });
             Assert.True(error is InvalidOperationException);

@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data {
 
                 Expression loadExpr;
 
-                if(!deferPaging && Context.PaginateViaPrimaryKey) {
+                if(!deferPaging && Context.PaginateViaPrimaryKey && Context.Take > 0) {
                     if(!Context.HasPrimaryKey) {
                         throw new InvalidOperationException(nameof(DataSourceLoadOptionsBase.PaginateViaPrimaryKey)
                             + " requires a primary key."
