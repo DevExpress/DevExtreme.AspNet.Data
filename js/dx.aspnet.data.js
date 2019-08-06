@@ -9,26 +9,32 @@
     if(typeof define === "function" && define.amd) {
         define(function(require, exports, module) {
             module.exports = factory(
-                require("jquery"),
+                require("devextreme/core/utils/ajax"),
+                require("jquery").Deferred,
+                require("jquery").extend,
                 require("devextreme/data/custom_store"),
                 require("devextreme/data/utils")
             );
         });
     } else if (typeof module === "object" && module.exports) {
         module.exports = factory(
-            require("jquery"),
+            require("devextreme/core/utils/ajax"),
+            require("jquery").Deferred,
+            require("jquery").extend,
             require("devextreme/data/custom_store"),
             require("devextreme/data/utils")
         );
     } else {
         DevExpress.data.AspNet = factory(
-            jQuery,
+            DevExpress.utils.ajax || { sendRequest: jQuery.ajax },
+            jQuery.Deferred,
+            jQuery.extend,
             DevExpress.data.CustomStore,
             DevExpress.data.utils
         );
     }
 
-})(function($, CustomStore, dataUtils) {
+})(function(ajaxUtility, Deferred, extend, CustomStore, dataUtils) {
     "use strict";
 
     var CUSTOM_STORE_OPTIONS = [
@@ -55,7 +61,7 @@
             onAjaxError = options.onAjaxError;
 
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
-            var d = $.Deferred();
+            var d = Deferred();
 
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
@@ -70,14 +76,14 @@
                 if(onBeforeSend)
                     onBeforeSend(operation, ajaxSettings);
 
-                $.ajax(ajaxSettings)
-                    .done(function(res, textStatus, xhr) {
+                ajaxUtility.sendRequest(ajaxSettings).then(
+                    function(res, textStatus, xhr) {
                         if(customSuccessHandler)
                             customSuccessHandler(d, res, xhr);
                         else
                             d.resolve();
-                    })
-                    .fail(function(xhr, textStatus) {
+                    },
+                    function(xhr, textStatus) {
                         var error = getErrorMessageFromXhr(xhr);
 
                         if(onAjaxError) {
@@ -90,7 +96,8 @@
                             d.reject(error);
                         else
                             d.reject(xhr, textStatus);
-                    });
+                    }
+                );
             }
 
             return d.promise();
@@ -133,7 +140,7 @@
                 }
 
                 if(Array.isArray(filter)) {
-                    filter = $.extend(true, [], filter);
+                    filter = extend(true, [], filter);
                     stringifyDatesInFilter(filter);
                     result.filter = JSON.stringify(filter);
                 }
@@ -151,7 +158,7 @@
                 }
             }
 
-            $.extend(result, loadParams);
+            extend(result, loadParams);
 
             return result;
         }
