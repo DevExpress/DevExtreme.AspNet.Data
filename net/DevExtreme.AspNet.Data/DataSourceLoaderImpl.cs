@@ -204,11 +204,6 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
-        static IEnumerable<T> ForceExecution<T>(IEnumerable<T> sequence) {
-            foreach(var item in sequence)
-                yield return item;
-        }
-
         static IEnumerable Buffer<T>(IEnumerable data) {
             if(data is ICollection)
                 return data;
