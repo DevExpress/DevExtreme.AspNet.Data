@@ -74,7 +74,7 @@ namespace DevExtreme.AspNet.Data {
 
                 Expression loadExpr;
 
-                if(!deferPaging && Context.PaginateViaPrimaryKey) {
+                if(!deferPaging && Context.PaginateViaPrimaryKey && Context.Take > 0) {
                     if(!Context.HasPrimaryKey) {
                         throw new InvalidOperationException(nameof(DataSourceLoadOptionsBase.PaginateViaPrimaryKey)
                             + " requires a primary key."
@@ -223,11 +223,6 @@ namespace DevExtreme.AspNet.Data {
             }
 
             return result;
-        }
-
-        static IEnumerable<T> ForceExecution<T>(IEnumerable<T> sequence) {
-            foreach(var item in sequence)
-                yield return item;
         }
 
         static IEnumerable Buffer<T>(IEnumerable data) {

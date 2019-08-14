@@ -61,7 +61,7 @@ test_script:
     -output:coverage_netcore3.xml
 
   - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user
+    OpenCover\tools\OpenCover.Console -returntargetcode -register:Path64
     -target:%xunit20%\xunit.console.exe
     -targetargs:"
     net\DevExtreme.AspNet.Data.Tests.NET4\bin\Debug\DevExtreme.AspNet.Data.Tests.dll

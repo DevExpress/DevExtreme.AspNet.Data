@@ -10,6 +10,7 @@
                 require("xhr-mock").default,
                 require("devextreme/core/version"),
                 require("devextreme/data/data_source"),
+                require("devextreme/core/utils/ajax"),
                 require(ASPNET_DATA_SCRIPT)
             );
         });
@@ -18,6 +19,7 @@
             require("xhr-mock").default,
             require("devextreme/core/version"),
             require("devextreme/data/data_source"),
+            require("devextreme/core/utils/ajax"),
             require(ASPNET_DATA_SCRIPT)
         );
     } else {
@@ -25,15 +27,18 @@
             window.XHRMock,
             DevExpress.VERSION,
             DevExpress.data.DataSource,
+            DevExpress.utils.ajax,
             DevExpress.data.AspNet
         );
     }
 
-})(function(XHRMock, devextremeVersion, DataSource, AspNet) {
+})(function(XHRMock, devextremeVersion, DataSource, ajaxUtility, AspNet) {
     "use strict";
 
     // https://github.com/karma-runner/karma-qunit/issues/57
     var QUnit = window.QUnit;
+
+    devextremeVersion = devextremeVersion.split(".").map(Number);
 
     var createStore = AspNet.createStore,
         NEVER_RESOLVE = new Promise(function() { });
@@ -54,11 +59,8 @@
     }
 
     function useLegacyStoreResult() {
-        var versionArray = devextremeVersion.split("."),
-            major = Number(versionArray[0]),
-            minor = Number(versionArray[1]);
-
-        return major < 18 || major === 18 && minor < 2;
+        return devextremeVersion[0] < 18
+            || devextremeVersion[0] === 18 && devextremeVersion[1] < 2;
     }
 
     QUnit.testStart(function() {
@@ -869,4 +871,20 @@
             done();
         }
     });
+
+    if(devextremeVersion[0] >= 19) {
+        QUnit.test("ajax.inject", function(assert) {
+            var done = assert.async();
+
+            function customSendRequest() {
+                ajaxUtility.resetInjection();
+                assert.expect(0);
+                done();
+                return NEVER_RESOLVE;
+            }
+
+            ajaxUtility.inject({ sendRequest: customSendRequest });
+            createStore({ loadUrl: "/"}).load();
+        })
+    }
 });
