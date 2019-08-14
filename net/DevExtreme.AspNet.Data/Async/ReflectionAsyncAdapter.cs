@@ -23,7 +23,7 @@ namespace DevExtreme.AspNet.Data.Async {
         public Task<int> CountAsync(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
             MethodInfo GetCountAsyncMethod() {
                 if(IsEFCore)
-                    return EFCore2Methods.CountAsyncMethod;
+                    return EFCoreMethods.CountAsyncMethod;
 
                 if(IsEF6)
                     return EF6Methods.CountAsyncMethod;
@@ -42,7 +42,7 @@ namespace DevExtreme.AspNet.Data.Async {
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
             if(IsEFCore)
-                return InvokeToArrayAsync<T>(EFCore2Methods.ToArrayAsyncMethod, provider, expr, cancellationToken);
+                return InvokeToArrayAsync<T>(EFCoreMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
             if(IsEF6)
                 return InvokeToArrayAsync<T>(EF6Methods.ToArrayAsyncMethod, provider, expr, cancellationToken);
@@ -71,10 +71,10 @@ namespace DevExtreme.AspNet.Data.Async {
             }
         }
 
-        static class EFCore2Methods {
+        static class EFCoreMethods {
             public static readonly MethodInfo CountAsyncMethod;
             public static readonly MethodInfo ToArrayAsyncMethod;
-            static EFCore2Methods() {
+            static EFCoreMethods() {
                 var extensionsType = Type.GetType("Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions, Microsoft.EntityFrameworkCore");
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToArrayAsyncMethod = FindToArrayAsyncMethod(extensionsType);
