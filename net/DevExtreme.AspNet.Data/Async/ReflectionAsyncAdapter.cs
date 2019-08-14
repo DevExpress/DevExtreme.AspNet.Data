@@ -18,18 +18,26 @@ namespace DevExtreme.AspNet.Data.Async {
         bool IsEF6 => _providerInfo.IsEFClassic && _providerInfo.Version.Major >= 6;
         bool IsEFCore => _providerInfo.IsEFCore;
         bool IsNH => _providerInfo.IsNH;
+        bool IsXPO => _providerInfo.IsXPO;
 
         public Task<int> CountAsync(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
-            if(IsEFCore)
-                return InvokeCountAsync(EFCore2Methods.CountAsyncMethod, provider, expr, cancellationToken);
+            MethodInfo GetCountAsyncMethod() {
+                if(IsEFCore)
+                    return EFCore2Methods.CountAsyncMethod;
 
-            if(IsEF6)
-                return InvokeCountAsync(EF6Methods.CountAsyncMethod, provider, expr, cancellationToken);
+                if(IsEF6)
+                    return EF6Methods.CountAsyncMethod;
 
-            if(IsNH)
-                return InvokeCountAsync(NHMethods.CountAsyncMethod, provider, expr, cancellationToken);
+                if(IsNH)
+                    return NHMethods.CountAsyncMethod;
 
-            throw NotSupported();
+                if(IsXPO)
+                    return XpoMethods.CountAsyncMethod;
+
+                throw NotSupported();
+            }
+
+            return InvokeCountAsync(GetCountAsyncMethod(), provider, expr, cancellationToken);
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
@@ -42,6 +50,8 @@ namespace DevExtreme.AspNet.Data.Async {
             if(IsNH)
                 return InvokeToListAsync<T>(NHMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
+            if(IsXPO)
+                return InvokeToArrayAsync<T>(XpoMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
             throw NotSupported();
         }
@@ -78,6 +88,17 @@ namespace DevExtreme.AspNet.Data.Async {
                 var extensionsType = Type.GetType("NHibernate.Linq.LinqExtensionMethods, NHibernate");
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
+            }
+        }
+
+        static class XpoMethods {
+            public static readonly MethodInfo CountAsyncMethod;
+            public static readonly MethodInfo ToArrayAsyncMethod;
+            static XpoMethods() {
+                var asm = Array.Find(AppDomain.CurrentDomain.GetAssemblies(), a => a.FullName.StartsWith("DevExpress.Xpo.v"));
+                var extensionsType = asm.GetType("DevExpress.Xpo.XPQueryExtensions");
+                CountAsyncMethod = FindCountAsyncMethod(extensionsType);
+                ToArrayAsyncMethod = FindToArrayAsyncMethod(extensionsType);
             }
         }
 
