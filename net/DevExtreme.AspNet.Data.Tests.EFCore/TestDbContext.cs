@@ -21,6 +21,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             modelBuilder.Entity<Bug120.DataItem>();
             modelBuilder.Entity<Bug326.Entity>();
             modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
+            modelBuilder.Entity<Async.DataItem>();
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {

@@ -8,6 +8,7 @@ namespace DevExtreme.AspNet.Data {
         public readonly bool IsEFClassic;
         public readonly bool IsEFCore;
         public readonly bool IsXPO;
+        public readonly bool IsNH;
         public readonly bool IsL2S;
         public readonly Version Version;
 
@@ -24,6 +25,8 @@ namespace DevExtreme.AspNet.Data {
                     IsEFCore = true;
                 else if(typeName.StartsWith("DevExpress.Xpo.XPQuery"))
                     IsXPO = true;
+                else if(typeName.StartsWith("NHibernate.Linq."))
+                    IsNH = true;
                 else if(typeName.StartsWith("System.Data.Linq."))
                     IsL2S = true;
 

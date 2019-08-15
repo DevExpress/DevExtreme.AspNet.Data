@@ -32,6 +32,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<RemoteGroupingStress_DataItem>();
             modelBuilder.Entity<Summary_DataItem>();
             modelBuilder.Entity<PaginateViaPrimaryKey_DataItem>().HasKey(i => new { i.K1, i.K2 });
+            modelBuilder.Entity<Async_DataItem>();
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {

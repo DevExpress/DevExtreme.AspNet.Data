@@ -19,7 +19,7 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("orders")]
-        public object Orders(DataSourceLoadOptions loadOptions) {
+        public async Task<object>Orders(DataSourceLoadOptions loadOptions) {
             var source = _nwind.Orders.Select(o => new {
                 o.OrderId,
                 o.CustomerId,
@@ -33,12 +33,12 @@ namespace Sample.Controllers {
             loadOptions.PrimaryKey = new[] { "OrderId" };
             loadOptions.PaginateViaPrimaryKey = true;
 
-            return DataSourceLoader.Load(source, loadOptions);
+            return await DataSourceLoader.LoadAsync(source, loadOptions);
         }
 
         [HttpGet("order-details")]
-        public object OrderDetails(int orderId, DataSourceLoadOptions options) {
-            return DataSourceLoader.Load(
+        public async Task<object> OrderDetails(int orderId, DataSourceLoadOptions options) {
+            return await DataSourceLoader.LoadAsync(
                 from i in _nwind.OrderDetails
                 where i.OrderId == orderId
                 select new {
@@ -52,8 +52,8 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("customers-lookup")]
-        public object CustomersLookup(DataSourceLoadOptions options) {
-            return DataSourceLoader.Load(
+        public async Task<object> CustomersLookup(DataSourceLoadOptions options) {
+            return await DataSourceLoader.LoadAsync(
                 from c in _nwind.Customers orderby c.CompanyName select new {
                     Value = c.CustomerId,
                     Text = $"{c.CompanyName} ({c.Country})"
@@ -63,8 +63,8 @@ namespace Sample.Controllers {
         }
 
         [HttpGet("shippers-lookup")]
-        public object ShippersLookup(DataSourceLoadOptions options) {
-            return DataSourceLoader.Load(
+        public async Task<object> ShippersLookup(DataSourceLoadOptions options) {
+            return await DataSourceLoader.LoadAsync(
                 from s in _nwind.Shippers orderby s.CompanyName select new {
                     Value = s.ShipperId,
                     Text = s.CompanyName
@@ -74,8 +74,8 @@ namespace Sample.Controllers {
         }
 
         [HttpPut("update-order")]
-        public IActionResult UpdateOrder(int key, string values) {
-            var order = _nwind.Orders.FirstOrDefault(o => o.OrderId == key);
+        public async Task<IActionResult> UpdateOrder(int key, string values) {
+            var order = await _nwind.Orders.FirstOrDefaultAsync(o => o.OrderId == key);
             if(order == null)
                 return StatusCode(409, "Order not found");
 
@@ -84,13 +84,13 @@ namespace Sample.Controllers {
             if(!TryValidateModel(order))
                 return BadRequest(ModelState.ToFullErrorString());
 
-            _nwind.SaveChanges();
+            await _nwind.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpPost("insert-order")]
-        public IActionResult InsertOrder(string values) {
+        public async Task<IActionResult> InsertOrder(string values) {
             var order = new Order();
             JsonConvert.PopulateObject(values, order);
 
@@ -98,25 +98,25 @@ namespace Sample.Controllers {
                 return BadRequest(ModelState.ToFullErrorString());
 
             _nwind.Orders.Add(order);
-            _nwind.SaveChanges();
+            await _nwind.SaveChangesAsync();
 
             return Json(order.OrderId);
         }
 
         [HttpDelete("delete-order")]
-        public IActionResult DeleteOrder(int key) {
-            var order = _nwind.Orders.FirstOrDefault(o => o.OrderId == key);
+        public async Task<IActionResult> DeleteOrder(int key) {
+            var order = await _nwind.Orders.FirstOrDefaultAsync(o => o.OrderId == key);
             if(order == null)
                 return StatusCode(409, "Order not found");
 
             _nwind.Orders.Remove(order);
-            _nwind.SaveChanges();
+            await _nwind.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpGet("products")]
-        public object Products(DataSourceLoadOptions loadOptions) {
+        public async Task<object> Products(DataSourceLoadOptions loadOptions) {
             var projection = _nwind.Products.Select(p => new {
                 p.ProductId,
                 p.ProductName,
@@ -124,7 +124,7 @@ namespace Sample.Controllers {
                 p.UnitPrice
             });
 
-            return DataSourceLoader.Load(projection, loadOptions);
+            return await DataSourceLoader.LoadAsync(projection, loadOptions);
         }
 
     }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -29,7 +31,15 @@ namespace DevExtreme.AspNet.Data {
         /// <param name="options">Data processing settings when loading data.</param>
         /// <returns>The load result.</returns>
         public static LoadResult Load<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
-            return new DataSourceLoaderImpl<T>(source, options).Load();
+            return LoadAsync(source, options, CancellationToken.None, true).GetAwaiter().GetResult();
+        }
+
+        public static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken = default(CancellationToken)) {
+            return LoadAsync(source, options, cancellationToken, false);
+        }
+
+        static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, DataSourceLoadOptionsBase options, CancellationToken ct, bool sync) {
+            return new DataSourceLoaderImpl<T>(source, options, ct, sync).LoadAsync();
         }
 
     }
