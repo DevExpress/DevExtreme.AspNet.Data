@@ -34,7 +34,7 @@ namespace DevExtreme.AspNet.Data.Async {
                 if(IsXPO)
                     return XpoMethods.CountAsyncMethod;
 
-                throw NotSupported();
+                throw ProviderNotSupported(provider);
             }
 
             return InvokeCountAsync(GetCountAsyncMethod(), provider, expr, cancellationToken);
@@ -53,12 +53,18 @@ namespace DevExtreme.AspNet.Data.Async {
             if(IsXPO)
                 return InvokeToArrayAsync<T>(XpoMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
-            throw NotSupported();
+            throw ProviderNotSupported(provider);
         }
 
-        static Exception NotSupported() {
-#warning TODO message
-            throw new NotSupportedException();
+        static Exception ProviderNotSupported(IQueryProvider provider) {
+            var providerType = provider.GetType();
+            if(providerType.IsGenericType)
+                providerType = providerType.GetGenericTypeDefinition();
+
+            var message = $"Async operations for the LINQ provider '{providerType.FullName}' are not supported."
+                + $" You can implement a custom async adapter ({typeof(IAsyncAdapter).FullName}) and register it via '{typeof(CustomAsyncAdapters).FullName}.{nameof(CustomAsyncAdapters.RegisterAdapter)}'.";
+
+            return new NotSupportedException(message);
         }
 
         static class EF6Methods {
