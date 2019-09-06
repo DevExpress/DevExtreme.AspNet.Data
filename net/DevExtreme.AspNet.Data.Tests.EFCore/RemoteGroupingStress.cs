@@ -17,11 +17,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             public DateTime? NullDate { get; set; }
         }
 
-        [Fact(
-#if EFCORE3
-            Skip = "https://github.com/aspnet/EntityFrameworkCore/issues/16844"
-#endif
-        )]
+        [Fact]
         public async Task Scenario() {
             await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
