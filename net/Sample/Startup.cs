@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample {
@@ -24,8 +23,7 @@ namespace Sample {
                 );
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {
-            loggerFactory.AddConsole(LogLevel.Information);
+        public void Configure(IApplicationBuilder app) {
             app.UseMvc();
             app.UseStaticFiles();
         }
