@@ -38,38 +38,38 @@ namespace Sample.Controllers {
 
         [HttpGet("order-details")]
         public async Task<IActionResult> OrderDetails(int orderId, DataSourceLoadOptions loadOptions) {
-            var source = from i in _nwind.OrderDetails
-                         where i.OrderId == orderId
-                         select new {
-                             Product = i.Product.ProductName,
-                             Price = i.UnitPrice,
-                             Quantity = i.Quantity,
-                             Sum = i.UnitPrice * i.Quantity
-                         };
+            var source = _nwind.OrderDetails
+                .Where(i => i.OrderId == orderId)
+                .Select(i => new {
+                    Product = i.Product.ProductName,
+                    Price = i.UnitPrice,
+                    i.Quantity,
+                    Sum = i.UnitPrice * i.Quantity
+                });
 
             return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
         }
 
         [HttpGet("customers-lookup")]
         public async Task<object> CustomersLookup(DataSourceLoadOptions loadOptions) {
-            var source = from c in _nwind.Customers
-                         orderby c.CompanyName
-                         select new {
-                             Value = c.CustomerId,
-                             Text = $"{c.CompanyName} ({c.Country})"
-                         };
+            var source = _nwind.Customers
+                .OrderBy(c => c.CompanyName)
+                .Select(c => new {
+                    Value = c.CustomerId,
+                    Text = $"{c.CompanyName} ({c.Country})"
+                });
 
             return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
         }
 
         [HttpGet("shippers-lookup")]
         public async Task<object> ShippersLookup(DataSourceLoadOptions loadOptions) {
-            var source = from s in _nwind.Shippers
-                         orderby s.CompanyName
-                         select new {
-                             Value = s.ShipperId,
-                             Text = s.CompanyName
-                         };
+            var source = _nwind.Shippers
+                .OrderBy(s => s.CompanyName)
+                .Select(s => new {
+                    Value = s.ShipperId,
+                    Text = s.CompanyName
+                });
 
             return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
         }
