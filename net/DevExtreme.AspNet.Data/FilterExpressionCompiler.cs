@@ -61,7 +61,7 @@ namespace DevExtreme.AspNet.Data {
             }
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
-                if(isStringOperation || progression.Last().Type == typeof(Object) && clientValue is String)
+                if(isStringOperation)
                     ForceToString(progression);
 
                 if(_stringToLower)
@@ -128,7 +128,7 @@ namespace DevExtreme.AspNet.Data {
                     var compareMethod = typeof(Utils).GetMethod(nameof(Utils.DynamicCompare));
                     return Expression.MakeBinary(
                         expressionType,
-                        Expression.Call(compareMethod, accessorExpr, valueExpr),
+                        Expression.Call(compareMethod, accessorExpr, valueExpr, Expression.Constant(_stringToLower)),
                         Expression.Constant(0)
                     );
                 }

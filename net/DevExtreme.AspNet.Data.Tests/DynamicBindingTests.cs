@@ -225,14 +225,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Case(
                 new object[] { "this", ">", new JValue(9) },
-                "(DynamicCompare(obj, 9) > 0)",
+                "(DynamicCompare(obj, 9, False) > 0)",
                 10
-            );
-
-            Case(
-                new object[] { "this", new JValue("a") },
-                @"(obj.ToString() == ""a"")",
-                "a"
             );
         }
 
@@ -244,6 +238,17 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             Assert.False(DynamicBindingHelper.ShouldUseDynamicBinding(data.ElementType));
+        }
+
+        [Fact]
+        public void T819075() {
+            dynamic sourceItem = new ExpandoObject();
+            sourceItem.p = new DateTime(2011, 11, 11);
+
+            Assert.Equal(1, DataSourceLoader.Load(new[] { sourceItem }, new SampleLoadOptions {
+                Filter = new[] { "p", "11/11/2011" },
+                RequireTotalCount = true
+            }).totalCount);
         }
     }
 
