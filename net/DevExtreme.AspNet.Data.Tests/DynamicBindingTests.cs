@@ -245,6 +245,26 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.False(DynamicBindingHelper.ShouldUseDynamicBinding(data.ElementType));
         }
+
+        [Fact]
+        public void DBNull() {
+            dynamic item1 = new ExpandoObject();
+            dynamic item2 = new ExpandoObject();
+            item1.p = 123;
+            item2.p = System.DBNull.Value;
+
+            var source = new[] { item1, item2 };
+
+            Assert.Equal(1, DataSourceLoader.Load(source, new SampleLoadOptions {
+                Filter = new object[] { "p", 123 },
+                RequireTotalCount = true
+            }).totalCount);
+
+            Assert.Equal(1, DataSourceLoader.Load(source, new SampleLoadOptions {
+                Filter = new object[] { "p", null },
+                RequireTotalCount = true
+            }).totalCount);
+        }
     }
 
 }
