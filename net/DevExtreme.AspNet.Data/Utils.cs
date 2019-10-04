@@ -91,6 +91,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static int DynamicCompare(object selectorResult, object clientValue, bool stringToLower) {
+            if(selectorResult is DBNull)
+                selectorResult = null;
+
             if(selectorResult != null) {
                 clientValue = ConvertClientValue(clientValue, selectorResult.GetType());
 

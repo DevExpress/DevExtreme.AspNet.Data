@@ -1,16 +1,11 @@
 version: '{build}'
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 environment:
   RELEASE_KEY_SECRET:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
 install:
-  # TODO remove when .NET Core 3.0 stable is available
-  - nuget update -self
-  - ps: "Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -UseBasicParsing -OutFile $env:temp\\dotnet-install.ps1"
-  - ps: "& $env:temp\\dotnet-install.ps1 -Architecture x64 -Version 3.0.100-rc1-014190 -InstallDir $env:ProgramFiles\\dotnet"
-
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
   - pip install -q codecov
