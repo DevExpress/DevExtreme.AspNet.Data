@@ -57,14 +57,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             var expr = compiler.Compile(new object[] {
                 new[] { "this", "startswith", "1" },
                 "or",
-                new[] { "this", "b" },
+                new[] { "this", "B" },
                 "or",
-                new[] { "this", ">=", "c" }
+                new[] { "this", ">=", "C" }
             });
 
             var expectedExpr = "(((IIF((obj == null), null, obj.ToString().ToLower()) ?? '').StartsWith('1')"
-                    + " OrElse (IIF((obj == null), null, obj.ToString().ToLower()) == 'b'))"
-                    + " OrElse (Compare(IIF((obj == null), null, obj.ToString().ToLower()), 'c') >= 0))";
+                    + " OrElse (DynamicCompare(obj, 'b', True) == 0))"
+                    + " OrElse (DynamicCompare(obj, 'c', True) >= 0))";
 
             Assert.Equal(
                 expectedExpr.Replace("'", "\""),
@@ -73,8 +73,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var method = expr.Compile();
             Assert.True((bool)method.DynamicInvoke(1));
-            Assert.True((bool)method.DynamicInvoke("b"));
-            Assert.True((bool)method.DynamicInvoke('c'));
+            Assert.True((bool)method.DynamicInvoke("B"));
+            Assert.True((bool)method.DynamicInvoke('C'));
         }
 
         [Fact]

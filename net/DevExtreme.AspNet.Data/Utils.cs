@@ -90,14 +90,23 @@ namespace DevExtreme.AspNet.Data {
                 .ToArray();
         }
 
-        public static int DynamicCompare(object selectorResult, object clientValue) {
+        public static int DynamicCompare(object selectorResult, object clientValue, bool stringToLower) {
             if(selectorResult is DBNull)
                 selectorResult = null;
 
-            if(selectorResult != null)
+            if(selectorResult != null) {
                 clientValue = ConvertClientValue(clientValue, selectorResult.GetType());
-            else
+
+                if(stringToLower && clientValue != null) {
+                    if(selectorResult is String selectorResultString) {
+                        selectorResult = selectorResultString.ToLower();
+                    } else if(selectorResult is Char selectorResultChar) {
+                        selectorResult = Char.ToLower(selectorResultChar);
+                    }
+                }
+            } else {
                 clientValue = UnwrapNewtonsoftValue(clientValue);
+            }
 
             return Comparer<object>.Default.Compare(selectorResult, clientValue);
         }
