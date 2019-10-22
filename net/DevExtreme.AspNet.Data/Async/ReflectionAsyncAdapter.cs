@@ -42,10 +42,10 @@ namespace DevExtreme.AspNet.Data.Async {
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
             if(IsEFCore)
-                return InvokeToArrayAsync<T>(EFCoreMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
+                return InvokeToListAsync<T>(EFCoreMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
             if(IsEF6)
-                return InvokeToArrayAsync<T>(EF6Methods.ToArrayAsyncMethod, provider, expr, cancellationToken);
+                return InvokeToListAsync<T>(EF6Methods.ToListAsyncMethod, provider, expr, cancellationToken);
 
             if(IsNH)
                 return InvokeToListAsync<T>(NHMethods.ToListAsyncMethod, provider, expr, cancellationToken);
@@ -69,21 +69,21 @@ namespace DevExtreme.AspNet.Data.Async {
 
         static class EF6Methods {
             public static readonly MethodInfo CountAsyncMethod;
-            public static readonly MethodInfo ToArrayAsyncMethod;
+            public static readonly MethodInfo ToListAsyncMethod;
             static EF6Methods() {
                 var extensionsType = Type.GetType("System.Data.Entity.QueryableExtensions, EntityFramework");
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
-                ToArrayAsyncMethod = FindToArrayAsyncMethod(extensionsType);
+                ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
             }
         }
 
         static class EFCoreMethods {
             public static readonly MethodInfo CountAsyncMethod;
-            public static readonly MethodInfo ToArrayAsyncMethod;
+            public static readonly MethodInfo ToListAsyncMethod;
             static EFCoreMethods() {
                 var extensionsType = Type.GetType("Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions, Microsoft.EntityFrameworkCore");
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
-                ToArrayAsyncMethod = FindToArrayAsyncMethod(extensionsType);
+                ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
             }
         }
 
