@@ -24,14 +24,12 @@
         }
 
         function makeResponseText() {
-            var error = response.error;
-            if(error === undefined)
-                return "N/A";
+            var body = "error" in response ? response.error : response.body;
 
-            if(typeof error !== "string" || String(getResponseHeader("Content-Type")).indexOf("application/json") === 0)
-                return JSON.stringify(error);
+            if(typeof body !== "string" || String(getResponseHeader("Content-Type")).indexOf("application/json") === 0)
+                return JSON.stringify(body);
 
-            return error;
+            return body;
         }
 
         return {
@@ -42,15 +40,38 @@
         };
     }
 
+    function getAcceptHeader(options) {
+        var dataType = options.dataType;
+        var accepts = options.accepts;
+        var fallback = ',*/*;q=0.01';
+
+        if(dataType && accepts && accepts[dataType])
+          return accepts[dataType] + fallback;
+
+        switch (dataType) {
+          case 'json': return 'application/json, text/javascript' + fallback;
+          case 'text': return 'text/plain' + fallback;
+          case 'xml': return 'application/xml, text/xml' + fallback;
+          case 'html': return 'text/html' + fallback;
+          case 'script': return 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript' + fallback;
+        }
+
+        return '*/*';
+    }
+
     return function(options) {
         var d = Deferred();
 
         var method = (options.method || "get").toLowerCase();
+        var headers = Object.assign({}, options.headers); // TODO Object.assign
         var data = options.data;
         var xhrFields = options.xhrFields;
 
         if(options.cache === false && method === "get" && data)
             data._ = nonce++;
+
+        if(!headers.Accept)
+            headers.Accept = getAcceptHeader(options);
 
         httpClient
             .request(
@@ -59,7 +80,7 @@
                 {
                     params: data,
                     responseType: options.dataType,
-                    headers: options.headers,
+                    headers: headers,
                     withCredentials: xhrFields && xhrFields.withCredentials,
                     observe: "response"
                 }
