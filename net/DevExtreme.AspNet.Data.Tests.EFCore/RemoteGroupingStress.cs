@@ -1,8 +1,10 @@
-﻿using System;
+﻿#if !EFCORE1
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class RemoteGroupingStress {
 
@@ -16,8 +18,8 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         }
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 dbSet.Add(new DataItem());
@@ -30,3 +32,4 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
     }
 
 }
+#endif

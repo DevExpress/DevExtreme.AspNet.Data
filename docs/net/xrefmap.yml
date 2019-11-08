@@ -105,6 +105,72 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator
   fullName: DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator
   nameWithType: CustomAggregators.RegisterAggregator
+- uid: DevExtreme.AspNet.Data.Async
+  name: DevExtreme.AspNet.Data.Async
+  href: api/DevExtreme.AspNet.Data.Async.html
+  commentId: N:DevExtreme.AspNet.Data.Async
+  fullName: DevExtreme.AspNet.Data.Async
+  nameWithType: DevExtreme.AspNet.Data.Async
+- uid: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters
+  name: CustomAsyncAdapters
+  href: api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.html
+  commentId: T:DevExtreme.AspNet.Data.Async.CustomAsyncAdapters
+  fullName: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters
+  nameWithType: CustomAsyncAdapters
+- uid: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Func{System.Type,System.Boolean},DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  name: RegisterAdapter(Func<Type, Boolean>, IAsyncAdapter)
+  href: api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.html#DevExtreme_AspNet_Data_Async_CustomAsyncAdapters_RegisterAdapter_System_Func_System_Type_System_Boolean__DevExtreme_AspNet_Data_Async_IAsyncAdapter_
+  commentId: M:DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Func{System.Type,System.Boolean},DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  name.vb: RegisterAdapter(Func(Of Type, Boolean), IAsyncAdapter)
+  fullName: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Func<System.Type, System.Boolean>, DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  fullName.vb: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Func(Of System.Type, System.Boolean), DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  nameWithType: CustomAsyncAdapters.RegisterAdapter(Func<Type, Boolean>, IAsyncAdapter)
+  nameWithType.vb: CustomAsyncAdapters.RegisterAdapter(Func(Of Type, Boolean), IAsyncAdapter)
+- uid: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Type,DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  name: RegisterAdapter(Type, IAsyncAdapter)
+  href: api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.html#DevExtreme_AspNet_Data_Async_CustomAsyncAdapters_RegisterAdapter_System_Type_DevExtreme_AspNet_Data_Async_IAsyncAdapter_
+  commentId: M:DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Type,DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  fullName: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter(System.Type, DevExtreme.AspNet.Data.Async.IAsyncAdapter)
+  nameWithType: CustomAsyncAdapters.RegisterAdapter(Type, IAsyncAdapter)
+- uid: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter*
+  name: RegisterAdapter
+  href: api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.html#DevExtreme_AspNet_Data_Async_CustomAsyncAdapters_RegisterAdapter_
+  commentId: Overload:DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter
+  fullName: DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.RegisterAdapter
+  nameWithType: CustomAsyncAdapters.RegisterAdapter
+- uid: DevExtreme.AspNet.Data.Async.IAsyncAdapter
+  name: IAsyncAdapter
+  href: api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html
+  commentId: T:DevExtreme.AspNet.Data.Async.IAsyncAdapter
+  fullName: DevExtreme.AspNet.Data.Async.IAsyncAdapter
+  nameWithType: IAsyncAdapter
+- uid: DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync(System.Linq.IQueryProvider,System.Linq.Expressions.Expression,System.Threading.CancellationToken)
+  name: CountAsync(IQueryProvider, Expression, CancellationToken)
+  href: api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html#DevExtreme_AspNet_Data_Async_IAsyncAdapter_CountAsync_System_Linq_IQueryProvider_System_Linq_Expressions_Expression_System_Threading_CancellationToken_
+  commentId: M:DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync(System.Linq.IQueryProvider,System.Linq.Expressions.Expression,System.Threading.CancellationToken)
+  fullName: DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync(System.Linq.IQueryProvider, System.Linq.Expressions.Expression, System.Threading.CancellationToken)
+  nameWithType: IAsyncAdapter.CountAsync(IQueryProvider, Expression, CancellationToken)
+- uid: DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync*
+  name: CountAsync
+  href: api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html#DevExtreme_AspNet_Data_Async_IAsyncAdapter_CountAsync_
+  commentId: Overload:DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync
+  fullName: DevExtreme.AspNet.Data.Async.IAsyncAdapter.CountAsync
+  nameWithType: IAsyncAdapter.CountAsync
+- uid: DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync*
+  name: ToEnumerableAsync
+  href: api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html#DevExtreme_AspNet_Data_Async_IAsyncAdapter_ToEnumerableAsync_
+  commentId: Overload:DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync
+  fullName: DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync
+  nameWithType: IAsyncAdapter.ToEnumerableAsync
+- uid: DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync``1(System.Linq.IQueryProvider,System.Linq.Expressions.Expression,System.Threading.CancellationToken)
+  name: ToEnumerableAsync<T>(IQueryProvider, Expression, CancellationToken)
+  href: api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html#DevExtreme_AspNet_Data_Async_IAsyncAdapter_ToEnumerableAsync__1_System_Linq_IQueryProvider_System_Linq_Expressions_Expression_System_Threading_CancellationToken_
+  commentId: M:DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync``1(System.Linq.IQueryProvider,System.Linq.Expressions.Expression,System.Threading.CancellationToken)
+  name.vb: ToEnumerableAsync(Of T)(IQueryProvider, Expression, CancellationToken)
+  fullName: DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync<T>(System.Linq.IQueryProvider, System.Linq.Expressions.Expression, System.Threading.CancellationToken)
+  fullName.vb: DevExtreme.AspNet.Data.Async.IAsyncAdapter.ToEnumerableAsync(Of T)(System.Linq.IQueryProvider, System.Linq.Expressions.Expression, System.Threading.CancellationToken)
+  nameWithType: IAsyncAdapter.ToEnumerableAsync<T>(IQueryProvider, Expression, CancellationToken)
+  nameWithType.vb: IAsyncAdapter.ToEnumerableAsync(Of T)(IQueryProvider, Expression, CancellationToken)
 - uid: DevExtreme.AspNet.Data.DataSourceLoader
   name: DataSourceLoader
   href: api/DevExtreme.AspNet.Data.DataSourceLoader.html
@@ -147,6 +213,21 @@ references:
   fullName.vb: DevExtreme.AspNet.Data.DataSourceLoader.Load(Of T)(System.Linq.IQueryable(Of T), DevExtreme.AspNet.Data.DataSourceLoadOptionsBase)
   nameWithType: DataSourceLoader.Load<T>(IQueryable<T>, DataSourceLoadOptionsBase)
   nameWithType.vb: DataSourceLoader.Load(Of T)(IQueryable(Of T), DataSourceLoadOptionsBase)
+- uid: DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync*
+  name: LoadAsync
+  href: api/DevExtreme.AspNet.Data.DataSourceLoader.html#DevExtreme_AspNet_Data_DataSourceLoader_LoadAsync_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync
+  fullName: DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync
+  nameWithType: DataSourceLoader.LoadAsync
+- uid: DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync``1(System.Linq.IQueryable{``0},DevExtreme.AspNet.Data.DataSourceLoadOptionsBase,System.Threading.CancellationToken)
+  name: LoadAsync<T>(IQueryable<T>, DataSourceLoadOptionsBase, CancellationToken)
+  href: api/DevExtreme.AspNet.Data.DataSourceLoader.html#DevExtreme_AspNet_Data_DataSourceLoader_LoadAsync__1_System_Linq_IQueryable___0__DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_System_Threading_CancellationToken_
+  commentId: M:DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync``1(System.Linq.IQueryable{``0},DevExtreme.AspNet.Data.DataSourceLoadOptionsBase,System.Threading.CancellationToken)
+  name.vb: LoadAsync(Of T)(IQueryable(Of T), DataSourceLoadOptionsBase, CancellationToken)
+  fullName: DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync<T>(System.Linq.IQueryable<T>, DevExtreme.AspNet.Data.DataSourceLoadOptionsBase, System.Threading.CancellationToken)
+  fullName.vb: DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(Of T)(System.Linq.IQueryable(Of T), DevExtreme.AspNet.Data.DataSourceLoadOptionsBase, System.Threading.CancellationToken)
+  nameWithType: DataSourceLoader.LoadAsync<T>(IQueryable<T>, DataSourceLoadOptionsBase, CancellationToken)
+  nameWithType.vb: DataSourceLoader.LoadAsync(Of T)(IQueryable(Of T), DataSourceLoadOptionsBase, CancellationToken)
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase
   name: DataSourceLoadOptionsBase
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html
@@ -225,6 +306,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.IsCountQuery
   nameWithType: DataSourceLoadOptionsBase.IsCountQuery
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+  name: PaginateViaPrimaryKey
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PaginateViaPrimaryKey
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+  nameWithType: DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey*
+  name: PaginateViaPrimaryKey
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PaginateViaPrimaryKey_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PaginateViaPrimaryKey
+  nameWithType: DataSourceLoadOptionsBase.PaginateViaPrimaryKey
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.PreSelect
   name: PreSelect
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_PreSelect
@@ -441,6 +534,27 @@ references:
   commentId: N:DevExtreme.AspNet.Data.Helpers
   fullName: DevExtreme.AspNet.Data.Helpers
   nameWithType: DevExtreme.AspNet.Data.Helpers
+- uid: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers
+  name: CustomFilterCompilers
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.html
+  commentId: T:DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers
+  nameWithType: CustomFilterCompilers
+- uid: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler(System.Func{DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo,System.Linq.Expressions.Expression})
+  name: RegisterBinaryExpressionCompiler(Func<IBinaryExpressionInfo, Expression>)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.html#DevExtreme_AspNet_Data_Helpers_CustomFilterCompilers_RegisterBinaryExpressionCompiler_System_Func_DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_System_Linq_Expressions_Expression__
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler(System.Func{DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo,System.Linq.Expressions.Expression})
+  name.vb: RegisterBinaryExpressionCompiler(Func(Of IBinaryExpressionInfo, Expression))
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler(System.Func<DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo, System.Linq.Expressions.Expression>)
+  fullName.vb: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler(System.Func(Of DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo, System.Linq.Expressions.Expression))
+  nameWithType: CustomFilterCompilers.RegisterBinaryExpressionCompiler(Func<IBinaryExpressionInfo, Expression>)
+  nameWithType.vb: CustomFilterCompilers.RegisterBinaryExpressionCompiler(Func(Of IBinaryExpressionInfo, Expression))
+- uid: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler*
+  name: RegisterBinaryExpressionCompiler
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.html#DevExtreme_AspNet_Data_Helpers_CustomFilterCompilers_RegisterBinaryExpressionCompiler_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.RegisterBinaryExpressionCompiler
+  nameWithType: CustomFilterCompilers.RegisterBinaryExpressionCompiler
 - uid: DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser
   name: DataSourceLoadOptionsParser
   href: api/DevExtreme.AspNet.Data.Helpers.DataSourceLoadOptionsParser.html
@@ -553,6 +667,60 @@ references:
   fullName.vb: DevExtreme.AspNet.Data.Helpers.IAccessor(Of T).Read
   nameWithType: IAccessor<T>.Read
   nameWithType.vb: IAccessor(Of T).Read
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo
+  name: IBinaryExpressionInfo
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html
+  commentId: T:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo
+  nameWithType: IBinaryExpressionInfo
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText
+  name: AccessorText
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_AccessorText
+  commentId: P:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText
+  nameWithType: IBinaryExpressionInfo.AccessorText
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText*
+  name: AccessorText
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_AccessorText_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.AccessorText
+  nameWithType: IBinaryExpressionInfo.AccessorText
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression
+  name: DataItemExpression
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_DataItemExpression
+  commentId: P:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression
+  nameWithType: IBinaryExpressionInfo.DataItemExpression
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression*
+  name: DataItemExpression
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_DataItemExpression_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.DataItemExpression
+  nameWithType: IBinaryExpressionInfo.DataItemExpression
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
+  name: Operation
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_Operation
+  commentId: P:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
+  nameWithType: IBinaryExpressionInfo.Operation
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation*
+  name: Operation
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_Operation_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
+  nameWithType: IBinaryExpressionInfo.Operation
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
+  name: Value
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_Value
+  commentId: P:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
+  nameWithType: IBinaryExpressionInfo.Value
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value*
+  name: Value
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_Value_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
+  nameWithType: IBinaryExpressionInfo.Value
 - uid: DevExtreme.AspNet.Data.ResponseModel
   name: DevExtreme.AspNet.Data.ResponseModel
   href: api/DevExtreme.AspNet.Data.ResponseModel.html

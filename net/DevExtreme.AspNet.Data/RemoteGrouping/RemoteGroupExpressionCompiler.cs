@@ -92,38 +92,44 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
         IEnumerable<Expression> MakeAggregates(Expression aggregateTarget, IEnumerable<SummaryInfo> summary) {
             foreach(var s in TransformSummary(summary)) {
-                var itemParam = CreateItemParam(typeof(T));
-                var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftToNullable: true);
-                var selectorType = selectorExpr.Type;
+                yield return MakeAggregate(aggregateTarget, s);
+            }
+        }
 
-                var callType = typeof(Enumerable);
-                var isCountNotNull = s.SummaryType == AggregateName.COUNT_NOT_NULL;
+        Expression MakeAggregate(Expression aggregateTarget, SummaryInfo s) {
+            var itemParam = CreateItemParam(typeof(T));
+            var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftToNullable: true);
+            var selectorType = selectorExpr.Type;
 
-                if(isCountNotNull && Utils.CanAssignNull(selectorType)) {
-                    yield return Expression.Call(
-                        callType,
-                        nameof(Enumerable.Sum),
-                        Type.EmptyTypes,
-                        Expression.Call(
-                            typeof(Enumerable),
-                            nameof(Enumerable.Select),
-                            new[] { typeof(T), typeof(int) },
-                            aggregateTarget,
-                            Expression.Lambda(
-                                Expression.Condition(
-                                    Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorType)),
-                                    Expression.Constant(1),
-                                    Expression.Constant(0)
-                                ),
-                                itemParam
-                            )
+            var callType = typeof(Enumerable);
+            var isCountNotNull = s.SummaryType == AggregateName.COUNT_NOT_NULL;
+
+            if(isCountNotNull && Utils.CanAssignNull(selectorType)) {
+                return Expression.Call(
+                    callType,
+                    nameof(Enumerable.Sum),
+                    Type.EmptyTypes,
+                    Expression.Call(
+                        typeof(Enumerable),
+                        nameof(Enumerable.Select),
+                        new[] { typeof(T), typeof(int) },
+                        aggregateTarget,
+                        Expression.Lambda(
+                            Expression.Condition(
+                                Expression.NotEqual(selectorExpr, Expression.Constant(null, selectorType)),
+                                Expression.Constant(1),
+                                Expression.Constant(0)
+                            ),
+                            itemParam
                         )
-                    );
-                } else {
-                    var callMethod = GetPreAggregateMethodName(s.SummaryType);
-                    var callMethodTypeParams = new List<Type> { typeof(T) };
-                    var callArgs = new List<Expression> { aggregateTarget };
+                    )
+                );
+            } else {
+                var callMethod = GetPreAggregateMethodName(s.SummaryType);
+                var callMethodTypeParams = new List<Type> { typeof(T) };
+                var callArgs = new List<Expression> { aggregateTarget };
 
+                try {
                     if(!IsWellKnownAggregateDataType(selectorType)) {
                         if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
                             callMethodTypeParams.Add(selectorType);
@@ -140,7 +146,10 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     if(!isCountNotNull)
                         callArgs.Add(Expression.Lambda(selectorExpr, itemParam));
 
-                    yield return Expression.Call(callType, callMethod, callMethodTypeParams.ToArray(), callArgs.ToArray());
+                    return Expression.Call(callType, callMethod, callMethodTypeParams.ToArray(), callArgs.ToArray());
+                } catch(Exception x) {
+                    var message = $"Failed to translate the '{s.SummaryType}' aggregate for the '{s.Selector}' member ({selectorExpr.Type}). See InnerException for details.";
+                    throw new Exception(message, x);
                 }
             }
         }
@@ -182,6 +191,12 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     return nameof(Enumerable.Sum);
                 case AggregateName.COUNT_NOT_NULL:
                     return nameof(Enumerable.Count);
+            }
+
+            if(CustomAggregators.IsRegistered(summaryType)) {
+                var message = $"The custom aggregate '{summaryType}' cannot be translated to a LINQ expression."
+                    + $" Set {nameof(DataSourceLoadOptionsBase)}.{nameof(DataSourceLoadOptionsBase.RemoteGrouping)} to False to enable in-memory aggregate calculation.";
+                throw new InvalidOperationException(message);
             }
 
             throw new NotSupportedException();

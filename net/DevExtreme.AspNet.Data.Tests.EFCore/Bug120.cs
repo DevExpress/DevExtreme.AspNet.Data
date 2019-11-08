@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class Bug120 {
 
@@ -15,8 +13,8 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore1 {
         }
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
                 var result = DataSourceLoader.Load(dbSet, new SampleLoadOptions { RequireTotalCount = true });
                 Assert.Equal(0, result.totalCount);

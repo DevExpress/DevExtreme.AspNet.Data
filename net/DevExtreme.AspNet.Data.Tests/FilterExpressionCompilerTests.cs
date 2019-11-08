@@ -290,6 +290,59 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("False", CompileOperation("<="));
         }
 
+        [Fact]
+        public void GuidComparison() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/339
+
+            var sampleGuid = Guid.Empty.ToString();
+
+            Assert.Equal(
+                $"(obj.CompareTo({sampleGuid}) > 0)",
+                Compile<Guid>(new[] { "this", ">", sampleGuid }).Body.ToString()
+            );
+
+            Assert.Equal(
+                $"(obj.Value.CompareTo({sampleGuid}) < 0)",
+                Compile<Guid?>(new[] { "this", "<", sampleGuid }).Body.ToString()
+            );
+
+            Assert.Equal(
+                $"IIF((obj == null), False, (obj.Value.CompareTo({sampleGuid}) >= 0))",
+                Compile<Guid?>(new[] { "this", ">=", sampleGuid }, true).Body.ToString()
+            );
+
+            Assert.Equal(
+                "False",
+                Compile<Guid?>(new[] { "this", "<=", null }).Body.ToString()
+            );
+        }
+
+
+        [Fact]
+        public void EnumComparison() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/164
+
+            Assert.Equal(
+                "(obj.CompareTo(Monday) > 0)",
+                Compile<DayOfWeek>(new object[] { "this", ">", DayOfWeek.Monday }).Body.ToString()
+            );
+
+            Assert.Equal(
+                "(obj.Value.CompareTo(Tuesday) < 0)",
+                Compile<DayOfWeek?>(new object[] { "this", "<", DayOfWeek.Tuesday }).Body.ToString()
+            );
+
+            Assert.Equal(
+                "IIF((obj == null), False, (obj.Value.CompareTo(Wednesday) >= 0))",
+                Compile<DayOfWeek?>(new object[] { "this", ">=", DayOfWeek.Wednesday }, true).Body.ToString()
+            );
+
+            Assert.Equal(
+                "False",
+                Compile<DayOfWeek?>(new[] { "this", "<=", null }).Body.ToString()
+            );
+        }
+
     }
 
 }

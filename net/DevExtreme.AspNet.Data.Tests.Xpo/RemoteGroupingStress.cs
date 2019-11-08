@@ -1,5 +1,6 @@
 ﻿using DevExpress.Xpo;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests.Xpo {
@@ -47,8 +48,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         }
 
         [Fact]
-        public void Scenario() {
-            UnitOfWorkHelper.Exec(uow => {
+        public async Task Scenario() {
+            await UnitOfWorkHelper.ExecAsync(uow => {
                 new DataItem(uow);
                 uow.CommitChanges();
 

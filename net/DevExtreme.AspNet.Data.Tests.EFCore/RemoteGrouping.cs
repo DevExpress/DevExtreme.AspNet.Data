@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
-    public class RemoteGrouping : IDisposable {
+    public class RemoteGrouping : IAsyncLifetime {
 
         [Table(nameof(RemoteGrouping) + "_" + nameof(DataItem))]
         public class DataItem {
@@ -14,26 +15,51 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             public int Group { get; set; }
         }
 
-        public RemoteGrouping() {
-            TestDbContext.Exec(context => {
+        async Task IAsyncLifetime.InitializeAsync() {
+            await TestDbContext.ExecAsync(async context => {
                 var dbSet = context.Set<DataItem>();
                 dbSet.Add(new DataItem { Group = 1 });
                 dbSet.Add(new DataItem { Group = 2 });
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             });
         }
 
-        public void Dispose() {
-            TestDbContext.Exec(context => {
+        async Task IAsyncLifetime.DisposeAsync() {
+            await TestDbContext.ExecAsync(async context => {
                 var dbSet = context.Set<DataItem>();
                 dbSet.RemoveRange(dbSet);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             });
         }
 
+#if EFCORE1
+
         [Fact]
-        public void EnabledByDefault() {
-            TestDbContext.Exec(context => {
+        public async Task DisabledByDefault() {
+            await TestDbContext.ExecAsync(context => {
+                var dbSet = context.Set<DataItem>();
+
+                var loadOptions = new SampleLoadOptions {
+                    Group = new[] {
+                        new GroupingInfo {
+                            Selector = "Group",
+                            IsExpanded = false
+                        }
+                    }
+                };
+
+                DataSourceLoader.Load(dbSet, loadOptions);
+
+                Assert.NotEmpty(loadOptions.ExpressionLog);
+                Assert.DoesNotContain(loadOptions.ExpressionLog, i => i.Contains(".GroupBy"));
+            });
+        }
+
+#else
+
+        [Fact]
+        public async Task EnabledByDefault() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 var loadOptions = new SampleLoadOptions {
@@ -51,12 +77,12 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         }
 
         [Fact]
-        public void TotalSummary() {
+        public async Task TotalSummary() {
             // aka empty group key
             // https://github.com/aspnet/EntityFrameworkCore/issues/11905
             // https://github.com/aspnet/EntityFrameworkCore/issues/11993
 
-            TestDbContext.Exec(context => {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 var loadOptions = new SampleLoadOptions {
@@ -77,6 +103,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
             });
         }
 
+#endif
     }
 
 }

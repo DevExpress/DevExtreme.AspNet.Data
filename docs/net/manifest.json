@@ -41,11 +41,47 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Async.CustomAsyncAdapters.html",
+          "hash": "BMkkRxbuPHhSB0rGUaVNgA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Async.IAsyncAdapter.html",
+          "hash": "JE0PxYIanUzoUPH0ZGY1LA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Async.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Async.html",
+          "hash": "YED9lKvsW/bjcd/nK+0/lQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.yml",
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html",
-          "hash": "fxGruGQ2JBiPxXhzSMvHNA=="
+          "hash": "X6DeaZI7F3M8bvZf9lVkZA=="
         }
       },
       "is_incremental": false,
@@ -57,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoader.html",
-          "hash": "SzhooXPPikDRemYr6HD/QQ=="
+          "hash": "px6wm/cwDBEwz3HV4C9RBQ=="
         }
       },
       "is_incremental": false,
@@ -70,6 +106,18 @@
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.GroupingInfo.html",
           "hash": "LMX5DZ7blkyWMtWEZO1t6Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.html",
+          "hash": "kUHTMna0w0SVINlDpPJ8bg=="
         }
       },
       "is_incremental": false,
@@ -101,11 +149,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html",
+          "hash": "IiGkNc3pJnLQu7tBoLXTlA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.yml",
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.html",
-          "hash": "POAeNiSEVA7z8SbSXoZJLQ=="
+          "hash": "uv76oF9NPqvfZx6PJ9W9Cw=="
         }
       },
       "is_incremental": false,
@@ -177,7 +237,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.html",
-          "hash": "k78MnS3hZy3jUSdSRHgQRw=="
+          "hash": "crg7ZdZ7qCv02TeyRkLeHQ=="
         }
       },
       "is_incremental": false,
@@ -189,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "w+SQrrsfh2+XtnuKqheXcw=="
+          "hash": "sxRQxXXMV7Xsetijjz6HWw=="
         }
       },
       "is_incremental": false,
@@ -238,18 +298,18 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "ResourceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

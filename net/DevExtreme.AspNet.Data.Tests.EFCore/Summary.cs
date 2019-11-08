@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
+namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class Summary {
 
@@ -15,17 +16,22 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore2 {
         }
 
         [Fact]
-        public void Scenario() {
-            TestDbContext.Exec(context => {
+        public async Task Scenario() {
+            await TestDbContext.ExecAsync(context => {
                 var dbSet = context.Set<DataItem>();
 
                 dbSet.AddRange(SummaryTestHelper.GenerateTestData(() => new DataItem()));
                 context.SaveChanges();
 
+#if EFCORE1
+                SummaryTestHelper.Run(dbSet);
+#else
                 SummaryTestHelper.Run(dbSet, new[] { "count", "min", "max", "sum" });
                 SummaryTestHelper.Run(dbSet, new[] { "avg" });
+#endif
             });
         }
 
     }
+
 }

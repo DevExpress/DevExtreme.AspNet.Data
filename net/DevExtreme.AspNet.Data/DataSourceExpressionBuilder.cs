@@ -1,6 +1,8 @@
 ﻿using DevExtreme.AspNet.Data.RemoteGrouping;
 using DevExtreme.AspNet.Data.Types;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -17,8 +19,8 @@ namespace DevExtreme.AspNet.Data {
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
-        public Expression BuildLoadExpr(Expression source, bool paginate = true) {
-            return BuildCore(source, paginate: paginate);
+        public Expression BuildLoadExpr(Expression source, bool paginate = true, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
+            return BuildCore(source, paginate: paginate, filterOverride: filterOverride, selectOverride: selectOverride);
         }
 
         public Expression BuildCountExpr(Expression source) {
@@ -29,19 +31,24 @@ namespace DevExtreme.AspNet.Data {
             return BuildCore(source, remoteGrouping: true);
         }
 
-        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false) {
+        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
-            if(_context.HasFilter)
-                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(_context.Filter)));
+            if(filterOverride != null || _context.HasFilter) {
+                var filterExpr = filterOverride != null && filterOverride.Count < 1
+                    ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(typeof(T)))
+                    : new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter);
+
+                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(filterExpr));
+            }
 
             if(!isCountQuery) {
                 if(!remoteGrouping) {
                     if(_context.HasAnySort)
                         expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _context.GetFullSort());
-                    if(_context.HasAnySelect && _context.UseRemoteSelect) {
-                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, _context.FullSelect);
+                    if(selectOverride != null || _context.HasAnySelect && _context.UseRemoteSelect) {
+                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, selectOverride ?? _context.FullSelect);
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {

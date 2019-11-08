@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,11 +45,23 @@ namespace DevExtreme.AspNet.Data {
 
             var clientAccessor = Convert.ToString(criteriaJson[0]);
             var clientOperation = hasExplicitOperation ? Convert.ToString(criteriaJson[1]).ToLower() : "=";
-            var clientValue = criteriaJson[hasExplicitOperation ? 2 : 1];
+            var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
+            if(CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
+                var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
+                    DataItemExpression = dataItemExpr,
+                    AccessorText = clientAccessor,
+                    Operation = clientOperation,
+                    Value = clientValue
+                });
+
+                if(customResult != null)
+                    return customResult;
+            }
+
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
-                if(isStringOperation || progression.Last().Type == typeof(Object) && Utils.UnwrapNewtonsoftValue(clientValue) is String)
+                if(isStringOperation)
                     ForceToString(progression);
 
                 if(_stringToLower)
@@ -88,15 +101,36 @@ namespace DevExtreme.AspNet.Data {
                 if(_stringToLower && clientValue is String)
                     clientValue = ((string)clientValue).ToLower();
 
+                if(IsInequality(expressionType)) {
+                    if(accessorExpr.Type == typeof(Guid) || accessorExpr.Type == typeof(Guid?)) {
+                        var method = typeof(Guid).GetMethod(nameof(Guid.CompareTo), new[] { typeof(Guid) });
+                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
+                    }
+
+                    if(Utils.StripNullableType(accessorExpr.Type).IsEnum) {
+                        var method = typeof(Enum).GetMethod(nameof(Enum.CompareTo), new[] { typeof(object) });
+                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
+                    }
+                }
+
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
 
                 if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
                     var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
-                    accessorExpr = Expression.Call(null, compareMethod, accessorExpr, valueExpr);
-                    valueExpr = Expression.Constant(0);
-                } else if(useDynamicBinding) {
-                    accessorExpr = Expression.Call(typeof(Utils).GetMethod(nameof(Utils.DynamicCompare)), accessorExpr, valueExpr);
-                    valueExpr = Expression.Constant(0);
+                    return Expression.MakeBinary(
+                        expressionType,
+                        Expression.Call(compareMethod, accessorExpr, valueExpr),
+                        Expression.Constant(0)
+                    );
+                }
+
+                if(useDynamicBinding) {
+                    var compareMethod = typeof(Utils).GetMethod(nameof(Utils.DynamicCompare));
+                    return Expression.MakeBinary(
+                        expressionType,
+                        Expression.Call(compareMethod, accessorExpr, valueExpr, Expression.Constant(_stringToLower)),
+                        Expression.Constant(0)
+                    );
                 }
 
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
@@ -106,6 +140,31 @@ namespace DevExtreme.AspNet.Data {
 
         bool IsInequality(ExpressionType type) {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
+        }
+
+        Expression CompileCompareToCall(Expression accessorExpr, ExpressionType expressionType, object clientValue, MethodInfo compareToMethod) {
+            if(clientValue == null)
+                return Expression.Constant(false);
+
+            var result = Expression.MakeBinary(
+                expressionType,
+                Expression.Call(
+                    Utils.IsNullable(accessorExpr.Type) ? Expression.Property(accessorExpr, "Value") : accessorExpr,
+                    compareToMethod,
+                    Expression.Constant(clientValue, compareToMethod.GetParameters()[0].ParameterType)
+                ),
+                Expression.Constant(0)
+            );
+
+            if(GuardNulls) {
+                return Expression.Condition(
+                    Expression.MakeBinary(ExpressionType.Equal, accessorExpr, Expression.Constant(null)),
+                    Expression.Constant(false),
+                    result
+                );
+            }
+
+            return result;
         }
 
         Expression CompileStringFunction(Expression accessorExpr, string clientOperation, string value) {
@@ -224,6 +283,13 @@ namespace DevExtreme.AspNet.Data {
                 progression.RemoveAt(progression.Count - 1);
 
             progression.Add(toLowerCall);
+        }
+
+        class BinaryExpressionInfo : IBinaryExpressionInfo {
+            public Expression DataItemExpression { get; set; }
+            public string AccessorText { get; set; }
+            public string Operation { get; set; }
+            public object Value { get; set; }
         }
     }
 

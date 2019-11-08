@@ -79,11 +79,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Bug179.cs" />
     <Compile Include="Bug184.cs" />
     <Compile Include="Bug235.cs" />
     <Compile Include="Bug239.cs" />
     <Compile Include="Bug240.cs" />
+    <Compile Include="PaginateViaPrimaryKey.cs" />
     <Compile Include="RemoteGroupingStress.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="SelectNotMapped.cs" />

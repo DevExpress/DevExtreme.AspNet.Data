@@ -12,6 +12,7 @@
                 require("xhr-mock").default,
                 require("devextreme/core/version"),
                 require("devextreme/data/data_source"),
+                require("devextreme/core/utils/ajax"),
                 require(ASPNET_DATA_SCRIPT)
             );
         });
@@ -22,6 +23,7 @@
             require("xhr-mock").default,
             require("devextreme/core/version"),
             require("devextreme/data/data_source"),
+            require("devextreme/core/utils/ajax"),
             require(ASPNET_DATA_SCRIPT)
         );
     } else {
@@ -29,15 +31,18 @@
             window.XHRMock,
             DevExpress.VERSION,
             DevExpress.data.DataSource,
+            DevExpress.utils.ajax,
             DevExpress.data.AspNet
         );
     }
 
-})(function(XHRMock, devextremeVersion, DataSource, AspNet) {
+})(function(XHRMock, devextremeVersion, DataSource, ajaxUtility, AspNet) {
     "use strict";
 
     // https://github.com/karma-runner/karma-qunit/issues/57
     var QUnit = window.QUnit;
+
+    devextremeVersion = devextremeVersion.split(".").map(Number);
 
     var createStore = AspNet.createStore,
         NEVER_RESOLVE = new Promise(function() { });
@@ -58,11 +63,8 @@
     }
 
     function useLegacyStoreResult() {
-        var versionArray = devextremeVersion.split("."),
-            major = Number(versionArray[0]),
-            minor = Number(versionArray[1]);
-
-        return major < 18 || major === 18 && minor < 2;
+        return devextremeVersion[0] < 18
+            || devextremeVersion[0] === 18 && devextremeVersion[1] < 2;
     }
 
     QUnit.testStart(function() {
@@ -470,6 +472,43 @@
             });
         });
 
+        QUnit.test("loadMode=raw", function(assert) {
+            var done = assert.async();
+
+            var store = createStore({
+                key: "this",
+                loadUrl: "/",
+                loadMode: "raw",
+                onBeforeSend: function(op, ajax) {
+                    assert.deepEqual(ajax.data, { });
+                }
+            });
+
+            var loadOptions = {
+                skip: 1,
+                take: 2,
+                filter: [ "this", ">", 0 ],
+                sort: [ { selector: "this", desc: true } ]
+            };
+
+            willRespondWithJson({ data: [ 0, 1, 2, 3 ]});
+
+            Promise.all([
+
+                store.load(loadOptions).done(function(r) {
+                    assert.deepEqual(r, [ 2, 1 ]);
+                }),
+
+                store.byKey(3).done(function(obj) {
+                    assert.equal(obj, 3);
+                }),
+
+                store.totalCount().done(function(count) {
+                    assert.equal(count, 4);
+                })
+
+            ]).then(done);
+        });
     });
 
     QUnit.module("check request data onBeforeSend", { beforeEach: wontRespond }, function() {
@@ -812,4 +851,75 @@
             store.remove(123)
         ]).then(done);
     });
+
+    QUnit.test("store events", function(assert) {
+        var done = assert.async();
+
+        var eventNames = [ "onLoading", "onLoaded", "onInserting", "onInserted", "onUpdating", "onUpdated", "onRemoving", "onRemoved", "onModifying", "onModified" ];
+        var trace = { };
+
+        var options = {
+            key: "any",
+            loadUrl: "/",
+            insertUrl: "/",
+            updateUrl: "/",
+            deleteUrl: "/"
+        };
+
+        eventNames.forEach(function(name) {
+            options[name] = function() {
+                trace[name] = true;
+            };
+        });
+
+        var store = createStore(options);
+
+        willRespondWithJson({ });
+
+        Promise.all([
+            store.load(),
+            store.insert({ }),
+            store.update(123, { }),
+            store.remove(123)
+        ]).then(function() {
+            assert.equal(Object.keys(trace).length, eventNames.length);
+            done();
+        })
+    });
+
+    QUnit.test("onPush", function(assert) {
+        var done = assert.async();
+
+        assert.expect(0);
+
+        var store = createStore({
+            onPush: function() {
+                done();
+            }
+        });
+
+        if("push" in store) {
+            store.push([
+                { type: "insert", data: { } }]
+            );
+        } else {
+            done();
+        }
+    });
+
+    if(devextremeVersion[0] >= 19) {
+        QUnit.test("ajax.inject", function(assert) {
+            var done = assert.async();
+
+            function customSendRequest() {
+                ajaxUtility.resetInjection();
+                assert.expect(0);
+                done();
+                return NEVER_RESOLVE;
+            }
+
+            ajaxUtility.inject({ sendRequest: customSendRequest });
+            createStore({ loadUrl: "/"}).load();
+        })
+    }
 });
