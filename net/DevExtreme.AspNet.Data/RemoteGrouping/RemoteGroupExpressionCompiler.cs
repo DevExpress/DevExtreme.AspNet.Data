@@ -130,16 +130,15 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 var callArgs = new List<Expression> { aggregateTarget };
 
                 try {
-                    if(!IsWellKnownAggregateDataType(selectorType)) {
-                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                    if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                        if(!IsWellKnownAggregateDataType(selectorType))
                             callMethodTypeParams.Add(selectorType);
-                        } else if(s.SummaryType == AggregateName.SUM) {
-                            if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
-                                callType = typeof(DynamicSum);
-                                callMethod = nameof(DynamicSum.Calculate);
-                            } else {
-                                selectorExpr = Expression.Convert(selectorExpr, GetSumType(selectorType));
-                            }
+                    } else if(s.SummaryType == AggregateName.SUM) {
+                        if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
+                            callType = typeof(DynamicSum);
+                            callMethod = nameof(DynamicSum.Calculate);
+                        } else {
+                            selectorExpr = ConvertSumSelector(selectorExpr);
                         }
                     }
 
@@ -161,6 +160,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 || type == typeof(float)
                 || type == typeof(int)
                 || type == typeof(long);
+        }
+
+        static Expression ConvertSumSelector(Expression expr) {
+            if(IsWellKnownAggregateDataType(expr.Type))
+                return expr;
+
+            return Expression.Convert(expr, GetSumType(expr.Type));
         }
 
         static Type GetSumType(Type type) {
