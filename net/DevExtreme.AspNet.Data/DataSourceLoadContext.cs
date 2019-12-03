@@ -208,7 +208,14 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        public bool ExpandLinqSumType => _options.ExpandLinqSumType.GetValueOrDefault();
+        public bool ExpandLinqSumType {
+            get {
+                if(_options.ExpandLinqSumType.HasValue)
+                    return _options.ExpandLinqSumType.Value;
+
+                return _providerInfo.IsEFClassic;
+            }
+        }
     }
 
     // Select
