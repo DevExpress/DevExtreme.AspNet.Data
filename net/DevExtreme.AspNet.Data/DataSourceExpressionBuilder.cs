@@ -27,11 +27,11 @@ namespace DevExtreme.AspNet.Data {
             return BuildCore(source, isCountQuery: true);
         }
 
-        public Expression BuildLoadGroupsExpr(Expression source) {
-            return BuildCore(source, remoteGrouping: true);
+        public Expression BuildLoadGroupsExpr(Expression source, bool expandSumType) {
+            return BuildCore(source, remoteGrouping: true, expandSumType: expandSumType);
         }
 
-        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
+        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false, bool expandSumType = false, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
             var queryableType = typeof(Queryable);
             var genericTypeArguments = new[] { typeof(T) };
 
@@ -52,7 +52,7 @@ namespace DevExtreme.AspNet.Data {
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, expandSumType, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {

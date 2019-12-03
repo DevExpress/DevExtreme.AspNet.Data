@@ -207,6 +207,8 @@ namespace DevExtreme.AspNet.Data {
                 return _summaryIsTotalCountOnly.Value;
             }
         }
+
+        public bool ExpandLinqSumType => _options.ExpandLinqSumType.GetValueOrDefault();
     }
 
     // Select

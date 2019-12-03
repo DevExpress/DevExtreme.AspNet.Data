@@ -106,7 +106,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls, null,
+                    guardNulls, false, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "123" }
                     },
@@ -130,7 +130,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             string Compile<T>(string selector, bool guardNulls) {
                 var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls, null,
+                    guardNulls, false, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "year" },
                         new GroupingInfo { Selector = selector, GroupInterval = "quarter" },
@@ -216,6 +216,52 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void GetSumType_ExpandFalse() {
+            Type GetSumType<T>() => RemoteGroupExpressionCompiler<object>.GetSumType(typeof(T), false);
+
+            // Validation: check lambda type in new T[0].Sum(i => i)
+
+            Assert.Equal(typeof(int), GetSumType<sbyte>());
+            Assert.Equal(typeof(int), GetSumType<byte>());
+
+            Assert.Equal(typeof(int), GetSumType<short>());
+            Assert.Equal(typeof(int), GetSumType<ushort>());
+
+            Assert.Equal(typeof(int), GetSumType<int>());
+            Assert.Equal(typeof(long), GetSumType<uint>());
+
+            Assert.Equal(typeof(long), GetSumType<long>());
+            Assert.Equal(typeof(decimal), GetSumType<ulong>());
+
+            Assert.Equal(typeof(float), GetSumType<float>());
+            Assert.Equal(typeof(double), GetSumType<double>());
+            Assert.Equal(typeof(decimal), GetSumType<decimal>());
+        }
+
+        [Fact]
+        public void GetSumType_ExpandTrue() {
+            Type GetSumType<T>() => RemoteGroupExpressionCompiler<object>.GetSumType(typeof(T), true);
+
+            // Don't convert integer types to decimal because SQL decimals have variable precision
+            // Except for UInt64 for which there is no better choice
+
+            Assert.Equal(typeof(long), GetSumType<sbyte>());
+            Assert.Equal(typeof(long), GetSumType<byte>());
+
+            Assert.Equal(typeof(long), GetSumType<short>());
+            Assert.Equal(typeof(long), GetSumType<ushort>());
+
+            Assert.Equal(typeof(long), GetSumType<int>());
+            Assert.Equal(typeof(long), GetSumType<uint>());
+
+            Assert.Equal(typeof(long), GetSumType<long>());
+            Assert.Equal(typeof(decimal), GetSumType<ulong>());
+
+            Assert.Equal(typeof(double), GetSumType<float>());
+            Assert.Equal(typeof(double), GetSumType<double>());
+            Assert.Equal(typeof(decimal), GetSumType<decimal>());
+        }
     }
 
 }

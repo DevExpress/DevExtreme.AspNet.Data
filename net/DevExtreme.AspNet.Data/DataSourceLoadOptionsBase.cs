@@ -87,6 +87,8 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? RemoteGrouping { get; set; }
 
+        public bool? ExpandLinqSumType { get; set; }
+
         /// <summary>
         /// An array of primary keys.
         /// </summary>
