@@ -22,6 +22,9 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             modelBuilder.Entity<Bug326.Entity>();
             modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
             modelBuilder.Entity<Async.DataItem>();
+#if !EFCORE1 && !EFCORE2
+            modelBuilder.Entity<ExpandLinqSumType.DataItem>();
+#endif
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {

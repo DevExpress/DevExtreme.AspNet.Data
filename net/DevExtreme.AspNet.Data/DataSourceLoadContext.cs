@@ -213,7 +213,8 @@ namespace DevExtreme.AspNet.Data {
                 if(_options.ExpandLinqSumType.HasValue)
                     return _options.ExpandLinqSumType.Value;
 
-                return _providerInfo.IsEFClassic;
+                return _providerInfo.IsEFClassic
+                    || _providerInfo.IsEFCore && _providerInfo.Version.Major > 2;
             }
         }
     }
