@@ -213,8 +213,12 @@ namespace DevExtreme.AspNet.Data {
                 if(_options.ExpandLinqSumType.HasValue)
                     return _options.ExpandLinqSumType.Value;
 
+                // NH 5.2.6: https://github.com/nhibernate/nhibernate-core/issues/2029
+                // EFCore 2: https://github.com/aspnet/EntityFrameworkCore/issues/14851
+
                 return _providerInfo.IsEFClassic
-                    || _providerInfo.IsEFCore && _providerInfo.Version.Major > 2;
+                    || _providerInfo.IsEFCore && _providerInfo.Version.Major > 2
+                    || _providerInfo.IsXPO;
             }
         }
     }
