@@ -10,14 +10,16 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
     class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
+        bool _expandSumType;
         AnonTypeNewTweaks _anonTypeNewTweaks;
         IEnumerable<GroupingInfo> _grouping;
         IEnumerable<SummaryInfo>
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+        public RemoteGroupExpressionCompiler(bool guardNulls, bool expandSumType, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
             : base(guardNulls) {
+            _expandSumType = expandSumType;
             _anonTypeNewTweaks = anonTypeNewTweaks;
             _grouping = grouping;
             _totalSummary = totalSummary;
@@ -26,7 +28,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
 #if DEBUG
         public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : this(false, null, grouping, totalSummary, groupSummary) {
+            : this(false, false, null, grouping, totalSummary, groupSummary) {
         }
 #endif
 
@@ -130,16 +132,15 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 var callArgs = new List<Expression> { aggregateTarget };
 
                 try {
-                    if(!IsWellKnownAggregateDataType(selectorType)) {
-                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                    if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                        if(!IsWellKnownAggregateDataType(selectorType))
                             callMethodTypeParams.Add(selectorType);
-                        } else if(s.SummaryType == AggregateName.SUM) {
-                            if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
-                                callType = typeof(DynamicSum);
-                                callMethod = nameof(DynamicSum.Calculate);
-                            } else {
-                                selectorExpr = Expression.Convert(selectorExpr, GetSumType(selectorType));
-                            }
+                    } else if(s.SummaryType == AggregateName.SUM) {
+                        if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
+                            callType = typeof(DynamicSum);
+                            callMethod = nameof(DynamicSum.Calculate);
+                        } else {
+                            selectorExpr = ConvertSumSelector(selectorExpr);
                         }
                     }
 
@@ -163,22 +164,37 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 || type == typeof(long);
         }
 
-        static Type GetSumType(Type type) {
+        Expression ConvertSumSelector(Expression expr) {
+            var type = expr.Type;
             var nullable = Utils.IsNullable(type);
-            type = Utils.StripNullableType(type);
-
-            if(type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) || type == typeof(ushort)) {
-                type = typeof(int);
-            } else if(type == typeof(uint)) {
-                type = typeof(long);
-            } else {
-                type = typeof(decimal);
-            }
 
             if(nullable)
-                return Utils.MakeNullable(type);
+                type = Utils.StripNullableType(type);
 
-            return type;
+            var sumType = GetSumType(type, _expandSumType);
+            if(sumType == type)
+                return expr;
+
+            if(nullable)
+                sumType = Utils.MakeNullable(sumType);
+
+            return Expression.Convert(expr, sumType);
+        }
+
+        internal static Type GetSumType(Type type, bool expand) {
+            if(type == typeof(decimal) || type == typeof(double) || type == typeof(long))
+                return type;
+
+            if(type == typeof(int) || type == typeof(byte) || type == typeof(short) || type == typeof(sbyte) || type == typeof(ushort))
+                return expand ? typeof(long) : typeof(int);
+
+            if(type == typeof(float))
+                return expand ? typeof(double) : typeof(float);
+
+            if(type == typeof(uint))
+                return typeof(long);
+
+            return typeof(decimal);
         }
 
         static string GetPreAggregateMethodName(string summaryType) {

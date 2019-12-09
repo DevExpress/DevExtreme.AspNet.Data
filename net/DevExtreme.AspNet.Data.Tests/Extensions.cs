@@ -17,7 +17,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         public static Expression BuildLoadGroupsExpr<T>(this DataSourceExpressionBuilder<T> builder) {
-            return builder.BuildLoadGroupsExpr(CreateSourceExpr<T>());
+            return builder.BuildLoadGroupsExpr(CreateSourceExpr<T>(), false);
         }
 
         static Expression CreateSourceExpr<T>() {
