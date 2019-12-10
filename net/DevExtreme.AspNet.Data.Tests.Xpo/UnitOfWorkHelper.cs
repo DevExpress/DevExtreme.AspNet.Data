@@ -23,7 +23,8 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                     typeof(Summary.DataItem),
                     typeof(Bug339.DataItem),
                     typeof(PaginateViaPrimaryKey.DataItem),
-                    typeof(Async.DataItem)
+                    typeof(Async.DataItem),
+                    typeof(ExpandLinqSumType.DataItem)
                 );
 
                 var provider = XpoDefault.GetConnectionProvider(

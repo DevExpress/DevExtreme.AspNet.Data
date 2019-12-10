@@ -170,7 +170,7 @@ namespace DevExtreme.AspNet.Data {
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
             return RemoteGroupTransformer.Run(
                 typeof(S),
-                await ExecExprAsync<AnonType>(Builder.BuildLoadGroupsExpr(Source.Expression)),
+                await ExecExprAsync<AnonType>(Builder.BuildLoadGroupsExpr(Source.Expression, Context.ExpandLinqSumType)),
                 Context.HasGroups ? Context.Group.Count : 0,
                 Context.TotalSummary,
                 Context.GroupSummary
