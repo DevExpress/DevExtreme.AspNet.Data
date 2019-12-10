@@ -50,7 +50,7 @@ test_script:
     OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
     -target:dotnet.exe
     -targetargs:"vstest
-    net\DevExtreme.AspNet.Data.Tests.EFCore3\bin\Debug\netcoreapp3.0\DevExtreme.AspNet.Data.Tests.EFCore3.dll
+    net\DevExtreme.AspNet.Data.Tests.EFCore3\bin\Debug\netcoreapp3.1\DevExtreme.AspNet.Data.Tests.EFCore3.dll
     "
     -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
     -output:coverage_netcore3.xml
