@@ -29,8 +29,27 @@ namespace DevExtreme.AspNet.Data.Async {
         }
 
         IAsyncAdapter CreateAdapter() {
-            return CustomAsyncAdapters.GetAdapter(Provider.GetType())
-                ?? new ReflectionAsyncAdapter(ProviderInfo);
+            var providerType = Provider.GetType();
+
+            var customAdapter = CustomAsyncAdapters.GetAdapter(providerType);
+            if(customAdapter != null)
+                return customAdapter;
+
+            var reflectionAdapter = new ReflectionAsyncAdapter(ProviderInfo);
+            if(reflectionAdapter.IsSupportedProvider)
+                return reflectionAdapter;
+
+            throw ProviderNotSupported(providerType);
+        }
+
+        static Exception ProviderNotSupported(Type providerType) {
+            if(providerType.IsGenericType)
+                providerType = providerType.GetGenericTypeDefinition();
+
+            var message = $"Async operations for the LINQ provider '{providerType.FullName}' are not supported."
+                + $" You can implement a custom async adapter ({typeof(IAsyncAdapter).FullName}) and register it via '{typeof(CustomAsyncAdapters).FullName}.{nameof(CustomAsyncAdapters.RegisterAdapter)}'.";
+
+            return new NotSupportedException(message);
         }
 
     }
