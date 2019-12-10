@@ -164,7 +164,7 @@ namespace DevExtreme.AspNet.Data {
             if(AsyncHelper != null)
                 return AsyncHelper.CountAsync(expr);
 
-            return Task.FromResult(Source.Provider.Execute<int>(expr));
+            return AsyncOverSyncAdapter.Instance.CountAsync(Source.Provider, expr);
         }
 
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
@@ -182,21 +182,16 @@ namespace DevExtreme.AspNet.Data {
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            if(AsyncHelper != null) {
-                var result = AsyncHelper.ToEnumerableAsync<R>(expr);
+            var result = AsyncHelper != null
+                ? AsyncHelper.ToEnumerableAsync<R>(expr)
+                : AsyncOverSyncAdapter.Instance.ToEnumerableAsync<R>(Source.Provider, expr);
+
 #if DEBUG
-                if(UseEnumerableOnce)
-                    result = result.ContinueWith(t => (IEnumerable<R>)new EnumerableOnce<R>(t.Result));
+            if(UseEnumerableOnce)
+                result = result.ContinueWith(t => (IEnumerable<R>)new EnumerableOnce<R>(t.Result));
 #endif
-                return result;
-            } else {
-                IEnumerable<R> result = Source.Provider.CreateQuery<R>(expr);
-#if DEBUG
-                if(UseEnumerableOnce)
-                    result = new EnumerableOnce<R>(result);
-#endif
-                return Task.FromResult(result);
-            }
+
+            return result;
         }
 
         IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
