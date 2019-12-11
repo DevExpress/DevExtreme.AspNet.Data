@@ -13,6 +13,8 @@ namespace DevExtreme.AspNet.Data.Async {
         private AsyncOverSyncAdapter() {
         }
 
+        // NOTE on Task.FromResult vs. Task.Run https://stackoverflow.com/a/34005461
+
         public Task<int> CountAsync(IQueryProvider queryProvider, Expression expr)
             => Task.FromResult(queryProvider.Execute<int>(expr));
 
