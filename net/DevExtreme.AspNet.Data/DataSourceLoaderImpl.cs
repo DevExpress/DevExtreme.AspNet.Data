@@ -177,18 +177,18 @@ namespace DevExtreme.AspNet.Data {
             );
         }
 
-        Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
+        async Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
 
             var result = AsyncHelper != null
-                ? AsyncHelper.ToEnumerableAsync<R>(expr)
-                : AsyncOverSyncAdapter.Instance.ToEnumerableAsync<R>(Source.Provider, expr);
+                ? await AsyncHelper.ToEnumerableAsync<R>(expr)
+                : await AsyncOverSyncAdapter.Instance.ToEnumerableAsync<R>(Source.Provider, expr);
 
 #if DEBUG
             if(UseEnumerableOnce)
-                result = result.ContinueWith(t => (IEnumerable<R>)new EnumerableOnce<R>(t.Result));
+                result = new EnumerableOnce<R>(result);
 #endif
 
             return result;
