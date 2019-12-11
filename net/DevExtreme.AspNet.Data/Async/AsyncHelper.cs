@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Async {
         readonly CancellationToken CancellationToken;
         readonly Lazy<IAsyncAdapter> Adapter;
 
-        public AsyncHelper(IQueryProvider provider, QueryProviderInfo providerInfo, CancellationToken cancellationToken) {
+        public AsyncHelper(IQueryProvider provider, QueryProviderInfo providerInfo, bool allowAsyncOverSync, CancellationToken cancellationToken) {
             Provider = provider;
             CancellationToken = cancellationToken;
 
@@ -26,6 +26,9 @@ namespace DevExtreme.AspNet.Data.Async {
                 var reflectionAdapter = new ReflectionAsyncAdapter(providerInfo);
                 if(reflectionAdapter.IsSupportedProvider)
                     return reflectionAdapter;
+
+                if(allowAsyncOverSync)
+                    return AsyncOverSyncAdapter.Instance;
 
                 throw ProviderNotSupported(providerType);
             }

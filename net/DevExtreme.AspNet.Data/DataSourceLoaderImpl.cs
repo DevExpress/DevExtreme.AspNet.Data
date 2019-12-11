@@ -32,7 +32,7 @@ namespace DevExtreme.AspNet.Data {
             var guardNulls = providerInfo.IsLinqToObjects;
 
             if(!sync)
-                AsyncHelper = new AsyncHelper(source.Provider, providerInfo, cancellationToken);
+                AsyncHelper = new AsyncHelper(source.Provider, providerInfo, options.AllowAsyncOverSync, cancellationToken);
 
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;

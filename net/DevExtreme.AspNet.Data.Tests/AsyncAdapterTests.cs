@@ -22,6 +22,17 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public async Task AllowAsyncOverSync() {
+            var error = await Record.ExceptionAsync(async delegate {
+                await DataSourceLoader.LoadAsync(SAMPLE_DATA, new SampleLoadOptions {
+                    AllowAsyncOverSync = true
+                });
+            });
+
+            Assert.Null(error);
+        }
+
+        [Fact]
         public async Task Canceled() {
             var token = new CancellationToken(true);
 
