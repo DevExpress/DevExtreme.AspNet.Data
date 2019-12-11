@@ -164,7 +164,7 @@ namespace DevExtreme.AspNet.Data {
             if(AsyncHelper != null)
                 return AsyncHelper.CountAsync(expr);
 
-            return AsyncOverSyncAdapter.Instance.CountAsync(Source.Provider, expr);
+            return AsyncOverSyncAdapter.CountAsync(Source.Provider, expr);
         }
 
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
@@ -184,7 +184,7 @@ namespace DevExtreme.AspNet.Data {
 
             var result = AsyncHelper != null
                 ? await AsyncHelper.ToEnumerableAsync<R>(expr)
-                : await AsyncOverSyncAdapter.Instance.ToEnumerableAsync<R>(Source.Provider, expr);
+                : AsyncOverSyncAdapter.ToEnumerable<R>(Source.Provider, expr);
 
 #if DEBUG
             if(UseEnumerableOnce)
