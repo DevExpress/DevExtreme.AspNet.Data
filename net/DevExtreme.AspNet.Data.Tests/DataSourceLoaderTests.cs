@@ -457,7 +457,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var loadResult = DataSourceLoader.Load(new[] { new { Prop = 123 } }, loadOptions);
             var items = loadResult.data.Cast<IDictionary<string, object>>().ToArray();
 
-#warning TODO complete this case
+            Assert.Equal(123, items.First()["Prop"]);
         }
 
         [Theory]
