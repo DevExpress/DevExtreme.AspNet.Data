@@ -445,6 +445,21 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(item.ContainsKey("b"));
         }
 
+        [Fact]
+        public void Load_PreSelect_CI() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/pull/400
+
+            var loadOptions = new SampleLoadOptions {
+                Select = new[] { "prop" },
+                PreSelect = new[] { "Prop" }
+            };
+
+            var loadResult = DataSourceLoader.Load(new[] { new { Prop = 123 } }, loadOptions);
+            var items = loadResult.data.Cast<IDictionary<string, object>>().ToArray();
+
+#warning TODO complete this case
+        }
+
         [Theory]
         [InlineData(false)]
         [InlineData(null)]
