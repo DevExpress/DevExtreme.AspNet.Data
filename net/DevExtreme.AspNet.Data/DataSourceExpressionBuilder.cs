@@ -1,5 +1,4 @@
 ﻿using DevExtreme.AspNet.Data.RemoteGrouping;
-using DevExtreme.AspNet.Data.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,63 +7,77 @@ using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data {
 
-    [Obsolete]
-    class OLD_DataSourceExpressionBuilder<T> {
-        DataSourceLoadContext _context;
+    class DataSourceExpressionBuilder<T> {
+        Expression Expr;
+        readonly DataSourceLoadContext Context;
 
-        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context) {
-            _context = context;
+        public DataSourceExpressionBuilder(Expression expr, DataSourceLoadContext context) {
+            Expr = expr;
+            Context = context;
         }
 
-        public Expression BuildLoadExpr(Expression source, bool paginate = true, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
-            return BuildCore(source, paginate: paginate, filterOverride: filterOverride, selectOverride: selectOverride);
+        public Expression BuildLoadExpr(bool paginate, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
+            AddFilter(filterOverride);
+            AddSort();
+            AddSelect(selectOverride);
+            if(paginate)
+                AddPaging();
+            return Expr;
         }
 
-        public Expression BuildCountExpr(Expression source) {
-            return BuildCore(source, isCountQuery: true);
+        public Expression BuildCountExpr() {
+            AddFilter();
+            AddCount();
+            return Expr;
         }
 
-        public Expression BuildLoadGroupsExpr(Expression source, bool expandSumType) {
-            return BuildCore(source, remoteGrouping: true, expandSumType: expandSumType);
+        public Expression BuildLoadGroupsExpr() {
+            AddFilter();
+            AddRemoteGrouping();
+            return Expr;
         }
 
-        Expression BuildCore(Expression expr, bool paginate = false, bool isCountQuery = false, bool remoteGrouping = false, bool expandSumType = false, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
-            var queryableType = typeof(Queryable);
-            var genericTypeArguments = new[] { typeof(T) };
-
-            if(filterOverride != null || _context.HasFilter) {
+        void AddFilter(IList filterOverride = null) {
+            if(filterOverride != null || Context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
                     ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(typeof(T)))
-                    : new FilterExpressionCompiler<T>(_context.GuardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter);
+                    : new FilterExpressionCompiler<T>(Context.GuardNulls, Context.UseStringToLower).Compile(filterOverride ?? Context.Filter);
 
-                expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(filterExpr));
+                Expr = Expression.Call(typeof(Queryable), "Where", new[] { typeof(T) }, Expr, Expression.Quote(filterExpr));
             }
+        }
 
-            if(!isCountQuery) {
-                if(!remoteGrouping) {
-                    if(_context.HasAnySort)
-                        expr = new SortExpressionCompiler<T>(_context.GuardNulls).Compile(expr, _context.GetFullSort());
-                    if(selectOverride != null || _context.HasAnySelect && _context.UseRemoteSelect) {
-                        expr = new SelectExpressionCompiler<T>(_context.GuardNulls, _context.CreateAnonTypeNewTweaks()).Compile(expr, selectOverride ?? _context.FullSelect);
-                        genericTypeArguments = expr.Type.GetGenericArguments();
-                    }
-                } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_context.GuardNulls, expandSumType, _context.CreateAnonTypeNewTweaks(), _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
-                }
+        void AddSort() {
+            if(Context.HasAnySort)
+                Expr = new SortExpressionCompiler<T>(Context.GuardNulls).Compile(Expr, Context.GetFullSort());
+        }
 
-                if(paginate) {
-                    if(_context.Skip > 0)
-                        expr = Expression.Call(queryableType, "Skip", genericTypeArguments, expr, Expression.Constant(_context.Skip));
+        void AddSelect(IReadOnlyList<string> selectOverride = null) {
+            if(selectOverride != null || Context.HasAnySelect && Context.UseRemoteSelect)
+                Expr = new SelectExpressionCompiler<T>(Context.GuardNulls, Context.CreateAnonTypeNewTweaks()).Compile(Expr, selectOverride ?? Context.FullSelect);
+        }
 
-                    if(_context.Take > 0)
-                        expr = Expression.Call(queryableType, "Take", genericTypeArguments, expr, Expression.Constant(_context.Take));
-                }
-            }
+        void AddPaging() {
+            var queryableType = typeof(Queryable);
+            var genericTypeArguments = Expr.Type.GetGenericArguments();
 
-            if(isCountQuery)
-                expr = Expression.Call(queryableType, "Count", genericTypeArguments, expr);
+            if(Context.Skip > 0)
+                Expr = Expression.Call(queryableType, "Skip", genericTypeArguments, Expr, Expression.Constant(Context.Skip));
 
-            return expr;
+            if(Context.Take > 0)
+                Expr = Expression.Call(queryableType, "Take", genericTypeArguments, Expr, Expression.Constant(Context.Take));
+        }
+
+        void AddRemoteGrouping() {
+            var compiler = new RemoteGroupExpressionCompiler<T>(
+                Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
+                Context.Group, Context.TotalSummary, Context.GroupSummary
+            );
+            Expr = compiler.Compile(Expr);
+        }
+
+        void AddCount() {
+            Expr = Expression.Call(typeof(Queryable), "Count", Expr.Type.GetGenericArguments(), Expr);
         }
     }
 

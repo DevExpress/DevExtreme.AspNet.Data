@@ -100,15 +100,15 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
+            string BuildLoadExpr() => Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions).BuildLoadExpr().ToString();
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
-                builder.BuildLoadExpr().ToString()
+                BuildLoadExpr()
             );
 
             loadOptions.Sort = null;
-            Assert.Contains("OrderBy", builder.BuildLoadExpr().ToString());
+            Assert.Contains("OrderBy", BuildLoadExpr());
         }
 
         [Fact]
@@ -126,7 +126,20 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GuardNulls() {
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
+            var data = new[] {
+                // filtered out
+                null,
+                Tuple.Create<int?, string, DateTime?>(null, "zz", new DateTime(2000, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, null, new DateTime(2000, 1, 1)),
+                Tuple.Create<int?, string, DateTime?>(1, "zz", null),
+
+
+                // kept
+                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 2)),
+                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 1))
+            }.AsQueryable();
+
+            var builder = Compat.CreateDataSourceExpressionBuilder(data, new SampleLoadOptions {
                 Filter = new[] {
                     new[] { "Item1", ">", "0" },
                     new[] { "Item2", "contains", "z" },
@@ -141,20 +154,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GuardNulls = true
             });
 
-            var data = new[] {
-                // filtered out
-                null,
-                Tuple.Create<int?, string, DateTime?>(null, "zz", new DateTime(2000, 1, 1)),
-                Tuple.Create<int?, string, DateTime?>(1, null, new DateTime(2000, 1, 1)),
-                Tuple.Create<int?, string, DateTime?>(1, "zz", null),
-
-
-                // kept
-                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 2)),
-                Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 1))
-            }.AsQueryable();
-
-            var expr = builder.BuildLoadExpr(data.Expression);
+            var expr = builder.BuildLoadExpr();
             var result = data.Provider.CreateQuery<object>(expr).ToArray();
             Assert.Equal(2, result.Length);
         }
@@ -166,18 +166,18 @@ namespace DevExtreme.AspNet.Data.Tests {
                 GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
+            string BuildLoadExpr() => Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options).BuildLoadExpr(false).ToString();
 
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", BuildLoadExpr());
 
             options.Sort = new[] {
                 new SortingInfo { Selector = "Item2" }
             };
 
-            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", BuildLoadExpr());
 
             options.Sort[0].Selector = "Item1";
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", BuildLoadExpr());
         }
 
         [Fact]
