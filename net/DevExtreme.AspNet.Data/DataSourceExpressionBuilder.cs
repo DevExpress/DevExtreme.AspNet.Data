@@ -45,7 +45,7 @@ namespace DevExtreme.AspNet.Data {
                     if(_context.HasAnySort)
                         expr = new SortExpressionCompiler<T>(_context.GuardNulls).Compile(expr, _context.GetFullSort());
                     if(selectOverride != null || _context.HasAnySelect && _context.UseRemoteSelect) {
-                        expr = new SelectExpressionCompiler<T>(_context.GuardNulls).Compile(expr, selectOverride ?? _context.FullSelect);
+                        expr = new SelectExpressionCompiler<T>(_context.GuardNulls, _context.CreateAnonTypeNewTweaks()).Compile(expr, selectOverride ?? _context.FullSelect);
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
