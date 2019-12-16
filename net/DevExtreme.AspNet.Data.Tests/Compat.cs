@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -16,14 +17,19 @@ namespace DevExtreme.AspNet.Data.Tests {
             return text.Append(")").ToString();
         }
 
-        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options, bool guardNulls = false) {
+        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options) {
+            var source = new EnumerableQuery<T>(Expression.Parameter(typeof(IQueryable<T>), "data"));
+            return CreateDataSourceExpressionBuilder(source, options);
+        }
+
+        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
             return new DataSourceExpressionBuilder<T>(
+                source.Expression,
                 new DataSourceLoadContext(
                     options,
-                    new QueryProviderInfo(new T[0].AsQueryable().Provider),
+                    new QueryProviderInfo(source.Provider),
                     typeof(T)
-                ),
-                guardNulls
+                )
             );
         }
     }
