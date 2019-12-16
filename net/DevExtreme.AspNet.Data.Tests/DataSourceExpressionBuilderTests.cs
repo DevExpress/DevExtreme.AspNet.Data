@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
                 Take = 222
-            });
+            }, false);
 
             var expr = builder.BuildLoadExpr();
 
@@ -24,7 +24,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Build_Filter() {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Filter = new object[] { "this", ">", 123 }
-            });
+            }, false);
 
             var expr = builder.BuildLoadExpr();
 
@@ -37,7 +37,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Filter = new object[0]
-            });
+            }, false);
 
             Assert.DoesNotContain(".Where", builder.BuildLoadExpr().ToString());
         }
@@ -51,7 +51,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Sort = new[] {
                     new SortingInfo { Selector = "this" }
                 },
-            });
+            }, false);
 
             var expr = builder.BuildCountExpr();
             var text = expr.ToString();
@@ -75,7 +75,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                         Desc=true
                     }
                 }
-            });
+            }, false);
 
             var expr = builder.BuildLoadExpr();
             Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.ToString());
@@ -94,7 +94,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 }
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions, false);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
@@ -112,7 +112,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }
                 }
-            });
+            }, false);
 
             Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().ToString());
         }

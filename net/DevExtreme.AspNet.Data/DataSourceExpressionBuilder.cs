@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data {
         bool _guardNulls;
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
+        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks) {
             _context = context;
             _guardNulls = guardNulls;
             _anonTypeNewTweaks = anonTypeNewTweaks;
