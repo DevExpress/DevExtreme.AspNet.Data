@@ -494,6 +494,46 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2m * sourceItem.DecimalN, summary[21]);
         }
 
+        [Fact]
+        public void T844633() {
+            var source = new[] {
+                new { G = 1, Value = 1 },
+                new { G = 2, Value = 2 },
+                new { G = 2, Value = 3 },
+                new { G = 3, Value = 4 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                GuardNulls = false,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                Skip = 1,
+                Take = 1
+            };
+
+            loadOptions.GroupSummary = loadOptions.TotalSummary = new[] {
+                new SummaryInfo { Selector = "Value", SummaryType = "sum" },
+                new SummaryInfo { SummaryType = "count" }
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            var group = loadResult.data.Cast<Group>().First();
+            var summary = loadResult.summary;
+
+            var expr0 = loadOptions.ExpressionLog[0];
+
+            Assert.Contains(".GroupBy", expr0);
+            Assert.EndsWith(".Skip(1).Take(1)", expr0);
+
+            Assert.Equal(5m, group.summary[0]);
+            Assert.Equal(2, group.summary[1]);
+
+            Assert.Equal(10m, summary[0]);
+            Assert.Equal(4, summary[1]);
+        }
+
     }
 
 }

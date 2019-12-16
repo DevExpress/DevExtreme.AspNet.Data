@@ -31,9 +31,11 @@ namespace DevExtreme.AspNet.Data {
             return Expr;
         }
 
-        public Expression BuildLoadGroupsExpr() {
+        public Expression BuildLoadGroupsExpr(bool paginate) {
             AddFilter();
             AddRemoteGrouping();
+            if(paginate)
+                AddPaging();
             return Expr;
         }
 
