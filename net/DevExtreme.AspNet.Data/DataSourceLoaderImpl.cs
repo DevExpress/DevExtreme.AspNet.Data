@@ -37,7 +37,7 @@ namespace DevExtreme.AspNet.Data {
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
-            guardNulls = guardNulls && !options.SuppressGuardNulls;
+            guardNulls = options.GuardNulls.GetValueOrDefault(guardNulls);
 #endif
 
             Source = source;
