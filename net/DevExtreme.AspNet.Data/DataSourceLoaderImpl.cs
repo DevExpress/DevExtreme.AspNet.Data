@@ -18,7 +18,6 @@ namespace DevExtreme.AspNet.Data {
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadContext Context;
-        readonly OLD_DataSourceExpressionBuilder<S> Builder;
 
         readonly AsyncHelper AsyncHelper;
 
@@ -40,8 +39,9 @@ namespace DevExtreme.AspNet.Data {
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
-            Builder = new OLD_DataSourceExpressionBuilder<S>(Context);
         }
+
+        OLD_DataSourceExpressionBuilder<S> CreateBuilder() => new OLD_DataSourceExpressionBuilder<S>(Context);
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
@@ -72,12 +72,12 @@ namespace DevExtreme.AspNet.Data {
                             + " Specify it via the " + nameof(DataSourceLoadOptionsBase.PrimaryKey) + " property.");
                     }
 
-                    var loadKeysExpr = Builder.BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
+                    var loadKeysExpr = CreateBuilder().BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
                     var keyTuples = await ExecExprAsync<AnonType>(loadKeysExpr);
 
-                    loadExpr = Builder.BuildLoadExpr(Source.Expression, false, filterOverride: FilterFromKeys(keyTuples));
+                    loadExpr = CreateBuilder().BuildLoadExpr(Source.Expression, false, filterOverride: FilterFromKeys(keyTuples));
                 } else {
-                    loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+                    loadExpr = CreateBuilder().BuildLoadExpr(Source.Expression, !deferPaging);
                 }
 
                 if(Context.HasAnySelect) {
@@ -147,7 +147,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Task<int> ExecCountAsync() {
-            var expr = Builder.BuildCountExpr(Source.Expression);
+            var expr = CreateBuilder().BuildCountExpr(Source.Expression);
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
@@ -161,7 +161,7 @@ namespace DevExtreme.AspNet.Data {
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
             return RemoteGroupTransformer.Run(
                 typeof(S),
-                await ExecExprAsync<AnonType>(Builder.BuildLoadGroupsExpr(Source.Expression, Context.ExpandLinqSumType)),
+                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(Source.Expression, Context.ExpandLinqSumType)),
                 Context.HasGroups ? Context.Group.Count : 0,
                 Context.TotalSummary,
                 Context.GroupSummary
