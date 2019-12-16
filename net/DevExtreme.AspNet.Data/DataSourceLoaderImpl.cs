@@ -18,7 +18,6 @@ namespace DevExtreme.AspNet.Data {
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadContext Context;
-        readonly DataSourceExpressionBuilder<S> Builder;
 
         readonly AsyncHelper AsyncHelper;
 
@@ -29,7 +28,6 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
             var providerInfo = new QueryProviderInfo(source.Provider);
-            var guardNulls = providerInfo.IsLinqToObjects;
 
             if(!sync)
                 AsyncHelper = new AsyncHelper(source.Provider, providerInfo, cancellationToken);
@@ -37,20 +35,13 @@ namespace DevExtreme.AspNet.Data {
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
-            guardNulls = guardNulls && !options.SuppressGuardNulls;
 #endif
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
-            Builder = new DataSourceExpressionBuilder<S>(
-                Context,
-                guardNulls,
-                new AnonTypeNewTweaks {
-                    AllowEmpty = !providerInfo.IsL2S,
-                    AllowUnusedMembers = !providerInfo.IsL2S
-                }
-            );
         }
+
+        DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
@@ -81,12 +72,12 @@ namespace DevExtreme.AspNet.Data {
                             + " Specify it via the " + nameof(DataSourceLoadOptionsBase.PrimaryKey) + " property.");
                     }
 
-                    var loadKeysExpr = Builder.BuildLoadExpr(Source.Expression, true, selectOverride: Context.PrimaryKey);
+                    var loadKeysExpr = CreateBuilder().BuildLoadExpr(true, selectOverride: Context.PrimaryKey);
                     var keyTuples = await ExecExprAsync<AnonType>(loadKeysExpr);
 
-                    loadExpr = Builder.BuildLoadExpr(Source.Expression, false, filterOverride: FilterFromKeys(keyTuples));
+                    loadExpr = CreateBuilder().BuildLoadExpr(false, filterOverride: FilterFromKeys(keyTuples));
                 } else {
-                    loadExpr = Builder.BuildLoadExpr(Source.Expression, !deferPaging);
+                    loadExpr = CreateBuilder().BuildLoadExpr(!deferPaging);
                 }
 
                 if(Context.HasAnySelect) {
@@ -156,7 +147,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Task<int> ExecCountAsync() {
-            var expr = Builder.BuildCountExpr(Source.Expression);
+            var expr = CreateBuilder().BuildCountExpr();
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
@@ -170,7 +161,7 @@ namespace DevExtreme.AspNet.Data {
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
             return RemoteGroupTransformer.Run(
                 typeof(S),
-                await ExecExprAsync<AnonType>(Builder.BuildLoadGroupsExpr(Source.Expression, Context.ExpandLinqSumType)),
+                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr()),
                 Context.HasGroups ? Context.Group.Count : 0,
                 Context.TotalSummary,
                 Context.GroupSummary

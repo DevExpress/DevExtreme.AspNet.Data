@@ -422,7 +422,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadOptions = new SampleLoadOptions {
-                SuppressGuardNulls = true,
+                GuardNulls = false,
                 TotalSummary = new[] {
                     nameof(sourceItem.SByte),
                     nameof(sourceItem.Byte),
