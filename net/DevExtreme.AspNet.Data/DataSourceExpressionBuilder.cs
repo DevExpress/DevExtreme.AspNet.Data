@@ -31,9 +31,9 @@ namespace DevExtreme.AspNet.Data {
             return Expr;
         }
 
-        public Expression BuildLoadGroupsExpr(bool paginate) {
+        public Expression BuildLoadGroupsExpr(bool paginate, bool suppressGroups = false, bool suppressTotals = false) {
             AddFilter();
-            AddRemoteGrouping();
+            AddRemoteGrouping(suppressGroups, suppressTotals);
             if(paginate)
                 AddPaging();
             return Expr;
@@ -70,10 +70,12 @@ namespace DevExtreme.AspNet.Data {
                 Expr = Expression.Call(queryableType, "Take", genericTypeArguments, Expr, Expression.Constant(Context.Take));
         }
 
-        void AddRemoteGrouping() {
+        void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
             var compiler = new RemoteGroupExpressionCompiler<T>(
                 Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
-                Context.Group, Context.TotalSummary, Context.GroupSummary
+                suppressGroups ? null : Context.Group,
+                suppressTotals ? null : Context.TotalSummary,
+                suppressGroups ? null : Context.GroupSummary
             );
             Expr = compiler.Compile(Expr);
         }

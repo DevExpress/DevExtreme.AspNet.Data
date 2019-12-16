@@ -532,8 +532,30 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(10m, summary[0]);
             Assert.Equal(4, summary[1]);
+
+            Assert.Equal(4, loadResult.totalCount);
         }
 
+        [Fact]
+        public void T844633_TotalsWoPaging() {
+            var source = new[] {
+                new { G = 0 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "G", SummaryType = "sum" }
+                }
+            };
+
+            DataSourceLoader.Load(source, loadOptions);
+
+            Assert.Single(loadOptions.ExpressionLog.Where(line => line.Contains("GroupBy")));
+        }
     }
 
 }

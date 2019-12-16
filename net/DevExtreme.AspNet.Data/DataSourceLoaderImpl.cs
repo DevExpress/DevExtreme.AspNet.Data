@@ -50,7 +50,7 @@ namespace DevExtreme.AspNet.Data {
             var result = new LoadResult();
 
             if(Context.UseRemoteGrouping && Context.ShouldEmptyGroups) {
-                var remotePaging = !Context.RequireGroupCount && Context.Group.Count == 1;
+                var remotePaging = Context.HasPaging && !Context.RequireGroupCount && Context.Group.Count == 1;
                 var groupingResult = await ExecRemoteGroupingAsync(remotePaging);
 
                 EmptyGroups(groupingResult.Groups, Context.Group.Count);
@@ -127,9 +127,9 @@ namespace DevExtreme.AspNet.Data {
 
         async Task ContinueWithAggregationAsync<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
             if(Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary && !Context.HasGroups) {
-                var groupingResult = await ExecRemoteGroupingAsync(false);
-                result.totalCount = groupingResult.TotalCount;
-                result.summary = groupingResult.Totals;
+                var totalsResult = await ExecRemoteTotalsAsync();
+                result.totalCount = totalsResult.TotalCount;
+                result.summary = totalsResult.Totals;
             } else {
                 var totalCount = -1;
 
@@ -162,13 +162,27 @@ namespace DevExtreme.AspNet.Data {
             return Task.FromResult(Source.Provider.Execute<int>(expr));
         }
 
+        Task<RemoteGroupingResult> ExecRemoteTotalsAsync() => ExecRemoteGroupingAsync(false, true, false);
+
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging) {
+            var result = await ExecRemoteGroupingAsync(remotePaging, false, remotePaging);
+
+            if(remotePaging && Context.HasTotalSummary) {
+                var totalsResult = await ExecRemoteTotalsAsync();
+                result.TotalCount = totalsResult.TotalCount;
+                result.Totals = totalsResult.Totals;
+            }
+
+            return result;
+        }
+
+        async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging, bool suppressGroups, bool suppressTotals) {
             return RemoteGroupTransformer.Run(
                 typeof(S),
-                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(remotePaging)),
-                Context.HasGroups ? Context.Group.Count : 0,
-                Context.TotalSummary,
-                Context.GroupSummary
+                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(remotePaging, suppressGroups, suppressTotals)),
+                !suppressGroups && Context.HasGroups ? Context.Group.Count : 0,
+                !suppressTotals ? Context.TotalSummary : null,
+                !suppressGroups ? Context.GroupSummary : null
             );
         }
 

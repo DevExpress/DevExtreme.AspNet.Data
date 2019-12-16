@@ -53,6 +53,7 @@ namespace DevExtreme.AspNet.Data {
     partial class DataSourceLoadContext {
         public int Skip => _options.Skip;
         public int Take => _options.Take;
+        public bool HasPaging => Skip > 0 || Take > 0;
         public bool PaginateViaPrimaryKey => _options.PaginateViaPrimaryKey.GetValueOrDefault(false);
     }
 
@@ -190,7 +191,7 @@ namespace DevExtreme.AspNet.Data {
             if(IsEmpty(primaryKey))
                 primaryKey = Utils.GetPrimaryKey(_itemType);
 
-            if((Skip > 0 || Take > 0) && String.IsNullOrEmpty(defaultSort) && IsEmpty(primaryKey)) {
+            if(HasPaging && String.IsNullOrEmpty(defaultSort) && IsEmpty(primaryKey)) {
                 if(_providerInfo.IsEFClassic || _providerInfo.IsEFCore)
                     defaultSort = EFSorting.FindSortableMember(_itemType);
                 else if(_providerInfo.IsXPO)
@@ -211,14 +212,16 @@ namespace DevExtreme.AspNet.Data {
 
         public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
 
-        public bool HasSummary => !IsEmpty(TotalSummary) || HasGroupSummary;
+        public bool HasSummary => HasTotalSummary || HasGroupSummary;
+
+        public bool HasTotalSummary => !IsEmpty(TotalSummary);
 
         public bool HasGroupSummary => !IsEmpty(GroupSummary);
 
         public bool SummaryIsTotalCountOnly {
             get {
                 if(!_summaryIsTotalCountOnly.HasValue)
-                    _summaryIsTotalCountOnly = !HasGroupSummary && HasSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
+                    _summaryIsTotalCountOnly = !HasGroupSummary && HasTotalSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
                 return _summaryIsTotalCountOnly.Value;
             }
         }
