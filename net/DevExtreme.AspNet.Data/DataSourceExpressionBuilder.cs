@@ -8,12 +8,13 @@ using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data {
 
-    class DataSourceExpressionBuilder<T> {
+    [Obsolete]
+    class OLD_DataSourceExpressionBuilder<T> {
         DataSourceLoadContext _context;
         bool _guardNulls;
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
+        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls = false, AnonTypeNewTweaks anonTypeNewTweaks = null) {
             _context = context;
             _guardNulls = guardNulls;
             _anonTypeNewTweaks = anonTypeNewTweaks;

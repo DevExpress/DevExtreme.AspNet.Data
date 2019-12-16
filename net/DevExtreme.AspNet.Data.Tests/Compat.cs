@@ -16,8 +16,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             return text.Append(")").ToString();
         }
 
-        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options, bool guardNulls = false) {
-            return new DataSourceExpressionBuilder<T>(
+        public static OLD_DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options, bool guardNulls = false) {
+            return new OLD_DataSourceExpressionBuilder<T>(
                 new DataSourceLoadContext(
                     options,
                     new QueryProviderInfo(new T[0].AsQueryable().Provider),

@@ -8,15 +8,15 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     static class Extensions {
 
-        public static Expression BuildLoadExpr<T>(this DataSourceExpressionBuilder<T> builder, bool paginate = true) {
+        public static Expression BuildLoadExpr<T>(this OLD_DataSourceExpressionBuilder<T> builder, bool paginate = true) {
             return builder.BuildLoadExpr(CreateSourceExpr<T>(), paginate);
         }
 
-        public static Expression BuildCountExpr<T>(this DataSourceExpressionBuilder<T> builder) {
+        public static Expression BuildCountExpr<T>(this OLD_DataSourceExpressionBuilder<T> builder) {
             return builder.BuildCountExpr(CreateSourceExpr<T>());
         }
 
-        public static Expression BuildLoadGroupsExpr<T>(this DataSourceExpressionBuilder<T> builder) {
+        public static Expression BuildLoadGroupsExpr<T>(this OLD_DataSourceExpressionBuilder<T> builder) {
             return builder.BuildLoadGroupsExpr(CreateSourceExpr<T>(), false);
         }
 

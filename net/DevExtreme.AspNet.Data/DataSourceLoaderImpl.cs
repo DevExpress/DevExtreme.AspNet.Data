@@ -18,7 +18,7 @@ namespace DevExtreme.AspNet.Data {
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadContext Context;
-        readonly DataSourceExpressionBuilder<S> Builder;
+        readonly OLD_DataSourceExpressionBuilder<S> Builder;
 
         readonly AsyncHelper AsyncHelper;
 
@@ -42,7 +42,7 @@ namespace DevExtreme.AspNet.Data {
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
-            Builder = new DataSourceExpressionBuilder<S>(
+            Builder = new OLD_DataSourceExpressionBuilder<S>(
                 Context,
                 guardNulls,
                 new AnonTypeNewTweaks {
