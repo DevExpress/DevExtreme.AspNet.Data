@@ -29,6 +29,11 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
+        public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
+            AllowEmpty = !_providerInfo.IsL2S,
+            AllowUnusedMembers = !_providerInfo.IsL2S
+        };
+
         static bool IsEmpty<T>(IReadOnlyCollection<T> collection) {
             return collection == null || collection.Count < 1;
         }

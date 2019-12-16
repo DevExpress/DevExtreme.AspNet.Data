@@ -11,11 +11,9 @@ namespace DevExtreme.AspNet.Data {
     [Obsolete]
     class OLD_DataSourceExpressionBuilder<T> {
         DataSourceLoadContext _context;
-        AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, AnonTypeNewTweaks anonTypeNewTweaks) {
+        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context) {
             _context = context;
-            _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
         public Expression BuildLoadExpr(Expression source, bool paginate = true, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
@@ -51,7 +49,7 @@ namespace DevExtreme.AspNet.Data {
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_context.GuardNulls, expandSumType, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_context.GuardNulls, expandSumType, _context.CreateAnonTypeNewTweaks(), _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {

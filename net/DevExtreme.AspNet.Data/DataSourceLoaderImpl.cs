@@ -40,13 +40,7 @@ namespace DevExtreme.AspNet.Data {
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
-            Builder = new OLD_DataSourceExpressionBuilder<S>(
-                Context,
-                new AnonTypeNewTweaks {
-                    AllowEmpty = !providerInfo.IsL2S,
-                    AllowUnusedMembers = !providerInfo.IsL2S
-                }
-            );
+            Builder = new OLD_DataSourceExpressionBuilder<S>(Context);
         }
 
         public async Task<LoadResult> LoadAsync() {

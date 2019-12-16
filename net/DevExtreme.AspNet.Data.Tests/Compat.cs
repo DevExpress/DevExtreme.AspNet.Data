@@ -22,8 +22,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                     options,
                     new QueryProviderInfo(new T[0].AsQueryable().Provider),
                     typeof(T)
-                ),
-                null
+                )
             );
         }
     }
