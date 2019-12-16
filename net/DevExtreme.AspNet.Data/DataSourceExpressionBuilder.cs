@@ -11,12 +11,10 @@ namespace DevExtreme.AspNet.Data {
     [Obsolete]
     class OLD_DataSourceExpressionBuilder<T> {
         DataSourceLoadContext _context;
-        bool _guardNulls;
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks) {
+        public OLD_DataSourceExpressionBuilder(DataSourceLoadContext context, AnonTypeNewTweaks anonTypeNewTweaks) {
             _context = context;
-            _guardNulls = guardNulls;
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
@@ -39,7 +37,7 @@ namespace DevExtreme.AspNet.Data {
             if(filterOverride != null || _context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
                     ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(typeof(T)))
-                    : new FilterExpressionCompiler<T>(_guardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter);
+                    : new FilterExpressionCompiler<T>(_context.GuardNulls, _context.UseStringToLower).Compile(filterOverride ?? _context.Filter);
 
                 expr = Expression.Call(queryableType, "Where", genericTypeArguments, expr, Expression.Quote(filterExpr));
             }
@@ -47,13 +45,13 @@ namespace DevExtreme.AspNet.Data {
             if(!isCountQuery) {
                 if(!remoteGrouping) {
                     if(_context.HasAnySort)
-                        expr = new SortExpressionCompiler<T>(_guardNulls).Compile(expr, _context.GetFullSort());
+                        expr = new SortExpressionCompiler<T>(_context.GuardNulls).Compile(expr, _context.GetFullSort());
                     if(selectOverride != null || _context.HasAnySelect && _context.UseRemoteSelect) {
-                        expr = new SelectExpressionCompiler<T>(_guardNulls).Compile(expr, selectOverride ?? _context.FullSelect);
+                        expr = new SelectExpressionCompiler<T>(_context.GuardNulls).Compile(expr, selectOverride ?? _context.FullSelect);
                         genericTypeArguments = expr.Type.GetGenericArguments();
                     }
                 } else {
-                    expr = new RemoteGroupExpressionCompiler<T>(_guardNulls, expandSumType, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
+                    expr = new RemoteGroupExpressionCompiler<T>(_context.GuardNulls, expandSumType, _anonTypeNewTweaks, _context.Group, _context.TotalSummary, _context.GroupSummary).Compile(expr);
                 }
 
                 if(paginate) {

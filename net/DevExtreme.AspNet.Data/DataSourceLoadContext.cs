@@ -19,6 +19,16 @@ namespace DevExtreme.AspNet.Data {
             _itemType = itemType;
         }
 
+        public bool GuardNulls {
+            get {
+#if DEBUG
+                if(_options.GuardNulls.HasValue)
+                    return _options.GuardNulls.Value;
+#endif
+                return _providerInfo.IsLinqToObjects;
+            }
+        }
+
         static bool IsEmpty<T>(IReadOnlyCollection<T> collection) {
             return collection == null || collection.Count < 1;
         }

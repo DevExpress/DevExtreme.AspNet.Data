@@ -29,7 +29,6 @@ namespace DevExtreme.AspNet.Data {
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
             var providerInfo = new QueryProviderInfo(source.Provider);
-            var guardNulls = providerInfo.IsLinqToObjects;
 
             if(!sync)
                 AsyncHelper = new AsyncHelper(source.Provider, providerInfo, cancellationToken);
@@ -37,14 +36,12 @@ namespace DevExtreme.AspNet.Data {
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
-            guardNulls = options.GuardNulls.GetValueOrDefault(guardNulls);
 #endif
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
             Builder = new OLD_DataSourceExpressionBuilder<S>(
                 Context,
-                guardNulls,
                 new AnonTypeNewTweaks {
                     AllowEmpty = !providerInfo.IsL2S,
                     AllowUnusedMembers = !providerInfo.IsL2S

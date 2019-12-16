@@ -16,14 +16,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             return text.Append(")").ToString();
         }
 
-        public static OLD_DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options, bool guardNulls) {
+        public static OLD_DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options) {
             return new OLD_DataSourceExpressionBuilder<T>(
                 new DataSourceLoadContext(
                     options,
                     new QueryProviderInfo(new T[0].AsQueryable().Provider),
                     typeof(T)
                 ),
-                guardNulls, null
+                null
             );
         }
     }

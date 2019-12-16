@@ -12,8 +12,9 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Build_SkipTake() {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
-                Take = 222
-            }, false);
+                Take = 222,
+                GuardNulls = false
+            });
 
             var expr = builder.BuildLoadExpr();
 
@@ -23,8 +24,9 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Build_Filter() {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
-                Filter = new object[] { "this", ">", 123 }
-            }, false);
+                Filter = new object[] { "this", ">", 123 },
+                GuardNulls = false
+            });
 
             var expr = builder.BuildLoadExpr();
 
@@ -36,8 +38,9 @@ namespace DevExtreme.AspNet.Data.Tests {
             // To mitigate cases like https://devexpress.com/issue=T483154
 
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
-                Filter = new object[0]
-            }, false);
+                Filter = new object[0],
+                GuardNulls = false
+            });
 
             Assert.DoesNotContain(".Where", builder.BuildLoadExpr().ToString());
         }
@@ -51,7 +54,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Sort = new[] {
                     new SortingInfo { Selector = "this" }
                 },
-            }, false);
+                GuardNulls = false
+            });
 
             var expr = builder.BuildCountExpr();
             var text = expr.ToString();
@@ -74,8 +78,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                         Selector = "Item2",
                         Desc=true
                     }
-                }
-            }, false);
+                },
+                GuardNulls = false
+            });
 
             var expr = builder.BuildLoadExpr();
             Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.ToString());
@@ -91,10 +96,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Group = new[] {
                     new GroupingInfo { Selector = "Item1" },
                     new GroupingInfo { Selector = "Item2", Desc = true  } // this must win
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
@@ -111,8 +117,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Group = new[] {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }
-                }
-            }, false);
+                },
+                GuardNulls = false
+            });
 
             Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().ToString());
         }
@@ -130,8 +137,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                     new SortingInfo { Selector = "Item1" },
                     new SortingInfo { Selector = "Item2.Length" },
                     new SortingInfo { Selector = "Item3.Year" },
-                }
-            }, true);
+                },
+                GuardNulls = true
+            });
 
             var data = new[] {
                 // filtered out
@@ -154,10 +162,11 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void DefaultSort() {
             var options = new SampleLoadOptions {
-                DefaultSort = "Item1"
+                DefaultSort = "Item1",
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
 
             Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
 
@@ -180,10 +189,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 },
                 Sort = new[] {
                     new SortingInfo { Selector = "Item2" }
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
             var expr = builder.BuildLoadGroupsExpr().ToString();
 
             Assert.StartsWith("data.GroupBy", expr);
@@ -192,10 +202,11 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void AlwaysOrderDataByPrimaryKey() {
             var options = new SampleLoadOptions {
-                PrimaryKey = new[] { "Item2", "Item1" }
+                PrimaryKey = new[] { "Item2", "Item1" },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
@@ -208,11 +219,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var options = new SampleLoadOptions {
                 PrimaryKey = new[] { "Item1" },
                 DefaultSort = "Item1",
-                Sort = new[] { new SortingInfo { Selector = "Item1" } }
+                Sort = new[] { new SortingInfo { Selector = "Item1" } },
+                GuardNulls = false
             };
 
             {
-                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options, false);
+                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options);
 
                 Assert.Equal(
                     "data.OrderBy(obj => obj.Item1)",
@@ -224,7 +236,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             options.Sort[0].Selector = "Item3";
 
             {
-                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options, false);
+                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options);
 
                 Assert.Equal(
                     "data.OrderBy(obj => obj.Item3).ThenBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
@@ -241,10 +253,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 DefaultSort = "item1",
                 Sort = new[] {
                     new SortingInfo { Selector = "ITEM1" }
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int>>(options);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1)",
@@ -256,12 +269,13 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void RemoteSelectFalse() {
             var options = new SampleLoadOptions {
                 Select = new[] { "abc" },
-                RemoteSelect = false
+                RemoteSelect = false,
+                GuardNulls = false
             };
 
             Assert.Equal(
                 "data",
-                Compat.CreateDataSourceExpressionBuilder<object>(options, false).BuildLoadExpr().ToString()
+                Compat.CreateDataSourceExpressionBuilder<object>(options).BuildLoadExpr().ToString()
             );
         }
     }
