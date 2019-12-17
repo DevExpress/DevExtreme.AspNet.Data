@@ -24,6 +24,14 @@ namespace DevExtreme.AspNet.Data.Tests.L2S {
                 );
 
                 INSTANCE.ExecuteCommand(
+                    $@"create table {nameof(RemoteGroupCount_DataItem)} (
+                        {nameof(RemoteGroupCount_DataItem.ID)} int identity primary key,
+                        {nameof(RemoteGroupCount_DataItem.G1)} int not null,
+                        {nameof(RemoteGroupCount_DataItem.G2)} int not null
+                    )"
+                );
+
+                INSTANCE.ExecuteCommand(
                     $@"create table {nameof(Summary_DataItem)} (
                         {nameof(Summary_DataItem.ID)} int identity primary key,
                         {nameof(Summary_DataItem.Group1)} nvarchar,
@@ -49,6 +57,9 @@ namespace DevExtreme.AspNet.Data.Tests.L2S {
     }
 
     partial class RemoteGroupingStress_DataItem : RemoteGroupingStressHelper.IEntity {
+    }
+
+    partial class RemoteGroupCount_DataItem : RemoteGroupCountTestHelper.IEntity {
     }
 
     partial class Summary_DataItem : SummaryTestHelper.IEntity {

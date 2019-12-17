@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="RemoteGroupCount.cs" />
     <Compile Include="RemoteGroupingStress.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="T670222_TotalSummary.cs" />

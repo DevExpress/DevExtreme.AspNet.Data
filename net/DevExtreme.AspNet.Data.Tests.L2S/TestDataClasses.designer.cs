@@ -32,6 +32,9 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
     partial void InsertRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
     partial void UpdateRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
     partial void DeleteRemoteGroupingStress_DataItem(RemoteGroupingStress_DataItem instance);
+    partial void InsertRemoteGroupCount_DataItem(RemoteGroupCount_DataItem instance);
+    partial void UpdateRemoteGroupCount_DataItem(RemoteGroupCount_DataItem instance);
+    partial void DeleteRemoteGroupCount_DataItem(RemoteGroupCount_DataItem instance);
     partial void InsertSummary_DataItem(Summary_DataItem instance);
     partial void UpdateSummary_DataItem(Summary_DataItem instance);
     partial void DeleteSummary_DataItem(Summary_DataItem instance);
@@ -69,6 +72,14 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 			get
 			{
 				return this.GetTable<RemoteGroupingStress_DataItem>();
+			}
+		}
+		
+		public System.Data.Linq.Table<RemoteGroupCount_DataItem> RemoteGroupCount_DataItems
+		{
+			get
+			{
+				return this.GetTable<RemoteGroupCount_DataItem>();
 			}
 		}
 		
@@ -222,6 +233,116 @@ namespace DevExtreme.AspNet.Data.Tests.L2S
 					this._NullDate = value;
 					this.SendPropertyChanged("NullDate");
 					this.OnNullDateChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class RemoteGroupCount_DataItem : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _G1;
+		
+		private int _G2;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnG1Changing(int value);
+    partial void OnG1Changed();
+    partial void OnG2Changing(int value);
+    partial void OnG2Changed();
+    #endregion
+		
+		public RemoteGroupCount_DataItem()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_G1")]
+		public int G1
+		{
+			get
+			{
+				return this._G1;
+			}
+			set
+			{
+				if ((this._G1 != value))
+				{
+					this.OnG1Changing(value);
+					this.SendPropertyChanging();
+					this._G1 = value;
+					this.SendPropertyChanged("G1");
+					this.OnG1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_G2")]
+		public int G2
+		{
+			get
+			{
+				return this._G2;
+			}
+			set
+			{
+				if ((this._G2 != value))
+				{
+					this.OnG2Changing(value);
+					this.SendPropertyChanging();
+					this._G2 = value;
+					this.SendPropertyChanged("G2");
+					this.OnG2Changed();
 				}
 			}
 		}
