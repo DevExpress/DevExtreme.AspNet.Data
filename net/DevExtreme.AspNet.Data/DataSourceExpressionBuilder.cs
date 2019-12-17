@@ -41,7 +41,7 @@ namespace DevExtreme.AspNet.Data {
 
         public Expression BuildGroupCountExpr() {
             AddFilter();
-            Expr = CreateSelectCompiler().Compile(Expr, new[] { Context.Group.Single().Selector });
+            Expr = CreateSelectCompiler().CompileSingle(Expr, Context.Group.Single().Selector);
             Expr = QueryableCall(nameof(Queryable.Distinct));
             AddCount();
             return Expr;

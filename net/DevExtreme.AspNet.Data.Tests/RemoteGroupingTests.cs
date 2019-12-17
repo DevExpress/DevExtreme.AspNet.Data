@@ -570,7 +570,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             // group count
             Assert.EndsWith(
-                ".Select(obj => new AnonType`1(I0 = obj.G)).Distinct().Count()",
+                ".Select(obj => obj.G).Distinct().Count()",
                 loadOptions.ExpressionLog[2]
             );
 

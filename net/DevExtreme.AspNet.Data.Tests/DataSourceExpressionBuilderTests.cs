@@ -296,7 +296,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True(error is InvalidOperationException);
 
             Assert.Equal(
-                "data.Where(obj => (obj.Item2 == 1)).Select(obj => new AnonType`1(I0 = obj.Item1)).Distinct().Count()",
+                "data.Where(obj => (obj.Item2 == 1)).Select(obj => obj.Item1).Distinct().Count()",
                 BuildExpr(new SampleLoadOptions {
                     GuardNulls = false,
                     Filter = new[] { "Item2", "1" },
