@@ -45,25 +45,38 @@ namespace DevExtreme.AspNet.Data {
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
-                return new LoadResult { totalCount = await ExecCountAsync() };
+                return new LoadResult { totalCount = await ExecTotalCountAsync() };
 
             var result = new LoadResult();
 
             if(Context.UseRemoteGrouping && Context.ShouldEmptyGroups) {
-                var remotePaging = Context.HasPaging && !Context.RequireGroupCount && Context.Group.Count == 1;
-                var groupingResult = await ExecRemoteGroupingAsync(remotePaging);
+                var remotePaging = Context.HasPaging && Context.Group.Count == 1;
+                var groupingResult = await ExecRemoteGroupingAsync(remotePaging, false, remotePaging);
 
                 EmptyGroups(groupingResult.Groups, Context.Group.Count);
 
                 result.data = groupingResult.Groups;
-                result.summary = groupingResult.Totals;
-                result.totalCount = groupingResult.TotalCount;
-
                 if(!remotePaging)
                     result.data = Paginate(result.data, Context.Skip, Context.Take);
 
-                if(Context.RequireGroupCount)
-                    result.groupCount = groupingResult.Groups.Count();
+                if(remotePaging) {
+                    if(Context.HasTotalSummary) {
+                        var totalsResult = await ExecRemoteTotalsAsync();
+                        result.summary = totalsResult.Totals;
+                        result.totalCount = totalsResult.TotalCount;
+                    } else if(Context.RequireTotalCount) {
+                        result.totalCount = await ExecTotalCountAsync();
+                    }
+                } else {
+                    result.summary = groupingResult.Totals;
+                    result.totalCount = groupingResult.TotalCount;
+                }
+
+                if(Context.RequireGroupCount) {
+                    result.groupCount = remotePaging
+                        ? await ExecCountAsync(CreateBuilder().BuildGroupCountExpr())
+                        : groupingResult.Groups.Count();
+                }
             } else {
                 var deferPaging = Context.HasGroups || !Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary;
 
@@ -134,7 +147,7 @@ namespace DevExtreme.AspNet.Data {
                 var totalCount = -1;
 
                 if(Context.RequireTotalCount || Context.SummaryIsTotalCountOnly)
-                    totalCount = await ExecCountAsync();
+                    totalCount = await ExecTotalCountAsync();
 
                 if(Context.RequireTotalCount)
                     result.totalCount = totalCount;
@@ -150,8 +163,7 @@ namespace DevExtreme.AspNet.Data {
             result.data = data;
         }
 
-        Task<int> ExecCountAsync() {
-            var expr = CreateBuilder().BuildCountExpr();
+        Task<int> ExecCountAsync(Expression expr) {
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
@@ -162,19 +174,9 @@ namespace DevExtreme.AspNet.Data {
             return Task.FromResult(Source.Provider.Execute<int>(expr));
         }
 
+        Task<int> ExecTotalCountAsync() => ExecCountAsync(CreateBuilder().BuildCountExpr());
+
         Task<RemoteGroupingResult> ExecRemoteTotalsAsync() => ExecRemoteGroupingAsync(false, true, false);
-
-        async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging) {
-            var result = await ExecRemoteGroupingAsync(remotePaging, false, remotePaging);
-
-            if(remotePaging && Context.HasTotalSummary) {
-                var totalsResult = await ExecRemoteTotalsAsync();
-                result.TotalCount = totalsResult.TotalCount;
-                result.Totals = totalsResult.Totals;
-            }
-
-            return result;
-        }
 
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging, bool suppressGroups, bool suppressTotals) {
             return RemoteGroupTransformer.Run(
