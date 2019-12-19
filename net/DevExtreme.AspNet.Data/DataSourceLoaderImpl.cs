@@ -172,7 +172,7 @@ namespace DevExtreme.AspNet.Data {
 
             var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
 
-            if(ProviderInfo.IsXPO)
+            if(Context.RequireQueryableChainBreak)
                 executor.BreakQueryableChain();
 
             return executor.CountAsync();
@@ -199,7 +199,7 @@ namespace DevExtreme.AspNet.Data {
 
             var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
 
-            if(ProviderInfo.IsXPO)
+            if(Context.RequireQueryableChainBreak)
                 executor.BreakQueryableChain();
 
             var result = await executor.ToEnumerableAsync<R>();

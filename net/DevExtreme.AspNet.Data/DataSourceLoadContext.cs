@@ -29,6 +29,17 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
+        public bool RequireQueryableChainBreak {
+            get {
+                if(_providerInfo.IsXPO) {
+                    // TODO add explanation
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
             AllowEmpty = !_providerInfo.IsL2S,
             AllowUnusedMembers = !_providerInfo.IsL2S
