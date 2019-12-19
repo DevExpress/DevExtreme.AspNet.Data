@@ -17,9 +17,12 @@ namespace DevExtreme.AspNet.Data {
 
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
-        readonly DataSourceLoadContext Context;
 
-        readonly AsyncHelper AsyncHelper;
+        readonly CancellationToken CancellationToken;
+        readonly bool Sync;
+
+        readonly QueryProviderInfo ProviderInfo;
+        readonly DataSourceLoadContext Context;
 
 #if DEBUG
         readonly Action<Expression> ExpressionWatcher;
@@ -27,18 +30,17 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
-            var providerInfo = new QueryProviderInfo(source.Provider);
+            Source = source;
+            CancellationToken = cancellationToken;
+            Sync = sync;
 
-            if(!sync)
-                AsyncHelper = new AsyncHelper(source.Provider, providerInfo, cancellationToken);
+            ProviderInfo = new QueryProviderInfo(source.Provider);
+            Context = new DataSourceLoadContext(options, ProviderInfo, typeof(S));
 
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
 #endif
-
-            Source = source;
-            Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
         }
 
         DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
@@ -168,10 +170,12 @@ namespace DevExtreme.AspNet.Data {
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            if(AsyncHelper != null)
-                return AsyncHelper.CountAsync(expr);
+            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
 
-            return Task.FromResult(Source.Provider.Execute<int>(expr));
+            if(ProviderInfo.IsXPO)
+                executor.BreakQueryableChain();
+
+            return executor.CountAsync();
         }
 
         Task<int> ExecTotalCountAsync() => ExecCountAsync(CreateBuilder().BuildCountExpr());
@@ -188,26 +192,24 @@ namespace DevExtreme.AspNet.Data {
             );
         }
 
-        Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
+        async Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            if(AsyncHelper != null) {
-                var result = AsyncHelper.ToEnumerableAsync<R>(expr);
+            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
+
+            if(ProviderInfo.IsXPO)
+                executor.BreakQueryableChain();
+
+            var result = await executor.ToEnumerableAsync<R>();
+
 #if DEBUG
-                if(UseEnumerableOnce)
-                    result = result.ContinueWith(t => (IEnumerable<R>)new EnumerableOnce<R>(t.Result));
+            if(UseEnumerableOnce)
+                result = new EnumerableOnce<R>(result);
 #endif
-                return result;
-            } else {
-                IEnumerable<R> result = Source.Provider.CreateQuery<R>(expr);
-#if DEBUG
-                if(UseEnumerableOnce)
-                    result = new EnumerableOnce<R>(result);
-#endif
-                return Task.FromResult(result);
-            }
+
+            return result;
         }
 
         IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
