@@ -12,14 +12,17 @@ namespace DevExtreme.AspNet.Data {
         IQueryProvider Provider;
         Expression Expr;
 
+        readonly QueryProviderInfo ProviderInfo;
         readonly CancellationToken CancellationToken;
         readonly bool Sync;
 
-        public ExpressionExecutor(IQueryProvider provider, Expression expr, CancellationToken cancellationToken, bool sync) {
+        public ExpressionExecutor(IQueryProvider provider, Expression expr, QueryProviderInfo providerInfo, CancellationToken cancellationToken, bool sync) {
             Provider = provider;
             Expr = expr;
-            Sync = sync;
+
+            ProviderInfo = providerInfo;
             CancellationToken = cancellationToken;
+            Sync = sync;
         }
 
         public void BreakQueryableChain() {
@@ -48,20 +51,23 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>() {
-            if(!Sync)
-                return CreateAsyncHelper().ToEnumerableAsync<T>(Expr);
-
-            return Task.FromResult((IEnumerable<T>)Provider.CreateQuery<T>(Expr));
+            CancellationToken.ThrowIfCancellationRequested();
+            return CreateAsyncAdapter().ToEnumerableAsync<T>(Provider, Expr, CancellationToken);
         }
 
         public Task<int> CountAsync() {
-            if(!Sync)
-                return CreateAsyncHelper().CountAsync(Expr);
-
-            return Task.FromResult(Provider.Execute<int>(Expr));
+            CancellationToken.ThrowIfCancellationRequested();
+            return CreateAsyncAdapter().CountAsync(Provider, Expr, CancellationToken);
         }
 
-        AsyncHelper CreateAsyncHelper() => new AsyncHelper(Provider, new QueryProviderInfo(Provider), CancellationToken);
+        IAsyncAdapter CreateAsyncAdapter() {
+            if(Sync)
+                return AsyncOverSyncAdapter.Instance;
+
+            return CustomAsyncAdapters.GetAdapter(Provider.GetType())
+                ?? new ReflectionAsyncAdapter(ProviderInfo);
+        }
+
     }
 
 }
