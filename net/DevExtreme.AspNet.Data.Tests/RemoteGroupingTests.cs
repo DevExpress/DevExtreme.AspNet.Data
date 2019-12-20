@@ -233,6 +233,28 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void RequireGroupCount_MultiLevels() {
+            var source = new[] {
+                new { G1 = 1, G2 = 1 },
+                new { G1 = 1, G2 = 2 },
+                new { G1 = 2, G2 = 3 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                RequireGroupCount = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G1", IsExpanded = false },
+                    new GroupingInfo { Selector = "G2", IsExpanded = false }
+                },
+                Take = 1
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            Assert.Equal(2, loadResult.groupCount);
+        }
+
+        [Fact]
         public void Summary_MissingOverload() {
             // Neither of Min, Max, Sum, Average provides an overload for byte sequences
             var data = new byte[] { 1, 3, 5 };
@@ -494,6 +516,94 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2m * sourceItem.DecimalN, summary[21]);
         }
 
+        [Fact]
+        public void T844633() {
+            var source = new[] {
+                new { G = 1, Value = 1 },
+                new { G = 2, Value = 2 },
+                new { G = 2, Value = 3 },
+                new { G = 3, Value = 4 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                GuardNulls = false,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                RequireGroupCount = true,
+                Skip = 1,
+                Take = 1
+            };
+
+            loadOptions.GroupSummary = loadOptions.TotalSummary = new[] {
+                new SummaryInfo { Selector = "Value", SummaryType = "sum" },
+                new SummaryInfo { SummaryType = "count" }
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            var group = loadResult.data.Cast<Group>().First();
+            var summary = loadResult.summary;
+
+            // groups
+            Assert.EndsWith(
+                ".GroupBy(obj => new AnonType`1(I0 = obj.G))" +
+                ".OrderBy(g => g.Key.I0)" +
+                ".Select(g => new AnonType`4(" +
+                    "I0 = g.Count(), " +
+                    "I1 = g.Key.I0, " +
+                    "I2 = g.Sum(obj => obj.Value)" +
+                "))" +
+                ".Skip(1).Take(1)",
+                loadOptions.ExpressionLog[0]
+            );
+
+            // totals
+            Assert.EndsWith(
+                ".GroupBy(obj => new AnonType())" +
+                ".Select(g => new AnonType`2(" +
+                    "I0 = g.Count(), " +
+                    "I1 = g.Sum(obj => obj.Value)" +
+                "))",
+                loadOptions.ExpressionLog[1]
+            );
+
+            // group count
+            Assert.EndsWith(
+                ".Select(obj => obj.G).Distinct().Count()",
+                loadOptions.ExpressionLog[2]
+            );
+
+            Assert.Equal(5m, group.summary[0]);
+            Assert.Equal(2, group.summary[1]);
+
+            Assert.Equal(10m, summary[0]);
+            Assert.Equal(4, summary[1]);
+
+            Assert.Equal(4, loadResult.totalCount);
+            Assert.Equal(3, loadResult.groupCount);
+        }
+
+        [Fact]
+        public void T844633_TotalsWoPaging() {
+            var source = new[] {
+                new { G = 0 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "G", SummaryType = "sum" }
+                }
+            };
+
+            DataSourceLoader.Load(source, loadOptions);
+
+            Assert.Single(loadOptions.ExpressionLog.Where(line => line.Contains("GroupBy")));
+        }
     }
 
 }

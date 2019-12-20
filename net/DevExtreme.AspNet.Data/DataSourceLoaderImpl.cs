@@ -17,9 +17,12 @@ namespace DevExtreme.AspNet.Data {
 
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
-        readonly DataSourceLoadContext Context;
 
-        readonly AsyncHelper AsyncHelper;
+        readonly CancellationToken CancellationToken;
+        readonly bool Sync;
+
+        readonly QueryProviderInfo ProviderInfo;
+        readonly DataSourceLoadContext Context;
 
 #if DEBUG
         readonly Action<Expression> ExpressionWatcher;
@@ -27,39 +30,55 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
-            var providerInfo = new QueryProviderInfo(source.Provider);
+            Source = source;
+            CancellationToken = cancellationToken;
+            Sync = sync;
 
-            if(!sync)
-                AsyncHelper = new AsyncHelper(source.Provider, providerInfo, cancellationToken);
+            ProviderInfo = new QueryProviderInfo(source.Provider);
+            Context = new DataSourceLoadContext(options, ProviderInfo, typeof(S));
 
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
 #endif
-
-            Source = source;
-            Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
         }
 
         DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
-                return new LoadResult { totalCount = await ExecCountAsync() };
+                return new LoadResult { totalCount = await ExecTotalCountAsync() };
 
             var result = new LoadResult();
 
             if(Context.UseRemoteGrouping && Context.ShouldEmptyGroups) {
-                var groupingResult = await ExecRemoteGroupingAsync();
+                var remotePaging = Context.HasPaging && Context.Group.Count == 1;
+                var groupingResult = await ExecRemoteGroupingAsync(remotePaging, false, remotePaging);
 
                 EmptyGroups(groupingResult.Groups, Context.Group.Count);
 
-                result.data = Paginate(groupingResult.Groups, Context.Skip, Context.Take);
-                result.summary = groupingResult.Totals;
-                result.totalCount = groupingResult.TotalCount;
+                result.data = groupingResult.Groups;
+                if(!remotePaging)
+                    result.data = Paginate(result.data, Context.Skip, Context.Take);
 
-                if(Context.RequireGroupCount)
-                    result.groupCount = groupingResult.Groups.Count();
+                if(remotePaging) {
+                    if(Context.HasTotalSummary) {
+                        var totalsResult = await ExecRemoteTotalsAsync();
+                        result.summary = totalsResult.Totals;
+                        result.totalCount = totalsResult.TotalCount;
+                    } else if(Context.RequireTotalCount) {
+                        result.totalCount = await ExecTotalCountAsync();
+                    }
+                } else {
+                    result.summary = groupingResult.Totals;
+                    result.totalCount = groupingResult.TotalCount;
+                }
+
+                if(Context.RequireGroupCount) {
+                    result.groupCount = remotePaging
+                        ? await ExecCountAsync(CreateBuilder().BuildGroupCountExpr())
+                        : groupingResult.Groups.Count();
+                }
             } else {
                 var deferPaging = Context.HasGroups || !Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary;
 
@@ -123,14 +142,14 @@ namespace DevExtreme.AspNet.Data {
 
         async Task ContinueWithAggregationAsync<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
             if(Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary && !Context.HasGroups) {
-                var groupingResult = await ExecRemoteGroupingAsync();
-                result.totalCount = groupingResult.TotalCount;
-                result.summary = groupingResult.Totals;
+                var totalsResult = await ExecRemoteTotalsAsync();
+                result.totalCount = totalsResult.TotalCount;
+                result.summary = totalsResult.Totals;
             } else {
                 var totalCount = -1;
 
                 if(Context.RequireTotalCount || Context.SummaryIsTotalCountOnly)
-                    totalCount = await ExecCountAsync();
+                    totalCount = await ExecTotalCountAsync();
 
                 if(Context.RequireTotalCount)
                     result.totalCount = totalCount;
@@ -146,48 +165,51 @@ namespace DevExtreme.AspNet.Data {
             result.data = data;
         }
 
-        Task<int> ExecCountAsync() {
-            var expr = CreateBuilder().BuildCountExpr();
+        Task<int> ExecCountAsync(Expression expr) {
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            if(AsyncHelper != null)
-                return AsyncHelper.CountAsync(expr);
+            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
 
-            return Task.FromResult(Source.Provider.Execute<int>(expr));
+            if(Context.RequireQueryableChainBreak)
+                executor.BreakQueryableChain();
+
+            return executor.CountAsync();
         }
 
-        async Task<RemoteGroupingResult> ExecRemoteGroupingAsync() {
+        Task<int> ExecTotalCountAsync() => ExecCountAsync(CreateBuilder().BuildCountExpr());
+
+        Task<RemoteGroupingResult> ExecRemoteTotalsAsync() => ExecRemoteGroupingAsync(false, true, false);
+
+        async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging, bool suppressGroups, bool suppressTotals) {
             return RemoteGroupTransformer.Run(
                 typeof(S),
-                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr()),
-                Context.HasGroups ? Context.Group.Count : 0,
-                Context.TotalSummary,
-                Context.GroupSummary
+                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(remotePaging, suppressGroups, suppressTotals)),
+                !suppressGroups && Context.HasGroups ? Context.Group.Count : 0,
+                !suppressTotals ? Context.TotalSummary : null,
+                !suppressGroups ? Context.GroupSummary : null
             );
         }
 
-        Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
+        async Task<IEnumerable<R>> ExecExprAsync<R>(Expression expr) {
 #if DEBUG
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            if(AsyncHelper != null) {
-                var result = AsyncHelper.ToEnumerableAsync<R>(expr);
+            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
+
+            if(Context.RequireQueryableChainBreak)
+                executor.BreakQueryableChain();
+
+            var result = await executor.ToEnumerableAsync<R>();
+
 #if DEBUG
-                if(UseEnumerableOnce)
-                    result = result.ContinueWith(t => (IEnumerable<R>)new EnumerableOnce<R>(t.Result));
+            if(UseEnumerableOnce)
+                result = new EnumerableOnce<R>(result);
 #endif
-                return result;
-            } else {
-                IEnumerable<R> result = Source.Provider.CreateQuery<R>(expr);
-#if DEBUG
-                if(UseEnumerableOnce)
-                    result = new EnumerableOnce<R>(result);
-#endif
-                return Task.FromResult(result);
-            }
+
+            return result;
         }
 
         IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {

@@ -16,7 +16,13 @@ namespace DevExtreme.AspNet.Data {
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
-        public Expression Compile(Expression target, IEnumerable<string> clientExprList) {
+        public Expression Compile(Expression target, IEnumerable<string> clientExprList)
+            => Compile(target, clientExprList, true);
+
+        public Expression CompileSingle(Expression target, string clientExpr)
+            => Compile(target, new[] { clientExpr }, false);
+
+        Expression Compile(Expression target, IEnumerable<string> clientExprList, bool useNew) {
             var itemExpr = CreateItemParam(typeof(T));
 
             var memberExprList = clientExprList
@@ -24,7 +30,9 @@ namespace DevExtreme.AspNet.Data {
                 .ToArray();
 
             var lambda = Expression.Lambda(
-                AnonType.CreateNewExpression(memberExprList, _anonTypeNewTweaks),
+                useNew
+                    ? AnonType.CreateNewExpression(memberExprList, _anonTypeNewTweaks)
+                    : memberExprList[0],
                 itemExpr
             );
 

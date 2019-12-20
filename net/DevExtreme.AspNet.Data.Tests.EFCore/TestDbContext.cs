@@ -16,6 +16,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
 #if !EFCORE1
             modelBuilder.Entity<RemoteGroupingStress.DataItem>();
+            modelBuilder.Entity<RemoteGroupCount.DataItem>();
 #endif
             modelBuilder.Entity<Summary.DataItem>();
             modelBuilder.Entity<Bug120.DataItem>();
