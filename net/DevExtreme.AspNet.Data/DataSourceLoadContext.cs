@@ -32,7 +32,10 @@ namespace DevExtreme.AspNet.Data {
         public bool RequireQueryableChainBreak {
             get {
                 if(_providerInfo.IsXPO) {
-                    // TODO add explanation
+                    // 1. XPQuery is stateful
+                    // 2. CreateQuery(expr) and Execute(expr) don't spawn intermediate query instances for Queryable calls within expr.
+                    //    This can put XPQuery into an invalid state. Example: Distinct().Count()
+                    // 3. XPQuery is IQueryProvider itself
                     return true;
                 }
 
