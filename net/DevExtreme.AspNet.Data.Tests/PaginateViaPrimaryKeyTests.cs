@@ -14,7 +14,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 .ToArray();
 
             var loadOptions = new SampleLoadOptions {
-                SuppressGuardNulls = true,
+                GuardNulls = false,
 
                 PrimaryKey = new[] { "ID" },
                 PaginateViaPrimaryKey = true,
@@ -56,7 +56,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 .ToArray();
 
             var loadOptions = new SampleLoadOptions {
-                SuppressGuardNulls = true,
+                GuardNulls = false,
 
                 PrimaryKey = new[] { "K1", "K2" },
                 PaginateViaPrimaryKey = true,
@@ -80,7 +80,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadOptions = new SampleLoadOptions {
-                SuppressGuardNulls = true,
+                GuardNulls = false,
                 PrimaryKey = new[] { "ID" },
                 PaginateViaPrimaryKey = true,
 
@@ -96,7 +96,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void DisabledWithoutTake() {
             var loadOptions = new SampleLoadOptions {
-                SuppressGuardNulls = true,
+                GuardNulls = false,
                 PaginateViaPrimaryKey = true
             };
 

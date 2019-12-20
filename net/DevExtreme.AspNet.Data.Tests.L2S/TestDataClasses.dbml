@@ -8,6 +8,13 @@
       <Column Name="NullDate" Type="System.DateTime" DbType="datetime2" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="" Member="RemoteGroupCount_DataItems">
+    <Type Name="RemoteGroupCount_DataItem">
+      <Column Name="ID" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="G1" Type="System.Int32" CanBeNull="false" />
+      <Column Name="G2" Type="System.Int32" CanBeNull="false" />
+    </Type>
+  </Table>
   <Table Name="" Member="Summary_DataItems">
     <Type Name="Summary_DataItem">
       <Column Name="ID" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

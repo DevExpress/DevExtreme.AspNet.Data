@@ -87,6 +87,7 @@
     <Compile Include="Bug239.cs" />
     <Compile Include="Bug240.cs" />
     <Compile Include="ExpandLinqSumType.cs" />
+    <Compile Include="RemoteGroupCount.cs" />
     <Compile Include="PaginateViaPrimaryKey.cs" />
     <Compile Include="RemoteGroupingStress.cs" />
     <Compile Include="Summary.cs" />

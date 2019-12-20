@@ -20,5 +20,11 @@
         <elementListCompartment Id="54b2396d-6c48-4d3f-8074-692608ab89a7" absoluteBounds="5.89, 0.96, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="3a312a8e-ed64-4d9c-a424-37fd348eecc8" absoluteBounds="0.5, 2.625, 2, 1.3862939453125">
+      <DataClassMoniker Name="/TestDataContext/RemoteGroupCount_DataItem" />
+      <nestedChildShapes>
+        <elementListCompartment Id="85476631-be9d-49d2-acb5-022644a04c81" absoluteBounds="0.515, 3.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>
