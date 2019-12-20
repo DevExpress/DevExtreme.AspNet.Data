@@ -17,12 +17,8 @@ namespace DevExtreme.AspNet.Data {
 
     class DataSourceLoaderImpl<S> {
         readonly IQueryable<S> Source;
-
-        readonly CancellationToken CancellationToken;
-        readonly bool Sync;
-
-        readonly QueryProviderInfo ProviderInfo;
         readonly DataSourceLoadContext Context;
+        readonly Func<Expression, ExpressionExecutor> CreateExecutor;
 
 #if DEBUG
         readonly Action<Expression> ExpressionWatcher;
@@ -30,12 +26,11 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
         public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
-            Source = source;
-            CancellationToken = cancellationToken;
-            Sync = sync;
+            var providerInfo = new QueryProviderInfo(source.Provider);
 
-            ProviderInfo = new QueryProviderInfo(source.Provider);
-            Context = new DataSourceLoadContext(options, ProviderInfo, typeof(S));
+            Source = source;
+            Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
+            CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync);
 
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
@@ -170,7 +165,7 @@ namespace DevExtreme.AspNet.Data {
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
+            var executor = CreateExecutor(expr);
 
             if(Context.RequireQueryableChainBreak)
                 executor.BreakQueryableChain();
@@ -197,7 +192,7 @@ namespace DevExtreme.AspNet.Data {
             ExpressionWatcher?.Invoke(expr);
 #endif
 
-            var executor = new ExpressionExecutor(Source.Provider, expr, CancellationToken, Sync);
+            var executor = CreateExecutor(expr);
 
             if(Context.RequireQueryableChainBreak)
                 executor.BreakQueryableChain();
