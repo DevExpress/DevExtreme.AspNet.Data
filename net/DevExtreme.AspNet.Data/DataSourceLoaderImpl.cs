@@ -30,7 +30,7 @@ namespace DevExtreme.AspNet.Data {
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
-            CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync);
+            CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync, options.AllowAsyncOverSync);
 
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
