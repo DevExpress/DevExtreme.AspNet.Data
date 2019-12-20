@@ -278,7 +278,7 @@ namespace DevExtreme.AspNet.Data {
                     var hasPreSelect = !IsEmpty(_options.PreSelect);
 
                     if(hasPreSelect && hasSelect)
-                        return Enumerable.Intersect(_options.PreSelect, _options.Select).ToArray();
+                        return Enumerable.Intersect(_options.PreSelect, _options.Select, StringComparer.OrdinalIgnoreCase).ToArray();
 
                     if(hasPreSelect)
                         return _options.PreSelect;
