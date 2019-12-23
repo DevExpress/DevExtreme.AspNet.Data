@@ -16,10 +16,12 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class Structs {
             public sbyte @sbyte = 3;
+            public short @short = 3;
             public int @int = 3;
             public long @long = 3;
 
             public byte @byte = 3;
+            public ushort @ushort = 3;
             public uint @uint = 3;
             public ulong @ulong = 3;
 
@@ -41,10 +43,12 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class NullableStructs {
             public sbyte? @sbyte = 3;
+            public short? @short = 3;
             public int? @int = 3;
             public long? @long = 3;
 
             public byte? @byte = 3;
+            public ushort? @ushort = 3;
             public uint? @uint = 3;
             public ulong? @ulong = 3;
 
@@ -69,10 +73,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var obj = new Structs();
 
             AssertEvaluation(obj, "sbyte", "3");
+            AssertEvaluation(obj, "short", "3");
             AssertEvaluation(obj, "int", "3");
             AssertEvaluation(obj, "long", "3");
 
             AssertEvaluation(obj, "byte", "3");
+            AssertEvaluation(obj, "ushort", "3");
             AssertEvaluation(obj, "uint", "3");
             AssertEvaluation(obj, "ulong", "3");
 
@@ -95,10 +101,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var obj = new NullableStructs();
 
             AssertEvaluation(obj, "sbyte", "3");
+            AssertEvaluation(obj, "short", "3");
             AssertEvaluation(obj, "int", "3");
             AssertEvaluation(obj, "long", "3");
 
             AssertEvaluation(obj, "byte", "3");
+            AssertEvaluation(obj, "ushort", "3");
             AssertEvaluation(obj, "uint", "3");
             AssertEvaluation(obj, "ulong", "3");
 
@@ -126,10 +134,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var obj = new Structs();
 
             AssertEvaluation(obj, "sbyte", 2.9);
+            AssertEvaluation(obj, "short", 2.9);
             AssertEvaluation(obj, "int", 2.9);
             AssertEvaluation(obj, "long", 2.9);
 
             AssertEvaluation(obj, "byte", 2.9);
+            AssertEvaluation(obj, "ushort", 2.9);
             AssertEvaluation(obj, "uint", 2.9);
             AssertEvaluation(obj, "ulong", 2.9);
         }
@@ -139,10 +149,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var obj = new Structs();
 
             AssertEvaluation(obj, "sbyte", "2.9");
+            AssertEvaluation(obj, "short", "2.9");
             AssertEvaluation(obj, "int", "2.9");
             AssertEvaluation(obj, "long", "2.9");
 
             AssertEvaluation(obj, "byte", "2.9");
+            AssertEvaluation(obj, "ushort", "2.9");
             AssertEvaluation(obj, "uint", "2.9");
             AssertEvaluation(obj, "ulong", "2.9");
         }

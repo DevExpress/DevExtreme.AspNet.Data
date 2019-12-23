@@ -124,7 +124,9 @@ namespace DevExtreme.AspNet.Data {
                 || type == typeof(byte)
                 || type == typeof(sbyte)
                 || type == typeof(uint)
-                || type == typeof(ulong);
+                || type == typeof(ulong)
+                || type == typeof(short)
+                || type == typeof(ushort);
         }
 
     }
