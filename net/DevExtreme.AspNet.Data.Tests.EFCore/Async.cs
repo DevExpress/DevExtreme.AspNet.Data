@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -6,6 +7,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
     public class Async {
 
+        [Table(nameof(Async) + "_" + nameof(DataItem))]
         public class DataItem : AsyncTestHelper.IDataItem {
             public int ID { get; set; }
             public int Value { get; set; }
