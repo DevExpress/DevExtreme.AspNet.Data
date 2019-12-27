@@ -26,6 +26,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
 #if !EFCORE1 && !EFCORE2
             modelBuilder.Entity<ExpandLinqSumType.DataItem>();
 #endif
+            modelBuilder.Entity<ShadowProps.DataItem>().Property<int?>(ShadowProps.SHADOW_NAME);
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
