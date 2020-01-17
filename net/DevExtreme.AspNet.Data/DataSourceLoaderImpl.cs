@@ -41,7 +41,7 @@ namespace DevExtreme.AspNet.Data {
 #endif
         }
 
-        
+
         DataSourceExpressionBuilder<S> CreateBuilder() => createExpressionBuilder;
 
         public async Task<LoadResult> LoadAsync() {
