@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DevExtreme.AspNet.Data.Types {
 
-    class AnonTypeNewTweaks {
+    public class AnonTypeNewTweaks {
         public bool AllowEmpty = true;
         public bool AllowUnusedMembers = true;
     }

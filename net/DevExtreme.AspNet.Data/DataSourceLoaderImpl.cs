@@ -19,26 +19,30 @@ namespace DevExtreme.AspNet.Data {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadContext Context;
         readonly Func<Expression, ExpressionExecutor> CreateExecutor;
+        readonly DataSourceExpressionBuilder<S> createExpressionBuilder;
 
 #if DEBUG
         readonly Action<Expression> ExpressionWatcher;
         readonly bool UseEnumerableOnce;
 #endif
-
-        public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
+        public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync)
+            : this(source, (ctx) => new DataSourceExpressionBuilder<S>(source.Expression, ctx), options, cancellationToken, sync)
+            {}
+        public DataSourceLoaderImpl(IQueryable<S> source, Func<DataSourceLoadContext, DataSourceExpressionBuilder<S>> createBuilderExpression, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
             var providerInfo = new QueryProviderInfo(source.Provider);
 
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
             CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync);
-
+            this.createExpressionBuilder = createBuilderExpression(Context);
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
 #endif
         }
 
-        DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
+        
+        DataSourceExpressionBuilder<S> CreateBuilder() => createExpressionBuilder;
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)

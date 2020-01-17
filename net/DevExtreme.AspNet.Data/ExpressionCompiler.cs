@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    abstract class ExpressionCompiler {
+    public abstract class ExpressionCompiler {
         bool _guardNulls;
 
         public ExpressionCompiler(bool guardNulls) {
@@ -101,7 +101,7 @@ namespace DevExtreme.AspNet.Data {
             return Expression.Parameter(type, "obj");
         }
 
-        internal static void ForceToString(List<Expression> progression) {
+        public static void ForceToString(List<Expression> progression) {
             var last = progression.Last();
             if(last.Type != typeof(String))
                 progression.Add(Expression.Call(last, typeof(Object).GetMethod(nameof(Object.ToString))));

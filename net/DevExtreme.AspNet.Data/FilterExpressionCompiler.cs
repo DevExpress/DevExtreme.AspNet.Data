@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class FilterExpressionCompiler<T> : ExpressionCompiler {
+    public class FilterExpressionCompiler<T> : ExpressionCompiler {
         const string
             CONTAINS = "contains",
             NOT_CONTAINS = "notcontains",

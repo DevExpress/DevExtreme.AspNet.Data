@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data {
 
-    class DataSourceExpressionBuilder<T> {
-        Expression Expr;
-        readonly DataSourceLoadContext Context;
+    public class DataSourceExpressionBuilder<T> {
+        protected Expression Expr;
+        protected readonly DataSourceLoadContext Context;
 
         public DataSourceExpressionBuilder(Expression expr, DataSourceLoadContext context) {
             Expr = expr;
@@ -47,7 +47,7 @@ namespace DevExtreme.AspNet.Data {
             return Expr;
         }
 
-        void AddFilter(IList filterOverride = null) {
+        protected virtual void AddFilter(IList filterOverride = null) {
             if(filterOverride != null || Context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
                     ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(typeof(T)))
@@ -57,17 +57,17 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        void AddSort() {
+        protected virtual void AddSort() {
             if(Context.HasAnySort)
                 Expr = new SortExpressionCompiler<T>(Context.GuardNulls).Compile(Expr, Context.GetFullSort());
         }
 
-        void AddSelect(IReadOnlyList<string> selectOverride = null) {
+        protected virtual void AddSelect(IReadOnlyList<string> selectOverride = null) {
             if(selectOverride != null || Context.HasAnySelect && Context.UseRemoteSelect)
                 Expr = CreateSelectCompiler().Compile(Expr, selectOverride ?? Context.FullSelect);
         }
 
-        void AddPaging() {
+        protected virtual void AddPaging() {
             if(Context.Skip > 0)
                 Expr = QueryableCall(nameof(Queryable.Skip), Expression.Constant(Context.Skip));
 
@@ -75,7 +75,7 @@ namespace DevExtreme.AspNet.Data {
                 Expr = QueryableCall(nameof(Queryable.Take), Expression.Constant(Context.Take));
         }
 
-        void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
+        protected virtual void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
             var compiler = new RemoteGroupExpressionCompiler<T>(
                 Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
                 suppressGroups ? null : Context.Group,
@@ -85,7 +85,7 @@ namespace DevExtreme.AspNet.Data {
             Expr = compiler.Compile(Expr);
         }
 
-        void AddCount() {
+        protected virtual void AddCount() {
             Expr = QueryableCall(nameof(Queryable.Count));
         }
 

@@ -8,10 +8,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
     public static class CustomFilterCompilers {
 
-        internal static class Binary {
-            internal readonly static ICollection<BinaryExpressionCompilerFunc> CompilerFuncs = new List<BinaryExpressionCompilerFunc>();
+        public static class Binary {
+            public readonly static ICollection<BinaryExpressionCompilerFunc> CompilerFuncs = new List<BinaryExpressionCompilerFunc>();
 
-            internal static Expression TryCompile(IBinaryExpressionInfo info) {
+            public static Expression TryCompile(IBinaryExpressionInfo info) {
                 foreach(var func in CompilerFuncs) {
                     var result = func(info);
                     if(result != null)

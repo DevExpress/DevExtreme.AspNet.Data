@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DevExtreme.AspNet.Data {
 
-    partial class DataSourceLoadContext {
+    public partial class DataSourceLoadContext {
         readonly DataSourceLoadOptionsBase _options;
         readonly QueryProviderInfo _providerInfo;
         readonly Type _itemType;

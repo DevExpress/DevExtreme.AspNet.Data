@@ -34,6 +34,19 @@ namespace DevExtreme.AspNet.Data {
         public static LoadResult Load<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
             return LoadAsync(source, options, CancellationToken.None, true).GetAwaiter().GetResult();
         }
+        /// <summary>
+        /// Loads data from a collection that implements the <see cref="System.Linq.IQueryable{T}"/> interface.
+        /// </summary>
+        /// <typeparam name="T">The type of objects in the collection.</typeparam>
+        /// <param name="source">A collection that implements the <see cref="System.Linq.IQueryable{T}"/> interface.</param>
+        /// <param name="createExpressionBuilder">An expression that changes the data source expression builder</param>
+        /// <param name="options">Data processing settings when loading data.</param>
+        /// <returns>The load result.</returns>
+        public static LoadResult Load<T>(IQueryable<T> source, Func<DataSourceLoadContext, DataSourceExpressionBuilder<T>> createExpressionBuilder, DataSourceLoadOptionsBase options) {
+            return LoadAsync(source, createExpressionBuilder, options, CancellationToken.None, true).GetAwaiter().GetResult();
+        }
+
+
 
         /// <summary>
         /// Asynchronously loads data from a collection that implements the <see cref="System.Linq.IQueryable{T}"/> interface.
@@ -52,6 +65,10 @@ namespace DevExtreme.AspNet.Data {
 
         static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, DataSourceLoadOptionsBase options, CancellationToken ct, bool sync) {
             return new DataSourceLoaderImpl<T>(source, options, ct, sync).LoadAsync();
+        }
+
+        static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, Func<DataSourceLoadContext, DataSourceExpressionBuilder<T>> createBuilderExpression, DataSourceLoadOptionsBase options, CancellationToken ct, bool sync) {
+            return new DataSourceLoaderImpl<T>(source, createBuilderExpression, options, ct, sync).LoadAsync();
         }
 
     }
