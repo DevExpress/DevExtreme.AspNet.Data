@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace DevExtreme.AspNet.Data {
         /// <param name="createExpressionBuilder">An expression that changes the data source expression builder</param>
         /// <param name="options">Data processing settings when loading data.</param>
         /// <returns>The load result.</returns>
-        public static LoadResult Load<T>(IQueryable<T> source, Func<DataSourceLoadContext, DataSourceExpressionBuilder<T>> createExpressionBuilder, DataSourceLoadOptionsBase options) {
+        public static LoadResult Load<T>(IQueryable<T> source, Func<Expression, DataSourceLoadContext, DataSourceExpressionBuilder<T>> createExpressionBuilder, DataSourceLoadOptionsBase options) {
             return LoadAsync(source, createExpressionBuilder, options, CancellationToken.None, true).GetAwaiter().GetResult();
         }
 
@@ -67,7 +68,7 @@ namespace DevExtreme.AspNet.Data {
             return new DataSourceLoaderImpl<T>(source, options, ct, sync).LoadAsync();
         }
 
-        static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, Func<DataSourceLoadContext, DataSourceExpressionBuilder<T>> createBuilderExpression, DataSourceLoadOptionsBase options, CancellationToken ct, bool sync) {
+        static Task<LoadResult> LoadAsync<T>(IQueryable<T> source, Func<Expression, DataSourceLoadContext, DataSourceExpressionBuilder<T>> createBuilderExpression, DataSourceLoadOptionsBase options, CancellationToken ct, bool sync) {
             return new DataSourceLoaderImpl<T>(source, createBuilderExpression, options, ct, sync).LoadAsync();
         }
 
