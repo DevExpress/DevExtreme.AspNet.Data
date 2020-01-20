@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DevExtreme.AspNet.Data {
 
-    public static class Utils {
+    internal static class Utils {
 
         public static bool CanAssignNull(Type type) {
             return !type.GetTypeInfo().IsValueType || IsNullable(type);

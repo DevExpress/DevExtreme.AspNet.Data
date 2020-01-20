@@ -13,7 +13,7 @@ namespace DevExtreme.AspNet.Data {
         readonly QueryProviderInfo _providerInfo;
         readonly Type _itemType;
 
-        public DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType) {
+        internal DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType) {
             _options = options;
             _providerInfo = providerInfo;
             _itemType = itemType;
@@ -43,7 +43,7 @@ namespace DevExtreme.AspNet.Data {
             }
         }
 
-        public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
+        internal AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
             AllowEmpty = !_providerInfo.IsL2S,
             AllowUnusedMembers = !_providerInfo.IsL2S
         };
