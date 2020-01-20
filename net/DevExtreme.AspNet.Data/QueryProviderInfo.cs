@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DevExtreme.AspNet.Data {
 
-    class QueryProviderInfo {
+    public class QueryProviderInfo {
         public readonly bool IsLinqToObjects;
         public readonly bool IsEFClassic;
         public readonly bool IsEFCore;

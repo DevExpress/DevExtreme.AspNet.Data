@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data {
         readonly IQueryable<S> Source;
         readonly DataSourceLoadContext Context;
         readonly Func<Expression, ExpressionExecutor> CreateExecutor;
-        readonly DataSourceExpressionBuilder<S> CreateExpressionBuilder;
+        readonly DataSourceExpressionBuilder<S> createExpressionBuilder;
 
 #if DEBUG
         readonly Action<Expression> ExpressionWatcher;
@@ -34,7 +34,7 @@ namespace DevExtreme.AspNet.Data {
             Source = source;
             Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
             CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync);
-            this.CreateExpressionBuilder = createBuilderExpression(Context);
+            this.createExpressionBuilder = createBuilderExpression(Context);
 #if DEBUG
             ExpressionWatcher = options.ExpressionWatcher;
             UseEnumerableOnce = options.UseEnumerableOnce;
@@ -42,7 +42,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
 
-        DataSourceExpressionBuilder<S> CreateBuilder() => CreateExpressionBuilder;
+        DataSourceExpressionBuilder<S> CreateBuilder() => createExpressionBuilder;
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
