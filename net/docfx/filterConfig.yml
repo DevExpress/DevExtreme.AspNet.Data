@@ -1,5 +1,3 @@
 apiRules:
 - exclude:
-    uidRegex: ^DevExtreme\.AspNet\.Data\.Helpers\.CustomAccessorCompilers(\.|$)
-- exclude:
     uidRegex: ^System\.Object\.
