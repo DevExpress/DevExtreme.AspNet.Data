@@ -72,9 +72,8 @@ namespace DevExtreme.AspNet.Data {
             if(customAdapter != null)
                 return customAdapter;
 
-            var reflectionAdapter = new ReflectionAsyncAdapter(ProviderInfo);
-            if(reflectionAdapter.IsSupportedProvider)
-                return reflectionAdapter;
+            if(ReflectionAsyncAdapter.SupportsProvider(ProviderInfo))
+                return new ReflectionAsyncAdapter(ProviderInfo);
 
             if(AllowAsyncOverSync)
                 return AsyncOverSyncAdapter.Instance;

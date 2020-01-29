@@ -9,31 +9,33 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Async {
 
     class ReflectionAsyncAdapter : IAsyncAdapter {
-        QueryProviderInfo _providerInfo;
+        readonly QueryProviderInfo _providerInfo;
+
+        public static bool SupportsProvider(QueryProviderInfo providerInfo)
+            => providerInfo.IsEFCore
+            || IsEF6(providerInfo)
+            || providerInfo.IsNH
+            || providerInfo.IsXPO;
+
+        static bool IsEF6(QueryProviderInfo providerInfo)
+            => providerInfo.IsEFClassic && providerInfo.Version.Major >= 6;
 
         public ReflectionAsyncAdapter(QueryProviderInfo providerInfo) {
             _providerInfo = providerInfo;
         }
 
-        bool IsEF6 => _providerInfo.IsEFClassic && _providerInfo.Version.Major >= 6;
-        bool IsEFCore => _providerInfo.IsEFCore;
-        bool IsNH => _providerInfo.IsNH;
-        bool IsXPO => _providerInfo.IsXPO;
-
-        public bool IsSupportedProvider => IsEFCore || IsEF6 || IsNH || IsXPO;
-
         public Task<int> CountAsync(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
             MethodInfo GetCountAsyncMethod() {
-                if(IsEFCore)
+                if(_providerInfo.IsEFCore)
                     return EFCoreMethods.CountAsyncMethod;
 
-                if(IsEF6)
+                if(IsEF6(_providerInfo))
                     return EF6Methods.CountAsyncMethod;
 
-                if(IsNH)
+                if(_providerInfo.IsNH)
                     return NHMethods.CountAsyncMethod;
 
-                if(IsXPO)
+                if(_providerInfo.IsXPO)
                     return XpoMethods.CountAsyncMethod;
 
                 throw new NotSupportedException();
@@ -43,16 +45,16 @@ namespace DevExtreme.AspNet.Data.Async {
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
-            if(IsEFCore)
+            if(_providerInfo.IsEFCore)
                 return InvokeToListAsync<T>(EFCoreMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsEF6)
+            if(IsEF6(_providerInfo))
                 return InvokeToListAsync<T>(EF6Methods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsNH)
+            if(_providerInfo.IsNH)
                 return InvokeToListAsync<T>(NHMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsXPO)
+            if(_providerInfo.IsXPO)
                 return InvokeToArrayAsync<T>(XpoMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
             throw new NotSupportedException();
