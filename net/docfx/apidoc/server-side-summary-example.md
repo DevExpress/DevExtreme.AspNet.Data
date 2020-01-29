@@ -13,4 +13,4 @@ CustomAggregators.RegisterAggregator("totalSales", typeof(TotalSalesAggregator<>
 ```
 
 > [!Important]
-> Custom aggregators are ignored if the LINQ provider groups data and calculates summaries. Set [`RemoteGrouping`](xref:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping) to `false` for custom aggregators to apply.
+> Custom aggregators are ignored if the LINQ provider groups data and calculates summaries. Set [RemoteGrouping](xref:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.RemoteGrouping) to `false` for custom aggregators to apply.
