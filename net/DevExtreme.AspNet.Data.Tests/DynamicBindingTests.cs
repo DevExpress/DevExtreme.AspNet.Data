@@ -270,6 +270,23 @@ namespace DevExtreme.AspNet.Data.Tests {
                 RequireTotalCount = true
             }).totalCount);
         }
+
+        [Fact]
+        public void Issue413() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/413#issuecomment-580766581
+
+            IQueryable<object> projection = new[] { new { A = 1 } }
+                .AsQueryable()
+                .Select(i => new { i.A });
+
+            var loadResult = DataSourceLoader.Load(projection, new SampleLoadOptions {
+                Filter = new[] { "A", "1" }
+            });
+
+            var error = Record.Exception(() => loadResult.data.Cast<object>().ToArray());
+
+            Assert.Contains("'object' does not contain a definition for 'A'", error.Message);
+        }
     }
 
 }
