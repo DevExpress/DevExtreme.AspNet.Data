@@ -215,7 +215,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void NoToStringForNumbers() {
-            var compiler = new FilterExpressionCompiler<dynamic>(false);
+            var compiler = new FilterExpressionCompiler(typeof(object), false);
 
             void Case(IList clientFilter, string expectedExpr, object trueTestValue) {
                 var expr = compiler.Compile(clientFilter);

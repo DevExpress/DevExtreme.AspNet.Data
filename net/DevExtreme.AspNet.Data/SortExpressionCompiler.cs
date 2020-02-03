@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class SortExpressionCompiler<T> : ExpressionCompiler {
+    class SortExpressionCompiler : ExpressionCompiler {
 
-        public SortExpressionCompiler(bool guardNulls)
-            : base(guardNulls) {
+        public SortExpressionCompiler(Type itemType, bool guardNulls)
+            : base(itemType, guardNulls) {
         }
 
         public Expression Compile(Expression target, IEnumerable<SortingInfo> clientExprList) {
-            var dataItemExpr = CreateItemParam(typeof(T));
+            var dataItemExpr = CreateItemParam();
             var first = true;
 
             foreach(var item in clientExprList) {
@@ -23,7 +23,7 @@ namespace DevExtreme.AspNet.Data {
 
                 var accessorExpr = CompileAccessorExpression(dataItemExpr, selector);
 
-                target = Expression.Call(typeof(Queryable), Utils.GetSortMethod(first, item.Desc), new[] { typeof(T), accessorExpr.Type }, target, Expression.Quote(Expression.Lambda(accessorExpr, dataItemExpr)));
+                target = Expression.Call(typeof(Queryable), Utils.GetSortMethod(first, item.Desc), new[] { ItemType, accessorExpr.Type }, target, Expression.Quote(Expression.Lambda(accessorExpr, dataItemExpr)));
                 first = false;
             }
 

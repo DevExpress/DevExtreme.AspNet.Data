@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Tests {
     public class SelectExpressionCompilerTests {
 
         Expression Compile<T>(params string[] selectors) {
-            return new SelectExpressionCompiler<T>(false).Compile(
+            return new SelectExpressionCompiler(typeof(T), false).Compile(
                 Expression.Parameter(typeof(IQueryable<T>), "data"),
                 selectors
             );

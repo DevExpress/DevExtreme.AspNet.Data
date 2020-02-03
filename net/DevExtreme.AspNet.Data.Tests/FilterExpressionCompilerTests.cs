@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         LambdaExpression Compile<T>(IList criteria, bool guardNulls = false) {
-            return new FilterExpressionCompiler<T>(guardNulls).Compile(criteria);
+            return new FilterExpressionCompiler(typeof(T), guardNulls).Compile(criteria);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void IsUnaryWithJsonCriteria() {
             var crit = JsonConvert.DeserializeObject<IList>("[\"!\", []]");
-            var compiler = new FilterExpressionCompiler<object>(false);
+            var compiler = new FilterExpressionCompiler(typeof(object), false);
             Assert.True(compiler.IsUnary(crit));
         }
 
