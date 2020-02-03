@@ -280,12 +280,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 .Select(i => new { i.A });
 
             var loadResult = DataSourceLoader.Load(projection, new SampleLoadOptions {
-                Filter = new[] { "A", "1" }
+                Filter = new[] { "A", "1" },
+                RequireTotalCount = true
             });
 
-            var error = Record.Exception(() => loadResult.data.Cast<object>().ToArray());
-
-            Assert.Contains("'object' does not contain a definition for 'A'", error.Message);
+            Assert.Equal(1, loadResult.totalCount);
         }
     }
 
