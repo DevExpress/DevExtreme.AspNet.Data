@@ -38,7 +38,7 @@ namespace DevExtreme.AspNet.Data {
 #endif
         }
 
-        DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
+        DataSourceExpressionBuilder CreateBuilder() => new DataSourceExpressionBuilder(Source.Expression, Context);
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)

@@ -17,13 +17,13 @@ namespace DevExtreme.AspNet.Data.Tests {
             return text.Append(")").ToString();
         }
 
-        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options) {
+        public static DataSourceExpressionBuilder CreateDataSourceExpressionBuilder<T>(DataSourceLoadOptionsBase options) {
             var source = new EnumerableQuery<T>(Expression.Parameter(typeof(IQueryable<T>), "data"));
             return CreateDataSourceExpressionBuilder(source, options);
         }
 
-        public static DataSourceExpressionBuilder<T> CreateDataSourceExpressionBuilder<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
-            return new DataSourceExpressionBuilder<T>(
+        public static DataSourceExpressionBuilder CreateDataSourceExpressionBuilder<T>(IQueryable<T> source, DataSourceLoadOptionsBase options) {
+            return new DataSourceExpressionBuilder(
                 source.Expression,
                 new DataSourceLoadContext(
                     options,
