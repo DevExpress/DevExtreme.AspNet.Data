@@ -12,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         class SampleCompiler : ExpressionCompiler {
 
             public SampleCompiler(bool guardNulls)
-                : base(guardNulls) {
+                : base(null, guardNulls) {
             }
 
         }

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     class DataSourceLoaderImpl<S> {
-        readonly IQueryable<S> Source;
+        readonly IQueryable Source;
         readonly DataSourceLoadContext Context;
         readonly Func<Expression, ExpressionExecutor> CreateExecutor;
 
@@ -25,11 +25,11 @@ namespace DevExtreme.AspNet.Data {
         readonly bool UseEnumerableOnce;
 #endif
 
-        public DataSourceLoaderImpl(IQueryable<S> source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
+        public DataSourceLoaderImpl(IQueryable source, DataSourceLoadOptionsBase options, CancellationToken cancellationToken, bool sync) {
             var providerInfo = new QueryProviderInfo(source.Provider);
 
             Source = source;
-            Context = new DataSourceLoadContext(options, providerInfo, typeof(S));
+            Context = new DataSourceLoadContext(options, providerInfo, Source.ElementType);
             CreateExecutor = expr => new ExpressionExecutor(Source.Provider, expr, providerInfo, cancellationToken, sync, options.AllowAsyncOverSync);
 
 #if DEBUG
@@ -38,7 +38,7 @@ namespace DevExtreme.AspNet.Data {
 #endif
         }
 
-        DataSourceExpressionBuilder<S> CreateBuilder() => new DataSourceExpressionBuilder<S>(Source.Expression, Context);
+        DataSourceExpressionBuilder CreateBuilder() => new DataSourceExpressionBuilder(Source.Expression, Context);
 
         public async Task<LoadResult> LoadAsync() {
             if(Context.IsCountQuery)
@@ -179,7 +179,7 @@ namespace DevExtreme.AspNet.Data {
 
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging, bool suppressGroups, bool suppressTotals) {
             return RemoteGroupTransformer.Run(
-                typeof(S),
+                Source.ElementType,
                 await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(remotePaging, suppressGroups, suppressTotals)),
                 !suppressGroups && Context.HasGroups ? Context.Group.Count : 0,
                 !suppressTotals ? Context.TotalSummary : null,

@@ -8,11 +8,11 @@ using System.Text;
 
 namespace DevExtreme.AspNet.Data {
 
-    class SelectExpressionCompiler<T> : ExpressionCompiler {
+    class SelectExpressionCompiler : ExpressionCompiler {
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public SelectExpressionCompiler(bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks = null)
-            : base(guardNulls) {
+        public SelectExpressionCompiler(Type itemType, bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks = null)
+            : base(itemType, guardNulls) {
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 
@@ -23,7 +23,7 @@ namespace DevExtreme.AspNet.Data {
             => Compile(target, new[] { clientExpr }, false);
 
         Expression Compile(Expression target, IEnumerable<string> clientExprList, bool useNew) {
-            var itemExpr = CreateItemParam(typeof(T));
+            var itemExpr = CreateItemParam();
 
             var memberExprList = clientExprList
                 .Select(i => CompileAccessorExpression(itemExpr, i, liftToNullable: true))

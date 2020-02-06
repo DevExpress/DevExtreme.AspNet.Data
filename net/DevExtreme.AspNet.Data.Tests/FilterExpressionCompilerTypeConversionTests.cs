@@ -10,7 +10,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         const string TEST_GUID = "01234567-0123-0123-0123-012345670000";
 
         void AssertEvaluation<T>(T dataItem, params object[] clientFilter) {
-            var expr = new FilterExpressionCompiler<T>(false).Compile(clientFilter);
+            var expr = new FilterExpressionCompiler(typeof(T), false).Compile(clientFilter);
             Assert.True((bool)expr.Compile().DynamicInvoke(dataItem));
         }
 
@@ -161,7 +161,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void InvalidValueHandling() {
-            var compiler = new FilterExpressionCompiler<Structs>(false);
+            var compiler = new FilterExpressionCompiler(typeof(Structs), false);
 
             Assert.Equal("False", compiler.Compile(new[] { "byte", "-3" }).Body.ToString());
             Assert.Equal("False", compiler.Compile(new[] { "byte", "257" }).Body.ToString());

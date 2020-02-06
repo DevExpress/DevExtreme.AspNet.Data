@@ -215,7 +215,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void NoToStringForNumbers() {
-            var compiler = new FilterExpressionCompiler<dynamic>(false);
+            var compiler = new FilterExpressionCompiler(typeof(object), false);
 
             void Case(IList clientFilter, string expectedExpr, object trueTestValue) {
                 var expr = compiler.Compile(clientFilter);
@@ -269,6 +269,22 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Filter = new[] { "p", "11/11/2011" },
                 RequireTotalCount = true
             }).totalCount);
+        }
+
+        [Fact]
+        public void Issue413() {
+            // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/413#issuecomment-580766581
+
+            IQueryable<object> projection = new[] { new { A = 1 } }
+                .AsQueryable()
+                .Select(i => new { i.A });
+
+            var loadResult = DataSourceLoader.Load(projection, new SampleLoadOptions {
+                Filter = new[] { "A", "1" },
+                RequireTotalCount = true
+            });
+
+            Assert.Equal(1, loadResult.totalCount);
         }
     }
 

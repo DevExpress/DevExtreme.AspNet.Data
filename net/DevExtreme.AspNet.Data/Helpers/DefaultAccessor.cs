@@ -9,7 +9,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         IDictionary<string, Func<T, object>> _accessors;
 
         public DefaultAccessor()
-            : base(true) {
+            : base(typeof(T), true) {
         }
 
         public object Read(T obj, string selector) {
@@ -17,7 +17,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
                 _accessors = new Dictionary<string, Func<T, object>>();
 
             if(!_accessors.ContainsKey(selector)) {
-                var param = CreateItemParam(typeof(T));
+                var param = CreateItemParam();
 
                 _accessors[selector] = Expression.Lambda<Func<T, object>>(
                     Expression.Convert(CompileAccessorExpression(param, selector), typeof(Object)),
