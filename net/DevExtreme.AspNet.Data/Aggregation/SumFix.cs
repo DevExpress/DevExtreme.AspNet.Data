@@ -13,14 +13,12 @@ namespace DevExtreme.AspNet.Data.Aggregation {
     // https://en.wikipedia.org/wiki/Empty_sum
 
     class SumFix : ExpressionCompiler {
-        Expression _typeParam;
         IReadOnlyList<SummaryInfo> _totalSummary;
         IReadOnlyList<SummaryInfo> _groupSummary;
         IDictionary<string, object> _defaultValues;
 
-        public SumFix(Type type, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary)
-            : base(false) {
-            _typeParam = Expression.Parameter(type);
+        public SumFix(Type itemType, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary)
+            : base(itemType, false) {
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
         }
@@ -54,7 +52,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
                 _defaultValues = new Dictionary<string, object>();
 
             if(!_defaultValues.ContainsKey(selector)) {
-                var expr = CompileAccessorExpression(_typeParam, selector);
+                var expr = CompileAccessorExpression(CreateItemParam(), selector);
                 var acc = AccumulatorFactory.Create(Utils.StripNullableType(expr.Type));
                 _defaultValues[selector] = acc.GetValue();
             }

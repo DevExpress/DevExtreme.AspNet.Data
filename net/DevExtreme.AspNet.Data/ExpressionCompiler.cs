@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data {
 
     abstract class ExpressionCompiler {
-        bool _guardNulls;
+        protected readonly Type ItemType;
+        protected readonly bool GuardNulls;
 
-        public ExpressionCompiler(bool guardNulls) {
-            _guardNulls = guardNulls;
-        }
-
-        protected bool GuardNulls {
-            get { return _guardNulls; }
+        public ExpressionCompiler(Type itemType, bool guardNulls) {
+            ItemType = itemType;
+            GuardNulls = guardNulls;
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
@@ -53,7 +51,7 @@ namespace DevExtreme.AspNet.Data {
 
             customizeProgression?.Invoke(progression);
 
-            if(_guardNulls && progression.Count > 1 || liftToNullable && progression.Count > 2) {
+            if(GuardNulls && progression.Count > 1 || liftToNullable && progression.Count > 2) {
                 var lastIndex = progression.Count - 1;
                 var last = progression[lastIndex];
                 if(Utils.CanAssignNull(target.Type) && !Utils.CanAssignNull(last.Type))
@@ -67,7 +65,7 @@ namespace DevExtreme.AspNet.Data {
             var last = progression.Last();
             var lastType = last.Type;
 
-            if(!_guardNulls)
+            if(!GuardNulls)
                 return last;
 
             Expression allTests = null;
@@ -97,8 +95,8 @@ namespace DevExtreme.AspNet.Data {
             );
         }
 
-        protected ParameterExpression CreateItemParam(Type type) {
-            return Expression.Parameter(type, "obj");
+        protected ParameterExpression CreateItemParam() {
+            return Expression.Parameter(ItemType, "obj");
         }
 
         internal static void ForceToString(List<Expression> progression) {

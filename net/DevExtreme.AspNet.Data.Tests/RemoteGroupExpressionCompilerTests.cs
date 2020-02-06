@@ -24,7 +24,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Compile() {
-            var compiler = new RemoteGroupExpressionCompiler<DataItem>(
+            var compiler = new RemoteGroupExpressionCompiler(
+                typeof(DataItem),
                 new[] {
                     new GroupingInfo { Selector = "G1" },
                     new GroupingInfo { Selector = "G2", Desc = true }
@@ -83,7 +84,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void CompileEmpty() {
-            var expr = new RemoteGroupExpressionCompiler<DataItem>(null, null, null).Compile(CreateTargetParam<DataItem>());
+            var expr = new RemoteGroupExpressionCompiler(typeof(DataItem), null, null, null).Compile(CreateTargetParam<DataItem>());
             Assert.Equal(
                 "data"
                     + ".GroupBy(obj => new AnonType())"
@@ -94,7 +95,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void IgnoreGroupSummaryIfNoGroups() {
-            var compiler = new RemoteGroupExpressionCompiler<DataItem>(null, null, new[] {
+            var compiler = new RemoteGroupExpressionCompiler(typeof(DataItem), null, null, new[] {
                 new SummaryInfo { Selector = "ignore me", SummaryType = "ignore me" }
             });
 
@@ -105,8 +106,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void GroupInterval_Numeric() {
 
             string Compile<T>(string selector, bool guardNulls) {
-                var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls, false, null,
+                var compiler = new RemoteGroupExpressionCompiler(
+                    typeof(T), guardNulls, false, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "123" }
                     },
@@ -129,8 +130,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void GroupInterval_Date() {
 
             string Compile<T>(string selector, bool guardNulls) {
-                var compiler = new RemoteGroupExpressionCompiler<T>(
-                    guardNulls, false, null,
+                var compiler = new RemoteGroupExpressionCompiler(
+                    typeof(T), guardNulls, false, null,
                     new[] {
                         new GroupingInfo { Selector = selector, GroupInterval = "year" },
                         new GroupingInfo { Selector = selector, GroupInterval = "quarter" },
@@ -204,7 +205,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         void Bug100Core<T>(params string[] memberNames) {
-            var compiler = new RemoteGroupExpressionCompiler<T>(
+            var compiler = new RemoteGroupExpressionCompiler(
+                typeof(T),
                 memberNames.Select(i => new GroupingInfo { Selector = i }).ToArray(),
                 null,
                 null
@@ -218,7 +220,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GetSumType_ExpandFalse() {
-            Type GetSumType<T>() => RemoteGroupExpressionCompiler<object>.GetSumType(typeof(T), false);
+            Type GetSumType<T>() => RemoteGroupExpressionCompiler.GetSumType(typeof(T), false);
 
             // Validation: check lambda type in new T[0].Sum(i => i)
 
@@ -241,7 +243,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GetSumType_ExpandTrue() {
-            Type GetSumType<T>() => RemoteGroupExpressionCompiler<object>.GetSumType(typeof(T), true);
+            Type GetSumType<T>() => RemoteGroupExpressionCompiler.GetSumType(typeof(T), true);
 
             // Don't convert integer types to decimal because SQL decimals have variable precision
             // Except for UInt64 for which there is no better choice
