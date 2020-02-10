@@ -9,62 +9,55 @@ using System.Threading.Tasks;
 namespace DevExtreme.AspNet.Data.Async {
 
     class ReflectionAsyncAdapter : IAsyncAdapter {
-        QueryProviderInfo _providerInfo;
+        readonly QueryProviderInfo _providerInfo;
+
+        public static bool SupportsProvider(QueryProviderInfo providerInfo)
+            => providerInfo.IsEFCore
+            || IsEF6(providerInfo)
+            || providerInfo.IsNH
+            || providerInfo.IsXPO;
+
+        static bool IsEF6(QueryProviderInfo providerInfo)
+            => providerInfo.IsEFClassic && providerInfo.Version.Major >= 6;
 
         public ReflectionAsyncAdapter(QueryProviderInfo providerInfo) {
             _providerInfo = providerInfo;
         }
 
-        bool IsEF6 => _providerInfo.IsEFClassic && _providerInfo.Version.Major >= 6;
-        bool IsEFCore => _providerInfo.IsEFCore;
-        bool IsNH => _providerInfo.IsNH;
-        bool IsXPO => _providerInfo.IsXPO;
-
         public Task<int> CountAsync(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
             MethodInfo GetCountAsyncMethod() {
-                if(IsEFCore)
+                if(_providerInfo.IsEFCore)
                     return EFCoreMethods.CountAsyncMethod;
 
-                if(IsEF6)
+                if(IsEF6(_providerInfo))
                     return EF6Methods.CountAsyncMethod;
 
-                if(IsNH)
+                if(_providerInfo.IsNH)
                     return NHMethods.CountAsyncMethod;
 
-                if(IsXPO)
+                if(_providerInfo.IsXPO)
                     return XpoMethods.CountAsyncMethod;
 
-                throw ProviderNotSupported(provider);
+                throw new NotSupportedException();
             }
 
             return InvokeCountAsync(GetCountAsyncMethod(), provider, expr, cancellationToken);
         }
 
         public Task<IEnumerable<T>> ToEnumerableAsync<T>(IQueryProvider provider, Expression expr, CancellationToken cancellationToken) {
-            if(IsEFCore)
+            if(_providerInfo.IsEFCore)
                 return InvokeToListAsync<T>(EFCoreMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsEF6)
+            if(IsEF6(_providerInfo))
                 return InvokeToListAsync<T>(EF6Methods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsNH)
+            if(_providerInfo.IsNH)
                 return InvokeToListAsync<T>(NHMethods.ToListAsyncMethod, provider, expr, cancellationToken);
 
-            if(IsXPO)
+            if(_providerInfo.IsXPO)
                 return InvokeToArrayAsync<T>(XpoMethods.ToArrayAsyncMethod, provider, expr, cancellationToken);
 
-            throw ProviderNotSupported(provider);
-        }
-
-        static Exception ProviderNotSupported(IQueryProvider provider) {
-            var providerType = provider.GetType();
-            if(providerType.IsGenericType)
-                providerType = providerType.GetGenericTypeDefinition();
-
-            var message = $"Async operations for the LINQ provider '{providerType.FullName}' are not supported."
-                + $" You can implement a custom async adapter ({typeof(IAsyncAdapter).FullName}) and register it via '{typeof(CustomAsyncAdapters).FullName}.{nameof(CustomAsyncAdapters.RegisterAdapter)}'.";
-
-            return new NotSupportedException(message);
+            throw new NotSupportedException();
         }
 
         static class EF6Methods {
