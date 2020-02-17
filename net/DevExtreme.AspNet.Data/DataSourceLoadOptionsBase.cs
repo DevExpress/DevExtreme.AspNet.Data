@@ -110,6 +110,8 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? PaginateViaPrimaryKey { get; set; }
 
+        public bool? SortByPrimaryKey { get; set; }
+
         public bool AllowAsyncOverSync { get; set; }
 
 #if DEBUG

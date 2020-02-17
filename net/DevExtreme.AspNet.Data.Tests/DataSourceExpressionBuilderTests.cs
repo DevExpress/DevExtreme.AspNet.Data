@@ -87,6 +87,39 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void SortByPrimaryKey() {
+
+            void Case(Action<DataSourceLoadOptionsBase> initOptions, Action<string> assert) {
+                var source = new[] {
+                    new { ID = 1, Value = "A" }
+                };
+
+                var loadOptions = new SampleLoadOptions {
+                    GuardNulls = false,
+                    PrimaryKey = new[] { "ID" },
+                    SortByPrimaryKey = false
+                };
+
+                initOptions?.Invoke(loadOptions);
+
+                assert(Compat.CreateDataSourceExpressionBuilder(source.AsQueryable(), loadOptions).BuildLoadExpr().ToString());
+            }
+
+            Case(
+                null,
+                expr => Assert.DoesNotContain("OrderBy", expr)
+            );
+
+            Case(
+                options => options.DefaultSort = "Value",
+                expr => {
+                    Assert.Contains(".OrderBy(obj => obj.Value)", expr);
+                    Assert.DoesNotContain("ThenBy", expr);
+                }
+            );
+        }
+
+        [Fact]
         public void GroupingAddedToSorting() {
             var loadOptions = new SampleLoadOptions {
                 Sort = new[] {
