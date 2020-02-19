@@ -138,7 +138,7 @@ namespace DevExtreme.AspNet.Data {
         string[] _primaryKey;
         string _defaultSort;
 
-        public bool HasAnySort => HasGroups || HasSort || HasPrimaryKey || HasDefaultSort;
+        public bool HasAnySort => HasGroups || HasSort || ShouldSortByPrimaryKey || HasDefaultSort;
 
         bool HasSort => !IsEmpty(_options.Sort);
 
@@ -159,6 +159,8 @@ namespace DevExtreme.AspNet.Data {
         public bool HasPrimaryKey => !IsEmpty(PrimaryKey);
 
         bool HasDefaultSort => !String.IsNullOrEmpty(DefaultSort);
+
+        bool ShouldSortByPrimaryKey => HasPrimaryKey && _options.SortByPrimaryKey.GetValueOrDefault(true);
 
         public IEnumerable<SortingInfo> GetFullSort() {
             var memo = new HashSet<string>();
@@ -189,7 +191,7 @@ namespace DevExtreme.AspNet.Data {
             if(HasDefaultSort)
                 requiredSort = requiredSort.Concat(new[] { DefaultSort });
 
-            if(HasPrimaryKey)
+            if(ShouldSortByPrimaryKey)
                 requiredSort = requiredSort.Concat(PrimaryKey);
 
             return Utils.AddRequiredSort(result, requiredSort);
