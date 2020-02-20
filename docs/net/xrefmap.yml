@@ -246,6 +246,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.#ctor
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DataSourceLoadOptionsBase
   nameWithType: DataSourceLoadOptionsBase.DataSourceLoadOptionsBase
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync
+  name: AllowAsyncOverSync
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_AllowAsyncOverSync
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync
+  nameWithType: DataSourceLoadOptionsBase.AllowAsyncOverSync
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync*
+  name: AllowAsyncOverSync
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_AllowAsyncOverSync_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.AllowAsyncOverSync
+  nameWithType: DataSourceLoadOptionsBase.AllowAsyncOverSync
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   name: DefaultSort
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_DefaultSort
@@ -258,6 +270,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.DefaultSort
   nameWithType: DataSourceLoadOptionsBase.DefaultSort
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType
+  name: ExpandLinqSumType
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_ExpandLinqSumType
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType
+  nameWithType: DataSourceLoadOptionsBase.ExpandLinqSumType
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType*
+  name: ExpandLinqSumType
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_ExpandLinqSumType_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.ExpandLinqSumType
+  nameWithType: DataSourceLoadOptionsBase.ExpandLinqSumType
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Filter
   name: Filter
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_Filter
@@ -426,6 +450,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
   fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.Sort
   nameWithType: DataSourceLoadOptionsBase.Sort
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey
+  name: SortByPrimaryKey
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_SortByPrimaryKey
+  commentId: P:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey
+  nameWithType: DataSourceLoadOptionsBase.SortByPrimaryKey
+- uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey*
+  name: SortByPrimaryKey
+  href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_SortByPrimaryKey_
+  commentId: Overload:DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey
+  fullName: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.SortByPrimaryKey
+  nameWithType: DataSourceLoadOptionsBase.SortByPrimaryKey
 - uid: DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.StringToLower
   name: StringToLower
   href: api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_StringToLower
@@ -534,6 +570,78 @@ references:
   commentId: N:DevExtreme.AspNet.Data.Helpers
   fullName: DevExtreme.AspNet.Data.Helpers
   nameWithType: DevExtreme.AspNet.Data.Helpers
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers
+  name: CustomAccessorCompilers
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.html
+  commentId: T:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers
+  nameWithType: CustomAccessorCompilers
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc
+  name: CustomAccessorCompilers.CompilerFunc
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html
+  commentId: T:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc
+  nameWithType: CustomAccessorCompilers.CompilerFunc
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.#ctor(System.Object,System.IntPtr)
+  name: CompilerFunc(Object, IntPtr)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc__ctor_System_Object_System_IntPtr_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.#ctor(System.Object,System.IntPtr)
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.CompilerFunc(System.Object, System.IntPtr)
+  nameWithType: CustomAccessorCompilers.CompilerFunc.CompilerFunc(Object, IntPtr)
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.#ctor*
+  name: CompilerFunc
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc__ctor_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.#ctor
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.CompilerFunc
+  nameWithType: CustomAccessorCompilers.CompilerFunc.CompilerFunc
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke(System.Linq.Expressions.Expression,System.String,System.AsyncCallback,System.Object)
+  name: BeginInvoke(Expression, String, AsyncCallback, Object)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_BeginInvoke_System_Linq_Expressions_Expression_System_String_System_AsyncCallback_System_Object_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke(System.Linq.Expressions.Expression,System.String,System.AsyncCallback,System.Object)
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke(System.Linq.Expressions.Expression, System.String, System.AsyncCallback, System.Object)
+  nameWithType: CustomAccessorCompilers.CompilerFunc.BeginInvoke(Expression, String, AsyncCallback, Object)
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke*
+  name: BeginInvoke
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_BeginInvoke_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.BeginInvoke
+  nameWithType: CustomAccessorCompilers.CompilerFunc.BeginInvoke
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke(System.IAsyncResult)
+  name: EndInvoke(IAsyncResult)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_EndInvoke_System_IAsyncResult_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke(System.IAsyncResult)
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke(System.IAsyncResult)
+  nameWithType: CustomAccessorCompilers.CompilerFunc.EndInvoke(IAsyncResult)
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke*
+  name: EndInvoke
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_EndInvoke_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.EndInvoke
+  nameWithType: CustomAccessorCompilers.CompilerFunc.EndInvoke
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke(System.Linq.Expressions.Expression,System.String)
+  name: Invoke(Expression, String)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_Invoke_System_Linq_Expressions_Expression_System_String_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke(System.Linq.Expressions.Expression,System.String)
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke(System.Linq.Expressions.Expression, System.String)
+  nameWithType: CustomAccessorCompilers.CompilerFunc.Invoke(Expression, String)
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke*
+  name: Invoke
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_Invoke_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.Invoke
+  nameWithType: CustomAccessorCompilers.CompilerFunc.Invoke
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register(DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc)
+  name: Register(CustomAccessorCompilers.CompilerFunc)
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_Register_DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_
+  commentId: M:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register(DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc)
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register(DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc)
+  nameWithType: CustomAccessorCompilers.Register(CustomAccessorCompilers.CompilerFunc)
+- uid: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register*
+  name: Register
+  href: api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.html#DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_Register_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register
+  fullName: DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register
+  nameWithType: CustomAccessorCompilers.Register
 - uid: DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers
   name: CustomFilterCompilers
   href: api/DevExtreme.AspNet.Data.Helpers.CustomFilterCompilers.html

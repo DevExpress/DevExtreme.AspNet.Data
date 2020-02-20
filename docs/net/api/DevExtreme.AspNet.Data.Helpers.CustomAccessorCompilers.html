@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CustomAggregators
+    <title>Class CustomAccessorCompilers
    | DevExtreme.AspNet.Data Documentation </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CustomAggregators
+    <meta name="title" content="Class CustomAccessorCompilers
    | DevExtreme.AspNet.Data Documentation ">
     <meta name="generator" content="docfx 2.27.0.0">
     
@@ -68,65 +68,38 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="DevExtreme.AspNet.Data.Aggregation.CustomAggregators">
+            <article class="content wrap" id="_content" data-uid="DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers">
   
   
-  <h1 id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators" data-uid="DevExtreme.AspNet.Data.Aggregation.CustomAggregators" class="text-break">Class CustomAggregators
+  <h1 id="DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers" data-uid="DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers" class="text-break">Class CustomAccessorCompilers
   </h1>
-  <div class="markdown level0 summary"><p>Provides methods that manipulate custom aggregators.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://msdn.microsoft.com/en-us/library/system.object(v=vs.110).aspx">Object</a></div>
-    <div class="level1"><span class="xref">CustomAggregators</span></div>
+    <div class="level1"><span class="xref">CustomAccessorCompilers</span></div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="DevExtreme.AspNet.Data.Aggregation.html">DevExtreme.AspNet.Data.Aggregation</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DevExtreme.AspNet.Data.Helpers.html">DevExtreme.AspNet.Data.Helpers</a></h6>
   <h6><strong>Assembly</strong>: DevExtreme.AspNet.Data.dll</h6>
-  <h5 id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators_syntax">Syntax</h5>
+  <h5 id="DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class CustomAggregators</code></pre>
+    <pre><code class="lang-csharp hljs">public static class CustomAccessorCompilers</code></pre>
   </div>
-  <h5 id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>When implementing a custom data aggregator, derive it from the <a class="xref" href="DevExtreme.AspNet.Data.Aggregation.Aggregator-1.html"><code>Aggregator&lt;T&gt;</code></a> class as shown in the following example. The custom aggregator in it calculates total sales:</p>
-<pre><code class="lang-csharp" name="Main">class TotalSalesAggregator&lt;T&gt; : Aggregator&lt;T&gt; {
-    decimal _total = 0;
-
-    public TotalSalesAggregator(IAccessor&lt;T&gt; accessor)
-        : base(accessor) {
-    }
-
-    public override void Step(T container, string selector) {
-        var quantity = Convert.ToInt32(Accessor.Read(container, &quot;Quantity&quot;));
-        var unitPrice = Convert.ToDecimal(Accessor.Read(container, &quot;UnitPrice&quot;));
-        var discount = Convert.ToDecimal(Accessor.Read(container, &quot;Discount&quot;));
-        _total += quantity * unitPrice * (1 - discount);
-    }
-
-    public override object Finish() {
-        return _total;
-    }
-}
-</code></pre><p>Then, register the aggregator under a string identifier at the application&#39;s start (for instance, in Global.asax or Startup.cs):</p>
-<pre><code class="lang-csharp">CustomAggregators.RegisterAggregator(&quot;totalSales&quot;, typeof(TotalSalesAggregator&lt;&gt;));
-</code></pre><div class="IMPORTANT"><h5>Important</h5><p>Custom aggregators are ignored if the LINQ provider groups data and calculates summaries. Set <a class="xref" href="DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html#DevExtreme_AspNet_Data_DataSourceLoadOptionsBase_RemoteGrouping">RemoteGrouping</a> to <code>false</code> for custom aggregators to apply.</p>
-</div>
-</div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_Aggregation_CustomAggregators_RegisterAggregator_System_String_System_Type_.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator(System.String%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_Register_DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register(DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   
-  <a id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators_RegisterAggregator_" data-uid="DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator*"></a>
-  <h4 id="DevExtreme_AspNet_Data_Aggregation_CustomAggregators_RegisterAggregator_System_String_System_Type_" data-uid="DevExtreme.AspNet.Data.Aggregation.CustomAggregators.RegisterAggregator(System.String,System.Type)">RegisterAggregator(String, Type)</h4>
-  <div class="markdown level1 summary"><p>Registers a custom aggregator.</p>
-</div>
+  <a id="DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_Register_" data-uid="DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register*"></a>
+  <h4 id="DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_Register_DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers_CompilerFunc_" data-uid="DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.Register(DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc)">Register(CustomAccessorCompilers.CompilerFunc)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void RegisterAggregator(string summaryType, Type aggregatorType)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void Register(CustomAccessorCompilers.CompilerFunc compilerFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -139,16 +112,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://msdn.microsoft.com/en-us/library/system.string(v=vs.110).aspx">String</a></td>
-        <td><span class="parametername">summaryType</span></td>
-        <td><p>The aggregator&apos;s string identifier.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://msdn.microsoft.com/en-us/library/system.type(v=vs.110).aspx">Type</a></td>
-        <td><span class="parametername">aggregatorType</span></td>
-        <td><p>The aggregator&apos;s type declaration without the generic type parameter T.</p>
-</td>
+        <td><a class="xref" href="DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html">CustomAccessorCompilers.CompilerFunc</a></td>
+        <td><span class="parametername">compilerFunc</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -160,7 +126,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/net/docfx/#L2" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/DevExpress/DevExtreme.AspNet.Data/new/master/net/docfx/apidoc/new?filename=DevExtreme_AspNet_Data_Helpers_CustomAccessorCompilers.md&amp;value=---%0Auid%3A%20DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

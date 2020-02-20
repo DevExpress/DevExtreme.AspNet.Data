@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Aggregation.CustomAggregators.html",
-          "hash": "qy1qtKn4DKzeKED2Gqcj3Q=="
+          "hash": "/SLOd6hSv81kGyB1Phwc1g=="
         }
       },
       "is_incremental": false,
@@ -81,7 +81,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.DataSourceLoadOptionsBase.html",
-          "hash": "X6DeaZI7F3M8bvZf9lVkZA=="
+          "hash": "QCCf94OdXxgHc2TusZ0rvQ=="
         }
       },
       "is_incremental": false,
@@ -106,6 +106,30 @@
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.GroupingInfo.html",
           "hash": "LMX5DZ7blkyWMtWEZO1t6Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.CompilerFunc.html",
+          "hash": "dhTptpnUxnnMnZ5+XuZ8qA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DevExtreme.AspNet.Data.Helpers.CustomAccessorCompilers.html",
+          "hash": "bTx5rsGDUO9nEuAxA3pBcw=="
         }
       },
       "is_incremental": false,
@@ -165,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.html",
-          "hash": "uv76oF9NPqvfZx6PJ9W9Cw=="
+          "hash": "BhIZsJFU8qdXSCAcpakBNQ=="
         }
       },
       "is_incremental": false,
@@ -249,7 +273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "sxRQxXXMV7Xsetijjz6HWw=="
+          "hash": "TP7c+ZaHS4kN2LMJzjHpBQ=="
         }
       },
       "is_incremental": false,
@@ -298,11 +322,6 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
@@ -310,6 +329,11 @@
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
