@@ -26,6 +26,9 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
 #if !EFCORE1 && !EFCORE2
             modelBuilder.Entity<ExpandLinqSumType.DataItem>();
 #endif
+
+            modelBuilder.Entity<Include.Category>();
+            modelBuilder.Entity<Include.Product>();
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
