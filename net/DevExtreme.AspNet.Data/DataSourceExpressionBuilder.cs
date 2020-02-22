@@ -16,8 +16,6 @@ namespace DevExtreme.AspNet.Data {
             Context = context;
         }
 
-        Type ItemType => Expr.Type.GenericTypeArguments[0];
-
         public Expression BuildLoadExpr(bool paginate, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
             AddFilter(filterOverride);
             AddSort();
@@ -52,8 +50,8 @@ namespace DevExtreme.AspNet.Data {
         void AddFilter(IList filterOverride = null) {
             if(filterOverride != null || Context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
-                    ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(ItemType))
-                    : new FilterExpressionCompiler(ItemType, Context.GuardNulls, Context.UseStringToLower).Compile(filterOverride ?? Context.Filter);
+                    ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(GetItemType()))
+                    : new FilterExpressionCompiler(GetItemType(), Context.GuardNulls, Context.UseStringToLower).Compile(filterOverride ?? Context.Filter);
 
                 Expr = QueryableCall(nameof(Queryable.Where), Expression.Quote(filterExpr));
             }
@@ -61,7 +59,7 @@ namespace DevExtreme.AspNet.Data {
 
         void AddSort() {
             if(Context.HasAnySort)
-                Expr = new SortExpressionCompiler(ItemType, Context.GuardNulls).Compile(Expr, Context.GetFullSort());
+                Expr = new SortExpressionCompiler(GetItemType(), Context.GuardNulls).Compile(Expr, Context.GetFullSort());
         }
 
         void AddSelect(IReadOnlyList<string> selectOverride = null) {
@@ -79,7 +77,7 @@ namespace DevExtreme.AspNet.Data {
 
         void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
             var compiler = new RemoteGroupExpressionCompiler(
-                ItemType, Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
+                GetItemType(), Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
                 suppressGroups ? null : Context.Group,
                 suppressTotals ? null : Context.TotalSummary,
                 suppressGroups ? null : Context.GroupSummary
@@ -92,13 +90,27 @@ namespace DevExtreme.AspNet.Data {
         }
 
         SelectExpressionCompiler CreateSelectCompiler()
-            => new SelectExpressionCompiler(ItemType, Context.GuardNulls, Context.CreateAnonTypeNewTweaks());
+            => new SelectExpressionCompiler(GetItemType(), Context.GuardNulls, Context.CreateAnonTypeNewTweaks());
 
         Expression QueryableCall(string methodName)
-            => Expression.Call(typeof(Queryable), methodName, Expr.Type.GenericTypeArguments, Expr);
+            => Expression.Call(typeof(Queryable), methodName, GetQueryableGenericArguments(), Expr);
 
         Expression QueryableCall(string methodName, Expression arg)
-            => Expression.Call(typeof(Queryable), methodName, Expr.Type.GenericTypeArguments, Expr, arg);
+            => Expression.Call(typeof(Queryable), methodName, GetQueryableGenericArguments(), Expr, arg);
+
+        Type[] GetQueryableGenericArguments() {
+            const string queryable1 = "IQueryable`1";
+            var type = Expr.Type;
+
+            if(type.IsInterface && type.Name == queryable1)
+                return type.GenericTypeArguments;
+
+            return type.GetInterface(queryable1).GenericTypeArguments;
+        }
+
+        Type GetItemType()
+            => GetQueryableGenericArguments().First();
+
     }
 
 }
