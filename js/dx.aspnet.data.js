@@ -60,6 +60,31 @@
             onBeforeSend = options.onBeforeSend,
             onAjaxError = options.onAjaxError;
 
+        function ajaxSendRequest(ajaxSettings, d, customSuccessHandler) {
+            ajaxUtility.sendRequest(ajaxSettings).then(
+                function(res, textStatus, xhr) {
+                    if(customSuccessHandler)
+                        customSuccessHandler(d, res, xhr);
+                    else
+                        d.resolve();
+                },
+                function(xhr, textStatus) {
+                    var error = getErrorMessageFromXhr(xhr);
+
+                    if(onAjaxError) {
+                        var e = { xhr: xhr, error: error };
+                        onAjaxError(e);
+                        error = e.error;
+                    }
+
+                    if(error)
+                        d.reject(error);
+                    else
+                        d.reject(xhr, textStatus);
+                }
+            );
+        }
+
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
             var d = Deferred();
 
@@ -73,31 +98,12 @@
                     ajaxSettings.dataType = "text";
                 }
 
-                if(onBeforeSend)
-                    onBeforeSend(operation, ajaxSettings);
-
-                ajaxUtility.sendRequest(ajaxSettings).then(
-                    function(res, textStatus, xhr) {
-                        if(customSuccessHandler)
-                            customSuccessHandler(d, res, xhr);
-                        else
-                            d.resolve();
-                    },
-                    function(xhr, textStatus) {
-                        var error = getErrorMessageFromXhr(xhr);
-
-                        if(onAjaxError) {
-                            var e = { xhr: xhr, error: error };
-                            onAjaxError(e);
-                            error = e.error;
-                        }
-
-                        if(error)
-                            d.reject(error);
-                        else
-                            d.reject(xhr, textStatus);
-                    }
-                );
+                if (onBeforeSend) {
+                    Promise.resolve(onBeforeSend(operation, ajaxSettings))
+                    .then(() => ajaxSendRequest(ajaxSettings, d,customSuccessHandler));
+                } else {
+                    ajaxSendRequest(ajaxSettings, d, customSuccessHandler);
+                }
             }
 
             return d.promise();
