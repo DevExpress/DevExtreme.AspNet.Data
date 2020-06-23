@@ -10,6 +10,7 @@ namespace DevExtreme.AspNet.Data {
         public readonly bool IsXPO;
         public readonly bool IsNH;
         public readonly bool IsL2S;
+        public readonly bool IsMongoDB;
         public readonly Version Version;
 
         public QueryProviderInfo(IQueryProvider provider) {
@@ -29,6 +30,8 @@ namespace DevExtreme.AspNet.Data {
                     IsNH = true;
                 else if(typeName.StartsWith("System.Data.Linq."))
                     IsL2S = true;
+                else if(typeName.StartsWith("MongoDB.Driver.Linq."))
+                    IsMongoDB = true;
 
                 Version = type.Assembly.GetName().Version;
             }
