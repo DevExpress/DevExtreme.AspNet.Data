@@ -178,6 +178,20 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupSummary_NoGroups() {
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "any" }
+                }
+            };
+
+            DataSourceLoader.Load(new object[0], loadOptions);
+
+            Assert.DoesNotContain(loadOptions.ExpressionLog, line => line.Contains("GroupBy"));
+        }
+
+        [Fact]
         public void NotUsedIfTotalCountOnly() {
             var data = new[] {
                 new { a = 1 },

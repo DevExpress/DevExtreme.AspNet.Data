@@ -232,7 +232,7 @@ namespace DevExtreme.AspNet.Data {
 
         public bool HasTotalSummary => !IsEmpty(TotalSummary);
 
-        public bool HasGroupSummary => !IsEmpty(GroupSummary);
+        public bool HasGroupSummary => HasGroups && !IsEmpty(GroupSummary);
 
         public bool SummaryIsTotalCountOnly {
             get {
