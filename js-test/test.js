@@ -922,4 +922,22 @@
             createStore({ loadUrl: "/"}).load();
         })
     }
+
+    QUnit.test("T903595", function(assert) {
+        var done = assert.async();
+
+        XHRMock.use(function(req) {
+            assert.ok(!("values" in req.url().query));
+            assert.equal(req.body().replace("%3A", ":"), "values=%7B%22a%22:1%7D");
+            done();
+            return NEVER_RESOLVE
+        });
+
+        var store = createStore({
+            key: "any",
+            insertUrl: "/"
+        });
+
+        store.insert({ a: 1 });
+    });
 });

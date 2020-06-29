@@ -18,13 +18,16 @@
 
     if(typeof define === "function" && define.amd) {
         define(function(require) {
+            var http = require("@angular/common/bundles/common-http.umd");
+
             ajax = require("devextreme/core/utils/ajax");
             createNgHttpClientSendRequestFunc = require("./ng-http-client-helper");
 
             ajax.inject({
                 sendRequest: createNgHttpClientSendRequestFunc(
-                    createHttpClient(require("@angular/common/bundles/common-http.umd")),
-                    require("devextreme/core/utils/deferred").Deferred
+                    createHttpClient(http),
+                    require("devextreme/core/utils/deferred").Deferred,
+                    http.HttpParams
                 )
             });
         });
@@ -34,7 +37,8 @@
         var $ = window.jQuery;
         $.ajax = window.DevExpress.data.AspNet.createNgHttpClientSendRequestFunc(
             createHttpClient(window.ng.common.http),
-            $.Deferred
+            $.Deferred,
+            window.ng.common.http.HttpParams
         );
     }
 })();

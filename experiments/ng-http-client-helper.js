@@ -13,8 +13,11 @@
         window.DevExpress.data.AspNet.createNgHttpClientSendRequestFunc = sendRequestFactory;
     }
 
-})(function(httpClient, Deferred) {
+})(function(httpClient, Deferred, HttpParams) {
     "use strict";
+
+    var URLENCODED = "application/x-www-form-urlencoded";
+    var CONTENT_TYPE = "Content-Type";
 
     var nonce = Date.now();
 
@@ -26,7 +29,7 @@
         function makeResponseText() {
             var body = "error" in response ? response.error : response.body;
 
-            if(typeof body !== "string" || String(getResponseHeader("Content-Type")).indexOf("application/json") === 0)
+            if(typeof body !== "string" || String(getResponseHeader(CONTENT_TYPE)).indexOf("application/json") === 0)
                 return JSON.stringify(body);
 
             return body;
@@ -63,22 +66,43 @@
         var d = Deferred();
 
         var method = (options.method || "get").toLowerCase();
+        var isGet = method === "get";
         var headers = Object.assign({}, options.headers); // TODO Object.assign
         var data = options.data;
         var xhrFields = options.xhrFields;
 
-        if(options.cache === false && method === "get" && data)
+        if(options.cache === false && isGet && data)
             data._ = nonce++;
 
         if(!headers.Accept)
             headers.Accept = getAcceptHeader(options);
+
+        if(!isGet && !headers[CONTENT_TYPE])
+            headers[CONTENT_TYPE] = options.contentType || URLENCODED + ";charset=utf-8";
+
+        var params;
+        var body;
+
+        if(isGet) {
+            params = data;
+        } else {
+            if(typeof data === "object" && headers[CONTENT_TYPE].indexOf(URLENCODED) === 0) {
+                body = new HttpParams();
+                for(var key in data)
+                    body = body.set(key, data[key]);
+                body = body.toString();
+            } else {
+                body = data;
+            }
+        }
 
         httpClient
             .request(
                 method,
                 options.url,
                 {
-                    params: data,
+                    params: params,
+                    body: body,
                     responseType: options.dataType,
                     headers: headers,
                     withCredentials: xhrFields && xhrFields.withCredentials,
