@@ -887,4 +887,22 @@
             createStore({ loadUrl: "/"}).load();
         })
     }
+
+    QUnit.test("T903595 - body encoding", function(assert) {
+        var done = assert.async();
+
+        XHRMock.use(function(req) {
+            assert.ok(!("values" in req.url().query));
+            assert.equal(req.body(), "values=%7B%22a%22%3A1%7D");
+            done();
+            return NEVER_RESOLVE
+        });
+
+        var store = createStore({
+            key: "any",
+            insertUrl: "/"
+        });
+
+        store.insert({ a: 1 });
+    });
 });
