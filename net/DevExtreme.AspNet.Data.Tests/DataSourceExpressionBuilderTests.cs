@@ -12,7 +12,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void Build_SkipTake() {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
                 Skip = 111,
-                Take = 222
+                Take = 222,
+                GuardNulls = false
             });
 
             var expr = builder.BuildLoadExpr();
@@ -23,7 +24,8 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void Build_Filter() {
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
-                Filter = new object[] { "this", ">", 123 }
+                Filter = new object[] { "this", ">", 123 },
+                GuardNulls = false
             });
 
             var expr = builder.BuildLoadExpr();
@@ -36,7 +38,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             // To mitigate cases like https://devexpress.com/issue=T483154
 
             var builder = Compat.CreateDataSourceExpressionBuilder<int>(new SampleLoadOptions {
-                Filter = new object[0]
+                Filter = new object[0],
+                GuardNulls = false
             });
 
             Assert.DoesNotContain(".Where", builder.BuildLoadExpr().ToString());
@@ -51,6 +54,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Sort = new[] {
                     new SortingInfo { Selector = "this" }
                 },
+                GuardNulls = false
             });
 
             var expr = builder.BuildCountExpr();
@@ -74,11 +78,45 @@ namespace DevExtreme.AspNet.Data.Tests {
                         Selector = "Item2",
                         Desc=true
                     }
-                }
+                },
+                GuardNulls = false
             });
 
             var expr = builder.BuildLoadExpr();
             Assert.Equal("data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2)", expr.ToString());
+        }
+
+        [Fact]
+        public void SortByPrimaryKey() {
+
+            void Case(Action<DataSourceLoadOptionsBase> initOptions, Action<string> assert) {
+                var source = new[] {
+                    new { ID = 1, Value = "A" }
+                };
+
+                var loadOptions = new SampleLoadOptions {
+                    GuardNulls = false,
+                    PrimaryKey = new[] { "ID" },
+                    SortByPrimaryKey = false
+                };
+
+                initOptions?.Invoke(loadOptions);
+
+                assert(Compat.CreateDataSourceExpressionBuilder(source.AsQueryable(), loadOptions).BuildLoadExpr().ToString());
+            }
+
+            Case(
+                null,
+                expr => Assert.DoesNotContain("OrderBy", expr)
+            );
+
+            Case(
+                options => options.DefaultSort = "Value",
+                expr => {
+                    Assert.Contains(".OrderBy(obj => obj.Value)", expr);
+                    Assert.DoesNotContain("ThenBy", expr);
+                }
+            );
         }
 
         [Fact]
@@ -91,18 +129,19 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Group = new[] {
                     new GroupingInfo { Selector = "Item1" },
                     new GroupingInfo { Selector = "Item2", Desc = true  } // this must win
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions);
+            string BuildLoadExpr() => Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(loadOptions).BuildLoadExpr().ToString();
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1).ThenByDescending(obj => obj.Item2).ThenBy(obj => obj.Item3)",
-                builder.BuildLoadExpr().ToString()
+                BuildLoadExpr()
             );
 
             loadOptions.Sort = null;
-            Assert.Contains("OrderBy", builder.BuildLoadExpr().ToString());
+            Assert.Contains("OrderBy", BuildLoadExpr());
         }
 
         [Fact]
@@ -111,7 +150,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Group = new[] {
                     new GroupingInfo { Selector = "this", GroupInterval = "a" },
                     new GroupingInfo { Selector = "this", GroupInterval = "b" }
-                }
+                },
+                GuardNulls = false
             });
 
             Assert.Equal("data.OrderBy(obj => obj)", builder.BuildLoadExpr().ToString());
@@ -119,20 +159,6 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void GuardNulls() {
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int?, string, DateTime?>>(new SampleLoadOptions {
-                Filter = new[] {
-                    new[] { "Item1", ">", "0" },
-                    new[] { "Item2", "contains", "z" },
-                    new[] { "Item2.Length", ">", "1" },
-                    new[] { "Item3.Year", ">", "0" }
-                },
-                Sort = new[] {
-                    new SortingInfo { Selector = "Item1" },
-                    new SortingInfo { Selector = "Item2.Length" },
-                    new SortingInfo { Selector = "Item3.Year" },
-                }
-            }, true);
-
             var data = new[] {
                 // filtered out
                 null,
@@ -146,7 +172,22 @@ namespace DevExtreme.AspNet.Data.Tests {
                 Tuple.Create<int?, string, DateTime?>(1, "zz", new DateTime(2000, 1, 1))
             }.AsQueryable();
 
-            var expr = builder.BuildLoadExpr(data.Expression);
+            var builder = Compat.CreateDataSourceExpressionBuilder(data, new SampleLoadOptions {
+                Filter = new[] {
+                    new[] { "Item1", ">", "0" },
+                    new[] { "Item2", "contains", "z" },
+                    new[] { "Item2.Length", ">", "1" },
+                    new[] { "Item3.Year", ">", "0" }
+                },
+                Sort = new[] {
+                    new SortingInfo { Selector = "Item1" },
+                    new SortingInfo { Selector = "Item2.Length" },
+                    new SortingInfo { Selector = "Item3.Year" },
+                },
+                GuardNulls = true
+            });
+
+            var expr = builder.BuildLoadExpr();
             var result = data.Provider.CreateQuery<object>(expr).ToArray();
             Assert.Equal(2, result.Length);
         }
@@ -154,21 +195,22 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void DefaultSort() {
             var options = new SampleLoadOptions {
-                DefaultSort = "Item1"
+                DefaultSort = "Item1",
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            string BuildLoadExpr() => Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options).BuildLoadExpr(false).ToString();
 
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", BuildLoadExpr());
 
             options.Sort = new[] {
                 new SortingInfo { Selector = "Item2" }
             };
 
-            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)", BuildLoadExpr());
 
             options.Sort[0].Selector = "Item1";
-            Assert.Equal("data.OrderBy(obj => obj.Item1)", builder.BuildLoadExpr(false).ToString());
+            Assert.Equal("data.OrderBy(obj => obj.Item1)", BuildLoadExpr());
         }
 
         [Fact]
@@ -180,10 +222,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 },
                 Sort = new[] {
                     new SortingInfo { Selector = "Item2" }
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
             var expr = builder.BuildLoadGroupsExpr().ToString();
 
             Assert.StartsWith("data.GroupBy", expr);
@@ -192,10 +235,11 @@ namespace DevExtreme.AspNet.Data.Tests {
         [Fact]
         public void AlwaysOrderDataByPrimaryKey() {
             var options = new SampleLoadOptions {
-                PrimaryKey = new[] { "Item2", "Item1" }
+                PrimaryKey = new[] { "Item2", "Item1" },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
@@ -208,11 +252,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             var options = new SampleLoadOptions {
                 PrimaryKey = new[] { "Item1" },
                 DefaultSort = "Item1",
-                Sort = new[] { new SortingInfo { Selector = "Item1" } }
+                Sort = new[] { new SortingInfo { Selector = "Item1" } },
+                GuardNulls = false
             };
 
             {
-                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options, false);
+                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options);
 
                 Assert.Equal(
                     "data.OrderBy(obj => obj.Item1)",
@@ -224,7 +269,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             options.Sort[0].Selector = "Item3";
 
             {
-                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options, false);
+                var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int, int, int>>(options);
 
                 Assert.Equal(
                     "data.OrderBy(obj => obj.Item3).ThenBy(obj => obj.Item2).ThenBy(obj => obj.Item1)",
@@ -241,10 +286,11 @@ namespace DevExtreme.AspNet.Data.Tests {
                 DefaultSort = "item1",
                 Sort = new[] {
                     new SortingInfo { Selector = "ITEM1" }
-                }
+                },
+                GuardNulls = false
             };
 
-            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int>>(options, false);
+            var builder = Compat.CreateDataSourceExpressionBuilder<Tuple<int>>(options);
 
             Assert.Equal(
                 "data.OrderBy(obj => obj.Item1)",
@@ -256,12 +302,41 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void RemoteSelectFalse() {
             var options = new SampleLoadOptions {
                 Select = new[] { "abc" },
-                RemoteSelect = false
+                RemoteSelect = false,
+                GuardNulls = false
             };
 
             Assert.Equal(
                 "data",
-                Compat.CreateDataSourceExpressionBuilder<object>(options, false).BuildLoadExpr().ToString()
+                Compat.CreateDataSourceExpressionBuilder<object>(options).BuildLoadExpr().ToString()
+            );
+        }
+
+        [Fact]
+        public void BuildGroupCountExpr() {
+            string BuildExpr(DataSourceLoadOptionsBase options) => Compat.CreateDataSourceExpressionBuilder<Tuple<int, int>>(options)
+                .BuildGroupCountExpr()
+                .ToString();
+
+            var error = Record.Exception(delegate {
+                BuildExpr(new SampleLoadOptions {
+                    Group = new[] {
+                        new GroupingInfo { Selector = "Item1" },
+                        new GroupingInfo { Selector = "Item2" }
+                    }
+                });
+            });
+            Assert.True(error is InvalidOperationException);
+
+            Assert.Equal(
+                "data.Where(obj => (obj.Item2 == 1)).Select(obj => obj.Item1).Distinct().Count()",
+                BuildExpr(new SampleLoadOptions {
+                    GuardNulls = false,
+                    Filter = new[] { "Item2", "1" },
+                    Group = new[] {
+                        new GroupingInfo { Selector = "Item1" }
+                    }
+                })
             );
         }
     }

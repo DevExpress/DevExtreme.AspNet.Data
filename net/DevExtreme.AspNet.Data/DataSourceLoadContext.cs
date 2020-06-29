@@ -19,6 +19,35 @@ namespace DevExtreme.AspNet.Data {
             _itemType = itemType;
         }
 
+        public bool GuardNulls {
+            get {
+#if DEBUG
+                if(_options.GuardNulls.HasValue)
+                    return _options.GuardNulls.Value;
+#endif
+                return _providerInfo.IsLinqToObjects;
+            }
+        }
+
+        public bool RequireQueryableChainBreak {
+            get {
+                if(_providerInfo.IsXPO) {
+                    // 1. XPQuery is stateful
+                    // 2. CreateQuery(expr) and Execute(expr) don't spawn intermediate query instances for Queryable calls within expr.
+                    //    This can put XPQuery into an invalid state. Example: Distinct().Count()
+                    // 3. XPQuery is IQueryProvider itself
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
+            AllowEmpty = !_providerInfo.IsL2S && !_providerInfo.IsMongoDB,
+            AllowUnusedMembers = !_providerInfo.IsL2S
+        };
+
         static bool IsEmpty<T>(IReadOnlyCollection<T> collection) {
             return collection == null || collection.Count < 1;
         }
@@ -38,6 +67,7 @@ namespace DevExtreme.AspNet.Data {
     partial class DataSourceLoadContext {
         public int Skip => _options.Skip;
         public int Take => _options.Take;
+        public bool HasPaging => Skip > 0 || Take > 0;
         public bool PaginateViaPrimaryKey => _options.PaginateViaPrimaryKey.GetValueOrDefault(false);
     }
 
@@ -108,7 +138,7 @@ namespace DevExtreme.AspNet.Data {
         string[] _primaryKey;
         string _defaultSort;
 
-        public bool HasAnySort => HasGroups || HasSort || HasPrimaryKey || HasDefaultSort;
+        public bool HasAnySort => HasGroups || HasSort || ShouldSortByPrimaryKey || HasDefaultSort;
 
         bool HasSort => !IsEmpty(_options.Sort);
 
@@ -129,6 +159,8 @@ namespace DevExtreme.AspNet.Data {
         public bool HasPrimaryKey => !IsEmpty(PrimaryKey);
 
         bool HasDefaultSort => !String.IsNullOrEmpty(DefaultSort);
+
+        bool ShouldSortByPrimaryKey => HasPrimaryKey && _options.SortByPrimaryKey.GetValueOrDefault(true);
 
         public IEnumerable<SortingInfo> GetFullSort() {
             var memo = new HashSet<string>();
@@ -159,7 +191,7 @@ namespace DevExtreme.AspNet.Data {
             if(HasDefaultSort)
                 requiredSort = requiredSort.Concat(new[] { DefaultSort });
 
-            if(HasPrimaryKey)
+            if(ShouldSortByPrimaryKey)
                 requiredSort = requiredSort.Concat(PrimaryKey);
 
             return Utils.AddRequiredSort(result, requiredSort);
@@ -175,7 +207,7 @@ namespace DevExtreme.AspNet.Data {
             if(IsEmpty(primaryKey))
                 primaryKey = Utils.GetPrimaryKey(_itemType);
 
-            if((Skip > 0 || Take > 0) && String.IsNullOrEmpty(defaultSort) && IsEmpty(primaryKey)) {
+            if(HasPaging && String.IsNullOrEmpty(defaultSort) && IsEmpty(primaryKey)) {
                 if(_providerInfo.IsEFClassic || _providerInfo.IsEFCore)
                     defaultSort = EFSorting.FindSortableMember(_itemType);
                 else if(_providerInfo.IsXPO)
@@ -196,15 +228,31 @@ namespace DevExtreme.AspNet.Data {
 
         public IReadOnlyList<SummaryInfo> GroupSummary => _options.GroupSummary;
 
-        public bool HasSummary => !IsEmpty(TotalSummary) || HasGroupSummary;
+        public bool HasSummary => HasTotalSummary || HasGroupSummary;
 
-        public bool HasGroupSummary => !IsEmpty(GroupSummary);
+        public bool HasTotalSummary => !IsEmpty(TotalSummary);
+
+        public bool HasGroupSummary => HasGroups && !IsEmpty(GroupSummary);
 
         public bool SummaryIsTotalCountOnly {
             get {
                 if(!_summaryIsTotalCountOnly.HasValue)
-                    _summaryIsTotalCountOnly = !HasGroupSummary && HasSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
+                    _summaryIsTotalCountOnly = !HasGroupSummary && HasTotalSummary && TotalSummary.All(i => i.SummaryType == AggregateName.COUNT);
                 return _summaryIsTotalCountOnly.Value;
+            }
+        }
+
+        public bool ExpandLinqSumType {
+            get {
+                if(_options.ExpandLinqSumType.HasValue)
+                    return _options.ExpandLinqSumType.Value;
+
+                // NH 5.2.6: https://github.com/nhibernate/nhibernate-core/issues/2029
+                // EFCore 2: https://github.com/aspnet/EntityFrameworkCore/issues/14851
+
+                return _providerInfo.IsEFClassic
+                    || _providerInfo.IsEFCore && _providerInfo.Version.Major > 2
+                    || _providerInfo.IsXPO;
             }
         }
     }
@@ -232,7 +280,7 @@ namespace DevExtreme.AspNet.Data {
                     var hasPreSelect = !IsEmpty(_options.PreSelect);
 
                     if(hasPreSelect && hasSelect)
-                        return Enumerable.Intersect(_options.PreSelect, _options.Select).ToArray();
+                        return Enumerable.Intersect(_options.PreSelect, _options.Select, StringComparer.OrdinalIgnoreCase).ToArray();
 
                     if(hasPreSelect)
                         return _options.PreSelect;

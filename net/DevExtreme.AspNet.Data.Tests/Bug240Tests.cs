@@ -7,10 +7,11 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class Bug240Tests {
 
-        static DataSourceLoadOptionsBase CreateFullStuffedLoadOptions() {
+        static DataSourceLoadOptionsBase CreateFullStuffedLoadOptions(bool guardNulls) {
             var selector = "Item1.Year";
 
             return new SampleLoadOptions {
+                GuardNulls = guardNulls,
                 Filter = new[] { selector, "123" },
                 Sort = new[] {
                     new SortingInfo { Selector = selector }
@@ -43,7 +44,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void BuildLoadExpr_NoGuardNulls() {
-            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(), false).BuildLoadExpr();
+            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(false)).BuildLoadExpr();
 
             Assert.Equal(
                 "data"
@@ -61,7 +62,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void BuildLoadExpr_WithGuardNulls() {
-            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(), true).BuildLoadExpr();
+            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(true)).BuildLoadExpr();
 
             Assert.Equal(
                 "data"
@@ -77,7 +78,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void BuildLoadGroupsExpr_NoGuardNulls() {
-            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(), false).BuildLoadGroupsExpr();
+            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(false)).BuildLoadGroupsExpr();
 
             Assert.Equal(
                 // Only selectors that land in .Select() use conversion to Nullable
@@ -97,7 +98,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void BuildLoadGroupsExpr_WithGuardNulls() {
-            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(), true).BuildLoadGroupsExpr();
+            var expr = Compat.CreateDataSourceExpressionBuilder<Tuple<DateTime?>>(CreateFullStuffedLoadOptions(true)).BuildLoadGroupsExpr();
 
             Assert.Equal(
                 // All selectors are guarded and use conversion to Nullable

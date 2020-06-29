@@ -1,8 +1,0 @@
-{
-    "name": "Sample",
-    "private": true,
-    "dependencies": {
-        "devextreme": "~19.1.0",
-        "jquery": "3.4.1"
-    }
-}

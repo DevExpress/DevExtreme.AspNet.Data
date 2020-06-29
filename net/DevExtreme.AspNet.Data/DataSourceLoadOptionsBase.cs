@@ -87,6 +87,8 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? RemoteGrouping { get; set; }
 
+        public bool? ExpandLinqSumType { get; set; }
+
         /// <summary>
         /// An array of primary keys.
         /// </summary>
@@ -108,10 +110,14 @@ namespace DevExtreme.AspNet.Data {
         /// </summary>
         public bool? PaginateViaPrimaryKey { get; set; }
 
+        public bool? SortByPrimaryKey { get; set; }
+
+        public bool AllowAsyncOverSync { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;
-        internal bool SuppressGuardNulls;
+        internal bool? GuardNulls;
 #endif
     }
 

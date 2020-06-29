@@ -178,6 +178,20 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void GroupSummary_NoGroups() {
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                GroupSummary = new[] {
+                    new SummaryInfo { Selector = "any" }
+                }
+            };
+
+            DataSourceLoader.Load(new object[0], loadOptions);
+
+            Assert.DoesNotContain(loadOptions.ExpressionLog, line => line.Contains("GroupBy"));
+        }
+
+        [Fact]
         public void NotUsedIfTotalCountOnly() {
             var data = new[] {
                 new { a = 1 },
@@ -230,6 +244,28 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Single(groups);
             Assert.Equal(2, result.groupCount);
+        }
+
+        [Fact]
+        public void RequireGroupCount_MultiLevels() {
+            var source = new[] {
+                new { G1 = 1, G2 = 1 },
+                new { G1 = 1, G2 = 2 },
+                new { G1 = 2, G2 = 3 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                RequireGroupCount = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G1", IsExpanded = false },
+                    new GroupingInfo { Selector = "G2", IsExpanded = false }
+                },
+                Take = 1
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            Assert.Equal(2, loadResult.groupCount);
         }
 
         [Fact]
@@ -385,6 +421,203 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("No coercion operator", exception.InnerException.Message);
         }
 
+        [Fact]
+        public void ExpandLinqSumType() {
+            var sourceItem = new {
+                SByte = SByte.MaxValue,
+                Byte = Byte.MaxValue,
+
+                Int16 = Int16.MaxValue,
+                UInt16 = UInt16.MaxValue,
+
+                Int32 = Int32.MaxValue,
+                UInt32 = UInt32.MaxValue,
+
+                Int64 = Int64.MaxValue / 2,
+                UInt64 = UInt64.MaxValue,
+
+                Single = Single.MaxValue,
+                Double = Double.MaxValue / 2,
+                Decimal = (Decimal.MaxValue - 1) / 2,
+
+                SByteN = (SByte?)SByte.MaxValue,
+                ByteN = (Byte?)Byte.MaxValue,
+
+                Int16N = (Int16?)Int16.MaxValue,
+                UInt16N = (UInt16?)UInt16.MaxValue,
+
+                Int32N = (Int32?)Int32.MaxValue,
+                UInt32N = (UInt32?)UInt32.MaxValue,
+
+                Int64N = (Int64?)Int64.MaxValue / 2,
+                UInt64N = (UInt64?)UInt64.MaxValue,
+
+                SingleN = (Single?)Single.MaxValue,
+                DoubleN = (Double?)Double.MaxValue / 2,
+                DecimalN = ((Decimal?)Decimal.MaxValue - 1) / 2
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                GuardNulls = false,
+                TotalSummary = new[] {
+                    nameof(sourceItem.SByte),
+                    nameof(sourceItem.Byte),
+                    nameof(sourceItem.Int16),
+                    nameof(sourceItem.UInt16),
+                    nameof(sourceItem.Int32),
+                    nameof(sourceItem.UInt32),
+                    nameof(sourceItem.Int64),
+                    nameof(sourceItem.UInt64),
+                    nameof(sourceItem.Single),
+                    nameof(sourceItem.Double),
+                    nameof(sourceItem.Decimal),
+
+                    nameof(sourceItem.SByteN),
+                    nameof(sourceItem.ByteN),
+                    nameof(sourceItem.Int16N),
+                    nameof(sourceItem.UInt16N),
+                    nameof(sourceItem.Int32N),
+                    nameof(sourceItem.UInt32N),
+                    nameof(sourceItem.Int64N),
+                    nameof(sourceItem.UInt64N),
+                    nameof(sourceItem.SingleN),
+                    nameof(sourceItem.DoubleN),
+                    nameof(sourceItem.DecimalN),
+                }
+                .Select(i => new SummaryInfo { Selector = i, SummaryType = "sum" })
+                .ToArray(),
+                RemoteGrouping = true,
+                ExpandLinqSumType = true
+            };
+
+            var summary = DataSourceLoader.Load(new[] { sourceItem, sourceItem }, loadOptions).summary;
+
+            var exprText = loadOptions.ExpressionLog.First(line => line.Contains("GroupBy"));
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.SByte", "Int64"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.Byte", "Int64"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.Int16", "Int64"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.UInt16", "Int64"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.Int32", "Int64"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.UInt32", "Int64"), exprText);
+            Assert.Contains("Sum(obj => obj.Int64", exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.UInt64", "Decimal"), exprText);
+            Assert.Contains("Sum(obj => " + Compat.ExpectedConvert("obj.Single", "Double"), exprText);
+            Assert.Contains("Sum(obj => obj.Double", exprText);
+            Assert.Contains("Sum(obj => obj.Decimal", exprText);
+
+            Assert.Equal(2m * sourceItem.SByte, summary[0]);
+            Assert.Equal(2m * sourceItem.Byte, summary[1]);
+            Assert.Equal(2m * sourceItem.Int16, summary[2]);
+            Assert.Equal(2m * sourceItem.UInt16, summary[3]);
+            Assert.Equal(2m * sourceItem.Int32, summary[4]);
+            Assert.Equal(2m * sourceItem.UInt32, summary[5]);
+            Assert.Equal(2m * sourceItem.Int64, summary[6]);
+            Assert.Equal(2m * sourceItem.UInt64, summary[7]);
+            Assert.Equal(2d * sourceItem.Single, summary[8]);
+            Assert.Equal(2d * sourceItem.Double, summary[9]);
+            Assert.Equal(2m * sourceItem.Decimal, summary[10]);
+
+            Assert.Equal(2m * sourceItem.SByteN, summary[11]);
+            Assert.Equal(2m * sourceItem.ByteN, summary[12]);
+            Assert.Equal(2m * sourceItem.Int16N, summary[13]);
+            Assert.Equal(2m * sourceItem.UInt16N, summary[14]);
+            Assert.Equal(2m * sourceItem.Int32N, summary[15]);
+            Assert.Equal(2m * sourceItem.UInt32N, summary[16]);
+            Assert.Equal(2m * sourceItem.Int64N, summary[17]);
+            Assert.Equal(2m * sourceItem.UInt64N, summary[18]);
+            Assert.Equal(2d * sourceItem.SingleN, summary[19]);
+            Assert.Equal(2d * sourceItem.DoubleN, summary[20]);
+            Assert.Equal(2m * sourceItem.DecimalN, summary[21]);
+        }
+
+        [Fact]
+        public void T844633() {
+            var source = new[] {
+                new { G = 1, Value = 1 },
+                new { G = 2, Value = 2 },
+                new { G = 2, Value = 3 },
+                new { G = 3, Value = 4 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                GuardNulls = false,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                RequireGroupCount = true,
+                Skip = 1,
+                Take = 1
+            };
+
+            loadOptions.GroupSummary = loadOptions.TotalSummary = new[] {
+                new SummaryInfo { Selector = "Value", SummaryType = "sum" },
+                new SummaryInfo { SummaryType = "count" }
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            var group = loadResult.data.Cast<Group>().First();
+            var summary = loadResult.summary;
+
+            // groups
+            Assert.EndsWith(
+                ".GroupBy(obj => new AnonType`1(I0 = obj.G))" +
+                ".OrderBy(g => g.Key.I0)" +
+                ".Select(g => new AnonType`4(" +
+                    "I0 = g.Count(), " +
+                    "I1 = g.Key.I0, " +
+                    "I2 = g.Sum(obj => obj.Value)" +
+                "))" +
+                ".Skip(1).Take(1)",
+                loadOptions.ExpressionLog[0]
+            );
+
+            // totals
+            Assert.EndsWith(
+                ".GroupBy(obj => new AnonType())" +
+                ".Select(g => new AnonType`2(" +
+                    "I0 = g.Count(), " +
+                    "I1 = g.Sum(obj => obj.Value)" +
+                "))",
+                loadOptions.ExpressionLog[1]
+            );
+
+            // group count
+            Assert.EndsWith(
+                ".Select(obj => obj.G).Distinct().Count()",
+                loadOptions.ExpressionLog[2]
+            );
+
+            Assert.Equal(5m, group.summary[0]);
+            Assert.Equal(2, group.summary[1]);
+
+            Assert.Equal(10m, summary[0]);
+            Assert.Equal(4, summary[1]);
+
+            Assert.Equal(4, loadResult.totalCount);
+            Assert.Equal(3, loadResult.groupCount);
+        }
+
+        [Fact]
+        public void T844633_TotalsWoPaging() {
+            var source = new[] {
+                new { G = 0 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                Group = new[] {
+                    new GroupingInfo { Selector = "G", IsExpanded = false }
+                },
+                RemoteGrouping = true,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "G", SummaryType = "sum" }
+                }
+            };
+
+            DataSourceLoader.Load(source, loadOptions);
+
+            Assert.Single(loadOptions.ExpressionLog.Where(line => line.Contains("GroupBy")));
+        }
     }
 
 }

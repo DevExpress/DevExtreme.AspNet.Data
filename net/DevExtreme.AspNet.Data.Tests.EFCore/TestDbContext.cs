@@ -16,12 +16,19 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             modelBuilder.Entity<RemoteGrouping.DataItem>();
 #if !EFCORE1
             modelBuilder.Entity<RemoteGroupingStress.DataItem>();
+            modelBuilder.Entity<RemoteGroupCount.DataItem>();
 #endif
             modelBuilder.Entity<Summary.DataItem>();
             modelBuilder.Entity<Bug120.DataItem>();
             modelBuilder.Entity<Bug326.Entity>();
             modelBuilder.Entity<PaginateViaPrimaryKey.DataItem>().HasKey("K1", "K2");
             modelBuilder.Entity<Async.DataItem>();
+#if !EFCORE1 && !EFCORE2
+            modelBuilder.Entity<ExpandLinqSumType.DataItem>();
+#endif
+
+            modelBuilder.Entity<Include.Category>();
+            modelBuilder.Entity<Include.Product>();
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {

@@ -1,0 +1,7 @@
+{
+  "name": "sample",
+  "dependencies": {
+    "devextreme": "^19.2.5",
+    "jquery": "^3.5.1"
+  }
+}

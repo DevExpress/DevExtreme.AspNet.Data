@@ -6,9 +6,8 @@ using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data.Helpers {
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class CustomAccessorCompilers {
-        public delegate Expression CompilerFunc(Expression target, string accessorText);
+        public delegate Expression CompilerFunc(Expression expr, string accessorText);
 
         static readonly ICollection<CompilerFunc> _compilers = new List<CompilerFunc>();
 
@@ -16,12 +15,12 @@ namespace DevExtreme.AspNet.Data.Helpers {
             _compilers.Add(compilerFunc);
         }
 
-        internal static Expression TryCompile(Expression target, string accessorText) {
+        internal static Expression TryCompile(Expression expr, string accessorText) {
             if(_compilers.Count < 1)
                 return null;
 
             foreach(var compiler in _compilers) {
-                var result = compiler(target, accessorText);
+                var result = compiler(expr, accessorText);
                 if(result != null)
                     return result;
             }

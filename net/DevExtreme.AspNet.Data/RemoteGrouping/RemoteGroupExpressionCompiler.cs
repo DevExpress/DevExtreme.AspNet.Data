@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.RemoteGrouping {
 
-    class RemoteGroupExpressionCompiler<T> : ExpressionCompiler {
+    class RemoteGroupExpressionCompiler : ExpressionCompiler {
+        bool _expandSumType;
         AnonTypeNewTweaks _anonTypeNewTweaks;
         IEnumerable<GroupingInfo> _grouping;
         IEnumerable<SummaryInfo>
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : base(guardNulls) {
+        public RemoteGroupExpressionCompiler(Type itemType, bool guardNulls, bool expandSumType, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : base(itemType, guardNulls) {
+            _expandSumType = expandSumType;
             _anonTypeNewTweaks = anonTypeNewTweaks;
             _grouping = grouping;
             _totalSummary = totalSummary;
@@ -25,13 +27,13 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
 #if DEBUG
-        public RemoteGroupExpressionCompiler(IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : this(false, null, grouping, totalSummary, groupSummary) {
+        public RemoteGroupExpressionCompiler(Type itemType, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
+            : this(itemType, false, false, null, grouping, totalSummary, groupSummary) {
         }
 #endif
 
         public Expression Compile(Expression target) {
-            var groupByParam = CreateItemParam(typeof(T));
+            var groupByParam = CreateItemParam();
             var groupKeyExprList = new List<Expression>();
             var descendingList = new List<bool>();
 
@@ -47,9 +49,9 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             }
 
             var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList, _anonTypeNewTweaks), groupByParam);
-            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, typeof(T));
+            var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, ItemType);
 
-            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { typeof(T), groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
+            target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { ItemType, groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
 
             for(var i = 0; i < groupKeyExprList.Count; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
@@ -74,7 +76,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             var param = Expression.Parameter(groupingType, "g");
 
             var projectionExprList = new List<Expression> {
-                Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { typeof(T) }, param)
+                Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { ItemType }, param)
             };
 
             for(var i = 0; i < groupCount; i++)
@@ -97,7 +99,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
         Expression MakeAggregate(Expression aggregateTarget, SummaryInfo s) {
-            var itemParam = CreateItemParam(typeof(T));
+            var itemParam = CreateItemParam();
             var selectorExpr = CompileAccessorExpression(itemParam, s.Selector, liftToNullable: true);
             var selectorType = selectorExpr.Type;
 
@@ -112,7 +114,7 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                     Expression.Call(
                         typeof(Enumerable),
                         nameof(Enumerable.Select),
-                        new[] { typeof(T), typeof(int) },
+                        new[] { ItemType, typeof(int) },
                         aggregateTarget,
                         Expression.Lambda(
                             Expression.Condition(
@@ -126,20 +128,19 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 );
             } else {
                 var callMethod = GetPreAggregateMethodName(s.SummaryType);
-                var callMethodTypeParams = new List<Type> { typeof(T) };
+                var callMethodTypeParams = new List<Type> { ItemType };
                 var callArgs = new List<Expression> { aggregateTarget };
 
                 try {
-                    if(!IsWellKnownAggregateDataType(selectorType)) {
-                        if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                    if(s.SummaryType == AggregateName.MIN || s.SummaryType == AggregateName.MAX) {
+                        if(!IsWellKnownAggregateDataType(selectorType))
                             callMethodTypeParams.Add(selectorType);
-                        } else if(s.SummaryType == AggregateName.SUM) {
-                            if(DynamicBindingHelper.ShouldUseDynamicBinding(typeof(T))) {
-                                callType = typeof(DynamicSum);
-                                callMethod = nameof(DynamicSum.Calculate);
-                            } else {
-                                selectorExpr = Expression.Convert(selectorExpr, GetSumType(selectorType));
-                            }
+                    } else if(s.SummaryType == AggregateName.SUM) {
+                        if(DynamicBindingHelper.ShouldUseDynamicBinding(ItemType)) {
+                            callType = typeof(DynamicSum);
+                            callMethod = nameof(DynamicSum.Calculate);
+                        } else {
+                            selectorExpr = ConvertSumSelector(selectorExpr);
                         }
                     }
 
@@ -163,22 +164,37 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 || type == typeof(long);
         }
 
-        static Type GetSumType(Type type) {
+        Expression ConvertSumSelector(Expression expr) {
+            var type = expr.Type;
             var nullable = Utils.IsNullable(type);
-            type = Utils.StripNullableType(type);
-
-            if(type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) || type == typeof(ushort)) {
-                type = typeof(int);
-            } else if(type == typeof(uint)) {
-                type = typeof(long);
-            } else {
-                type = typeof(decimal);
-            }
 
             if(nullable)
-                return Utils.MakeNullable(type);
+                type = Utils.StripNullableType(type);
 
-            return type;
+            var sumType = GetSumType(type, _expandSumType);
+            if(sumType == type)
+                return expr;
+
+            if(nullable)
+                sumType = Utils.MakeNullable(sumType);
+
+            return Expression.Convert(expr, sumType);
+        }
+
+        internal static Type GetSumType(Type type, bool expand) {
+            if(type == typeof(decimal) || type == typeof(double) || type == typeof(long))
+                return type;
+
+            if(type == typeof(int) || type == typeof(byte) || type == typeof(short) || type == typeof(sbyte) || type == typeof(ushort))
+                return expand ? typeof(long) : typeof(int);
+
+            if(type == typeof(float))
+                return expand ? typeof(double) : typeof(float);
+
+            if(type == typeof(uint))
+                return typeof(long);
+
+            return typeof(decimal);
         }
 
         static string GetPreAggregateMethodName(string summaryType) {

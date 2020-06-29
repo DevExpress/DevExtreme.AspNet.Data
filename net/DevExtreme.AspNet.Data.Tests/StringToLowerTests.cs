@@ -53,7 +53,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Dynamic() {
-            var compiler = new FilterExpressionCompiler<dynamic>(true, true);
+            var compiler = new FilterExpressionCompiler(typeof(object), true, true);
             var expr = compiler.Compile(new object[] {
                 new[] { "this", "startswith", "1" },
                 "or",
@@ -97,7 +97,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 expectedExpr,
-                new FilterExpressionCompiler<T>(guardNulls, stringToLower)
+                new FilterExpressionCompiler(typeof(T), guardNulls, stringToLower)
                     .Compile(new[] { "this", op, "T" })
                     .Body.ToString()
             );

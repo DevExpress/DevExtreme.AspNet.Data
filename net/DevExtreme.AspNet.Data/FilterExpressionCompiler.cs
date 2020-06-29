@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class FilterExpressionCompiler<T> : ExpressionCompiler {
+    class FilterExpressionCompiler : ExpressionCompiler {
         const string
             CONTAINS = "contains",
             NOT_CONTAINS = "notcontains",
@@ -19,13 +19,13 @@ namespace DevExtreme.AspNet.Data {
 
         bool _stringToLower;
 
-        public FilterExpressionCompiler(bool guardNulls, bool stringToLower = false)
-            : base(guardNulls) {
+        public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false)
+            : base(itemType, guardNulls) {
             _stringToLower = stringToLower;
         }
 
         public LambdaExpression Compile(IList criteriaJson) {
-            var dataItemExpr = CreateItemParam(typeof(T));
+            var dataItemExpr = CreateItemParam();
             return Expression.Lambda(CompileCore(dataItemExpr, criteriaJson), dataItemExpr);
         }
 
