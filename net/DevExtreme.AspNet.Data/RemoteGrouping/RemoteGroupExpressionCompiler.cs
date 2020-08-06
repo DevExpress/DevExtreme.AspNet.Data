@@ -48,16 +48,17 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 }
             }
 
-            var groupKeyLambda = Expression.Lambda(AnonType.CreateNewExpression(groupKeyExprList, _anonTypeNewTweaks), groupByParam);
+            var groupKeyTypeFacade = new AnonTypeFacade(groupKeyExprList);
+            var groupKeyLambda = Expression.Lambda(groupKeyTypeFacade.CreateNewExpression(_anonTypeNewTweaks), groupByParam);
             var groupingType = typeof(IGrouping<,>).MakeGenericType(groupKeyLambda.ReturnType, ItemType);
 
             target = Expression.Call(typeof(Queryable), nameof(Queryable.GroupBy), new[] { ItemType, groupKeyLambda.ReturnType }, target, Expression.Quote(groupKeyLambda));
 
             for(var i = 0; i < groupKeyExprList.Count; i++) {
                 var orderParam = Expression.Parameter(groupingType, "g");
-                var orderAccessor = Expression.Field(
+                var orderAccessor = groupKeyTypeFacade.CreateMemberAccessor(
                     Expression.Property(orderParam, "Key"),
-                    AnonType.IndexToField(i)
+                    i
                 );
 
                 target = Expression.Call(
@@ -69,25 +70,27 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
                 );
             }
 
-            return MakeAggregatingProjection(target, groupingType, groupKeyExprList.Count);
+            return MakeAggregatingProjection(target, groupingType, groupKeyTypeFacade);
         }
 
-        Expression MakeAggregatingProjection(Expression target, Type groupingType, int groupCount) {
+        Expression MakeAggregatingProjection(Expression target, Type groupingType, AnonTypeFacade groupKeyTypeFacade) {
             var param = Expression.Parameter(groupingType, "g");
+            var groupCount = groupKeyTypeFacade.MemberCount;
 
             var projectionExprList = new List<Expression> {
                 Expression.Call(typeof(Enumerable), nameof(Enumerable.Count), new[] { ItemType }, param)
             };
 
             for(var i = 0; i < groupCount; i++)
-                projectionExprList.Add(Expression.Field(Expression.Property(param, "Key"), AnonType.IndexToField(i)));
+                projectionExprList.Add(groupKeyTypeFacade.CreateMemberAccessor(Expression.Property(param, "Key"), i));
 
             projectionExprList.AddRange(MakeAggregates(param, _totalSummary));
 
             if(groupCount > 0)
                 projectionExprList.AddRange(MakeAggregates(param, _groupSummary));
 
-            var projectionLambda = Expression.Lambda(AnonType.CreateNewExpression(projectionExprList, _anonTypeNewTweaks), param);
+            var projectionTypeFacade = new AnonTypeFacade(projectionExprList);
+            var projectionLambda = Expression.Lambda(projectionTypeFacade.CreateNewExpression(_anonTypeNewTweaks), param);
 
             return Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { param.Type, projectionLambda.ReturnType }, target, Expression.Quote(projectionLambda));
         }
