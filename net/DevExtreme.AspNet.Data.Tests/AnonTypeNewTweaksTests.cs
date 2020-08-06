@@ -8,8 +8,8 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class AnonTypeNewTweaksTests {
-        static readonly ICollection<Expression> EMPTY_EXPR_LIST = Array.Empty<Expression>();
-        static readonly ICollection<Expression> PARTIAL_EXPR_LIST = new[] {
+        static readonly IReadOnlyCollection<Expression> EMPTY_EXPR_LIST = Array.Empty<Expression>();
+        static readonly IReadOnlyCollection<Expression> PARTIAL_EXPR_LIST = new[] {
             Expression.Constant(0),
             Expression.Constant(1),
             Expression.Constant(2),
