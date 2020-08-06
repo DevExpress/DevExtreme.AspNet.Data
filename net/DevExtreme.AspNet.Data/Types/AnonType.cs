@@ -70,12 +70,19 @@ namespace DevExtreme.AspNet.Data.Types {
             }
 
             var typeArguments = expressions.Select(i => i.Type).ToArray();
-            var type = Get(typeArguments);
+            return CreateNewExpression(Get(typeArguments), typeArguments, expressions, true);
+        }
 
+        public static Expression CreateNewExpression(Type type, Type[] typeArguments, IEnumerable<Expression> expressions, bool useFields) {
             return Expression.New(
                 type.GetConstructor(typeArguments),
                 expressions,
-                Enumerable.Range(0, typeArguments.Length).Select(i => type.GetField(IndexToField(i)))
+                Enumerable.Range(0, typeArguments.Length).Select(i => {
+                    var name = IndexToField(i);
+                    return useFields
+                        ? (MemberInfo)type.GetField(name)
+                        : (MemberInfo)type.GetProperty(name);
+                })
             );
         }
 
