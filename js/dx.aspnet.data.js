@@ -60,33 +60,33 @@
             onBeforeSend = options.onBeforeSend,
             onAjaxError = options.onAjaxError;
 
-        function ajaxSendRequest(ajaxSettings, d, customSuccessHandler) {
-            ajaxUtility.sendRequest(ajaxSettings).then(
-                function(res, textStatus, xhr) {
-                    if(customSuccessHandler)
-                        customSuccessHandler(d, res, xhr);
-                    else
-                        d.resolve();
-                },
-                function(xhr, textStatus) {
-                    var error = getErrorMessageFromXhr(xhr);
-
-                    if(onAjaxError) {
-                        var e = { xhr: xhr, error: error };
-                        onAjaxError(e);
-                        error = e.error;
-                    }
-
-                    if(error)
-                        d.reject(error);
-                    else
-                        d.reject(xhr, textStatus);
-                }
-            );
-        }
-
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
             var d = Deferred();
+
+            function sendCore() {
+                ajaxUtility.sendRequest(ajaxSettings).then(
+                    function(res, textStatus, xhr) {
+                        if(customSuccessHandler)
+                            customSuccessHandler(d, res, xhr);
+                        else
+                            d.resolve();
+                    },
+                    function(xhr, textStatus) {
+                        var error = getErrorMessageFromXhr(xhr);
+
+                        if(onAjaxError) {
+                            var e = { xhr: xhr, error: error };
+                            onAjaxError(e);
+                            error = e.error;
+                        }
+
+                        if(error)
+                            d.reject(error);
+                        else
+                            d.reject(xhr, textStatus);
+                    }
+                );
+            }
 
             if(requiresKey && !keyExpr) {
                 d.reject(new Error("Primary key is not specified (operation: '" + operation + "', url: '" + ajaxSettings.url + "')"));
@@ -100,9 +100,9 @@
 
                 if (onBeforeSend) {
                     Promise.resolve(onBeforeSend(operation, ajaxSettings))
-                    .then(() => ajaxSendRequest(ajaxSettings, d,customSuccessHandler));
+                    .then(() => sendCore());
                 } else {
-                    ajaxSendRequest(ajaxSettings, d, customSuccessHandler);
+                    sendCore();
                 }
             }
 
