@@ -61,7 +61,9 @@
             onAjaxError = options.onAjaxError;
 
         function send(operation, requiresKey, ajaxSettings, customSuccessHandler) {
-            var d = Deferred();
+            var d = Deferred(),
+                thenable,
+                beforeSendResult;
 
             function sendCore() {
                 ajaxUtility.sendRequest(ajaxSettings).then(
@@ -98,12 +100,16 @@
                     ajaxSettings.dataType = "text";
                 }
 
-                if (onBeforeSend) {
-                    Promise.resolve(onBeforeSend(operation, ajaxSettings))
-                    .then(() => sendCore());
-                } else {
-                    sendCore();
+                if(onBeforeSend) {
+                    beforeSendResult = onBeforeSend(operation, ajaxSettings);
+                    if(beforeSendResult && typeof beforeSendResult.then === "function")
+                        thenable = beforeSendResult;
                 }
+
+                if(thenable)
+                    thenable.then(sendCore); // TODO handle error
+                else
+                    sendCore();
             }
 
             return d.promise();
