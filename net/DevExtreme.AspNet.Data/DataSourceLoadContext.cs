@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
-            AllowEmpty = !_providerInfo.IsL2S,
+            AllowEmpty = !_providerInfo.IsL2S && !_providerInfo.IsMongoDB,
             AllowUnusedMembers = !_providerInfo.IsL2S
         };
 
@@ -232,7 +232,7 @@ namespace DevExtreme.AspNet.Data {
 
         public bool HasTotalSummary => !IsEmpty(TotalSummary);
 
-        public bool HasGroupSummary => !IsEmpty(GroupSummary);
+        public bool HasGroupSummary => HasGroups && !IsEmpty(GroupSummary);
 
         public bool SummaryIsTotalCountOnly {
             get {
