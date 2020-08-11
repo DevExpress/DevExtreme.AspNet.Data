@@ -107,7 +107,7 @@
                 }
 
                 if(thenable)
-                    thenable.then(sendCore, d.reject);
+                    thenable.then(sendCore, function(error) { d.reject(error); });
                 else
                     sendCore();
             }
