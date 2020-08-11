@@ -662,6 +662,21 @@
             store.load();
         });
 
+        QUnit.test("error", function(assert) {
+            var done = assert.async();
+
+            var store = createStore({
+                onBeforeSend: function() {
+                    return Promise.reject("test reason");
+                }
+            });
+
+            store.load().fail(function(error) {
+                assert.equal(error.message, "test reason");
+                done();
+            });
+        });
+
     });
 
     QUnit.module("cache-busting", function() {

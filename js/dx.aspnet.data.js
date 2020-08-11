@@ -107,7 +107,7 @@
                 }
 
                 if(thenable)
-                    thenable.then(sendCore); // TODO handle error
+                    thenable.then(sendCore, d.reject);
                 else
                     sendCore();
             }
