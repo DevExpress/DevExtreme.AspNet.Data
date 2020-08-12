@@ -110,15 +110,19 @@ namespace DevExtreme.AspNet.Data {
                         return false;
 
                     if(_providerInfo.IsEFCore) {
+                        var version = _providerInfo.Version;
+
                         // https://github.com/aspnet/EntityFrameworkCore/issues/2341
                         // https://github.com/aspnet/EntityFrameworkCore/issues/11993
                         // https://github.com/aspnet/EntityFrameworkCore/issues/11999
-                        if(_providerInfo.Version < new Version(2, 2, 0))
+                        if(version < new Version(2, 2, 0))
                             return false;
 
-                        #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
-                        if(HasAvg(TotalSummary) || HasAvg(GroupSummary))
-                            return false;
+                        if(version.Major < 5) {
+                            // https://github.com/aspnet/EntityFrameworkCore/issues/11711
+                            if(HasAvg(TotalSummary) || HasAvg(GroupSummary))
+                                return false;
+                        }
                     }
 
                     return true;
