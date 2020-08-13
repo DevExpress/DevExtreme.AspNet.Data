@@ -630,6 +630,55 @@
         });
     });
 
+    QUnit.module("async onBeforeSend", function() {
+
+        QUnit.test("success", function(assert) {
+            var done = assert.async();
+
+            XHRMock.use(function(req) {
+                assert.equal(req.header("Authorization"), "Bearer 123")
+                done();
+                return NEVER_RESOLVE;
+            });
+
+            function getTokenAsync() {
+                return Promise.resolve("123");
+            }
+
+            function addAuthorizationAsync(ajaxSettings) {
+                return getTokenAsync().then(function(token) {
+                    ajaxSettings.headers = {
+                        Authorization: "Bearer " + token
+                    };
+                });
+            }
+
+            var store = createStore({
+                onBeforeSend: function(op, ajaxSettings) {
+                    return addAuthorizationAsync(ajaxSettings);
+                }
+            });
+
+            store.load();
+        });
+
+        QUnit.test("error", function(assert) {
+            var done = assert.async();
+
+            var store = createStore({
+                onBeforeSend: function() {
+                    return Promise.reject("test reason");
+                }
+            });
+
+            store.load().fail(function(error) {
+                assert.equal(error.message, "test reason");
+                done();
+            });
+        });
+
+    });
+
     QUnit.module("cache-busting", function() {
 
         function testCacheBusting(testName, action) {
