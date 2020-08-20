@@ -72,6 +72,12 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void ConvertClientValue_TrivialConversion() {
+            var value = typeof(UtilsTests);
+            Assert.Same(value, Utils.ConvertClientValue(value, value.GetType()));
+        }
+
     }
 
 }
