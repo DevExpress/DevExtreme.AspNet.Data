@@ -43,6 +43,8 @@ namespace DevExtreme.AspNet.Data {
                     currentTarget = ReadExpando(currentTarget, clientExprItem);
                 else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
+                else if(BsonBindingHelper.IsBsonType(currentTarget.Type))
+                    currentTarget = BsonBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
                     currentTarget = FixReflectedType(Expression.PropertyOrField(currentTarget, clientExprItem));
 

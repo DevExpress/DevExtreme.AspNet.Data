@@ -46,7 +46,6 @@ namespace DevExtreme.AspNet.Data {
             var clientAccessor = Convert.ToString(criteriaJson[0]);
             var clientOperation = hasExplicitOperation ? Convert.ToString(criteriaJson[1]).ToLower() : "=";
             var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
-            var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
             if(CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
                 var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
@@ -59,6 +58,11 @@ namespace DevExtreme.AspNet.Data {
                 if(customResult != null)
                     return customResult;
             }
+
+            if(BsonBindingHelper.IsBsonType(ItemType))
+                return CompileBinaryBson(dataItemExpr, clientAccessor, clientOperation, clientValue);
+
+            var isStringOperation = IsStringOperation(clientOperation);
 
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor, progression => {
                 if(isStringOperation)
@@ -260,6 +264,13 @@ namespace DevExtreme.AspNet.Data {
             return Convert.ToString(criteriaJson[0]) == "!";
         }
 
+        static bool IsStringOperation(string clientOperation) {
+            return clientOperation == CONTAINS
+                || clientOperation == STARTS_WITH
+                || clientOperation == ENDS_WITH
+                || clientOperation == NOT_CONTAINS;
+        }
+
         string GetStringOperationMethodName(string clientOperation) {
             if(clientOperation == STARTS_WITH)
                 return nameof(String.StartsWith);
@@ -283,6 +294,14 @@ namespace DevExtreme.AspNet.Data {
                 progression.RemoveAt(progression.Count - 1);
 
             progression.Add(toLowerCall);
+        }
+
+        Expression CompileBinaryBson(ParameterExpression dataItemExpr, string clientAccessor, string clientOperation, object clientValue) {
+            return Expression.MakeBinary(
+                TranslateBinaryOperation(clientOperation),
+                CompileAccessorExpression(dataItemExpr, clientAccessor),
+                BsonBindingHelper.CreateBsonValueExpr(clientValue)
+            );
         }
 
         class BinaryExpressionInfo : IBinaryExpressionInfo {
