@@ -33,10 +33,16 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
         }
 
-        #warning Remove summaryTypes with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
-        public static void Run<T>(IQueryable<T> data, string[] summaryTypes = null) where T : IEntity {
-            summaryTypes = summaryTypes ?? new[] { "count", "min", "max", "sum", "avg" };
+        public static void Run<T>(IQueryable<T> data) where T : IEntity {
+            if(Compat.CanUseRemoteAvg(data.Provider)) {
+                RunCore(data, new[] { "count", "min", "max", "sum", "avg" });
+            } else {
+                RunCore(data, new[] { "count", "min", "max", "sum" });
+                RunCore(data, new[] { "avg" });
+            }
+        }
 
+        static void RunCore<T>(IQueryable<T> data, string[] summaryTypes) where T : IEntity {
             var group = Array.ConvertAll(
                 new[] { nameof(IEntity.Group1), nameof(IEntity.Group2) },
                 i => new GroupingInfo {

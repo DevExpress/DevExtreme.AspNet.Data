@@ -23,15 +23,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             var loadOptions = new SampleLoadOptions {
                 RemoteGrouping = true,
                 Group = BuildGroupParams(),
-                GroupSummary = BuildSummaryParams()
+                GroupSummary = BuildSummaryParams(Compat.CanUseRemoteAvg(data.Provider))
             };
-
-            #warning Remove with https://github.com/aspnet/EntityFrameworkCore/issues/11711 fix
-            if(data.Provider.GetType().FullName.StartsWith("Microsoft.EntityFrameworkCore")) {
-                loadOptions.GroupSummary = loadOptions.GroupSummary
-                    .Where(i => i.SummaryType != "avg")
-                    .ToArray();
-            }
 
             Assert.Null(Record.Exception(delegate {
                 DataSourceLoader.Load(data, loadOptions);
@@ -62,10 +55,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             return list.ToArray();
         }
 
-        static SummaryInfo[] BuildSummaryParams() {
+        static SummaryInfo[] BuildSummaryParams(bool useAvg) {
             var list = new List<SummaryInfo>();
 
-            foreach(var type in new[] { "count", "min", "max", "sum", "avg" }) {
+            var numericSummaryTypes = new List<string> { "count", "min", "max", "sum" };
+            if(useAvg)
+                numericSummaryTypes.Add("avg");
+
+            foreach(var type in numericSummaryTypes) {
                 list.Add(new SummaryInfo { Selector = PROP_NUM, SummaryType = type });
                 list.Add(new SummaryInfo { Selector = PROP_NULL_NUM, SummaryType = type });
             }
