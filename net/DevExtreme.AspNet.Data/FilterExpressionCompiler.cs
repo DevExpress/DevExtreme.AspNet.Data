@@ -297,9 +297,19 @@ namespace DevExtreme.AspNet.Data {
         }
 
         Expression CompileBinaryBson(ParameterExpression dataItemExpr, string clientAccessor, string clientOperation, object clientValue) {
+            var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor);
+
+            if(IsStringOperation(clientOperation)) {
+                return CompileStringFunction(
+                    Expression.Convert(accessorExpr, typeof(String)),
+                    clientOperation,
+                    Convert.ToString(clientValue)
+                );
+            }
+
             return Expression.MakeBinary(
                 TranslateBinaryOperation(clientOperation),
-                CompileAccessorExpression(dataItemExpr, clientAccessor),
+                accessorExpr,
                 BsonBindingHelper.CreateBsonValueExpr(clientValue)
             );
         }

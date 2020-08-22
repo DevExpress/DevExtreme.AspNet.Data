@@ -25,6 +25,13 @@ namespace DevExtreme.AspNet.Data.Tests {
                 $"({left} == null)",
                 Compile(new[] { "p", null })
             );
+
+            var leftAsString = Compat.ExpectedConvert(left, "String");
+
+            Assert.Equal(
+                $"{leftAsString}.Contains(\"abc\")",
+                Compile(new[] { "p", "contains", "abc" })
+            );
         }
 
     }
