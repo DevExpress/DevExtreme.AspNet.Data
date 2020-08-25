@@ -60,31 +60,29 @@ namespace DevExtreme.AspNet.Data.Types {
             return GetTemplate(size).MakeGenericType(typeArguments.ToArray());
         }
 
-        public static Expression CreateNewExpression(ICollection<Expression> expressions, AnonTypeNewTweaks tweaks) {
+        public static Expression CreateNewExpression(IReadOnlyCollection<Expression> expressions, AnonTypeNewTweaks tweaks) {
             if(tweaks != null) {
                 if(!tweaks.AllowEmpty && expressions.Count < 1)
                     return Expression.Constant(1);
 
-                if(!tweaks.AllowUnusedMembers) {
-                    var unusedCount = SnapSize(expressions.Count) - expressions.Count;
-
-                    if(unusedCount > 0)
-                        expressions = new List<Expression>(expressions);
-
-                    while(unusedCount > 0) {
-                        expressions.Add(Expression.Constant(false));
-                        unusedCount--;
-                    }
-                }
+                if(!tweaks.AllowUnusedMembers)
+                    expressions = Pad(expressions, SnapSize(expressions.Count));
             }
 
             var typeArguments = expressions.Select(i => i.Type).ToArray();
-            var type = Get(typeArguments);
+            return CreateNewExpression(Get(typeArguments), typeArguments, expressions, true);
+        }
 
+        public static Expression CreateNewExpression(Type type, Type[] typeArguments, IEnumerable<Expression> expressions, bool useFields) {
             return Expression.New(
                 type.GetConstructor(typeArguments),
                 expressions,
-                Enumerable.Range(0, typeArguments.Length).Select(i => type.GetField(IndexToField(i)))
+                Enumerable.Range(0, typeArguments.Length).Select(i => {
+                    var name = IndexToField(i);
+                    return useFields
+                        ? (MemberInfo)type.GetField(name)
+                        : (MemberInfo)type.GetProperty(name);
+                })
             );
         }
 
@@ -96,6 +94,15 @@ namespace DevExtreme.AspNet.Data.Types {
             return int.Parse(field.Substring(1));
         }
 
+        static IReadOnlyCollection<Expression> Pad(IReadOnlyCollection<Expression> collection, int totalCount) {
+            var padLen = totalCount - collection.Count;
+
+            if(padLen < 1)
+                return collection;
+
+            var padding = Enumerable.Repeat(Expression.Constant(false), padLen);
+            return new List<Expression>(collection.Concat(padding));
+        }
     }
 
 }

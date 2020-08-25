@@ -31,7 +31,7 @@ namespace DevExtreme.AspNet.Data {
 
             var lambda = Expression.Lambda(
                 useNew
-                    ? AnonType.CreateNewExpression(memberExprList, _anonTypeNewTweaks)
+                    ? new AnonTypeFacade(memberExprList).CreateNewExpression(_anonTypeNewTweaks)
                     : memberExprList[0],
                 itemExpr
             );

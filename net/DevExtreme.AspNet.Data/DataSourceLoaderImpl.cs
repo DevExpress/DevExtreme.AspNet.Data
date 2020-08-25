@@ -87,7 +87,7 @@ namespace DevExtreme.AspNet.Data {
                     }
 
                     var loadKeysExpr = CreateBuilder().BuildLoadExpr(true, selectOverride: Context.PrimaryKey);
-                    var keyTuples = await ExecExprAsync<AnonType>(loadKeysExpr);
+                    var keyTuples = await ExecExprAnonAsync(loadKeysExpr);
 
                     loadExpr = CreateBuilder().BuildLoadExpr(false, filterOverride: FilterFromKeys(keyTuples));
                 } else {
@@ -118,7 +118,7 @@ namespace DevExtreme.AspNet.Data {
 
         async Task<IEnumerable<ExpandoObject>> ExecWithSelectAsync(Expression loadExpr) {
             if(Context.UseRemoteSelect)
-                return SelectHelper.ConvertRemoteResult(await ExecExprAsync<AnonType>(loadExpr), Context.FullSelect);
+                return SelectHelper.ConvertRemoteResult(await ExecExprAnonAsync(loadExpr), Context.FullSelect);
 
             return SelectHelper.Evaluate(await ExecExprAsync<S>(loadExpr), Context.FullSelect);
         }
@@ -180,7 +180,7 @@ namespace DevExtreme.AspNet.Data {
         async Task<RemoteGroupingResult> ExecRemoteGroupingAsync(bool remotePaging, bool suppressGroups, bool suppressTotals) {
             return RemoteGroupTransformer.Run(
                 Source.ElementType,
-                await ExecExprAsync<AnonType>(CreateBuilder().BuildLoadGroupsExpr(remotePaging, suppressGroups, suppressTotals)),
+                await ExecExprAnonAsync(CreateBuilder().BuildLoadGroupsExpr(remotePaging, suppressGroups, suppressTotals)),
                 !suppressGroups && Context.HasGroups ? Context.Group.Count : 0,
                 !suppressTotals ? Context.TotalSummary : null,
                 !suppressGroups ? Context.GroupSummary : null
@@ -205,6 +205,11 @@ namespace DevExtreme.AspNet.Data {
 #endif
 
             return result;
+        }
+
+        async Task<IEnumerable<AnonType>> ExecExprAnonAsync(Expression expr) {
+            return (await ExecExprAsync<object>(expr))
+                .Select(i => i is AnonType anon ? anon : new DynamicClassAdapter(i));
         }
 
         IList FilterFromKeys(IEnumerable<AnonType> keyTuples) {
