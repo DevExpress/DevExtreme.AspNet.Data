@@ -9,9 +9,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void Filter() {
-            var compiler = new FilterExpressionCompiler(typeof(BsonDocument), false);
-
-            string Compile(IList filter) => compiler.Compile(filter).Body.ToString();
+            string Compile(IList filter, bool stringToLower = false)
+                => new FilterExpressionCompiler(typeof(BsonDocument), false, stringToLower).Compile(filter).Body.ToString();
 
             var left = "obj.get_Item(\"p\")";
             var rightString = Compat.ExpectedConvert("\"v\"", "BsonValue");
@@ -29,8 +28,23 @@ namespace DevExtreme.AspNet.Data.Tests {
             var leftAsString = Compat.ExpectedConvert(left, "String");
 
             Assert.Equal(
-                $"{leftAsString}.Contains(\"abc\")",
-                Compile(new[] { "p", "contains", "abc" })
+                $"IsMatch({leftAsString}, \"\\.\", Singleline)",
+                Compile(new[] { "p", "contains", "." })
+            );
+
+            Assert.Equal(
+                $"Not(IsMatch({leftAsString}, \"\\.\", IgnoreCase, Singleline))",
+                Compile(new[] { "p", "notcontains", "." }, true)
+            );
+
+            Assert.Equal(
+                $"IsMatch({leftAsString}, \"^\\.\", Singleline)",
+                Compile(new[] { "p", "startswith", "." })
+            );
+
+            Assert.Equal(
+                $"IsMatch({leftAsString}, \"\\.$\", Singleline)",
+                Compile(new[] { "p", "endswith", "." })
             );
         }
 

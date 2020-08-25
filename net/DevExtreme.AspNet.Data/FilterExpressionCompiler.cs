@@ -195,6 +195,30 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
+        Expression CompileStringFunctionViaRegex(Expression accessorExpr, string clientOperation, string value) {
+            var pattern = Regex.Escape(value);
+
+            if(clientOperation == STARTS_WITH)
+                pattern = "^" + pattern;
+            else if(clientOperation == ENDS_WITH)
+                pattern += "$";
+
+            var regexOptions = RegexOptions.Singleline;
+            if(_stringToLower)
+                regexOptions |= RegexOptions.IgnoreCase;
+
+            Expression result = Expression.Call(typeof(Regex), nameof(Regex.IsMatch), Type.EmptyTypes,
+                Expression.Convert(accessorExpr, typeof(String)),
+                Expression.Constant(pattern),
+                Expression.Constant(regexOptions)
+            );
+
+            if(clientOperation == NOT_CONTAINS)
+                result = Expression.Not(result);
+
+            return result;
+        }
+
         Expression CompileGroup(ParameterExpression dataItemExpr, IList criteriaJson) {
             var operands = new List<Expression>();
             var isAnd = true;
@@ -300,8 +324,8 @@ namespace DevExtreme.AspNet.Data {
             var accessorExpr = CompileAccessorExpression(dataItemExpr, clientAccessor);
 
             if(IsStringOperation(clientOperation)) {
-                return CompileStringFunction(
-                    Expression.Convert(accessorExpr, typeof(String)),
+                return CompileStringFunctionViaRegex(
+                    accessorExpr,
                     clientOperation,
                     Convert.ToString(clientValue)
                 );
