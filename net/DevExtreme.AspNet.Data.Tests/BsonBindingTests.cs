@@ -22,7 +22,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             Assert.Equal(
-                $"({left} == null)",
+                $"({left} == BsonNull)",
                 Compile(new[] { "p", null })
             );
 
