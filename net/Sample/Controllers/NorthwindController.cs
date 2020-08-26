@@ -7,125 +7,72 @@ using Sample.Models;
 using DevExtreme.AspNet.Data;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Sample.Controllers {
 
+    // https://stackoverflow.com/q/32770477
+    class LookupItem {
+        public BsonValue Value { get; set; }
+        public BsonValue Text { get; set; }
+    }
+
     [Route("nwind")]
     public class NorthwindController : Controller {
-        NorthwindContext _nwind;
+        IMongoDatabase _nwind;
 
-        public NorthwindController(NorthwindContext nwind) {
-            _nwind = nwind;
+        public NorthwindController() {
+            // https://github.com/InfinniPlatform/Northwind
+            _nwind = new MongoClient("mongodb://localhost").GetDatabase("Northwind");
         }
 
         [HttpGet("orders")]
-        public async Task<IActionResult> Orders(DataSourceLoadOptions loadOptions) {
-            var source = _nwind.Orders.Select(o => new {
-                o.OrderId,
-                o.CustomerId,
-                o.OrderDate,
-                o.Freight,
-                o.ShipCountry,
-                o.ShipRegion,
-                o.ShipVia
-            });
+        public IActionResult Orders(DataSourceLoadOptions loadOptions) {
+            var source = _nwind.GetCollection<BsonDocument>("Orders").AsQueryable();
 
-            loadOptions.PrimaryKey = new[] { "OrderId" };
-            loadOptions.PaginateViaPrimaryKey = true;
+            loadOptions.PreSelect = new[] {
+                "_id",
+                "Customer.Id",
+                "OrderDate",
+                "Freight",
+                "ShipCountry",
+                "ShipRegion",
+                "ShipVia.Id"
+            };
 
-            return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
-        }
+            loadOptions.StringToLower = true;
 
-        [HttpGet("order-details")]
-        public async Task<IActionResult> OrderDetails(int orderId, DataSourceLoadOptions loadOptions) {
-            var source = _nwind.OrderDetails
-                .Where(i => i.OrderId == orderId)
-                .Select(i => new {
-                    Product = i.Product.ProductName,
-                    Price = i.UnitPrice,
-                    i.Quantity,
-                    Sum = i.UnitPrice * i.Quantity
-                });
-
-            return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
+            return Json2(DataSourceLoader.Load(source, loadOptions));
         }
 
         [HttpGet("customers-lookup")]
-        public async Task<object> CustomersLookup(DataSourceLoadOptions loadOptions) {
-            var source = _nwind.Customers
-                .OrderBy(c => c.CompanyName)
-                .Select(c => new {
-                    Value = c.CustomerId,
-                    Text = $"{c.CompanyName} ({c.Country})"
+        public object CustomersLookup(DataSourceLoadOptions loadOptions) {
+            var source = _nwind.GetCollection<BsonDocument>("Customers").AsQueryable()
+                .OrderBy(c => c["CompanyName"])
+                .Select(c => new LookupItem {
+                    Value = c["_id"],
+                    Text = c["CompanyName"]
                 });
 
-            return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
+            return Json2(DataSourceLoader.Load(source, loadOptions));
         }
 
         [HttpGet("shippers-lookup")]
-        public async Task<object> ShippersLookup(DataSourceLoadOptions loadOptions) {
-            var source = _nwind.Shippers
-                .OrderBy(s => s.CompanyName)
-                .Select(s => new {
-                    Value = s.ShipperId,
-                    Text = s.CompanyName
+        public object ShippersLookup(DataSourceLoadOptions loadOptions) {
+            var source = _nwind.GetCollection<BsonDocument>("Shippers").AsQueryable()
+                .OrderBy(s => s["CompanyName"])
+                .Select(s => new LookupItem {
+                    Value = s["_id"],
+                    Text = s["CompanyName"]
                 });
 
-            return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
+            return Json2(DataSourceLoader.Load(source, loadOptions));
         }
 
-        [HttpPut("update-order")]
-        public async Task<IActionResult> UpdateOrder(int key, string values) {
-            var order = await _nwind.Orders.FirstOrDefaultAsync(o => o.OrderId == key);
-            if(order == null)
-                return StatusCode(409, "Order not found");
-
-            JsonConvert.PopulateObject(values, order);
-
-            if(!TryValidateModel(order))
-                return BadRequest(ModelState.ToFullErrorString());
-
-            await _nwind.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        [HttpPost("insert-order")]
-        public async Task<IActionResult> InsertOrder(string values) {
-            var order = new Order();
-            JsonConvert.PopulateObject(values, order);
-
-            if(!TryValidateModel(order))
-                return BadRequest(ModelState.ToFullErrorString());
-
-            _nwind.Orders.Add(order);
-            await _nwind.SaveChangesAsync();
-
-            return Json(order.OrderId);
-        }
-
-        [HttpDelete("delete-order")]
-        public async Task<IActionResult> DeleteOrder(int key) {
-            var order = await _nwind.Orders.FirstOrDefaultAsync(o => o.OrderId == key);
-            if(order == null)
-                return StatusCode(409, "Order not found");
-
-            _nwind.Orders.Remove(order);
-            await _nwind.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        [HttpGet("products")]
-        public async Task<IActionResult> Products(DataSourceLoadOptions loadOptions) {
-            var source = _nwind.Products.Select(p => new {
-                p.ProductId,
-                p.ProductName,
-                p.Category.CategoryName,
-                p.UnitPrice
-            });
-
-            return Json(await DataSourceLoader.LoadAsync(source, loadOptions));
+        IActionResult Json2(object obj) {
+            var json = JsonConvert.SerializeObject(obj, new BsonValueConverter());
+            return Content(json, "application/json");
         }
 
     }

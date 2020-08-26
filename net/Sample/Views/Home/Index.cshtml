@@ -7,7 +7,7 @@
         $("#grid").dxDataGrid({
 
             dataSource: DevExpress.data.AspNet.createStore({
-                key: "orderId",
+                key: "_id",
                 loadUrl: "@Url.Action("Orders", "Northwind")",
                 updateUrl: "@Url.Action("UpdateOrder", "Northwind")",
                 insertUrl: "@Url.Action("InsertOrder", "Northwind")",
@@ -21,39 +21,39 @@
 
             columns: [
                 {
-                    dataField: "customerId",
+                    dataField: "Customer.Id",
                     caption: "Customer",
                     lookup: {
-                        valueExpr: "value",
-                        displayExpr: "text",
+                        valueExpr: "Value",
+                        displayExpr: "Text",
                         dataSource: DevExpress.data.AspNet.createStore({
-                            key: "value",
+                            key: "Value",
                             loadUrl: "@Url.Action("CustomersLookup", "Northwind")"
                         })
                     }
                 },
                 {
-                    dataField: "orderDate",
+                    dataField: "OrderDate",
                     dataType: "date",
                     headerFilter: {
                         groupInterval: "quarter"
                     }
                 },
                 {
-                    dataField: "freight",
+                    dataField: "Freight",
                     headerFilter: {
                         groupInterval: 100
                     }
                 },
-                "shipCountry",
-                "shipRegion",
+                "ShipCountry",
+                "ShipRegion",
                 {
-                    dataField: "shipVia",
+                    dataField: "ShipVia.Id",
                     lookup: {
-                        valueExpr: "value",
-                        displayExpr: "text",
+                        valueExpr: "Value",
+                        displayExpr: "Text",
                         dataSource: DevExpress.data.AspNet.createStore({
-                            key: "value",
+                            key: "Value",
                             loadUrl: "@Url.Action("ShippersLookup", "Northwind")"
                         })
                     }
@@ -74,28 +74,12 @@
             },
             summary: {
                 totalItems: [
-                    { column: "freight", summaryType: "sum" }
+                    { column: "Freight", summaryType: "sum" }
                 ],
                 groupItems: [
-                    { column: "freight", summaryType: "sum" },
+                    { column: "Freight", summaryType: "sum" },
                     { summaryType: "count" }
                 ]
-            },
-
-            masterDetail: {
-                enabled: true,
-                template: function(container, options) {
-                    $("<div>")
-                        .dxDataGrid({
-                            dataSource: DevExpress.data.AspNet.createStore({
-                                loadUrl: "@Url.Action("OrderDetails", "Northwind")",
-                                loadParams: { orderId: options.data.orderId }
-                            }),
-                            remoteOperations: true,
-                            showBorders: true
-                        })
-                        .appendTo(container);
-                }
             }
         });
     });
