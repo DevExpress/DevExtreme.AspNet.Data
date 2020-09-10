@@ -53,7 +53,8 @@ namespace DevExtreme.AspNet.Data {
                     DataItemExpression = dataItemExpr,
                     AccessorText = clientAccessor,
                     Operation = clientOperation,
-                    Value = clientValue
+                    Value = clientValue,
+                    StringToLower = _stringToLower
                 });
 
                 if(customResult != null)
@@ -290,6 +291,7 @@ namespace DevExtreme.AspNet.Data {
             public string AccessorText { get; set; }
             public string Operation { get; set; }
             public object Value { get; set; }
+            public bool StringToLower { get; set; }
         }
     }
 

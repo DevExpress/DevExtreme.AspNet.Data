@@ -8,6 +8,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         string AccessorText { get; }
         string Operation { get; }
         object Value { get; }
+        bool StringToLower { get; }
     }
 
 }
