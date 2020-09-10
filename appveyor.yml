@@ -1,5 +1,5 @@
 version: '{build}'
-image: Visual Studio 2019
+image: Previous Visual Studio 2019
 
 environment:
   RELEASE_KEY_SECRET:
