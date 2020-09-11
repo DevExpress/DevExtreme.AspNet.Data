@@ -2,6 +2,7 @@ version: '{build}'
 image: Visual Studio 2019
 
 environment:
+  CHROME_BIN: "C:/Program Files/Google/Chrome/Application/chrome.exe"
   RELEASE_KEY_SECRET:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
