@@ -10,7 +10,7 @@ install:
   # TODO remove when .NET 5 is RTM
   - nuget update -self
   - ps: "wget https://dot.net/v1/dotnet-install.ps1 -o dotnet-install.ps1"
-  - ps: "& .\\dotnet-install.ps1 -Version 5.0.100-preview.8.20417.9 -InstallDir $env:ProgramFiles\\dotnet"
+  - ps: "& .\\dotnet-install.ps1 -Version 5.0.100-rc.1.20452.10 -InstallDir $env:ProgramFiles\\dotnet"
 
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
