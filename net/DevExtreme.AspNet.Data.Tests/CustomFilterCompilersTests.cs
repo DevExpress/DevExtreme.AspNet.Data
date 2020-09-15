@@ -91,6 +91,29 @@ namespace DevExtreme.AspNet.Data.Tests {
             }
         }
 
+        [Fact]
+        public void StringToLower() {
+            try {
+                var stringToLowerLog = new List<bool>();
+
+                CustomFilterCompilers.RegisterBinaryExpressionCompiler(info => {
+                    stringToLowerLog.Add(info.StringToLower);
+                    return Expression.Constant(true);
+                });
+
+                foreach(var stringToLower in new[] { false, true }) {
+                    DataSourceLoader.Load(new Product[0], new SampleLoadOptions {
+                        Filter = new[] { "any", "any", "any" },
+                        StringToLower = stringToLower
+                    });
+                }
+
+                Assert.False(stringToLowerLog[0]);
+                Assert.True(stringToLowerLog[1]);
+            } finally {
+                CustomFilterCompilers.Binary.CompilerFuncs.Clear();
+            }
+        }
 
         class Product {
             public string Name { get; set; }
