@@ -93,6 +93,7 @@
     <Compile Include="Summary.cs" />
     <Compile Include="SelectNotMapped.cs" />
     <Compile Include="T640117.cs" />
+    <Compile Include="T931030.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Bug112.cs" />
   </ItemGroup>

@@ -35,6 +35,7 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
             modelBuilder.Entity<Async_DataItem>();
             modelBuilder.Entity<ExpandLinqSumType_DataItem>();
             modelBuilder.Entity<RemoteGroupCount_DataItem>();
+            modelBuilder.Entity<T931030_DataItem>();
         }
 
         public static async Task ExecAsync(Func<TestDbContext, Task> action) {
