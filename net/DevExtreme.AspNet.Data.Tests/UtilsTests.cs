@@ -74,8 +74,35 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void ConvertClientValue_TrivialConversion() {
-            var value = typeof(UtilsTests);
+            object value = typeof(UtilsTests);
             Assert.Same(value, Utils.ConvertClientValue(value, value.GetType()));
+        }
+
+        [Fact]
+        public void ConvertClientValue_ToBaseType() {
+            object value = typeof(int);
+            Assert.Same(value, Utils.ConvertClientValue(value, typeof(Type)));
+        }
+
+        [Fact]
+        public void ConvertClientValue_ToImplementedInterface() {
+            object value = 123;
+            Assert.Same(value, Utils.ConvertClientValue(value, typeof(IConvertible)));
+        }
+
+        [Fact]
+        public void ConvertClientValue_ToSameNullable() {
+            object value = 123;
+            Assert.Same(value, Utils.ConvertClientValue(value, typeof(int?)));
+        }
+
+        [Fact]
+        public void ConvertClientValue_Numeric() {
+            // https://stackoverflow.com/q/30080763 - notes about IsAssignableFrom
+            object input = 123;
+            object output = Utils.ConvertClientValue(input, typeof(long));
+            Assert.NotSame(input, output);
+            Assert.Equal(123L, output);
         }
 
     }
