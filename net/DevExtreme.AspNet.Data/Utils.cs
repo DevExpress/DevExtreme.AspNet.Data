@@ -36,7 +36,7 @@ namespace DevExtreme.AspNet.Data {
             if(value == null || type == null)
                 return value;
 
-            if(value.GetType() == type)
+            if(type.IsAssignableFrom(value.GetType()))
                 return value;
 
             type = StripNullableType(type);
