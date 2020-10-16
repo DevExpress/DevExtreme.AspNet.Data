@@ -177,7 +177,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html",
-          "hash": "IiGkNc3pJnLQu7tBoLXTlA=="
+          "hash": "Jr3JCoQ/vif1e479WYSBHA=="
         }
       },
       "is_incremental": false,
@@ -322,13 +322,13 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build"
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
           "incrementalPhase": "build"
         },
         "TocDocumentProcessor": {

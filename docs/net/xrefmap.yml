@@ -817,6 +817,18 @@ references:
   commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
   fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Operation
   nameWithType: IBinaryExpressionInfo.Operation
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower
+  name: StringToLower
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_StringToLower
+  commentId: P:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower
+  nameWithType: IBinaryExpressionInfo.StringToLower
+- uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower*
+  name: StringToLower
+  href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_StringToLower_
+  commentId: Overload:DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower
+  fullName: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.StringToLower
+  nameWithType: IBinaryExpressionInfo.StringToLower
 - uid: DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.Value
   name: Value
   href: api/DevExtreme.AspNet.Data.Helpers.IBinaryExpressionInfo.html#DevExtreme_AspNet_Data_Helpers_IBinaryExpressionInfo_Value
