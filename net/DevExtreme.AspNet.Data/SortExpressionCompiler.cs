@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,16 +22,33 @@ namespace DevExtreme.AspNet.Data {
                 if(String.IsNullOrEmpty(selector))
                     continue;
 
-                var accessorExpr = CompileAccessorExpression(dataItemExpr, selector);
+                var customTarget = CustomSortCompilers.Sort.CompilerFuncs.Count == 0 ? null
+                    : CustomSortCompilers.Sort.TryCompile(target, new SortExpressionInfo {
+                        DataItemExpression = dataItemExpr,
+                        AccessorText = selector,
+                        Desc = item.Desc,
+                        First = first
+                    });
 
-                target = Expression.Call(typeof(Queryable), Utils.GetSortMethod(first, item.Desc), new[] { ItemType, accessorExpr.Type }, target, Expression.Quote(Expression.Lambda(accessorExpr, dataItemExpr)));
+                if(customTarget == null) {
+                    var accessorExpr = CompileAccessorExpression(dataItemExpr, selector);
+                    target = Expression.Call(typeof(Queryable), Utils.GetSortMethod(first, item.Desc), new[] { ItemType, accessorExpr.Type }, target, Expression.Quote(Expression.Lambda(accessorExpr, dataItemExpr)));
+                } else {
+                    target = customTarget;
+                }
+
                 first = false;
             }
 
             return target;
         }
 
-
+        class SortExpressionInfo : ISortExpressionInfo {
+            public Expression DataItemExpression { get; set; }
+            public string AccessorText { get; set; }
+            public bool Desc { get; set; }
+            public bool First { get; set; }
+        }
     }
 
 }
