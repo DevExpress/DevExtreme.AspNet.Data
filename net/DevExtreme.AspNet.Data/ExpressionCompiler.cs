@@ -43,7 +43,7 @@ namespace DevExtreme.AspNet.Data {
 
                 if(customResult != null)
                     currentTarget = customResult;
-                else if(currentTarget.Type.GetInterfaces().Any(f => f.IsGenericType && f.GetGenericTypeDefinition() == typeof(IDictionary<string, object>)))
+                else if(currentTarget.Type == typeof(ExpandoObject))
                     currentTarget = ReadExpando(currentTarget, clientExprItem);
                 else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
