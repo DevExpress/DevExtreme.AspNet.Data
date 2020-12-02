@@ -8,7 +8,7 @@ environment:
 
 install:
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
-  - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . OpenCover
+  - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2020.2.4 JetBrains.dotCover.CommandLineTools
   - c:\Python38\python -m pip install -q codecov
   - node build/make-nojquery
   - node build/replace-meta "%APPVEYOR_BUILD_NUMBER%" "%APPVEYOR_REPO_TAG_NAME%" "%APPVEYOR_REPO_NAME%"
@@ -35,45 +35,7 @@ test_script:
   - npm run karma-bundled-nojquery
   - npm run karma-bundled-nojquery-cjs
 
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
-    -target:dotnet.exe
-    -targetargs:"vstest
-    net\DevExtreme.AspNet.Data.Tests\bin\Debug\netcoreapp2.1\DevExtreme.AspNet.Data.Tests.dll
-    net\DevExtreme.AspNet.Data.Tests.EFCore1\bin\Debug\netcoreapp2.1\DevExtreme.AspNet.Data.Tests.EFCore1.dll
-    net\DevExtreme.AspNet.Data.Tests.EFCore2\bin\Debug\netcoreapp2.1\DevExtreme.AspNet.Data.Tests.EFCore2.dll
-    net\DevExtreme.AspNet.Data.Tests.NH\bin\Debug\netcoreapp2.1\DevExtreme.AspNet.Data.Tests.NH.dll
-    net\DevExtreme.AspNet.Data.Tests.Xpo\bin\Debug\netcoreapp2.1\DevExtreme.AspNet.Data.Tests.Xpo.dll
-    "
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
-    -output:coverage_netcore.xml
-
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
-    -target:dotnet.exe
-    -targetargs:"vstest
-    net\DevExtreme.AspNet.Data.Tests.EFCore3\bin\Debug\netcoreapp3.1\DevExtreme.AspNet.Data.Tests.EFCore3.dll
-    "
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
-    -output:coverage_netcore3.xml
-
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:user -oldstyle
-    -target:dotnet.exe
-    -targetargs:"vstest net\DevExtreme.AspNet.Data.Tests.EFCore5\bin\Debug\net5\DevExtreme.AspNet.Data.Tests.EFCore5.dll"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
-    -output:coverage_net5.xml
-
-  - >-
-    OpenCover\tools\OpenCover.Console -returntargetcode -register:Path64
-    -target:%xunit20%\xunit.console.exe
-    -targetargs:"
-    net\DevExtreme.AspNet.Data.Tests.NET4\bin\Debug\DevExtreme.AspNet.Data.Tests.dll
-    net\DevExtreme.AspNet.Data.Tests.EF6\bin\Debug\DevExtreme.AspNet.Data.Tests.EF6.dll
-    net\DevExtreme.AspNet.Data.Tests.L2S\bin\Debug\DevExtreme.AspNet.Data.Tests.L2S.dll
-    -noshadow"
-    -filter:"+[DevExtreme*]* -[DevExtreme.AspNet.Data.Tests]* -[DevExtreme.AspNet.Data.Tests.*]*"
-    -output:coverage_netfx.xml
+  - JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_net.xml --TargetExecutable=net\dotnet-test-all.cmd
 
 after_test:
   - npm pack
@@ -82,7 +44,7 @@ after_test:
   - if defined RELEASE_KEY_SECRET dotnet pack net\DevExtreme.AspNet.Data --configuration=Release
 
 on_success:
-  - c:\Python38\Scripts\codecov -X gcov -f coverage_netcore.xml coverage_netcore3.xml coverage_net5.xml coverage_netfx.xml js-test/coverage/lcov.info
+  - c:\Python38\Scripts\codecov -X gcov -f coverage_net.xml js-test/coverage/lcov.info
 
 artifacts:
   - path: net\DevExtreme.AspNet.Data\bin\Release\*.nupkg
