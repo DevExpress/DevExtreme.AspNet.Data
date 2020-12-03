@@ -139,6 +139,8 @@ namespace DevExtreme.AspNet.Data {
                                 Expression.Constant(0)
                             );
                         }
+
+                        // Comparer<T>.Default fallback?
                     }
                 }
 
