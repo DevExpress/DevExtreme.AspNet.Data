@@ -134,6 +134,15 @@ namespace DevExtreme.AspNet.Data {
                     );
                 }
 
+                if(expressionType == ExpressionType.Equal || expressionType == ExpressionType.NotEqual) {
+                    if(!HasEqualityOperator(Utils.StripNullableType(accessorExpr.Type))) {
+                        Expression result = Expression.Call(typeof(Object), "Equals", Type.EmptyTypes, accessorExpr, valueExpr);
+                        if(expressionType == ExpressionType.NotEqual)
+                            result = Expression.Not(result);
+                        return result;
+                    }
+                }
+
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
@@ -141,6 +150,16 @@ namespace DevExtreme.AspNet.Data {
 
         bool IsInequality(ExpressionType type) {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
+        }
+
+        bool HasEqualityOperator(Type type) {
+            if(type.IsEnum || (int)Type.GetTypeCode(type) > 2)
+                return true;
+
+            if(type == typeof(Guid) || type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
+                return true;
+
+            return type.GetMethod("op_Equality", new[] { type, type }) != null;
         }
 
         Expression CompileCompareToCall(Expression accessorExpr, ExpressionType expressionType, object clientValue, MethodInfo compareToMethod) {
