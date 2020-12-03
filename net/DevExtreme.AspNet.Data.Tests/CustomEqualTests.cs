@@ -29,8 +29,8 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(1, loadResult.totalCount);
             Assert.Contains(
                 not
-                 ? ".Where(obj => Not(Equals(obj, {1})))"
-                 : ".Where(obj => Equals(obj, {1}))",
+                    ? ".Where(obj => Not(Equals(obj, {1})))"
+                    : ".Where(obj => Equals(obj, {1}))",
                 loadOptions.ExpressionLog[0]
             );
         }
