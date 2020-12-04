@@ -57,6 +57,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void Struct() {
+            var source = new[] {
+                new DataItemStruct { Value = 1 },
+                new DataItemStruct { Value = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                GuardNulls = false,
+                Filter = new object[] { "this", new DataItemStruct { Value = 1 } },
+                IsCountQuery = true
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+
+            Assert.Equal(1, loadResult.totalCount);
+            Assert.Contains(
+                ".Where(obj => Equals(" + Compat.ExpectedConvert("obj", "Object") +  ", " + Compat.ExpectedConvert("{1}", "Object") + "))",
+                loadOptions.ExpressionLog[0]
+            );
+        }
+
         class DataItemNoOperator {
             public int Value;
             public override bool Equals(object obj)
@@ -77,6 +99,16 @@ namespace DevExtreme.AspNet.Data.Tests {
                 => throw new NotImplementedException();
             public override int GetHashCode()
                 => throw new NotImplementedException();
+            public override string ToString()
+                => "{" + Value + "}";
+        }
+
+        struct DataItemStruct {
+            public int Value;
+            public override bool Equals(object obj)
+                => Value == ((DataItemStruct)obj).Value;
+            public override int GetHashCode()
+                => Value.GetHashCode();
             public override string ToString()
                 => "{" + Value + "}";
         }

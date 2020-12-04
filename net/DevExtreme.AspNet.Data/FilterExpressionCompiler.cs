@@ -114,7 +114,12 @@ namespace DevExtreme.AspNet.Data {
                 }
 
                 if(expressionType == ExpressionType.Equal || expressionType == ExpressionType.NotEqual) {
-                    if(!HasEqualityOperator(Utils.StripNullableType(accessorExpr.Type))) {
+                    var type = Utils.StripNullableType(accessorExpr.Type);
+                    if(!HasEqualityOperator(type)) {
+                        if(type.IsValueType) {
+                            accessorExpr = Expression.Convert(accessorExpr, typeof(Object));
+                            valueExpr = Expression.Convert(valueExpr, typeof(Object));
+                        }
                         Expression result = Expression.Call(typeof(Object), "Equals", Type.EmptyTypes, accessorExpr, valueExpr);
                         if(expressionType == ExpressionType.NotEqual)
                             result = Expression.Not(result);
