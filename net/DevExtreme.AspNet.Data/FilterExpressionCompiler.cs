@@ -102,28 +102,7 @@ namespace DevExtreme.AspNet.Data {
                 if(_stringToLower && clientValue is String)
                     clientValue = ((string)clientValue).ToLower();
 
-                if(IsInequality(expressionType)) {
-                    if(accessorExpr.Type == typeof(Guid) || accessorExpr.Type == typeof(Guid?)) {
-                        var method = typeof(Guid).GetMethod(nameof(Guid.CompareTo), new[] { typeof(Guid) });
-                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
-                    }
-
-                    if(Utils.StripNullableType(accessorExpr.Type).IsEnum) {
-                        var method = typeof(Enum).GetMethod(nameof(Enum.CompareTo), new[] { typeof(object) });
-                        return CompileCompareToCall(accessorExpr, expressionType, clientValue, method);
-                    }
-                }
-
                 Expression valueExpr = Expression.Constant(clientValue, accessorExpr.Type);
-
-                if(accessorExpr.Type == typeof(String) && IsInequality(expressionType)) {
-                    var compareMethod = typeof(String).GetMethod(nameof(String.Compare), new[] { typeof(String), typeof(String) });
-                    return Expression.MakeBinary(
-                        expressionType,
-                        Expression.Call(compareMethod, accessorExpr, valueExpr),
-                        Expression.Constant(0)
-                    );
-                }
 
                 if(useDynamicBinding) {
                     var compareMethod = typeof(Utils).GetMethod(nameof(Utils.DynamicCompare));
@@ -134,6 +113,42 @@ namespace DevExtreme.AspNet.Data {
                     );
                 }
 
+                if(expressionType == ExpressionType.Equal || expressionType == ExpressionType.NotEqual) {
+                    var type = Utils.StripNullableType(accessorExpr.Type);
+                    if(!HasEqualityOperator(type)) {
+                        if(type.IsValueType) {
+                            accessorExpr = Expression.Convert(accessorExpr, typeof(Object));
+                            valueExpr = Expression.Convert(valueExpr, typeof(Object));
+                        }
+                        Expression result = Expression.Call(typeof(Object), "Equals", Type.EmptyTypes, accessorExpr, valueExpr);
+                        if(expressionType == ExpressionType.NotEqual)
+                            result = Expression.Not(result);
+                        return result;
+                    }
+                }
+
+                if(IsInequality(expressionType)) {
+                    var type = Utils.StripNullableType(accessorExpr.Type);
+                    if(!HasComparisonOperator(type)) {
+                        if(type.IsValueType) {
+                            var compareToMethod = type.GetMethod("CompareTo", new[] { type }) ?? type.GetMethod("CompareTo", new[] { typeof(object) });
+                            if(compareToMethod != null && !compareToMethod.IsStatic && compareToMethod.ReturnType == typeof(int))
+                                return CompileCompareToCall(accessorExpr, expressionType, clientValue, compareToMethod);
+                        }
+
+                        var compareMethod = type.GetMethod("Compare", new[] { type, type });
+                        if(compareMethod != null && compareMethod.IsStatic && compareMethod.ReturnType == typeof(int)) {
+                            return Expression.MakeBinary(
+                                expressionType,
+                                Expression.Call(compareMethod, accessorExpr, valueExpr),
+                                Expression.Constant(0)
+                            );
+                        }
+
+                        // Comparer<T>.Default fallback?
+                    }
+                }
+
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
@@ -141,6 +156,30 @@ namespace DevExtreme.AspNet.Data {
 
         bool IsInequality(ExpressionType type) {
             return type == ExpressionType.LessThan || type == ExpressionType.LessThanOrEqual || type == ExpressionType.GreaterThanOrEqual || type == ExpressionType.GreaterThan;
+        }
+
+        bool HasEqualityOperator(Type type) {
+            if(type.IsEnum || (int)Type.GetTypeCode(type) > 2)
+                return true;
+
+            if(type == typeof(Guid) || type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
+                return true;
+
+            return type.GetMethod("op_Equality", new[] { type, type }) != null;
+        }
+
+        bool HasComparisonOperator(Type type) {
+            if(type.IsEnum)
+                return false;
+
+            var code = (int)Type.GetTypeCode(type);
+            if(code > 4 && code < 18)
+                return true;
+
+            if(type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
+                return true;
+
+            return type.GetMethod("op_GreaterThan", new[] { type, type }) != null;
         }
 
         Expression CompileCompareToCall(Expression accessorExpr, ExpressionType expressionType, object clientValue, MethodInfo compareToMethod) {
