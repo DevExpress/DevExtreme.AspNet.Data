@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -19,6 +20,7 @@ namespace DevExtreme.AspNet.Data {
             } else {
                 var type = provider.GetType();
                 var typeName = type.FullName;
+                var providerAssembly = type.Assembly;
 
                 if(typeName == "Microsoft.Data.Entity.Query.Internal.EntityQueryProvider" || typeName == "System.Data.Entity.Internal.Linq.DbQueryProvider")
                     IsEFClassic = true;
@@ -32,11 +34,26 @@ namespace DevExtreme.AspNet.Data {
                     IsL2S = true;
                 else if(typeName.StartsWith("MongoDB.Driver.Linq."))
                     IsMongoDB = true;
+                else if(typeName.StartsWith("LinqKit.ExpandableQueryProvider`1")) {
+                    if(TryAssembly("Microsoft.EntityFrameworkCore", ref providerAssembly)) {
+                        IsEFCore = true;
+                    } else if(TryAssembly("EntityFramework", ref providerAssembly)) {
+                        IsEFClassic = true;
+                    }
+                }
 
-                Version = type.Assembly.GetName().Version;
+                Version = providerAssembly.GetName().Version;
             }
         }
 
+        bool TryAssembly(string name, ref Assembly result) {
+            try {
+                result = AppDomain.CurrentDomain.GetAssemblies().First(i => i.GetName().Name == name);
+                return true;
+            } catch {
+                return false;
+            }
+        }
     }
 
 }
