@@ -68,11 +68,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         void AddPaging() {
-            if(Context.Skip > 0)
+            if(Context.Skip >= 0 && Context.Take > 0) {
                 Expr = QueryableCall(nameof(Queryable.Skip), Expression.Constant(Context.Skip));
-
-            if(Context.Take > 0)
                 Expr = QueryableCall(nameof(Queryable.Take), Expression.Constant(Context.Take));
+            }
         }
 
         void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
