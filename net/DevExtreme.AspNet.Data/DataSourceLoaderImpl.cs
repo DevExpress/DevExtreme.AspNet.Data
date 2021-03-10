@@ -44,6 +44,9 @@ namespace DevExtreme.AspNet.Data {
             if(Context.IsCountQuery)
                 return new LoadResult { totalCount = await ExecTotalCountAsync() };
 
+            if(Context.Take < 0)
+                return await LoadAggregatesOnlyAsync();
+
             var result = new LoadResult();
 
             if(Context.UseRemoteGrouping && Context.ShouldEmptyGroups) {
@@ -116,6 +119,21 @@ namespace DevExtreme.AspNet.Data {
             return result;
         }
 
+        async Task<LoadResult> LoadAggregatesOnlyAsync() {
+            var result = new LoadResult();
+
+            if(Context.HasTotalSummary) {
+                if(Context.IsRemoteTotalSummary) {
+                    await ContinueWithAggregationAsync<S>(null, null, result, false);
+                } else {
+                    var data = await ExecExprAsync<S>(CreateBuilder().BuildLoadExpr(false));
+                    await ContinueWithAggregationAsync(data, new DefaultAccessor<S>(), result, false);
+                }
+            }
+
+            return result;
+        }
+
         async Task<IEnumerable<ExpandoObject>> ExecWithSelectAsync(Expression loadExpr) {
             if(Context.UseRemoteSelect)
                 return SelectHelper.ConvertRemoteResult(await ExecExprAnonAsync(loadExpr), Context.FullSelect);
@@ -129,14 +147,14 @@ namespace DevExtreme.AspNet.Data {
                 var groups = new GroupHelper<R>(accessor).Group(loadResult, Context.Group);
                 if(Context.RequireGroupCount)
                     result.groupCount = groups.Count;
-                await ContinueWithAggregationAsync(groups, accessor, result);
+                await ContinueWithAggregationAsync(groups, accessor, result, true);
             } else {
-                await ContinueWithAggregationAsync(loadResult, accessor, result);
+                await ContinueWithAggregationAsync(loadResult, accessor, result, true);
             }
         }
 
-        async Task ContinueWithAggregationAsync<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result) {
-            if(Context.UseRemoteGrouping && !Context.SummaryIsTotalCountOnly && Context.HasSummary && !Context.HasGroups) {
+        async Task ContinueWithAggregationAsync<R>(IEnumerable data, IAccessor<R> accessor, LoadResult result, bool includeData) {
+            if(Context.IsRemoteTotalSummary) {
                 var totalsResult = await ExecRemoteTotalsAsync();
                 result.totalCount = totalsResult.TotalCount;
                 result.summary = totalsResult.Totals;
@@ -152,12 +170,14 @@ namespace DevExtreme.AspNet.Data {
                 if(Context.SummaryIsTotalCountOnly) {
                     result.summary = Enumerable.Repeat((object)totalCount, Context.TotalSummary.Count).ToArray();
                 } else if(Context.HasSummary) {
-                    data = Buffer<R>(data);
+                    if(includeData)
+                        data = Buffer<R>(data);
                     result.summary = new AggregateCalculator<R>(data, accessor, Context.TotalSummary, Context.GroupSummary).Run();
                 }
             }
 
-            result.data = data;
+            if(includeData)
+                result.data = data;
         }
 
         Task<int> ExecCountAsync(Expression expr) {
