@@ -476,6 +476,37 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Theory]
+        [InlineData(false, false)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(true, true)]
+        public void Load_NegativeTake(bool remoteGrouping, bool group) {
+            var loadOptions = new SampleLoadOptions {
+                Filter = new[] { "this", "<", "100" },
+                RemoteGrouping = remoteGrouping,
+                Take = -1,
+                TotalSummary = new[] {
+                    new SummaryInfo { Selector = "this", SummaryType = "sum" }
+                }
+            };
+
+            if(group) {
+                loadOptions.Group = new[] {
+                    new GroupingInfo { Selector = "any", IsExpanded = !remoteGrouping }
+                };
+                loadOptions.GroupSummary = new[] {
+                    new SummaryInfo { Selector = "any", SummaryType = "any" }
+                };
+            }
+
+            var loadResult = DataSourceLoader.Load(new[] { 1, 1, 2, 2, 100 }, loadOptions);
+            Assert.Null(loadResult.data);
+            Assert.Equal(6m, loadResult.summary[0]);
+
+            Assert.Single(loadOptions.ExpressionLog);
+        }
+
+        [Theory]
         [InlineData(false, true)]
         [InlineData(false, false)]
         [InlineData(true, false)]
