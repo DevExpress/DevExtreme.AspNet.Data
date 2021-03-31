@@ -6,7 +6,11 @@ environment:
   RELEASE_KEY_SECRET:
     secure: qK/vt4/ihLipeamB7l+Dng==
 
+init:
+  - git config --global core.autocrlf true
+
 install:
+  - editorconfig-checker
   - if defined RELEASE_KEY_SECRET (nuget install secure-file -ExcludeVersion -Verbosity quiet && secure-file\tools\secure-file -decrypt net\DevExtreme.AspNet.Data\release.snk.enc -secret %RELEASE_KEY_SECRET%)
   - nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2020.2.4 JetBrains.dotCover.CommandLineTools
   - c:\Python38\python -m pip install -q codecov
@@ -21,7 +25,6 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
 
 test_script:
-  - npm run eclint
   - npm run eslint
 
   - npm i --no-save "devextreme@~18.1.0"
