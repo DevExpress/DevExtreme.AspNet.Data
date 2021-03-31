@@ -21,7 +21,7 @@ build_script:
   - dotnet build net\DevExtreme.AspNet.Data.sln
 
 test_script:
-  - npm run eclint
+  - editorconfig-checker
   - npm run eslint
 
   - npm i --no-save "devextreme@~18.1.0"
