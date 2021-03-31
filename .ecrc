@@ -1,0 +1,9 @@
+{
+  "NoColor": false,
+  "Exclude": [
+    "^docs/",
+    "\\.dbml(\\.layout)?$",
+    "\\.designer\\.cs$",
+    "\\.snk\\.enc$"
+  ]
+}
