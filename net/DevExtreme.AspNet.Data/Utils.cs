@@ -47,6 +47,9 @@ namespace DevExtreme.AspNet.Data {
             if(type == typeof(DateTime) && value is String)
                 return DateTime.Parse((string)value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
+            if(type == typeof(DateTimeOffset) && value is DateTime date)
+                return new DateTimeOffset(date);
+
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
                 return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
