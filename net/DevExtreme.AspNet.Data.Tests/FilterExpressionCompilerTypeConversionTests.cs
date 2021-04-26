@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -223,6 +225,24 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertEvaluation(obj, new[] { "NullableTime", "contains", "23" });
         }
 
+        [Theory]
+        [InlineData(DateParseHandling.None)]
+        [InlineData(DateParseHandling.DateTime)]
+        [InlineData(DateParseHandling.DateTimeOffset)]
+        public void Issue477(DateParseHandling dateParseHandling) {
+            var date = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var filterJSON = JsonConvert.SerializeObject(new object[] { "this", date });
+            var deserializedFilter = JsonConvert.DeserializeObject<IList>(filterJSON, new JsonSerializerSettings {
+                DateParseHandling = dateParseHandling
+            });
+
+            var loadOptions = new SampleLoadOptions {
+                Filter = deserializedFilter
+            };
+
+            var loadResult = DataSourceLoader.Load(new[] { date }, loadOptions);
+            Assert.Single(loadResult.data);
+        }
     }
 
 }
