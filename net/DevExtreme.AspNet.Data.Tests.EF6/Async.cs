@@ -21,6 +21,8 @@ namespace DevExtreme.AspNet.Data.Tests.EF6 {
                 await context.SaveChangesAsync();
 
                 await AsyncTestHelper.RunAsync(set);
+
+                await AsyncTestHelper.RunAsync(LinqKit.Extensions.AsExpandable(set));
             });
         }
 
