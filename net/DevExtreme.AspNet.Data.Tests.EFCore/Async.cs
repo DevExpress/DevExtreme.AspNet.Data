@@ -21,6 +21,10 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
                 await context.SaveChangesAsync();
 
                 await AsyncTestHelper.RunAsync(set);
+
+#if EFCORE5
+                await AsyncTestHelper.RunAsync(LinqKit.Extensions.AsExpandable(set));
+#endif
             });
         }
 
