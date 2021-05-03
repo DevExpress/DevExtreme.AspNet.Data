@@ -35,23 +35,20 @@ namespace DevExtreme.AspNet.Data {
                 else if(typeName.StartsWith("MongoDB.Driver.Linq."))
                     IsMongoDB = true;
                 else if(typeName.StartsWith("LinqKit.ExpandableQueryProvider`1")) {
-                    if(TryAssembly("Microsoft.EntityFrameworkCore", ref providerAssembly)) {
-                        IsEFCore = true;
-                    } else if(TryAssembly("EntityFramework", ref providerAssembly)) {
-                        IsEFClassic = true;
+                    switch(providerAssembly.GetName().Name) {
+                        case "LinqKit.Microsoft.EntityFrameworkCore":
+                            IsEFCore = true;
+                            providerAssembly = Assembly.Load("Microsoft.EntityFrameworkCore");
+                            break;
+
+                        case "LinqKit.EntityFramework":
+                            IsEFClassic = true;
+                            providerAssembly = Assembly.Load("EntityFramework");
+                            break;
                     }
                 }
 
                 Version = providerAssembly.GetName().Version;
-            }
-        }
-
-        bool TryAssembly(string name, ref Assembly result) {
-            try {
-                result = AppDomain.CurrentDomain.GetAssemblies().First(i => i.GetName().Name == name);
-                return true;
-            } catch {
-                return false;
             }
         }
     }
