@@ -20,7 +20,6 @@
   "devDependencies": {
     "@types/jquery": "^2.0.39",
     "bluebird": "^3.5.1",
-    "eclint": "^2.0.1",
     "eslint": "^5.3.0",
     "jquery": "^3.5.1",
     "karma": "^4.1.0",
@@ -40,7 +39,6 @@
     "karma-bundled-nojquery": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' test.js -o test-bundle.js && karma start --bundled",
     "karma-bundled-nojquery-cjs": "cd js-test && webpack --mode=development --define ASPNET_DATA_SCRIPT='../js-nojquery/index.js' --define define=false test.js -o test-bundle.js && karma start --bundled",
     "dts": "cd js-test && tsc check-ts-compilation.ts && tsc check-ts-compilation.nojquery.ts",
-    "eslint": "eslint .",
-    "eclint": "eclint check *.{yml,json} {net,js,js-test}/**/*.{cs,js,ts,html,json,cshtml,tt} !net/**/{bin,obj}/** !**/*.designer.cs !net/docfx/build/** !js-test/test-bundle.js !net/Sample/{node_modules,wwwroot/lib}/**"
+    "eslint": "eslint ."
   }
 }

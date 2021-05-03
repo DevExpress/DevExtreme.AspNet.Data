@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -28,6 +29,9 @@ namespace DevExtreme.AspNet.Data {
         /// A flag indicating whether the current query is made to get the total number of data objects.
         /// </summary>
         public bool IsCountQuery { get; set; }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsSummaryQuery { get; set; }
 
         /// <summary>
         /// The number of data objects to be skipped from the start of the resulting set.

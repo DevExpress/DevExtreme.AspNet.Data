@@ -88,7 +88,7 @@ namespace DevExtreme.AspNet.Data {
 
         public IReadOnlyList<GroupingInfo> Group => _options.Group;
 
-        public bool HasGroups => !IsEmpty(Group);
+        public bool HasGroups => !IsSummaryQuery && !IsEmpty(Group);
 
         public bool ShouldEmptyGroups {
             get {
@@ -259,6 +259,10 @@ namespace DevExtreme.AspNet.Data {
                     || _providerInfo.IsXPO;
             }
         }
+
+        public bool IsSummaryQuery => _options.IsSummaryQuery;
+
+        public bool IsRemoteTotalSummary => UseRemoteGrouping && !SummaryIsTotalCountOnly && HasSummary && !HasGroups;
     }
 
     // Select
