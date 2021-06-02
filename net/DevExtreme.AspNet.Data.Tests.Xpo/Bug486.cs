@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
         [Fact]
         public async Task Scenario() {
             await UnitOfWorkHelper.ExecAsync(uow => {
-                { 
+                {
                     var department = new Department(uow);
                     var employee = new Employee(uow);
 
