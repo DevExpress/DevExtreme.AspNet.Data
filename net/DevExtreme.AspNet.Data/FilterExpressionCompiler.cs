@@ -19,9 +19,12 @@ namespace DevExtreme.AspNet.Data {
 
         bool _stringToLower;
 
-        public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false)
+        readonly bool _supportsEqualsMethod;
+
+        public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false, bool supportsEqualsMethod = true)
             : base(itemType, guardNulls) {
             _stringToLower = stringToLower;
+            _supportsEqualsMethod = supportsEqualsMethod;
         }
 
         public LambdaExpression Compile(IList criteriaJson) {
@@ -115,7 +118,7 @@ namespace DevExtreme.AspNet.Data {
 
                 if(expressionType == ExpressionType.Equal || expressionType == ExpressionType.NotEqual) {
                     var type = Utils.StripNullableType(accessorExpr.Type);
-                    if(!HasEqualityOperator(type)) {
+                    if(_supportsEqualsMethod && !HasEqualityOperator(type)) {
                         if(type.IsValueType) {
                             accessorExpr = Expression.Convert(accessorExpr, typeof(Object));
                             valueExpr = Expression.Convert(valueExpr, typeof(Object));
