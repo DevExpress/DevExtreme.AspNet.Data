@@ -115,7 +115,7 @@ namespace DevExtreme.AspNet.Data {
 
                 if(expressionType == ExpressionType.Equal || expressionType == ExpressionType.NotEqual) {
                     var type = Utils.StripNullableType(accessorExpr.Type);
-                    if(!HasEqualityOperator(type)) {
+                    if(!HasEqualityOperator(type) && !IsXPObject(type)) {
                         if(type.IsValueType) {
                             accessorExpr = Expression.Convert(accessorExpr, typeof(Object));
                             valueExpr = Expression.Convert(valueExpr, typeof(Object));
@@ -152,6 +152,20 @@ namespace DevExtreme.AspNet.Data {
                 return Expression.MakeBinary(expressionType, accessorExpr, valueExpr);
             }
 
+        }
+
+        bool IsXPObject(Type type) {
+            if (type.IsInterface || type.IsValueType || type.IsPrimitive) {
+                return false;
+            }
+            Type current = type;
+            while (current != typeof(Object)) {
+                if (current.FullName.StartsWith("DevExpress.Xpo.")) {
+                    return true;
+                }
+                current = current.BaseType;
+            }
+            return false;
         }
 
         bool IsInequality(ExpressionType type) {
