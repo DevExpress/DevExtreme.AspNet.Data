@@ -76,6 +76,7 @@ namespace DevExtreme.AspNet.Data {
         public IList Filter => _options.Filter;
         public bool HasFilter => !IsEmptyList(_options.Filter);
         public bool UseStringToLower => _options.StringToLower ?? DataSourceLoadOptionsBase.StringToLowerDefault ?? _providerInfo.IsLinqToObjects;
+        public bool SupportsEqualsMethod => !_providerInfo.IsXPO;
     }
 
     // Grouping

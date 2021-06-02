@@ -10,45 +10,28 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
     public class Bug486 {
 
         [Persistent(nameof(Bug486) + "_" + nameof(Department))]
-        public class Department : XPObject {
-            string _title;
-
-            public Department(Session session)
-                : base(session) {
-            }
-
-            public string Title {
-                get => _title;
-                set => SetPropertyValue(nameof(Title), ref _title, value);
-            }
-
-            [Association("Department-Employees")]
-            public XPCollection<Employee> Employees => GetCollection<Employee>(nameof(Employees));
+        public class Department {
+            [Key]
+            public Guid ID { get; set; }
         }
 
         [Persistent(nameof(Bug486) + "_" + nameof(Employee))]
-        public class Employee : XPObject {
-            Department _department;
-
-            public Employee(Session session)
-                : base(session) {
-            }
+        public class Employee {
+            [Key]
+            public Guid ID { get; set; }
 
             [Association("Department-Employees")]
-            public Department Department {
-                get => _department;
-                set => SetPropertyValue("Department", ref _department, value);
-            }
+            public Department Department { get; set; }
         }
 
         [Fact]
         public async Task Scenario() {
             await UnitOfWorkHelper.ExecAsync(uow => {
                 {
-                    var department = new Department(uow);
-                    var employee = new Employee(uow);
-
-                    department.Employees.Add(employee);
+                    var department = new Department();
+                    var employee = new Employee {
+                        Department = department
+                    };
 
                     uow.Save(department);
                     uow.Save(employee);
