@@ -31,6 +31,18 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void WrongOperator() {
+            TestFilter(
+                new[] {
+                    new DataItemWrongOperator { Value = 1 },
+                    new DataItemWrongOperator { Value = 2 }
+                },
+                "=", new DataItemWrongOperator { Value = 1 },
+                ".Where(obj => Equals(obj, {1}))"
+            );
+        }
+
+        [Fact]
         public void Struct() {
             TestFilter(
                 new[] {
@@ -78,6 +90,20 @@ namespace DevExtreme.AspNet.Data.Tests {
                 => throw new NotImplementedException();
             public override int GetHashCode()
                 => throw new NotImplementedException();
+            public override string ToString()
+                => "{" + Value + "}";
+        }
+
+        class DataItemWrongOperator {
+            public int Value;
+            public static DataItemWrongOperator operator ==(DataItemWrongOperator l, DataItemWrongOperator r)
+                => null;
+            public static DataItemWrongOperator operator !=(DataItemWrongOperator l, DataItemWrongOperator r)
+                => null;
+            public override bool Equals(object obj)
+                => Value == (obj as DataItemWrongOperator).Value;
+            public override int GetHashCode()
+                => Value.GetHashCode();
             public override string ToString()
                 => "{" + Value + "}";
         }
