@@ -168,7 +168,8 @@ namespace DevExtreme.AspNet.Data {
             if(type == typeof(Guid) || type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
                 return true;
 
-            return type.GetMethod("op_Equality", new[] { type, type }) != null;
+            var operatorMethod = type.GetMethod("op_Equality", new[] { type, type });
+            return operatorMethod != null && operatorMethod.ReturnType == typeof(bool);
         }
 
         bool HasComparisonOperator(Type type) {
