@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -96,8 +97,10 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         class DataItemWrongOperator {
             public int Value;
+            [SuppressMessage("Style", "IDE0060")]
             public static DataItemWrongOperator operator ==(DataItemWrongOperator l, DataItemWrongOperator r)
                 => null;
+            [SuppressMessage("Style", "IDE0060")]
             public static DataItemWrongOperator operator !=(DataItemWrongOperator l, DataItemWrongOperator r)
                 => null;
             public override bool Equals(object obj)
