@@ -19,7 +19,6 @@ module.exports = function(config) {
             "../node_modules/bluebird/js/browser/bluebird.core.min.js",
             "test.js"
         );
-        options.browsers.push("IE");
         options.preprocessors = {
             "../js/*.js": "coverage"
         };
