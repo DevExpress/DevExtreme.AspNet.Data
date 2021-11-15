@@ -16,7 +16,6 @@ module.exports = function(config) {
     } else {
         options.files = require("./test-deps.js");
         options.files.push(
-            "../node_modules/bluebird/js/browser/bluebird.core.min.js",
             "test.js"
         );
         options.preprocessors = {
