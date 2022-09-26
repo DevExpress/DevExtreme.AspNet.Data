@@ -1,6 +1,6 @@
 # DevExtreme ASP.NET Data
 
-[![Build status](https://ci.appveyor.com/api/projects/status/6jyq7ocmvbuhvypo/branch/master?svg=true)](https://ci.appveyor.com/project/dxrobot/devextreme-aspnet-data/branch/master)
+[![CI](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/DevExpress/DevExtreme.AspNet.Data/branch/master/graph/badge.svg)](https://codecov.io/gh/DevExpress/DevExtreme.AspNet.Data)
 [![NuGet](https://img.shields.io/nuget/v/DevExtreme.AspNet.Data.svg?maxAge=43200)](https://www.nuget.org/packages/DevExtreme.AspNet.Data)
 [![npm](https://img.shields.io/npm/v/devextreme-aspnet-data.svg?maxAge=43200)](https://www.npmjs.com/package/devextreme-aspnet-data)
