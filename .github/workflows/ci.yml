@@ -1,0 +1,124 @@
+name: CI
+
+concurrency:
+  group: ${{github.workflow}}-${{github.event.pull_request.number || github.sha}}
+  cancel-in-progress: true
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  NUGET_XMLDOC_MODE: "skip"
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: git config --global core.autocrlf true
+    - uses: actions/checkout@v3
+
+    - run: curl -L https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.3.5/ec-linux-amd64.tar.gz  | tar xzf - -C /opt
+    - run: /opt/bin/ec-linux-amd64 -v
+
+    - run: npm i eslint
+    - run: npm run eslint
+
+  test-js:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        devextreme: [ "devextreme@~18.1.0", "devextreme@>=18.2.0" ]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - run: pip install codecov
+    - run: node build/make-nojquery
+
+    - run: npm i --omit=peer
+    - run: npm i --no-save "${{ matrix.devextreme }}"
+    - run: npm run dts
+    - run: npm run karma
+    - run: npm run karma-bundled
+    - run: npm run karma-bundled-nojquery
+    - run: npm run karma-bundled-nojquery-cjs
+
+    - run: codecov -X gcov -f js-test/coverage/lcov.info
+
+  test-dotnet:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/cache@v3
+      with:
+        key: nuget-${{ hashFiles('net/**/*.csproj', 'net/**/packages.config') }}
+        restore-keys: nuget
+        path: |
+          net/packages
+          ~/.nuget/packages
+
+    - run: pip install codecov
+    - run: nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2022.2.3 JetBrains.dotCover.CommandLineTools
+
+    - run: cd net/Sample && npm i
+    - run: nuget restore net/DevExtreme.AspNet.Data.sln -Verbosity quiet
+    - run: dotnet build --no-restore net/DevExtreme.AspNet.Data.sln
+
+    - run: JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_dotnet.xml --TargetExecutable=net\dotnet-test-all.cmd
+
+    - run: codecov -X gcov -f coverage_dotnet.xml
+
+  release-packages:
+    runs-on: ubuntu-latest
+
+    env:
+      RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
+      run: |
+        curl -L -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
+        unzip /opt/secure-file.zip -d /opt/secure-file
+        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
+
+    - run: node build/make-nojquery
+    - run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
+
+    - run: npm pack
+    - run: npm pack ./js-nojquery
+
+    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
+      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: release-packages
+        path: |
+          net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
+          devextreme-aspnet-data-*.tgz
+
+  docfx:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - run: dotnet build net/DevExtreme.AspNet.Data
+    - run: net\docfx\build.cmd
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: docfx-site
+        path: net/docfx/build/site

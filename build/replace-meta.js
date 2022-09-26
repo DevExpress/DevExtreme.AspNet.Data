@@ -10,8 +10,8 @@ const META_COPYRIGHT = "Copyright (c) " + META_COMPANY;
 const META_DESCRIPTION = "DevExtreme data layer extension for ASP.NET";
 const META_PROJECT_URL = "https://github.com/" + MAIN_REPO_NAME;
 
-const BUILD_NUMBER = process.argv[2];
-const TAG = process.argv[3];
+const BUILD_NUMBER = adjustBuildNumber(process.argv[2]);
+const TAG = tagFromRef(process.argv[3]);
 const REPO_NAME = process.argv[4];
 
 let META_VERSION_NUMERIC = "99.0.0";
@@ -65,3 +65,15 @@ if(REPO_NAME === MAIN_REPO_NAME && /^v?(([.\d]+)[\w-]*)$/.test(TAG)) {
         "// Version: " + META_VERSION_FULL + "\r\n" + fs.readFileSync(fullFilePath, "utf-8")
     );
 });
+
+function adjustBuildNumber(text) {
+    if(text)
+        return String(1024 + Number(text));
+    return text;
+}
+
+function tagFromRef(ref) {
+    if(ref && ref.startsWith("refs/tags/"))
+        return ref.split("/", 3)[2];
+    return ref;
+}
