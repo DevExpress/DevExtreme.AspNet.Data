@@ -22,7 +22,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
 
                 await AsyncTestHelper.RunAsync(set);
 
-#if EFCORE5
+#if !EFCORE1 && !EFCORE2 && !EFCORE3
                 await AsyncTestHelper.RunAsync(LinqKit.Extensions.AsExpandable(set));
 #endif
             });
