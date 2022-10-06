@@ -1,0 +1,4 @@
+name: "DevExtreme.AspNet.Data CodeQL config"
+
+paths-ignore:
+  - "net/Sample/wwwroot/lib/**"
