@@ -34,7 +34,7 @@ namespace DevExtreme.AspNet.Data {
                     IsL2S = true;
                 else if(typeName.StartsWith("MongoDB.Driver.Linq."))
                     IsMongoDB = true;
-                else if(typeName.StartsWith("LinqKit.ExpandableQueryProvider`1")) {
+                else if(typeName.StartsWith("LinqKit.ExpandableQueryProvider`1") || typeName.StartsWith("LinqKit.ExpandableIncludableQueryProvider`1")) {
                     switch(providerAssembly.GetName().Name) {
                         case "LinqKit.Microsoft.EntityFrameworkCore":
                             IsEFCore = true;
