@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "config:js-lib"
+  ],
+  "prConcurrentLimit": 2,
+  "semanticCommits": "enabled",
+  "labels": [
+    "dependencies"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": [ "*" ],
+      "matchUpdateTypes": [ "minor", "patch" ],
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [ "*" ],
+      "matchUpdateTypes": [ "major" ],
+      "enabled": false
+    }
+  ],
+  "reviewers": [
+    "team:devextreme-devops"
+  ],
+  "constraints": {
+    "node": "^16.18.0"
+  }
+}
