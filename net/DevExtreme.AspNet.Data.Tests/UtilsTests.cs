@@ -8,6 +8,13 @@ namespace DevExtreme.AspNet.Data.Tests {
 
     public class UtilsTests {
 
+        [Fact]
+        public void CodeQLCheck() {
+            var r = new Random();
+            var password = "hello" + r.Next();
+            Console.Write("Tell everyone: " + password);
+        }
+
         // AddRequiredSort
 
         [Fact]
