@@ -52,10 +52,9 @@ jobs:
         # queries: security-extended,security-and-quality
 
 
-    # Build
-    - run: cd net/Sample && npm i
-    - run: nuget restore net/DevExtreme.AspNet.Data.sln -Verbosity quiet
-    - run: dotnet build --no-restore net/DevExtreme.AspNet.Data.sln
+    # Custom build for C#
+    - if: matrix.language == 'csharp'
+      uses: ./.github/actions/dotnet-test-build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
