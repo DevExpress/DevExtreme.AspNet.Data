@@ -1,0 +1,18 @@
+name: dotnet-test-build
+description: Builds net/DevExtreme.AspNet.Data.sln in Debug configuration, with NuGet cache
+
+runs:
+  using: "composite"
+
+  steps:
+  - uses: actions/cache@v3
+    with:
+      key: ${{ runner.os }}-nuget-${{ hashFiles('net/**/*.csproj') }}
+      restore-keys: ${{ runner.os }}-nuget-
+      path: ~/.nuget/packages
+
+  - shell: bash
+    run: cd net/Sample && npm i
+
+  - shell: bash
+    run: dotnet build -c Debug net/DevExtreme.AspNet.Data.sln

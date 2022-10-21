@@ -62,19 +62,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - uses: actions/cache@v3
-      with:
-        key: nuget-${{ hashFiles('net/**/*.csproj', 'net/**/packages.config') }}
-        restore-keys: nuget
-        path: |
-          net/packages
-          ~/.nuget/packages
-
     - run: pip install codecov
     - run: nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2022.2.3 JetBrains.dotCover.CommandLineTools
 
-    - run: cd net/Sample && npm i
-    - run: dotnet build net/DevExtreme.AspNet.Data.sln
+    - uses: ./.github/actions/dotnet-test-build
 
     - run: JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_dotnet.xml --TargetExecutable=net\dotnet-test-all.cmd
 
