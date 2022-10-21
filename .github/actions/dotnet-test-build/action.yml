@@ -7,8 +7,8 @@ runs:
   steps:
   - uses: actions/cache@v3
     with:
-      key: nuget-${{ hashFiles('net/**/*.csproj') }}
-      restore-keys: nuget
+      key: ${{ runner.os }}-nuget-${{ hashFiles('net/**/*.csproj') }}
+      restore-keys: ${{ runner.os }}-nuget-
       path: ~/.nuget/packages
 
   - shell: bash
