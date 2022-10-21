@@ -18,6 +18,12 @@ on:
   schedule:
     - cron: '0 0 * * 6'
 
+env:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  NUGET_XMLDOC_MODE: "skip"
+
 jobs:
   analyze:
     name: Analyze
