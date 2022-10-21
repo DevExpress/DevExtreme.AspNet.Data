@@ -1,6 +1,32 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    ":pinOnlyDevDependencies"
+  ],
+  "prConcurrentLimit": 2,
+  "semanticCommits": "enabled",
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [ "*" ],
+      "matchUpdateTypes": [ "minor", "patch" ],
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [ "*" ],
+      "excludePackageNames": [ "DevExpress.Xpo", "FluentNHibernate" ],
+      "matchUpdateTypes": [ "major" ],
+      "enabled": false
+    }
+  ],
+  "reviewers": [
+    "team:devextreme-devops"
+  ],
+  "ignorePaths": [
+    "net/DevExtreme.AspNet.Data/DevExtreme.AspNet.Data.csproj",
+    "net/Sample/Sample.csproj"
   ]
 }
