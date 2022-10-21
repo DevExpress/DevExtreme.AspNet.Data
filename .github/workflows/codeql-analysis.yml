@@ -18,10 +18,16 @@ on:
   schedule:
     - cron: '0 0 * * 6'
 
+env:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  NUGET_XMLDOC_MODE: "skip"
+
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
@@ -52,10 +58,9 @@ jobs:
         # queries: security-extended,security-and-quality
 
 
-    # Build
-    - run: cd net/Sample && npm i
-    - run: nuget restore net/DevExtreme.AspNet.Data.sln -Verbosity quiet
-    - run: dotnet build --no-restore net/DevExtreme.AspNet.Data.sln
+    # Custom build for C#
+    - if: matrix.language == 'csharp'
+      uses: ./.github/actions/dotnet-test-build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
