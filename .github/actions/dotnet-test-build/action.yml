@@ -7,11 +7,9 @@ runs:
   steps:
   - uses: actions/cache@v3
     with:
-      key: nuget-${{ hashFiles('net/**/*.csproj', 'net/**/packages.config') }}
+      key: nuget-${{ hashFiles('net/**/*.csproj') }}
       restore-keys: nuget
-      path: |
-        net/packages
-        ~/.nuget/packages
+      path: ~/.nuget/packages
 
   - shell: bash
     run: cd net/Sample && npm i
