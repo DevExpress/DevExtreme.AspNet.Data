@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Remove="TestContainer" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
     <PackageReference Include="xunit.assert" Version="2.4.2" />
