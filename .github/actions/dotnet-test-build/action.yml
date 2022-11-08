@@ -5,6 +5,19 @@ runs:
   using: "composite"
 
   steps:
+  - uses: actions/setup-dotnet@v3
+    with:
+      dotnet-quality: ga
+      dotnet-version: |
+        3.1
+        6.0
+
+  # TODO merge with prev step when 7.0 becomes RTM
+  - uses: actions/setup-dotnet@v3
+    with:
+      dotnet-quality: preview
+      dotnet-version: 7.0
+
   - uses: actions/cache@v3
     with:
       key: ${{ runner.os }}-nuget-${{ hashFiles('net/**/*.csproj') }}
