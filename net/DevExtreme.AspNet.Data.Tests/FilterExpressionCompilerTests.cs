@@ -322,20 +322,32 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void EnumComparison() {
             // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/164
 
-            Assert.Equal(
-                "(obj.CompareTo(Monday) > 0)",
-                Compile<DayOfWeek>(new object[] { "this", ">", DayOfWeek.Monday }).Body.ToString()
-            );
+            var fridayValues = new object[] {
+                DayOfWeek.Friday,
+                new DayOfWeek?(DayOfWeek.Friday),
+                5,
+                new long?(5),
+                "5",
+                "FRIDAY",
+                "friday",
+            };
 
-            Assert.Equal(
-                "(obj.Value.CompareTo(Tuesday) < 0)",
-                Compile<DayOfWeek?>(new object[] { "this", "<", DayOfWeek.Tuesday }).Body.ToString()
-            );
+            foreach(var friday in fridayValues) {
+                Assert.Equal(
+                    "(obj.CompareTo(Friday) > 0)",
+                    Compile<DayOfWeek>(new object[] { "this", ">", friday }).Body.ToString()
+                );
 
-            Assert.Equal(
-                "IIF((obj == null), False, (obj.Value.CompareTo(Wednesday) >= 0))",
-                Compile<DayOfWeek?>(new object[] { "this", ">=", DayOfWeek.Wednesday }, true).Body.ToString()
-            );
+                Assert.Equal(
+                    "(obj.Value.CompareTo(Friday) < 0)",
+                    Compile<DayOfWeek?>(new object[] { "this", "<", friday }).Body.ToString()
+                );
+
+                Assert.Equal(
+                    "IIF((obj == null), False, (obj.Value.CompareTo(Friday) >= 0))",
+                    Compile<DayOfWeek?>(new object[] { "this", ">=", friday }, true).Body.ToString()
+                );
+            }
 
             Assert.Equal(
                 "False",
