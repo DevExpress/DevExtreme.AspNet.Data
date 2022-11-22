@@ -1,6 +1,6 @@
 # Using CI Builds
 
-You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml?query=branch%3Amaster). Please note that you need to be signed into GitHub.
+You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml?query=branch%3Amaster). Please note that you need to be signed in to GitHub.
 
 - Click the most recent successful workflow run result. 
 - At the bottom of the opened page, download the `release-packages` archive.
