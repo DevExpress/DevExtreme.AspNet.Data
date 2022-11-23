@@ -332,26 +332,45 @@ namespace DevExtreme.AspNet.Data.Tests {
                 "friday",
             };
 
-            foreach(var friday in fridayValues) {
-                Assert.Equal(
-                    "(obj.CompareTo(Friday) > 0)",
-                    Compile<DayOfWeek>(new object[] { "this", ">", friday }).Body.ToString()
-                );
+            void Case<T>(IList criteria, bool guardNulls, string expectedExprBodyText, IReadOnlyList<T> input, IReadOnlyList<bool> expectedOutput) {
+                var expr = Compile<T>(criteria, guardNulls);
+                Assert.Equal(expectedExprBodyText, expr.Body.ToString());
 
-                Assert.Equal(
-                    "(obj.Value.CompareTo(Friday) < 0)",
-                    Compile<DayOfWeek?>(new object[] { "this", "<", friday }).Body.ToString()
-                );
-
-                Assert.Equal(
-                    "IIF((obj == null), False, (obj.Value.CompareTo(Friday) >= 0))",
-                    Compile<DayOfWeek?>(new object[] { "this", ">=", friday }, true).Body.ToString()
-                );
+                var func = expr.Compile();
+                var actualOutput = input.Select(i => (bool)func.DynamicInvoke(i));
+                Assert.Equal(expectedOutput, actualOutput);
             }
 
-            Assert.Equal(
+            foreach(var friday in fridayValues) {
+
+                Case(
+                    new object[] { "this", ">", friday }, false,
+                    "(obj.CompareTo(Friday) > 0)",
+                    new[] { DayOfWeek.Friday, DayOfWeek.Saturday },
+                    new[] { false, true }
+                );
+
+                Case(
+                    new object[] { "this", "<", friday }, false,
+                    "(obj.Value.CompareTo(Friday) < 0)",
+                    new DayOfWeek?[] { DayOfWeek.Monday, DayOfWeek.Friday },
+                    new[] { true, false }
+                );
+
+                Case(
+                    new object[] { "this", ">=", friday }, true,
+                    "IIF((obj == null), False, (obj.Value.CompareTo(Friday) >= 0))",
+                    new DayOfWeek?[] { DayOfWeek.Monday, DayOfWeek.Friday, DayOfWeek.Saturday },
+                    new[] { false, true, true }
+                );
+
+            }
+
+            Case(
+                new object[] { "this", "<=", null }, false,
                 "False",
-                Compile<DayOfWeek?>(new[] { "this", "<=", null }).Body.ToString()
+                new DayOfWeek?[] { null, DayOfWeek.Thursday },
+                new[] { false, false }
             );
         }
 
