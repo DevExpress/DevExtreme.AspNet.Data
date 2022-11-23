@@ -345,21 +345,21 @@ namespace DevExtreme.AspNet.Data.Tests {
 
                 Case(
                     new object[] { "this", ">", friday }, false,
-                    "(obj.CompareTo(Friday) > 0)",
+                    $"({Compat.ExpectedConvert("obj", "Int32")} > 5)",
                     new[] { DayOfWeek.Friday, DayOfWeek.Saturday },
                     new[] { false, true }
                 );
 
                 Case(
                     new object[] { "this", "<", friday }, false,
-                    "(obj.Value.CompareTo(Friday) < 0)",
+                    $"({Compat.ExpectedConvert("obj", "Nullable`1")} < 5)",
                     new DayOfWeek?[] { DayOfWeek.Monday, DayOfWeek.Friday },
                     new[] { true, false }
                 );
 
                 Case(
                     new object[] { "this", ">=", friday }, true,
-                    "IIF((obj == null), False, (obj.Value.CompareTo(Friday) >= 0))",
+                    $"({Compat.ExpectedConvert("obj", "Nullable`1")} >= 5)",
                     new DayOfWeek?[] { DayOfWeek.Monday, DayOfWeek.Friday, DayOfWeek.Saturday },
                     new[] { false, true, true }
                 );
@@ -368,7 +368,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Case(
                 new object[] { "this", "<=", null }, false,
-                "False",
+                $"({Compat.ExpectedConvert("obj", "Nullable`1")} <= null)",
                 new DayOfWeek?[] { null, DayOfWeek.Thursday },
                 new[] { false, false }
             );

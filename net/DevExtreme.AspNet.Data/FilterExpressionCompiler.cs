@@ -132,7 +132,9 @@ namespace DevExtreme.AspNet.Data {
 
                 if(IsInequality(expressionType)) {
                     var type = Utils.StripNullableType(accessorExpr.Type);
-                    if(!HasComparisonOperator(type)) {
+                    if(type.IsEnum) {
+                        EnumToUnderlyingType(ref accessorExpr, ref valueExpr);
+                    } else if(!HasComparisonOperator(type)) {
                         if(type.IsValueType) {
                             var compareToMethod = type.GetMethod("CompareTo", new[] { type }) ?? type.GetMethod("CompareTo", new[] { typeof(object) });
                             if(compareToMethod != null && !compareToMethod.IsStatic && compareToMethod.ReturnType == typeof(int))
@@ -327,6 +329,23 @@ namespace DevExtreme.AspNet.Data {
                 progression.RemoveAt(progression.Count - 1);
 
             progression.Add(toLowerCall);
+        }
+
+        static void EnumToUnderlyingType(ref Expression accessorExpr, ref Expression valueExpr) {
+            var isNullable = Utils.IsNullable(accessorExpr.Type);
+
+            var underlyingType = Enum.GetUnderlyingType(Utils.StripNullableType(accessorExpr.Type));
+            if(isNullable)
+                underlyingType = typeof(Nullable<>).MakeGenericType(underlyingType);
+
+            accessorExpr = Expression.Convert(accessorExpr, underlyingType);
+
+            if(valueExpr is ConstantExpression valueConstExpr) {
+                var newValue = Utils.ConvertClientValue(valueConstExpr.Value, underlyingType);
+                valueExpr = Expression.Constant(newValue, underlyingType);
+            } else {
+                valueExpr = Expression.Convert(valueExpr, underlyingType);
+            }
         }
 
         class BinaryExpressionInfo : IBinaryExpressionInfo {
