@@ -20,7 +20,7 @@ interface Options {
     loadMode?: "processed" | "raw",
     cacheRawData?: boolean,
 
-    onBeforeSend?: (operation: string, ajaxSettings: JQueryAjaxSettings) => void,
+    onBeforeSend?: (operation: string, ajaxSettings: JQueryAjaxSettings) => void | PromiseLike<any>| any,
     onAjaxError?: (e: { xhr: JQueryXHR, error: string | Error }) => void
 
     onLoading?: (loadOptions: any) => void;
