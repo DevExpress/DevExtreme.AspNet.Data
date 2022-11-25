@@ -38,3 +38,11 @@ AspNetData.createStore({
 
     onPush: (changes) => console.log(changes.length)
 })
+
+AspNetData.createStore({
+    onBeforeSend: () => "any" // backward compatibility
+});
+
+AspNetData.createStore({
+    onBeforeSend: Promise.resolve
+});

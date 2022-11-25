@@ -90,7 +90,7 @@ When you call the `DevExpress.data.AspNet.createStore` method, pass an object wi
 - `onBeforeSend` - a function that customizes the request before it is sent.
 
     ```js
-    onBeforeSend: (operation, ajaxSettings) => void
+    onBeforeSend: (operation, ajaxSettings) => void | PromiseLike
     ```
 
     Parameter  | Type | Description
