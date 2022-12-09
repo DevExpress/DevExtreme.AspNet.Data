@@ -26,7 +26,7 @@
     "team:devextreme-devops"
   ],
   "ignorePaths": [
-    "net/DevExtreme.AspNet.Data/DevExtreme.AspNet.Data.csproj",
-    "net/Sample/Sample.csproj"
+    "net/DevExtreme.AspNet.Data/*",
+    "net/Sample/*"
   ]
 }
