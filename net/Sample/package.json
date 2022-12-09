@@ -1,7 +1,7 @@
 {
   "name": "sample",
   "dependencies": {
-    "devextreme": "~22.1.0",
+    "devextreme": "~22.2.0",
     "jquery": "^3.6.1"
   }
 }
