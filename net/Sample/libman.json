@@ -12,11 +12,6 @@
       "destination": "wwwroot/lib/devextreme/js/"
     },
     {
-      "library": "node_modules/devextreme/dist/css/dx.common.css",
-      "provider": "filesystem",
-      "destination": "wwwroot/lib/devextreme/css/"
-    },
-    {
       "library": "node_modules/devextreme/dist/css/dx.light.css",
       "provider": "filesystem",
       "destination": "wwwroot/lib/devextreme/css/"
