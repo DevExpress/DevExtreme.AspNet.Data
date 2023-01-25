@@ -33,6 +33,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             }
         }
 
+        class TargetClassEx1 : TargetClass {
+            public int Prop { get; set; }
+        }
+
+        class TargetClassEx2 : TargetClassEx1 {
+            public new string Prop { get; set; }
+        }
+
         string CompileAccessor(bool guardNulls, string selector, Action<List<Expression>> customizeProgression = null) {
             return new SampleCompiler(guardNulls)
                 .CompileAccessorExpression(Expression.Parameter(typeof(TargetClass), "t"), selector, customizeProgression)
@@ -118,6 +126,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
+        [Fact]
+        public void Issue580() {
+            Assert.Equal(typeof(String), ExpressionCompiler.GetPropertyOrField(Expression.Parameter(typeof(TargetClassEx2)), "Prop").Type);
+        }
     }
 
 }

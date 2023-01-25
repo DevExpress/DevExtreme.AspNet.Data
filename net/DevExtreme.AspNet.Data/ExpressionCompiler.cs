@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data {
                 else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
                 else
-                    currentTarget = FixReflectedType(Expression.PropertyOrField(currentTarget, clientExprItem));
+                    currentTarget = FixReflectedType(GetPropertyOrField(currentTarget, clientExprItem));
 
                 progression.Add(currentTarget);
             }
@@ -111,6 +111,23 @@ namespace DevExtreme.AspNet.Data {
                 "Item",
                 Expression.Constant(member)
             );
+        }
+
+        internal static MemberExpression GetPropertyOrField(Expression expression, string propertyOrFieldName) {
+            MemberExpression memberExpr;
+            try {
+                memberExpr = Expression.PropertyOrField(expression, propertyOrFieldName);
+            } catch(AmbiguousMatchException) {
+                memberExpr = GetDeclaredOnlyProperty(expression, propertyOrFieldName);
+            }
+            return memberExpr;
+        }
+
+        static MemberExpression GetDeclaredOnlyProperty(Expression expression, string propertyOrFieldName) {
+            PropertyInfo pi = expression.Type.GetProperty(propertyOrFieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
+            if(pi != null)
+                return Expression.Property(expression, pi);
+            throw new ArgumentException($"'{propertyOrFieldName}' is not a member of type '{expression.Type}'", nameof(propertyOrFieldName));
         }
 
         static MemberExpression FixReflectedType(MemberExpression expr) {
