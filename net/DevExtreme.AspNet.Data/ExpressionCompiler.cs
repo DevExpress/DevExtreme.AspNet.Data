@@ -124,7 +124,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         static MemberExpression GetDeclaredOnlyProperty(Expression expression, string propertyOrFieldName) {
-            PropertyInfo pi = expression.Type.GetProperty(propertyOrFieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
+            PropertyInfo pi = expression.Type.GetProperty(propertyOrFieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
             if(pi != null)
                 return Expression.Property(expression, pi);
             throw new ArgumentException($"'{propertyOrFieldName}' is not a member of type '{expression.Type}'", nameof(propertyOrFieldName));
