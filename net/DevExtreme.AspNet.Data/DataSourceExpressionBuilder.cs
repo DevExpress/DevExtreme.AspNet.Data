@@ -51,7 +51,7 @@ namespace DevExtreme.AspNet.Data {
             if(filterOverride != null || Context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
                     ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(GetItemType()))
-                    : new FilterExpressionCompiler(GetItemType(), Context.GuardNulls, Context.UseStringToLower, Context.SupportsEqualsMethod).Compile(filterOverride ?? Context.Filter);
+                    : new FilterExpressionCompiler(GetItemType(), Context.GuardNulls, Context.UseStringToLower, Context.SupportsEqualsMethod, Context.RuntimeResolutionContext).Compile(filterOverride ?? Context.Filter);
 
                 Expr = QueryableCall(nameof(Queryable.Where), Expression.Quote(filterExpr));
             }

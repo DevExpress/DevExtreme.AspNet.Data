@@ -118,6 +118,8 @@ namespace DevExtreme.AspNet.Data {
 
         public bool AllowAsyncOverSync { get; set; }
 
+        public object RuntimeResolutionContext { get; set; }
+
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;
         internal bool UseEnumerableOnce;

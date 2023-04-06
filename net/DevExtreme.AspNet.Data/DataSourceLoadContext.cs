@@ -307,4 +307,10 @@ namespace DevExtreme.AspNet.Data {
             }
         }
     }
+
+
+    partial class DataSourceLoadContext {
+        public object RuntimeResolutionContext => _options.RuntimeResolutionContext;
+    }
+
 }

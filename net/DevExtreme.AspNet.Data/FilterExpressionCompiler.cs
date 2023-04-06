@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    class FilterExpressionCompiler : ExpressionCompiler {
+    public class FilterExpressionCompiler : ExpressionCompiler {
         const string
             CONTAINS = "contains",
             NOT_CONTAINS = "notcontains",
@@ -20,10 +20,12 @@ namespace DevExtreme.AspNet.Data {
         bool _stringToLower;
 
         readonly bool _supportsEqualsMethod;
+        public object RuntimeResolutionContext;
 
-        public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false, bool supportsEqualsMethod = true)
+        public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false, bool supportsEqualsMethod = true, object runtimeResolutionContext = null)
             : base(itemType, guardNulls) {
             _stringToLower = stringToLower;
+            RuntimeResolutionContext = runtimeResolutionContext;
             _supportsEqualsMethod = supportsEqualsMethod;
         }
 
@@ -43,7 +45,17 @@ namespace DevExtreme.AspNet.Data {
             return CompileBinary(dataItemExpr, criteriaJson);
         }
 
-        Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson) {
+        public Expression CompileNonCustomBinary(ParameterExpression dataItemExpr, IList criteria) {
+
+            return CompileBinary(dataItemExpr, criteria, false);
+        }
+
+        public Expression CompileNonCustomBinary(IList criteria) {
+
+            return CompileBinary(CreateItemParam(), criteria, false);
+        }
+
+        Expression CompileBinary(ParameterExpression dataItemExpr, IList criteriaJson, bool shouldProcessCustom = true) {
             var hasExplicitOperation = criteriaJson.Count > 2;
 
             var clientAccessor = Convert.ToString(criteriaJson[0]);
@@ -51,14 +63,14 @@ namespace DevExtreme.AspNet.Data {
             var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
-            if(CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
+            if(shouldProcessCustom && CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
                 var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
                     DataItemExpression = dataItemExpr,
                     AccessorText = clientAccessor,
                     Operation = clientOperation,
                     Value = clientValue,
                     StringToLower = _stringToLower
-                });
+                }, this);
 
                 if(customResult != null)
                     return customResult;

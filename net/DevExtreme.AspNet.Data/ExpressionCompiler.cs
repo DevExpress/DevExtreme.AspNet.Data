@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
-    abstract class ExpressionCompiler {
+    public abstract class ExpressionCompiler {
         protected readonly Type ItemType;
         protected readonly bool GuardNulls;
 
@@ -95,7 +95,7 @@ namespace DevExtreme.AspNet.Data {
             );
         }
 
-        protected ParameterExpression CreateItemParam() {
+        public ParameterExpression CreateItemParam() {
             return Expression.Parameter(ItemType, "obj");
         }
 
