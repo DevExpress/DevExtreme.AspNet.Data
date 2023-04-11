@@ -198,7 +198,7 @@
                 JSON.stringify({
                     some_property: SAMPLE_MESSAGE
                 }),
-                `{\"some_property\":\"${SAMPLE_MESSAGE}\"}`
+                '{\"some_property\":\"' + SAMPLE_MESSAGE + '\"}'
             ));
         });
 
