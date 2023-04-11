@@ -1,3 +1,22 @@
+**********************************************************************************************************************************************
+
+This is a fork of Devexpress.AspNet.Data, a fantastic expression building library for querying an API. While designed to work with Devex controls, it also works as the base for free querying of Entity Framework Core and XPO data models.
+
+Its main shortcoming in my use case was a lack of support for Automapper style projections. This fork provides those projections and also changes to support the injection of automapper parameters for use in customfilters.
+
+**********************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
 # DevExtreme ASP.NET Data
 
 [![CI](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml)
