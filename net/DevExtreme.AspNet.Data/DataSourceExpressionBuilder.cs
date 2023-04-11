@@ -21,15 +21,14 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public Expression BuildLoadExpr(bool paginate, IList filterOverride = null, IReadOnlyList<string> selectOverride = null, Type projectionType = null) {
-            if (Context.ProjectBeforeFilter) {
+            if(Context.ProjectBeforeFilter) {
                 AddSelect(selectOverride, projectionType);
                 AddFilter(filterOverride);
                 AddSort();
                 if(paginate)
                     AddPaging();
                 return Expr;
-            }
-            else {
+            } else {
                 AddFilter(filterOverride);
                 AddSort();
                 AddSelect(selectOverride, projectionType);
@@ -81,7 +80,7 @@ namespace DevExtreme.AspNet.Data {
                 Expr = CreateSelectCompiler().Compile(Expr, selectOverride ?? Context.FullSelect);
             else if(projectionType != null) {
                 var _type = GetItemType();
-                var qryBase = Context.Mapper.ConfigurationProvider.Internal().ProjectionBuilder.GetProjection(_type, projectionType, null, Array.Empty<MemberPath>());
+                var qryBase = Context.Mapper.ConfigurationProvider.Internal().ProjectionBuilder.GetProjection(_type, projectionType, Context.AutomapperProjectionParameters, Array.Empty<MemberPath>());
                 var qryExpr = qryBase.Projection;
                 Expr = Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { _type, qryExpr.ReturnType }, Expr, Expression.Quote(qryExpr));
             }
