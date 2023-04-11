@@ -117,8 +117,7 @@ namespace DevExtreme.AspNet.Data {
         public bool? SortByPrimaryKey { get; set; }
 
         public bool AllowAsyncOverSync { get; set; }
-
-        public object RuntimeResolutionContext { get; set; }
+        public bool? ProjectBeforeFilter { get; set; }
 
 #if DEBUG
         internal Action<Expression> ExpressionWatcher;

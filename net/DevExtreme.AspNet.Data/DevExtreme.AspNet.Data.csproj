@@ -1,35 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>99.0</Version>
-    <PackageId>DevExtreme.AspNet.Data</PackageId>
+    <Version>999</Version>
+    <PackageId>DXAutomap.AspNet.Data</PackageId>
     <Description>%meta_description%</Description>
-    <Authors>%meta_company%</Authors>
-    <Copyright>%meta_copyright%</Copyright>
+    <Authors>Devexpress_Statler</Authors>
     <PackageProjectUrl>%meta_project_url%</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://secure.gravatar.com/avatar/6b38f1e9ffd8b069bcdc2741934fdbcf?s=512&amp;r=g</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>DevExtreme.AspNet.Data</AssemblyName>
-    <AssemblyVersion>99.0</AssemblyVersion>
-    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
+    <AssemblyName>DXAutomap.AspNet.Data</AssemblyName>
+    <AssemblyVersion>999</AssemblyVersion>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

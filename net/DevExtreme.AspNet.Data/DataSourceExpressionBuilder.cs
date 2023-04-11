@@ -1,9 +1,13 @@
-﻿using DevExtreme.AspNet.Data.RemoteGrouping;
+﻿using AutoMapper;
+using AutoMapper.Internal;
+using DevExtreme.AspNet.Data.Async;
+using DevExtreme.AspNet.Data.RemoteGrouping;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -16,13 +20,23 @@ namespace DevExtreme.AspNet.Data {
             Context = context;
         }
 
-        public Expression BuildLoadExpr(bool paginate, IList filterOverride = null, IReadOnlyList<string> selectOverride = null) {
-            AddFilter(filterOverride);
-            AddSort();
-            AddSelect(selectOverride);
-            if(paginate)
-                AddPaging();
-            return Expr;
+        public Expression BuildLoadExpr(bool paginate, IList filterOverride = null, IReadOnlyList<string> selectOverride = null, Type projectionType = null) {
+            if (Context.ProjectBeforeFilter) {
+                AddSelect(selectOverride, projectionType);
+                AddFilter(filterOverride);
+                AddSort();
+                if(paginate)
+                    AddPaging();
+                return Expr;
+            }
+            else {
+                AddFilter(filterOverride);
+                AddSort();
+                AddSelect(selectOverride, projectionType);
+                if(paginate)
+                    AddPaging();
+                return Expr;
+            }
         }
 
         public Expression BuildCountExpr() {
@@ -51,7 +65,7 @@ namespace DevExtreme.AspNet.Data {
             if(filterOverride != null || Context.HasFilter) {
                 var filterExpr = filterOverride != null && filterOverride.Count < 1
                     ? Expression.Lambda(Expression.Constant(false), Expression.Parameter(GetItemType()))
-                    : new FilterExpressionCompiler(GetItemType(), Context.GuardNulls, Context.UseStringToLower, Context.SupportsEqualsMethod, Context.RuntimeResolutionContext).Compile(filterOverride ?? Context.Filter);
+                    : new FilterExpressionCompiler(GetItemType(), Context.GuardNulls, Context.UseStringToLower, Context.SupportsEqualsMethod, Context.AutomapperProjectionParameters).Compile(filterOverride ?? Context.Filter);
 
                 Expr = QueryableCall(nameof(Queryable.Where), Expression.Quote(filterExpr));
             }
@@ -62,9 +76,15 @@ namespace DevExtreme.AspNet.Data {
                 Expr = new SortExpressionCompiler(GetItemType(), Context.GuardNulls).Compile(Expr, Context.GetFullSort());
         }
 
-        void AddSelect(IReadOnlyList<string> selectOverride = null) {
+        void AddSelect(IReadOnlyList<string> selectOverride = null, Type projectionType = null) {
             if(selectOverride != null || Context.HasAnySelect && Context.UseRemoteSelect)
                 Expr = CreateSelectCompiler().Compile(Expr, selectOverride ?? Context.FullSelect);
+            else if(projectionType != null) {
+                var _type = GetItemType();
+                var qryBase = Context.Mapper.ConfigurationProvider.Internal().ProjectionBuilder.GetProjection(_type, projectionType, null, Array.Empty<MemberPath>());
+                var qryExpr = qryBase.Projection;
+                Expr = Expression.Call(typeof(Queryable), nameof(Queryable.Select), new[] { _type, qryExpr.ReturnType }, Expr, Expression.Quote(qryExpr));
+            }
         }
 
         void AddPaging() {
