@@ -20,10 +20,9 @@ namespace DevExtreme.AspNet.Data {
         bool _stringToLower;
 
         readonly bool _supportsEqualsMethod;
-        public object RuntimeResolutionContext;
 
         public FilterExpressionCompiler(Type itemType, bool guardNulls, bool stringToLower = false, bool supportsEqualsMethod = true, object runtimeResolutionContext = null)
-            : base(itemType, guardNulls) {
+            : base(itemType, guardNulls, runtimeResolutionContext) {
             _stringToLower = stringToLower;
             RuntimeResolutionContext = runtimeResolutionContext;
             _supportsEqualsMethod = supportsEqualsMethod;

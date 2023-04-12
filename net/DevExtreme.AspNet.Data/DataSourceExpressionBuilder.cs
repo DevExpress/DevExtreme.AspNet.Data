@@ -44,7 +44,10 @@ namespace DevExtreme.AspNet.Data {
             return Expr;
         }
 
-        public Expression BuildLoadGroupsExpr(bool paginate, bool suppressGroups = false, bool suppressTotals = false) {
+        public Expression BuildLoadGroupsExpr(bool paginate, bool suppressGroups = false, bool suppressTotals = false, Type projectionType = null) {
+            if(Context.ProjectBeforeFilter) {
+                AddSelect(null, projectionType);
+            }
             AddFilter();
             AddRemoteGrouping(suppressGroups, suppressTotals);
             if(paginate)
@@ -72,7 +75,7 @@ namespace DevExtreme.AspNet.Data {
 
         void AddSort() {
             if(Context.HasAnySort)
-                Expr = new SortExpressionCompiler(GetItemType(), Context.GuardNulls).Compile(Expr, Context.GetFullSort());
+                Expr = new SortExpressionCompiler(GetItemType(), Context.GuardNulls, Context.AutomapperProjectionParameters).Compile(Expr, Context.GetFullSort());
         }
 
         void AddSelect(IReadOnlyList<string> selectOverride = null, Type projectionType = null) {
@@ -99,7 +102,8 @@ namespace DevExtreme.AspNet.Data {
                 GetItemType(), Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
                 suppressGroups ? null : Context.Group,
                 suppressTotals ? null : Context.TotalSummary,
-                suppressGroups ? null : Context.GroupSummary
+                suppressGroups ? null : Context.GroupSummary,
+                Context.AutomapperProjectionParameters
             );
             Expr = compiler.Compile(Expr);
         }
@@ -109,7 +113,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         SelectExpressionCompiler CreateSelectCompiler()
-            => new SelectExpressionCompiler(GetItemType(), Context.GuardNulls, Context.CreateAnonTypeNewTweaks());
+            => new SelectExpressionCompiler(GetItemType(), Context.GuardNulls, Context.CreateAnonTypeNewTweaks(), Context.AutomapperProjectionParameters);
 
         Expression QueryableCall(string methodName)
             => Expression.Call(typeof(Queryable), methodName, GetQueryableGenericArguments(), Expr);

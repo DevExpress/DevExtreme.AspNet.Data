@@ -12,14 +12,17 @@ namespace DevExtreme.AspNet.Data {
     public abstract class ExpressionCompiler {
         protected readonly Type ItemType;
         protected readonly bool GuardNulls;
+        public object RuntimeResolutionContext;
 
-        public ExpressionCompiler(Type itemType, bool guardNulls) {
+
+        public ExpressionCompiler(Type itemType, bool guardNulls, object runtimeResolutionContext) {
             ItemType = itemType;
             GuardNulls = guardNulls;
+            RuntimeResolutionContext = runtimeResolutionContext;
         }
 
         protected internal Expression CompileAccessorExpression(Expression target, string clientExpr, Action<List<Expression>> customizeProgression = null, bool liftToNullable = false) {
-            var customResult = CustomAccessorCompilers.TryCompile(target, clientExpr);
+            var customResult = CustomAccessorCompilers.TryCompile(target, clientExpr, RuntimeResolutionContext);
             if(customResult != null)
                 return customResult;
 
@@ -43,8 +46,13 @@ namespace DevExtreme.AspNet.Data {
                     currentTarget = ReadExpando(currentTarget, clientExprItem);
                 else if(DynamicBindingHelper.ShouldUseDynamicBinding(currentTarget.Type))
                     currentTarget = DynamicBindingHelper.CompileGetMember(currentTarget, clientExprItem);
-                else
-                    currentTarget = FixReflectedType(GetPropertyOrField(currentTarget, clientExprItem));
+                else {
+                    var customResultSplit = CustomAccessorCompilers.TryCompile(target, clientExprItem, RuntimeResolutionContext);
+                    if(customResultSplit != null) {
+                        currentTarget = customResultSplit;
+                    }
+                    else currentTarget = FixReflectedType(GetPropertyOrField(currentTarget, clientExprItem));
+                }                
 
                 progression.Add(currentTarget);
             }

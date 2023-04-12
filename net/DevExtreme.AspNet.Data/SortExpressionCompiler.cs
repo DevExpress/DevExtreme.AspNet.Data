@@ -8,8 +8,8 @@ namespace DevExtreme.AspNet.Data {
 
     class SortExpressionCompiler : ExpressionCompiler {
 
-        public SortExpressionCompiler(Type itemType, bool guardNulls)
-            : base(itemType, guardNulls) {
+        public SortExpressionCompiler(Type itemType, bool guardNulls, object runtimeResolutionContext)
+            : base(itemType, guardNulls, runtimeResolutionContext) {
         }
 
         public Expression Compile(Expression target, IEnumerable<SortingInfo> clientExprList) {
