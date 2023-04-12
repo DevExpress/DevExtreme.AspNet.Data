@@ -10,10 +10,11 @@ How to use:
 
 The basic functionality is exactly the same as the devex library. The big difference is that the user can:
 1. Specify a projection type to the LoadAsync method (ProjectTo in automapper). As long as this type is included in the registered mapping config(s), the projection will occur seamlessly with the results in the returned object. While it is possible to specify an (already projected) IQueryable to the LoadAsync in the base library, you lose the capacity to filter, sort or group on properties of the base object that aren't in the projection. **This library supports querying any property of the base object OR the mapped object**
-2. Specify parameters to the LoadAsync method that will be accessible in the custom filters added through CustomFilterCompilers. This is important when you are passing parameters to an automapper ProjectTo that would change filters applied to the base object.
-3. Specify that filters apply after a projection using the new DataSourceLoadOption property ProjectBeforeFilter
-4. Utilise the devex expression builders for binary expressions by calling CompileNonCustomBinary
-5. From Version 1.11, CustomAccessors also have access to the tuntime context (Automapper object)
+2. Sort and group on original or mapped properties
+3. Specify parameters to the LoadAsync method that will be accessible in the custom filters added through CustomFilterCompilers. This is important when you are passing parameters to an automapper ProjectTo that would change filters applied to the base object.
+4. Specify that filters apply after a projection using the new DataSourceLoadOption property ProjectBeforeFilter
+5. Utilise the devex expression builders for binary expressions by calling CompileNonCustomBinary
+6. From Version 1.11, CustomAccessors also have access to the tuntime context (Automapper object)
 
 
 **********************************************************************************************************************************************
