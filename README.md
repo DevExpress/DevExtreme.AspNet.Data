@@ -13,6 +13,7 @@ The basic functionality is exactly the same as the devex library. The big differ
 2. Specify parameters to the LoadAsync method that will be accessible in the custom filters added through CustomFilterCompilers. This is important when you are passing parameters to an automapper ProjectTo that would change filters applied to the base object.
 3. Specify that filters apply after a projection using the new DataSourceLoadOption property ProjectBeforeFilter
 4. Utilise the devex expression builders for binary expressions by calling CompileNonCustomBinary
+5. From Version 1.11, CustomAccessors also have access to the tuntime context (Automapper object)
 
 
 **********************************************************************************************************************************************
@@ -40,7 +41,17 @@ In configure, call CustomAccessorCompilers.RegisterAutomapperProfiles. You can a
             CustomAccessorCompilers.RegisterAutomapperProfiles(app.ApplicationServices.GetService<IMapper>());
             //Additional mappers can be added like this:
             //CustomAccessorLibrary.Add<AreaCode,string>("FirstLetter", t => t.AreaCodeName.FirstOrDefault().ToString().ToUpper());
-            
+            //Or like this - a separate static class/method is recommended
+            //CustomAccessorCompilers.RegisterContext<Notification, DateTime?>("DateRead", (u) =>
+            //{
+            //    dynamic dynObj = new DynamicWrapper(u);
+            //    if (dynObj.UserId is int)
+            //    {
+            //        int UserId = dynObj.UserId;
+            //        return src => src.NotificationTos.Where(x => x.UserId == UserId).OrderByDescending(x => x.NotificationTypeId).Select(x => x.DateRead).FirstOrDefault();
+            //    }
+            //    return src => null;
+            //});
             ....
         }
 
