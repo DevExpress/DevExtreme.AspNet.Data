@@ -62,7 +62,7 @@ namespace DevExtreme.AspNet.Data {
             var clientValue = Utils.UnwrapNewtonsoftValue(criteriaJson[hasExplicitOperation ? 2 : 1]);
             var isStringOperation = clientOperation == CONTAINS || clientOperation == NOT_CONTAINS || clientOperation == STARTS_WITH || clientOperation == ENDS_WITH;
 
-            if(shouldProcessCustom && CustomFilterCompilers.Binary.CompilerFuncs.Count > 0) {
+            if(shouldProcessCustom && CustomFilterCompilers.Binary.CompilerFuncsWithContext.Count > 0) {
                 var customResult = CustomFilterCompilers.Binary.TryCompile(new BinaryExpressionInfo {
                     DataItemExpression = dataItemExpr,
                     AccessorText = clientAccessor,

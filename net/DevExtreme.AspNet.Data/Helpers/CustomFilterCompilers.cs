@@ -10,15 +10,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
     public static class CustomFilterCompilers {
 
         internal static class Binary {
-            internal readonly static ICollection<BinaryExpressionCompilerFunc> CompilerFuncs = new List<BinaryExpressionCompilerFunc>();
             internal readonly static ICollection<BinaryExpressionCompilerWithContextFunc> CompilerFuncsWithContext = new List<BinaryExpressionCompilerWithContextFunc>();
 
             internal static Expression TryCompile(IBinaryExpressionInfo info, FilterExpressionCompiler filterExpressionCompiler) {
-                foreach(var func in CompilerFuncs) {
-                    var result = func(info);
-                    if(result != null)
-                        return result;
-                }
                 foreach(var func in CompilerFuncsWithContext) {
                     var result = func(info, filterExpressionCompiler);
                     if(result != null)
@@ -29,7 +23,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
         }
 
         public static void RegisterBinaryExpressionCompiler(BinaryExpressionCompilerFunc compilerFunc) {
-            Binary.CompilerFuncs.Add(compilerFunc);
+            Binary.CompilerFuncsWithContext.Add((item, _cx) => compilerFunc(item));
         }
 
         public static void RegisterBinaryExpressionCompilerWithContext(BinaryExpressionCompilerWithContextFunc compilerFunc) {
