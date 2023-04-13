@@ -4,6 +4,8 @@ This is a fork of Devexpress.AspNet.Data, a fantastic expression building librar
 
 Its main shortcoming in my use case was a lack of support for Automapper style projections. This fork provides those projections and also changes to support the injection of automapper parameters for use in customfilters.
 
+Available as nuget at NuGet\Install-Package DXAutomap.AspNet.Data -Version 1.12.0
+
 **********************************************************************************************************************************************
 
 How to use:
