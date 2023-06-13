@@ -41,11 +41,8 @@ interface Options {
     onPush?: (changes: Array<any>) => void;
 }
 
-interface CustomStore<
-    TItem = any,
-    TKey = any,
-> extends DxCustomStore<TItem, TKey> {
-    byKey(key: TKey): Promise<TItem>;
+declare class CustomStore extends DxCustomStore {
+    byKey(key: any | string | number): any;
 }
 
 export function createStore(options: Options): CustomStore;
