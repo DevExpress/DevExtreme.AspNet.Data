@@ -1,4 +1,4 @@
-import CustomStore from "devextreme/data/custom_store";
+import DxCustomStore from "devextreme/data/custom_store";
 
 interface Options {
     key?: string|Array<string>,
@@ -39,6 +39,13 @@ interface Options {
     onModified?: Function;
 
     onPush?: (changes: Array<any>) => void;
+}
+
+declare class CustomStore<
+    TItem = any,
+    TKey = any,
+> extends DxCustomStore<TItem, TKey> {
+    byKey(key: TKey): Promise<TItem>;
 }
 
 export function createStore(options: Options): CustomStore;
