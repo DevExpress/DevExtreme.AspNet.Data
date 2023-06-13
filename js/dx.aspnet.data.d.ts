@@ -41,7 +41,7 @@ interface Options {
     onPush?: (changes: Array<any>) => void;
 }
 
-declare class CustomStore<
+interface CustomStore<
     TItem = any,
     TKey = any,
 > extends DxCustomStore<TItem, TKey> {
