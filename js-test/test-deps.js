@@ -1,4 +1,4 @@
-const dxVersion = require('devextreme/package.json').version;
+var dxVersion = require('devextreme/package.json').version;
 
 var TEST_DEPS = [
     "../node_modules/jquery/dist/jquery.min.js",
