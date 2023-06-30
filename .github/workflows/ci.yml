@@ -40,7 +40,10 @@ jobs:
 
     strategy:
       matrix:
-        devextreme: [ "devextreme@~18.1.0", "devextreme@>=18.2.0" ]
+        version:
+          - '~18.1.0'
+          - '~22.2.0'
+          - '>=23.1.0'
 
     steps:
     - uses: actions/checkout@v3
@@ -48,7 +51,10 @@ jobs:
     - run: node build/make-nojquery
 
     - run: npm i --omit=peer
-    - run: npm i --no-save "${{ matrix.devextreme }}"
+    - run: npm i --no-save "devextreme@${{ matrix.version }}"
+    - name: Instal devextreme-dist
+      if: ${{ matrix.version == '>=23.1.0' }}
+      run: npm i --no-save "devextreme-dist@${{ matrix.version }}"
     - run: npm run dts
     - run: npm run karma
     - run: npm run karma-bundled
