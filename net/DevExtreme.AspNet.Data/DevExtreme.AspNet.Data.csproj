@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>999</Version>
+    <Version>1.12</Version>
     <PackageId>DXAutomap.AspNet.Data</PackageId>
-    <Description>%meta_description%</Description>
+    <Description>DevExtreme data layer extension for ASP.NET supporting Automapper</Description>
     <Authors>Devexpress_Statler</Authors>
-    <PackageProjectUrl>%meta_project_url%</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/statler/DevExtreme.AspNet.Data</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://secure.gravatar.com/avatar/6b38f1e9ffd8b069bcdc2741934fdbcf?s=512&amp;r=g</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup>
     <AssemblyName>DXAutomap.AspNet.Data</AssemblyName>
-    <AssemblyVersion>999</AssemblyVersion>
+    <AssemblyVersion>1.12</AssemblyVersion>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>

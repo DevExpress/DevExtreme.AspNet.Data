@@ -11,13 +11,17 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
     public static class CustomAccessorCompilers {
         public delegate Expression CompilerFunc(Expression expr, string accessorText);
+        public delegate Expression CompilerFuncWithContext(Expression expr, string accessorText, object runtimeContext);
 
-        static readonly ICollection<CompilerFunc> _compilers = new List<CompilerFunc>();
+        static readonly ICollection<CompilerFuncWithContext> _compilersWithContext = new List<CompilerFuncWithContext>();
 
         private static AccessorLibrary CustomAccessorLibrary = new AccessorLibrary();
 
         public static void Register(CompilerFunc compilerFunc) {
-            _compilers.Add(compilerFunc);
+            _compilersWithContext.Add((target, accessorText, runtimeContext) => compilerFunc(target, accessorText));
+        }
+        public static void RegisterWithContext(CompilerFuncWithContext compilerFunc) {
+            _compilersWithContext.Add(compilerFunc);
         }
 
         /// <summary>
@@ -29,6 +33,13 @@ namespace DevExtreme.AspNet.Data.Helpers {
         /// <param name="ResolveExpression"></param>
         public static void Register<T, U>(string PropertyName, Expression<Func<T, U>> ResolveExpression) {
             CustomAccessorLibrary.Add(PropertyName, ResolveExpression);
+        }
+        public static void RegisterContext<T, U>(string PropertyName, Func<object, Expression<Func<T, U>>> ResolveExprFunc) {
+            CustomAccessorLibrary.Add<T>(PropertyName, ResolveExprFunc);
+        }
+
+        public static void RegisterContext<T>(string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
+            CustomAccessorLibrary.Add<T>(PropertyName, ResolveExprFunc);
         }
 
         public static void RegisterAutomapperProfiles(IMapper mapper) {
@@ -56,22 +67,21 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             //Register the method that finds the right accessor from the dictionary. This will provide
             //an accessor for the registered Automapper and 
-            Register((target, accessorText) => {
-                var accessor = CustomAccessorLibrary.Get(target, target.Type.Name, accessorText);
+            RegisterWithContext((target, accessorText, runtimeContext) => {
+                var accessor = CustomAccessorLibrary.Get(target, target.Type.Name, accessorText, runtimeContext);
                 if(accessor != null) return accessor;
 
                 return null;
             });
         }
 
-        internal static Expression TryCompile(Expression expr, string accessorText) {
-            if(_compilers.Count < 1)
-                return null;
-
-            foreach(var compiler in _compilers) {
-                var result = compiler(expr, accessorText);
-                if(result != null)
-                    return result;
+        internal static Expression TryCompile(Expression expr, string accessorText, object runtimeContext) {
+            if(_compilersWithContext.Count >= 1) {
+                foreach(var compiler in _compilersWithContext) {
+                    var result = compiler(expr, accessorText, runtimeContext);
+                    if(result != null)
+                        return result;
+                }
             }
 
             return null;
@@ -79,7 +89,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
 #if DEBUG
         internal static void Clear() {
-            _compilers.Clear();
+            _compilersWithContext.Clear();
         }
 #endif
 
@@ -98,6 +108,17 @@ namespace DevExtreme.AspNet.Data.Helpers {
             } else _dctAccessors.Add(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
         }
 
+        public void Add(string TypeName, string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
+            var _accessor = new Accessor(TypeName, PropertyName, ResolveExprFunc);
+            if(_dctAccessors.ContainsKey(TypeName)) {
+                var expressionForType = _dctAccessors[TypeName];
+                expressionForType[PropertyName] = _accessor;
+            } else _dctAccessors.Add(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
+        }
+        public void Add<T>(string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
+            Add(typeof(T).Name, PropertyName, ResolveExprFunc);
+        }
+
         public void Add<T>(string PropertyName, LambdaExpression ResolveExpression) {
             Add(typeof(T).Name, PropertyName, ResolveExpression);
         }
@@ -106,11 +127,11 @@ namespace DevExtreme.AspNet.Data.Helpers {
             Add(typeof(T).Name, PropertyName, ResolveExpression);
         }
 
-        public Expression Get(Expression target, string TypeName, string PropertyName) {
+        public Expression Get(Expression target, string TypeName, string PropertyName, object runtimeContext) {
             if(_dctAccessors.ContainsKey(TypeName)) {
                 var expressionForType = _dctAccessors[TypeName];
                 if(expressionForType.ContainsKey(PropertyName)) {
-                    var expression = expressionForType[PropertyName].ResolveExpression;
+                    var expression = expressionForType[PropertyName].GetResolvedExpression(runtimeContext);
                     return new ParameterVisitor(expression.Parameters, target as ParameterExpression)
                         .VisitAndConvert(expression.Body, PropertyName);
                 }
@@ -124,13 +145,23 @@ namespace DevExtreme.AspNet.Data.Helpers {
     public class Accessor {
         public string TypeName { get; set; }
         public string PropertyName { get; set; }
-        public LambdaExpression ResolveExpression { get; set; }
+        Func<object, LambdaExpression> ResolveExpression { get; set; }
+
         public Accessor() {
         }
         public Accessor(string typeName, string propertyName, LambdaExpression resolveExpression) {
             TypeName = typeName;
             PropertyName = propertyName;
-            ResolveExpression = resolveExpression;
+            ResolveExpression = (o) => resolveExpression;
+        }
+        public Accessor(string typeName, string propertyName, Func<object, LambdaExpression> resolveExpressionFunc) {
+            TypeName = typeName;
+            PropertyName = propertyName;
+            ResolveExpression = resolveExpressionFunc;
+        }
+
+        public LambdaExpression GetResolvedExpression(object runtimeContext) {
+            return ResolveExpression(runtimeContext);
         }
     }
 

@@ -9,10 +9,10 @@ namespace DevExtreme.AspNet.Data {
 
     static class SelectHelper {
 
-        public static IEnumerable<ExpandoObject> Evaluate<T>(IEnumerable<T> data, IEnumerable<string> select) {
+        public static IEnumerable<ExpandoObject> Evaluate<T>(IEnumerable<T> data, IEnumerable<string> select, object runtimeResolutionContext) {
             var bufferedSelect = select.ToArray();
             var paths = SelectToPaths(bufferedSelect);
-            var accessor = new DefaultAccessor<T>();
+            var accessor = new DefaultAccessor<T>(runtimeResolutionContext);
 
             foreach(var item in data)
                 yield return PathsToExpando(paths, i => accessor.Read(item, bufferedSelect[i]));
