@@ -8,8 +8,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
     class DefaultAccessor<T> : ExpressionCompiler, IAccessor<T> {
         IDictionary<string, Func<T, object>> _accessors;
 
-        public DefaultAccessor()
-            : base(typeof(T), true) {
+        public DefaultAccessor(object runtimeResolutionContext)
+            : base(typeof(T), true, runtimeResolutionContext) {
         }
 
         public object Read(T obj, string selector) {

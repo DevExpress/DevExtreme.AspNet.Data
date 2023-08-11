@@ -17,8 +17,10 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
             _totalSummary,
             _groupSummary;
 
-        public RemoteGroupExpressionCompiler(Type itemType, bool guardNulls, bool expandSumType, AnonTypeNewTweaks anonTypeNewTweaks, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : base(itemType, guardNulls) {
+        public RemoteGroupExpressionCompiler(Type itemType, bool guardNulls, bool expandSumType, AnonTypeNewTweaks anonTypeNewTweaks,
+            IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary,
+            object runtimeResolutionContext)
+            : base(itemType, guardNulls, runtimeResolutionContext) {
             _expandSumType = expandSumType;
             _anonTypeNewTweaks = anonTypeNewTweaks;
             _grouping = grouping;
@@ -27,8 +29,8 @@ namespace DevExtreme.AspNet.Data.RemoteGrouping {
         }
 
 #if DEBUG
-        public RemoteGroupExpressionCompiler(Type itemType, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary)
-            : this(itemType, false, false, null, grouping, totalSummary, groupSummary) {
+        public RemoteGroupExpressionCompiler(Type itemType, IEnumerable<GroupingInfo> grouping, IEnumerable<SummaryInfo> totalSummary, IEnumerable<SummaryInfo> groupSummary, object runtimeResolutionContext)
+            : this(itemType, false, false, null, grouping, totalSummary, groupSummary, runtimeResolutionContext) {
         }
 #endif
 

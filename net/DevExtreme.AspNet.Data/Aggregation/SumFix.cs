@@ -17,8 +17,8 @@ namespace DevExtreme.AspNet.Data.Aggregation {
         IReadOnlyList<SummaryInfo> _groupSummary;
         IDictionary<string, object> _defaultValues;
 
-        public SumFix(Type itemType, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary)
-            : base(itemType, false) {
+        public SumFix(Type itemType, IReadOnlyList<SummaryInfo> totalSummary, IReadOnlyList<SummaryInfo> groupSummary, object runtimeResolutionContext)
+            : base(itemType, false, runtimeResolutionContext) {
             _totalSummary = totalSummary;
             _groupSummary = groupSummary;
         }
