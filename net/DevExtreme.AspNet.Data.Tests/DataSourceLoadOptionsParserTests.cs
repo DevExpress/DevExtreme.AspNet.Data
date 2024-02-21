@@ -1,8 +1,6 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {

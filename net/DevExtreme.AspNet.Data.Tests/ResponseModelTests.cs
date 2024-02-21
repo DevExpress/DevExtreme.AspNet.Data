@@ -1,8 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -13,13 +10,13 @@ namespace DevExtreme.AspNet.Data.Tests {
         public void EmptyLoadResultSerialization() {
             Assert.Equal(
                 "{\"data\":null}",
-                JsonConvert.SerializeObject(new LoadResult())
+                JsonSerializer.Serialize(new LoadResult())
             );
         }
 
         [Fact]
         public void EmptyGroupSerialization() {
-            var json = JsonConvert.SerializeObject(new Group());
+            var json = JsonSerializer.Serialize(new Group());
 
             // these must always be present
             Assert.Contains("\"key\":", json);

@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace DevExtreme.AspNet.Data.Helpers {
 
@@ -59,25 +55,26 @@ namespace DevExtreme.AspNet.Data.Helpers {
                 loadOptions.Take = Convert.ToInt32(take);
 
             if(!String.IsNullOrEmpty(sort))
-                loadOptions.Sort = JsonConvert.DeserializeObject<SortingInfo[]>(sort);
+                loadOptions.Sort = JsonSerializer.Deserialize<SortingInfo[]>(sort);
 
             if(!String.IsNullOrEmpty(group))
-                loadOptions.Group = JsonConvert.DeserializeObject<GroupingInfo[]>(group);
+                loadOptions.Group = JsonSerializer.Deserialize<GroupingInfo[]>(group);
 
             if(!String.IsNullOrEmpty(filter)) {
-                loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter, new JsonSerializerSettings {
-                    DateParseHandling = DateParseHandling.None
+                loadOptions.Filter = JsonSerializer.Deserialize<IList>(filter, new JsonSerializerOptions {
+                    //TODO:
+                    //DateParseHandling = DateParseHandling.None
                 });
             }
 
             if(!String.IsNullOrEmpty(totalSummary))
-                loadOptions.TotalSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(totalSummary);
+                loadOptions.TotalSummary = JsonSerializer.Deserialize<SummaryInfo[]>(totalSummary);
 
             if(!String.IsNullOrEmpty(groupSummary))
-                loadOptions.GroupSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(groupSummary);
+                loadOptions.GroupSummary = JsonSerializer.Deserialize<SummaryInfo[]>(groupSummary);
 
             if(!String.IsNullOrEmpty(select))
-                loadOptions.Select = JsonConvert.DeserializeObject<string[]>(select);
+                loadOptions.Select = JsonSerializer.Deserialize<string[]>(select);
         }
     }
 
