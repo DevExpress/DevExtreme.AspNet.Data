@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Text.Json.Serialization;
 
 namespace DevExtreme.AspNet.Data.ResponseModel {
 
@@ -23,13 +20,13 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
         /// <summary>
         /// The count of items in the group.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore]//TODO: DefaultIgnoreCondition?
         public int? count { get; set; }
 
         /// <summary>
         /// Group summary calculation results.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore]//TODO: DefaultIgnoreCondition?
         public object[] summary { get; set; }
     }
 
