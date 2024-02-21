@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DevExtreme.AspNet.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Sample.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Sample.Models;
-using DevExtreme.AspNet.Data;
-using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Controllers {
 
@@ -80,7 +77,8 @@ namespace Sample.Controllers {
             if(order == null)
                 return StatusCode(409, "Order not found");
 
-            JsonConvert.PopulateObject(values, order);
+            //TODO:
+            //JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
                 return BadRequest(ModelState.ToFullErrorString());
@@ -93,7 +91,9 @@ namespace Sample.Controllers {
         [HttpPost("insert-order")]
         public async Task<IActionResult> InsertOrder(string values) {
             var order = new Order();
-            JsonConvert.PopulateObject(values, order);
+
+            //TODO:
+            //JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
                 return BadRequest(ModelState.ToFullErrorString());

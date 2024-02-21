@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Globalization;
 using System.ComponentModel;
-using Newtonsoft.Json.Linq;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -118,9 +116,10 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static object UnwrapNewtonsoftValue(object value) {
+            /*
             if(value is JValue jValue)
                 return jValue.Value;
-
+            */
             return value;
         }
 
