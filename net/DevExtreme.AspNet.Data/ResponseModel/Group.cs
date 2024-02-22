@@ -20,13 +20,13 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
         /// <summary>
         /// The count of items in the group.
         /// </summary>
-        [JsonIgnore]//TODO: DefaultIgnoreCondition?
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? count { get; set; }
 
         /// <summary>
         /// Group summary calculation results.
         /// </summary>
-        [JsonIgnore]//TODO: DefaultIgnoreCondition?
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public object[] summary { get; set; }
     }
 

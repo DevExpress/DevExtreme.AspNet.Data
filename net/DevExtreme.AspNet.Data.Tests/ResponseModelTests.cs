@@ -8,6 +8,9 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void EmptyLoadResultSerialization() {
+            //https://github.com/dotnet/runtime/issues/41630
+            //https://github.com/dotnet/runtime/issues/36236
+            //TODO:
             Assert.Equal(
                 "{\"data\":null}",
                 JsonSerializer.Serialize(new LoadResult())
@@ -16,6 +19,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void EmptyGroupSerialization() {
+            //TODO:
             var json = JsonSerializer.Serialize(new Group());
 
             // these must always be present
@@ -29,6 +33,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 #if NET4
         [Fact]
         public void JavaScriptSerializer() {
+            //TODO:
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 
             var loadResultJson = serializer.Serialize(new LoadResult());
