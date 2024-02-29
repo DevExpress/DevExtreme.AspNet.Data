@@ -63,10 +63,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
                 loadOptions.Group = JsonSerializer.Deserialize<GroupingInfo[]>(group, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(filter)) {
-                loadOptions.Filter = JsonSerializer.Deserialize<IList>(filter, new JsonSerializerOptions {
-                    //TODO:
-                    //DateParseHandling = DateParseHandling.None
-                });
+                var deserializedList = JsonSerializer.Deserialize<IList>(filter);
+                loadOptions.Filter = Compatibility.UnwrapList(deserializedList);
             }
 
             if(!String.IsNullOrEmpty(totalSummary))

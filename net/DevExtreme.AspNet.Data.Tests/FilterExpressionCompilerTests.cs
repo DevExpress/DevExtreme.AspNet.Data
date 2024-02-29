@@ -143,7 +143,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void IsUnaryWithJsonCriteria() {
-            var crit = JsonSerializer.Deserialize<IList>("[\"!\", []]");
+            var deserializedList = JsonSerializer.Deserialize<IList>("[\"!\", []]");
+            var crit = Compatibility.UnwrapList(deserializedList);
             var compiler = new FilterExpressionCompiler(typeof(object), false);
             Assert.True(compiler.IsUnary(crit));
         }
@@ -238,15 +239,13 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.True((bool)Compile<DataItem1>(new object[] { "Date", "12/13/2011 00:00:00" }).Compile().DynamicInvoke(data[0]));
         }
 
-        /*
         [Fact]
         public void JsonObjects() {
-            //TODO:
-            var crit = JsonSerializer.Deserialize<IList>(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]");
+            var deserializedList = JsonSerializer.Deserialize<IList>(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]");
+            var crit = Compatibility.UnwrapList(deserializedList);
             var expr = Compile<DataItem1>(crit);
             Assert.Equal(@"((obj.StringProp == ""abc"") AndAlso (obj.NullableProp == null))", expr.Body.ToString());
         }
-        */
 
         [Fact]
         public void StringInequality() {

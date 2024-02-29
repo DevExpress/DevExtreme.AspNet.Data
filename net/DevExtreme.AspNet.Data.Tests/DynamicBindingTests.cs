@@ -1,11 +1,16 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text.Json;
 using Xunit;
+
+#if NEWTONSOFT_TESTS
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+#endif
 
 namespace DevExtreme.AspNet.Data.Tests {
 
@@ -68,6 +73,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2d, expandoResult[0][P1]);
         }
 
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void Filter_JValueNull() {
             var result = ToDictArray(DataSourceLoader.Load(
@@ -75,13 +81,13 @@ namespace DevExtreme.AspNet.Data.Tests {
                     CreateExpando(null)
                 },
                 new SampleLoadOptions {
-                    //TODO:
-                    //Filter = new object[] { P1, JValue.CreateNull() }
+                    Filter = new object[] { P1, JValue.CreateNull() }
                 }
             ).data);
 
             Assert.Single(result);
         }
+        #endif
 
         [Fact]
         public void Filter_Null() {
@@ -146,10 +152,10 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(4m, expandoResult[1].summary[0]);
         }
 
-        /*
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void JArray() {
-            var sourceData = JsonSerializer.Deserialize<JArray>(@"[
+            var sourceData = JsonConvert.DeserializeObject<JArray>(@"[
                 { ""p1"": 2 },
                 { ""p1"": 3 },
                 { ""p1"": 1 },
@@ -167,7 +173,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(4m, result.summary[0]);
         }
-        */
+        #endif
 
         [Fact]
         public void T598818() {
@@ -214,7 +220,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Single(loadResult.data);
         }
 
-        /*
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void NoToStringForNumbers() {
             var compiler = new FilterExpressionCompiler(typeof(object), false);
@@ -231,7 +237,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 10
             );
         }
-        */
+        #endif
 
         [Fact]
         public void T714342() {

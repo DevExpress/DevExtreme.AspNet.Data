@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var source = new[] { new Category(), new Category() };
                 source[0].Products.Add(new Product { Name = "Chai" });
 
-                var filter = JsonSerializer.Deserialize<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]");
+                var deserializedList = JsonSerializer.Deserialize<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]");
+                var filter = Compatibility.UnwrapList(deserializedList);
 
                 var loadOptions = new SampleLoadOptions {
                     Filter = filter,
