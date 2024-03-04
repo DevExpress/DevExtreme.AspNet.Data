@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\JamesNK\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
     <None Update="Types\AnonType.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
