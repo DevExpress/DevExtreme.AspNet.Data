@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
+
 using System.Text.Json;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             //https://github.com/dotnet/runtime/issues/41630
             //https://github.com/dotnet/runtime/issues/36236
             Assert.Equal(
-                "{\"data\":null}",
+                "{\"data\":null,\"totalCount\":-1,\"groupCount\":-1}",
                 JsonSerializer.Serialize(new LoadResult())
             );
         }

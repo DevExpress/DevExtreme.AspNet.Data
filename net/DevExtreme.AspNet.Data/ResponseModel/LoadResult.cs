@@ -16,13 +16,13 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
         /// <summary>
         /// The total number of data objects in the resulting dataset.
         /// </summary>
-        [DefaultValue(-1), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [DefaultValue(-1)/*, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)*/]
         public int totalCount { get; set; } = -1;
 
         /// <summary>
         /// The number of top-level groups in the resulting dataset.
         /// </summary>
-        [DefaultValue(-1), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [DefaultValue(-1)/*, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)*/]
         public int groupCount { get; set; } = -1;
 
         /// <summary>
