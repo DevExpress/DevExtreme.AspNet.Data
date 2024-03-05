@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -12,6 +9,7 @@ namespace DevExtreme.AspNet.Data {
         /// <summary>
         /// A value that groups data in ranges of a given length or date/time period.
         /// </summary>
+        [JsonConverter(typeof(NumericAndStringConverter))]
         public string GroupInterval { get; set; }
 
         /// <summary>

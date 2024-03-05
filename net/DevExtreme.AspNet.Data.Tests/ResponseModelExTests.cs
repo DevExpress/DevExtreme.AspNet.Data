@@ -7,7 +7,7 @@ using Xunit;
 using Newtonsoft.Json;
 
 namespace DevExtreme.AspNet.Data.Tests {
-    
+
     public class ResponseModelTestsEx {
 
         class LoadResultEx : LoadResult {

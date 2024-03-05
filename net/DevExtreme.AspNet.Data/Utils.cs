@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -137,52 +135,6 @@ namespace DevExtreme.AspNet.Data {
                 || type == typeof(ushort);
         }
 
-    }
-
-    internal static class Compatibility {
-        internal static IList UnwrapList(IList deserializedList) {
-            var unwrappedList = new List<object>();
-            foreach(var item in deserializedList)
-                unwrappedList.Add(UnwrapJsonElement(item));
-            return unwrappedList;
-        }
-
-        static object UnwrapJsonElement(object deserializeObject) {
-            if(!(deserializeObject is JsonElement jsonElement))
-                return null;
-
-            //https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to#deserialize-inferred-types-to-object-properties
-
-            switch(jsonElement.ValueKind) {
-                case JsonValueKind.Array:
-                    return jsonElement.EnumerateArray().Select(item => UnwrapJsonElement(item)).ToList();
-                case JsonValueKind.String:
-                    return jsonElement.GetString();
-                case JsonValueKind.Null:
-                    return null;
-                case JsonValueKind.False:
-                case JsonValueKind.True:
-                    return jsonElement.GetBoolean();
-                case JsonValueKind.Number:
-                    //same as IsIntegralType + unsigned?
-                    if(jsonElement.TryGetInt32(out var intValue))
-                        return intValue;
-                    if(jsonElement.TryGetInt64(out var longValue))
-                        return longValue;
-                    if(jsonElement.TryGetSByte(out var sByteValue))
-                        return sByteValue;
-                    if(jsonElement.TryGetInt16(out var shortValue))
-                        return shortValue;
-                    //or floating point as well?
-                    if(jsonElement.TryGetDouble(out var doubleValue))
-                        return doubleValue;
-                    if(jsonElement.TryGetDecimal(out var decimalValue))
-                        return decimalValue;
-                    throw new NotImplementedException();
-                default:
-                    throw new NotImplementedException();
-            }
-        }
     }
 
 }
