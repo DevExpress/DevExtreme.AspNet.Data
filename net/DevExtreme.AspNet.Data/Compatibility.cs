@@ -19,7 +19,7 @@ namespace DevExtreme.AspNet.Data {
 
         static object UnwrapJsonElement(object deserializeObject) {
             if(!(deserializeObject is JsonElement jsonElement))
-                return null;
+                throw new InvalidOperationException();
 
             switch(jsonElement.ValueKind) {
                 case JsonValueKind.Array:
@@ -52,6 +52,7 @@ namespace DevExtreme.AspNet.Data {
                 return string.Format(CultureInfo.InvariantCulture, "{0}", GetNumber(ref reader));
             return reader.GetString();
         }
+
         static object GetNumber(ref Utf8JsonReader reader) {
             if(reader.TryGetInt32(out int intValue))
                 return intValue;
