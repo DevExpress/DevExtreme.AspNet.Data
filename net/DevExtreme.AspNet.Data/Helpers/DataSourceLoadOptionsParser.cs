@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace DevExtreme.AspNet.Data.Helpers {
 
@@ -12,6 +8,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
     /// A parser for the data processing settings.
     /// </summary>
     public static class DataSourceLoadOptionsParser {
+        static readonly JsonSerializerOptions DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+
         public const string
             KEY_REQUIRE_TOTAL_COUNT = "requireTotalCount",
             KEY_REQUIRE_GROUP_COUNT = "requireGroupCount",
@@ -59,25 +57,24 @@ namespace DevExtreme.AspNet.Data.Helpers {
                 loadOptions.Take = Convert.ToInt32(take);
 
             if(!String.IsNullOrEmpty(sort))
-                loadOptions.Sort = JsonConvert.DeserializeObject<SortingInfo[]>(sort);
+                loadOptions.Sort = JsonSerializer.Deserialize<SortingInfo[]>(sort, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(group))
-                loadOptions.Group = JsonConvert.DeserializeObject<GroupingInfo[]>(group);
+                loadOptions.Group = JsonSerializer.Deserialize<GroupingInfo[]>(group, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(filter)) {
-                loadOptions.Filter = JsonConvert.DeserializeObject<IList>(filter, new JsonSerializerSettings {
-                    DateParseHandling = DateParseHandling.None
-                });
+                var deserializedList = JsonSerializer.Deserialize<IList>(filter);
+                loadOptions.Filter = Compatibility.UnwrapList(deserializedList);
             }
 
             if(!String.IsNullOrEmpty(totalSummary))
-                loadOptions.TotalSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(totalSummary);
+                loadOptions.TotalSummary = JsonSerializer.Deserialize<SummaryInfo[]>(totalSummary, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(groupSummary))
-                loadOptions.GroupSummary = JsonConvert.DeserializeObject<SummaryInfo[]>(groupSummary);
+                loadOptions.GroupSummary = JsonSerializer.Deserialize<SummaryInfo[]>(groupSummary, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(select))
-                loadOptions.Select = JsonConvert.DeserializeObject<string[]>(select);
+                loadOptions.Select = JsonSerializer.Deserialize<string[]>(select);
         }
     }
 

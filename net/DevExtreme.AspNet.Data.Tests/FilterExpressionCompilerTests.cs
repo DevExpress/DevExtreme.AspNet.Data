@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
+using System.Text.Json;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -144,7 +143,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void IsUnaryWithJsonCriteria() {
-            var crit = JsonConvert.DeserializeObject<IList>("[\"!\", []]");
+            var deserializedList = JsonSerializer.Deserialize<IList>("[\"!\", []]");
+            var crit = Compatibility.UnwrapList(deserializedList);
             var compiler = new FilterExpressionCompiler(typeof(object), false);
             Assert.True(compiler.IsUnary(crit));
         }
@@ -241,7 +241,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void JsonObjects() {
-            var crit = (IList)JsonConvert.DeserializeObject(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]");
+            var deserializedList = JsonSerializer.Deserialize<IList>(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]");
+            var crit = Compatibility.UnwrapList(deserializedList);
             var expr = Compile<DataItem1>(crit);
             Assert.Equal(@"((obj.StringProp == ""abc"") AndAlso (obj.NullableProp == null))", expr.Body.ToString());
         }

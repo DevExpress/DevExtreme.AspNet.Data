@@ -1,10 +1,11 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
-using Newtonsoft.Json;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -34,7 +35,8 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var source = new[] { new Category(), new Category() };
                 source[0].Products.Add(new Product { Name = "Chai" });
 
-                var filter = JsonConvert.DeserializeObject<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]");
+                var deserializedList = JsonSerializer.Deserialize<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]");
+                var filter = Compatibility.UnwrapList(deserializedList);
 
                 var loadOptions = new SampleLoadOptions {
                     Filter = filter,

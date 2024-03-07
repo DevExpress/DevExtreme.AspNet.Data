@@ -1,13 +1,16 @@
 ﻿using DevExtreme.AspNet.Data.ResponseModel;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 using Xunit;
+
+#if NEWTONSOFT_TESTS
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+#endif
 
 namespace DevExtreme.AspNet.Data.Tests {
 
@@ -70,6 +73,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(2d, expandoResult[0][P1]);
         }
 
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void Filter_JValueNull() {
             var result = ToDictArray(DataSourceLoader.Load(
@@ -83,6 +87,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Single(result);
         }
+        #endif
 
         [Fact]
         public void Filter_Null() {
@@ -147,6 +152,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(4m, expandoResult[1].summary[0]);
         }
 
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void JArray() {
             var sourceData = JsonConvert.DeserializeObject<JArray>(@"[
@@ -167,6 +173,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(4m, result.summary[0]);
         }
+        #endif
 
         [Fact]
         public void T598818() {
@@ -213,6 +220,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Single(loadResult.data);
         }
 
+        #if NEWTONSOFT_TESTS
         [Fact]
         public void NoToStringForNumbers() {
             var compiler = new FilterExpressionCompiler(typeof(object), false);
@@ -229,6 +237,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 10
             );
         }
+        #endif
 
         [Fact]
         public void T714342() {
