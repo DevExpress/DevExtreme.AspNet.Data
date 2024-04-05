@@ -14,8 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data.Tests", "DevExtreme.AspNet.Data.Tests\DevExtreme.AspNet.Data.Tests.csproj", "{BFF5CDCB-B8E0-4D4C-BCEB-18651691E1E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{760B3927-BB40-4D5B-B64C-880E75E4A4A5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data.Tests.NET4", "DevExtreme.AspNet.Data.Tests.NET4\DevExtreme.AspNet.Data.Tests.NET4.csproj", "{D083C7D4-E8EC-409F-8B45-512FABB21A54}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevExtreme.AspNet.Data.Tests.EF6", "DevExtreme.AspNet.Data.Tests.EF6\DevExtreme.AspNet.Data.Tests.EF6.csproj", "{C401BB6E-D21B-45D5-AB98-6B308DB4E4FB}"
@@ -54,10 +52,6 @@ Global
 		{BFF5CDCB-B8E0-4D4C-BCEB-18651691E1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF5CDCB-B8E0-4D4C-BCEB-18651691E1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFF5CDCB-B8E0-4D4C-BCEB-18651691E1E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{760B3927-BB40-4D5B-B64C-880E75E4A4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{760B3927-BB40-4D5B-B64C-880E75E4A4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{760B3927-BB40-4D5B-B64C-880E75E4A4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{760B3927-BB40-4D5B-B64C-880E75E4A4A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D083C7D4-E8EC-409F-8B45-512FABB21A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D083C7D4-E8EC-409F-8B45-512FABB21A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D083C7D4-E8EC-409F-8B45-512FABB21A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
