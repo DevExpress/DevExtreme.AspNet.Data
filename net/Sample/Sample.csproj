@@ -28,7 +28,7 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.17" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.17" />
   </ItemGroup>
-    
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
     <DefineConstants>NET8.0</DefineConstants>
   </PropertyGroup>
@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <!--
-  <Target Name="Clean dx-aspnet-data-js" BeforeTargets="LibraryManagerRestore">    
+  <Target Name="Clean dx-aspnet-data-js" BeforeTargets="LibraryManagerRestore">
     <Delete Files="wwwroot/lib/dx.aspnet.data.js" />
   </Target>
   -->
