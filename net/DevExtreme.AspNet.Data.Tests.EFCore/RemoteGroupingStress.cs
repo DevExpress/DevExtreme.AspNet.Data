@@ -15,7 +15,7 @@ namespace DevExtreme.AspNet.Data.Tests.EFCore {
             public int? NullNum { get; set; }
             public DateTime Date { get; set; }
             public DateTime? NullDate { get; set; }
-#if NET6_0_OR_GREATER
+#if EFCORE8 || EFCORE9
             public DateOnly DateO { get; set; }
 #endif
         }

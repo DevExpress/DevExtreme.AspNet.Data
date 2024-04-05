@@ -14,9 +14,9 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
             int? _nullNum;
             DateTime _date;
             DateTime? _nullDate;
-#if NET6_0_OR_GREATER
+//#if EFCORE8 || EFCORE9
             DateOnly _dateO;
-#endif
+//#endif
 
             public DataItem(Session session)
                 : base(session) {
@@ -48,12 +48,12 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
                 set { SetPropertyValue(nameof(NullDate), ref _nullDate, value); }
             }
 
-#if NET6_0_OR_GREATER
+//#if EFCORE8 || EFCORE9
             public DateOnly DateO {
                 get { return _dateO; }
                 set { SetPropertyValue(nameof(DateO), ref _dateO, value); }
             }
-#endif
+//#endif
         }
 
         [Fact(Skip = "Skip until proper DevExpress.Xpo dll / nupkg with Date Time Only support?")]

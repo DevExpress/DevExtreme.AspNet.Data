@@ -13,10 +13,10 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
             public virtual int? NullNum { get; set; }
             public virtual DateTime Date { get; set; }
             public virtual DateTime? NullDate { get; set; }
-#if NET6_0_OR_GREATER
+//#if EFCORE8 || EFCORE9
             // dummy interface implementation
             public virtual DateOnly DateO { get; set; }
-#endif
+//#endif
         }
 
         public class DataItemMap : ClassMap<DataItem> {
