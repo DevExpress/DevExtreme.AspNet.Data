@@ -40,6 +40,20 @@
                     }
                 },
                 {
+                    dataField: "orderDateOnly",
+                    dataType: "date",
+                    headerFilter: {
+                        groupInterval: "quarter"
+                    }
+                },
+                {
+                    dataField: "orderTimeOnly",
+                    dataType: "time",
+                    headerFilter: {
+                        //groupInterval: "quarter" // N|A
+                    }
+                },
+                {
                     dataField: "freight",
                     headerFilter: {
                         groupInterval: 100
@@ -61,6 +75,7 @@
             ],
 
             groupPanel: { visible: true },
+            searchPanel: { visible: true },
             filterRow: { visible: true },
             headerFilter: { visible: true },
             editing: {
@@ -74,7 +89,10 @@
             },
             summary: {
                 totalItems: [
-                    { column: "freight", summaryType: "sum" }
+                    { column: "freight", summaryType: "sum" },
+                    { column: "orderDate", summaryType: "count" },
+                    { column: "orderDateOnly", summaryType: "count" },
+                    //{ column: "orderTimeOnly", summaryType: "count" }
                 ],
                 groupItems: [
                     { column: "freight", summaryType: "sum" },

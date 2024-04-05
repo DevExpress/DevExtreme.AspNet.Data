@@ -1,0 +1,18 @@
+USE [Northwind]
+GO
+ALTER TABLE [Orders]
+ADD [OrderDateOnly] date NULL
+GO
+UPDATE [Orders] SET [OrderDateOnly] = CONVERT(date, [OrderDate])
+GO
+ALTER TABLE [Orders]
+ADD [OrderDateTimeOnly] time NULL
+GO
+UPDATE [Orders] SET [OrderDateTimeOnly] = CONVERT(time, DATEADD(hour, ([OrderID] + 1), [OrderDate]))
+
+---
+
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+Scaffold-DbContext "Data Source=(localdb)\MSSQLLocalDB; Database=Northwind; Integrated Security=True; MultipleActiveResultSets=True; App=EntityFramework" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

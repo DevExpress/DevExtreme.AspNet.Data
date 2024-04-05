@@ -7,7 +7,14 @@ namespace Sample {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services
                 .AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+                //.AddRazorRuntimeCompilation()
+#if NET6_0
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new Net6DateOnlyJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new Net6TimeOnlyJsonConverter());
+                })
+#endif
+                ;
             builder.Services
                 .AddLogging()
                 .AddEntityFrameworkSqlServer()

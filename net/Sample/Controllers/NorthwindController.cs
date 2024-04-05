@@ -1,11 +1,11 @@
 ﻿using DevExtreme.AspNet.Data;
 
-using Sample.Models;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
+
+using Sample.Models;
 
 namespace Sample.Controllers {
 
@@ -23,6 +23,10 @@ namespace Sample.Controllers {
                 o.OrderId,
                 o.CustomerId,
                 o.OrderDate,
+                //----------------------------------------
+                o.OrderDateOnly,
+                o.OrderTimeOnly,
+                //----------------------------------------
                 o.Freight,
                 o.ShipCountry,
                 o.ShipRegion,
