@@ -6,9 +6,9 @@ GO
 UPDATE [Orders] SET [OrderDateOnly] = CONVERT(date, [OrderDate])
 GO
 ALTER TABLE [Orders]
-ADD [OrderDateTimeOnly] time NULL
+ADD [OrderTimeOnly] time NULL
 GO
-UPDATE [Orders] SET [OrderDateTimeOnly] = CONVERT(time, DATEADD(hour, ([OrderID] + 1), [OrderDate]))
+UPDATE [Orders] SET [OrderTimeOnly] = CONVERT(time, DATEADD(hour, ([OrderID] + 1), [OrderDate]))
 
 ---
 
