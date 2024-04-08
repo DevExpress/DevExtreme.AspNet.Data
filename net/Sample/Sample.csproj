@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
@@ -38,10 +38,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
   </ItemGroup>
 
-  <!--
   <Target Name="Clean dx-aspnet-data-js" BeforeTargets="LibraryManagerRestore">
     <Delete Files="wwwroot/lib/dx.aspnet.data.js" />
   </Target>
-  -->
 
 </Project>
