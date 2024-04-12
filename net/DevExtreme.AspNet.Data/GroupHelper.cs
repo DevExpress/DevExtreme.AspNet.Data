@@ -1,11 +1,9 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.ResponseModel;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -95,6 +93,11 @@ namespace DevExtreme.AspNet.Data {
         static DateTime ToDateTime(object value) {
             if(value is DateTimeOffset offset)
                 return offset.DateTime;
+
+#if NET6_0_OR_GREATER
+            if(value is DateOnly date)
+                return date.ToDateTime(TimeOnly.MinValue);
+#endif
 
             return Convert.ToDateTime(value);
         }

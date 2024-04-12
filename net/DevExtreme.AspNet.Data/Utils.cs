@@ -48,6 +48,13 @@ namespace DevExtreme.AspNet.Data {
             if(type == typeof(DateTimeOffset) && value is DateTime date)
                 return new DateTimeOffset(date);
 
+#if NET6_0_OR_GREATER
+            if(type == typeof(DateOnly) && value is String)
+                return DateOnly.Parse((string)value, CultureInfo.InvariantCulture);
+            if(type == typeof(TimeOnly) && value is String)
+                return TimeOnly.Parse((string)value, CultureInfo.InvariantCulture);
+#endif
+
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
                 return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
