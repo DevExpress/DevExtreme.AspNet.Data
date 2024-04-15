@@ -8,7 +8,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
     /// A parser for the data processing settings.
     /// </summary>
     public static class DataSourceLoadOptionsParser {
-        static readonly JsonSerializerOptions DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        static readonly JsonSerializerOptions DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web) {
+            Converters = { new ListConverter() }
+        };
 
         public const string
             KEY_REQUIRE_TOTAL_COUNT = "requireTotalCount",
@@ -62,10 +64,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(!String.IsNullOrEmpty(group))
                 loadOptions.Group = JsonSerializer.Deserialize<GroupingInfo[]>(group, DEFAULT_SERIALIZER_OPTIONS);
 
-            if(!String.IsNullOrEmpty(filter)) {
-                var deserializedList = JsonSerializer.Deserialize<IList>(filter);
-                loadOptions.Filter = Compatibility.UnwrapList(deserializedList);
-            }
+            if(!String.IsNullOrEmpty(filter))
+                loadOptions.Filter = JsonSerializer.Deserialize<IList>(filter, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(totalSummary))
                 loadOptions.TotalSummary = JsonSerializer.Deserialize<SummaryInfo[]>(totalSummary, DEFAULT_SERIALIZER_OPTIONS);

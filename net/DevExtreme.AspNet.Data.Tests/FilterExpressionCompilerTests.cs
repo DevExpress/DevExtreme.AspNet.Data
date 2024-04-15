@@ -9,6 +9,9 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class FilterExpressionCompilerTests {
+        static readonly JsonSerializerOptions TESTS_DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web) {
+            Converters = { new ListConverter() }
+        };
 
         class DataItem1 {
             public int IntProp { get; set; }
@@ -143,8 +146,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void IsUnaryWithJsonCriteria() {
-            var deserializedList = JsonSerializer.Deserialize<IList>("[\"!\", []]");
-            var crit = Compatibility.UnwrapList(deserializedList);
+            var crit = JsonSerializer.Deserialize<IList>("[\"!\", []]", TESTS_DEFAULT_SERIALIZER_OPTIONS);
             var compiler = new FilterExpressionCompiler(typeof(object), false);
             Assert.True(compiler.IsUnary(crit));
         }
@@ -241,8 +243,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
         [Fact]
         public void JsonObjects() {
-            var deserializedList = JsonSerializer.Deserialize<IList>(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]");
-            var crit = Compatibility.UnwrapList(deserializedList);
+            var crit = JsonSerializer.Deserialize<IList>(@"[ [ ""StringProp"", ""abc"" ], [ ""NullableProp"", null ] ]", TESTS_DEFAULT_SERIALIZER_OPTIONS);
             var expr = Compile<DataItem1>(crit);
             Assert.Equal(@"((obj.StringProp == ""abc"") AndAlso (obj.NullableProp == null))", expr.Body.ToString());
         }
