@@ -17,9 +17,10 @@ const REPO_NAME = process.argv[4];
 let META_VERSION_NUMERIC = "99.0.0";
 let META_VERSION_FULL;
 
-if(REPO_NAME === MAIN_REPO_NAME && /^v?(([.\d]+)[\w-]*)$/.test(TAG)) {
-    META_VERSION_FULL = RegExp.$1;
-    META_VERSION_NUMERIC = RegExp.$2;
+const VERSION_MATCH = /^v?(([.\d]+)[\w.-]*)$/.exec(TAG)
+if(REPO_NAME === MAIN_REPO_NAME && VERSION_MATCH) {
+    META_VERSION_FULL = VERSION_MATCH[1];
+    META_VERSION_NUMERIC = VERSION_MATCH[2];
 } else if(BUILD_NUMBER) {
     META_VERSION_FULL = META_VERSION_NUMERIC + "-ci-";
 
