@@ -11,6 +11,9 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class CustomFilterCompilersTests {
+        static readonly JsonSerializerOptions TESTS_DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web) {
+            Converters = { new ListConverter() }
+        };
 
         [Fact]
         public void OneToManyContains() {
@@ -35,8 +38,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 var source = new[] { new Category(), new Category() };
                 source[0].Products.Add(new Product { Name = "Chai" });
 
-                var deserializedList = JsonSerializer.Deserialize<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]");
-                var filter = Compatibility.UnwrapList(deserializedList);
+                var filter = JsonSerializer.Deserialize<IList>(@"[ ""Products"", ""Contains"", ""ch"" ]", TESTS_DEFAULT_SERIALIZER_OPTIONS);
 
                 var loadOptions = new SampleLoadOptions {
                     Filter = filter,

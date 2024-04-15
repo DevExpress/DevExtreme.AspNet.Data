@@ -61,10 +61,16 @@ namespace DevExtreme.AspNet.Data {
             throw new NotImplementedException();
         }
 
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) {
-            throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => throw new NotImplementedException();
+    }
+
+    class ListConverter : JsonConverter<IList> {
+        public override IList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+            var deserializedList = JsonSerializer.Deserialize<IList>(ref reader);
+            return Compatibility.UnwrapList(deserializedList);
         }
 
+        public override void Write(Utf8JsonWriter writer, IList value, JsonSerializerOptions options) => throw new NotImplementedException();
     }
 
 }
