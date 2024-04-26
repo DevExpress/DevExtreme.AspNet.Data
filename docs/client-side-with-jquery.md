@@ -137,8 +137,13 @@ You can find a jQuery example [here](https://github.com/DevExpress/DevExtreme.As
 
 ## See Also
 
-- [DataGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_2/datagrid-webapi)
-- [PivotGrid and Web API example](https://github.com/DevExpress/devextreme-examples/tree/17_2/pivotgrid-webapi)
-- [DataGrid in an MVC 5 App example](https://github.com/DevExpress/devextreme-examples/tree/17_2/datagrid-mvc5)
+- GitHub Examples
+    - [DataGrid and Web API](https://github.com/DevExpress-Examples/devextreme-datagrid-with-webapi)
+    - [PivotGrid and Web API](https://github.com/DevExpress-Examples/devextreme-pivotgrid-with-webapi)
+    - [DataGrid in an MVC 5 App](https://github.com/DevExpress-Examples/devextreme-datagrid-mvc5)
+- Online Demos
+    - [DataGrid and Web API](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/DataGrid/WebAPIService/)
+    - [PivotGrid and Web API](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/PivotGrid/WebAPIService/)
+    - [DataGrid in an MVC 5 App](https://demos.devexpress.com/ASPNetMVC/Demo/DataGrid/WebAPIService/)
 - [Custom Data Sources](https://js.devexpress.com/Documentation/Guide/Data_Binding/Specify_a_Data_Source/Custom_Data_Sources/)
 - [PivotGrid - Use CustomStore](https://js.devexpress.com/Documentation/Guide/Widgets/PivotGrid/Use_CustomStore/)
