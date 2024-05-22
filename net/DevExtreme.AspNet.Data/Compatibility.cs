@@ -18,6 +18,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
         static object UnwrapJsonElement(object deserializeObject) {
+            if(deserializeObject == null)
+                return null;
+
             if(!(deserializeObject is JsonElement jsonElement))
                 throw new InvalidOperationException();
 
