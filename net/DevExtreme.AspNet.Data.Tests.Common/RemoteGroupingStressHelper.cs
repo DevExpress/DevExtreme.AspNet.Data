@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -11,12 +10,18 @@ namespace DevExtreme.AspNet.Data.Tests {
         const string PROP_NULL_NUM = nameof(IEntity.NullNum);
         const string PROP_DATE = nameof(IEntity.Date);
         const string PROP_NULL_DATE = nameof(IEntity.NullDate);
+#if EFCORE8 || EFCORE9
+        const string PROP_DATE_ONLY = nameof(IEntity.DateO);
+#endif
 
         public interface IEntity {
             int Num { get; }
             int? NullNum { get; }
             DateTime Date { get; }
             DateTime? NullDate { get; }
+#if EFCORE8 || EFCORE9
+            DateOnly DateO { get; set; }
+#endif
         }
 
         public static void Run<T>(IQueryable<T> data) where T : IEntity {
@@ -36,7 +41,10 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new GroupingInfo { Selector = PROP_NUM },
                 new GroupingInfo { Selector = PROP_NULL_NUM },
                 new GroupingInfo { Selector = PROP_DATE },
-                new GroupingInfo { Selector = PROP_NULL_DATE }
+                new GroupingInfo { Selector = PROP_NULL_DATE },
+#if EFCORE8 || EFCORE9
+                new GroupingInfo { Selector = PROP_DATE_ONLY },
+#endif
             };
 
             foreach(var interval in Enumerable.Range(1, 3).Select(i => (100 * i).ToString())) {

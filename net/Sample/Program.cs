@@ -1,23 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Sample.Models;
 
 namespace Sample {
     public class Program {
         public static void Main(string[] args) {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .ConfigureLogging(logging => logging.AddConsole())
-                .Build();
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services
+                .AddControllersWithViews()
+                //.AddRazorRuntimeCompilation()
+#if NET6_0
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new Net6DateOnlyJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new Net6TimeOnlyJsonConverter());
+                })
+#endif
+                ;
+            builder.Services
+                .AddLogging()
+                .AddEntityFrameworkSqlServer()
+                .AddDbContext<NorthwindContext>(options => options
+                    //.UseSqlServer("Server=.\\SQLEXPRESS; Database=Northwind; Trusted_Connection=True")
+                    .UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB; Database=Northwind; Integrated Security=True; MultipleActiveResultSets=True; App=EntityFramework")
+                );
 
-            host.Run();
+            var app = builder.Build();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.Run();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Sample.Models {
 
@@ -127,5 +125,14 @@ namespace Sample.Models {
                     .HasConstraintName("FK_Products_Categories");
             });
         }
+
+#if NET6_0 || NET7_0
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+            base.ConfigureConventions(configurationBuilder);
+            configurationBuilder.Properties<DateOnly>().HaveConversion<NetLess8DateOnlyValueConverter>();
+            configurationBuilder.Properties<TimeOnly>().HaveConversion<NetLess8TimeOnlyValueConverter>();
+        }
+#endif
+
     }
 }

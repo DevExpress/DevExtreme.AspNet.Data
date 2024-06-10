@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -133,7 +133,7 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         static string DataToString(object data) {
-            return JsonConvert.SerializeObject(data).Replace("\"", "");
+            return JsonSerializer.Serialize(data).Replace("\"", "");
         }
 
     }

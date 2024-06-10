@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -56,6 +56,7 @@ namespace DevExtreme.AspNet.Data {
         /// <summary>
         /// A filter expression.
         /// </summary>
+        [JsonConverter(typeof(ListConverter))]
         public IList Filter { get; set; }
 
         /// <summary>

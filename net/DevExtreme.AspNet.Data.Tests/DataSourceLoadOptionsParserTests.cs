@@ -1,8 +1,7 @@
 ﻿using DevExtreme.AspNet.Data.Helpers;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DevExtreme.AspNet.Data.Tests {
@@ -58,6 +57,34 @@ namespace DevExtreme.AspNet.Data.Tests {
             });
 
             Assert.IsType<string>(opts.Filter[1]);
+        }
+
+        [Fact]
+        public void MustParseNull() {
+            var opts = new SampleLoadOptions();
+
+            DataSourceLoadOptionsParser.Parse(opts, key => {
+                if(key == DataSourceLoadOptionsParser.KEY_FILTER)
+                    return @"[ ""fieldName"", ""="", null ]";
+                return null;
+            });
+
+            Assert.Equal(new[] { "fieldName", "=", null }, opts.Filter.Cast<string>());
+        }
+
+        [Fact]
+        public void MustParseNumericAsString() {
+            var opts = new SampleLoadOptions();
+
+            DataSourceLoadOptionsParser.Parse(opts, key => {
+                if(key == DataSourceLoadOptionsParser.KEY_GROUP)
+                    return @"[{""selector"":""freight"",""groupInterval"":100,""isExpanded"":false}]";
+                return null;
+            });
+
+            Assert.Equal("freight", opts.Group[0].Selector);
+            Assert.Equal("100", opts.Group[0].GroupInterval);
+            Assert.False(opts.Group[0].IsExpanded);
         }
 
     }

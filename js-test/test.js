@@ -176,7 +176,7 @@
             QUnit.test("other mime", testCase("unknown/unknown", "any", "Bad Request"));
 
             QUnit.test("RFC 7807 - title", testCase(
-                "application/json",
+                "application/problem+json",
                 JSON.stringify({
                     type: "https://tools.ietf.org/html/rfc7231#section-6.6.1",
                     title: SAMPLE_MESSAGE,
@@ -186,13 +186,20 @@
             ));
 
             QUnit.test("RFC 7807 - detail fallback", testCase(
-                "application/json",
+                "application/problem+json",
                 JSON.stringify({
                     detail: SAMPLE_MESSAGE
                 }),
                 SAMPLE_MESSAGE
-            ))
+            ));
 
+            QUnit.test("RFC 7807 - error format", testCase(
+                "application/problem+json",
+                JSON.stringify({
+                    some_property: SAMPLE_MESSAGE
+                }),
+                '{\"some_property\":\"' + SAMPLE_MESSAGE + '\"}'
+            ));
         });
 
         QUnit.test("Issue #146", function(assert) {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sample.Models {
@@ -22,8 +20,20 @@ namespace Sample.Models {
         [Column("EmployeeID")]
         public int? EmployeeId { get; set; }
 
+        //----------------------------------------
+
         [Column(TypeName = "datetime")]
         public DateTime? OrderDate { get; set; }
+
+        // [NotMapped]
+        // [Column(TypeName = "date")]
+        // public DateOnly? OrderDateOnly => DateOnly.FromDateTime(OrderDate.Value);
+
+        public DateOnly? OrderDateOnly { get; set; }
+
+        public TimeOnly? OrderTimeOnly { get; set; }
+
+        //----------------------------------------
 
         [Column(TypeName = "datetime")]
         public DateTime? RequiredDate { get; set; }

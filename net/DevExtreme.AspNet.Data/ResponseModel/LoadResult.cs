@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace DevExtreme.AspNet.Data.ResponseModel {
 
@@ -20,19 +16,19 @@ namespace DevExtreme.AspNet.Data.ResponseModel {
         /// <summary>
         /// The total number of data objects in the resulting dataset.
         /// </summary>
-        [DefaultValue(-1), JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [DefaultValue(-1)/*, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)*/]
         public int totalCount { get; set; } = -1;
 
         /// <summary>
         /// The number of top-level groups in the resulting dataset.
         /// </summary>
-        [DefaultValue(-1), JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [DefaultValue(-1)/*, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)*/]
         public int groupCount { get; set; } = -1;
 
         /// <summary>
         /// Total summary calculation results.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public object[] summary { get; set; }
     }
 

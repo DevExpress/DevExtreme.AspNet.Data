@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Globalization;
 using System.ComponentModel;
-using Newtonsoft.Json.Linq;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace DevExtreme.AspNet.Data {
 
@@ -49,6 +47,13 @@ namespace DevExtreme.AspNet.Data {
 
             if(type == typeof(DateTimeOffset) && value is DateTime date)
                 return new DateTimeOffset(date);
+
+#if NET6_0_OR_GREATER
+            if(type == typeof(DateOnly) && value is String)
+                return DateOnly.Parse((string)value, CultureInfo.InvariantCulture);
+            if(type == typeof(TimeOnly) && value is String)
+                return TimeOnly.Parse((string)value, CultureInfo.InvariantCulture);
+#endif
 
             var converter = TypeDescriptor.GetConverter(type);
             if(converter != null && converter.CanConvertFrom(value.GetType()))
@@ -118,9 +123,11 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public static object UnwrapNewtonsoftValue(object value) {
-            if(value is JValue jValue)
-                return jValue.Value;
-
+            if(value != null) {
+                var type = value.GetType();
+                if(type.FullName.Equals("Newtonsoft.Json.Linq.JValue"))
+                    return type.GetProperty("Value").GetValue(value, null);
+            }
             return value;
         }
 

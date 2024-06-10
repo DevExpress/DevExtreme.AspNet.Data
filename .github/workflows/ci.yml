@@ -40,23 +40,30 @@ jobs:
 
     strategy:
       matrix:
-        devextreme: [ "devextreme@~18.1.0", "devextreme@>=18.2.0" ]
+        version:
+          - '~18.1.0'
+          - '~22.2.0'
+          - '>=23.1.0'
 
     steps:
     - uses: actions/checkout@v3
 
-    - run: pip install codecov
     - run: node build/make-nojquery
 
     - run: npm i --omit=peer
-    - run: npm i --no-save "${{ matrix.devextreme }}"
+    - run: npm i --no-save "devextreme@${{ matrix.version }}"
+    - name: Instal devextreme-dist
+      if: ${{ matrix.version == '>=23.1.0' }}
+      run: npm i --no-save "devextreme-dist@${{ matrix.version }}"
     - run: npm run dts
     - run: npm run karma
     - run: npm run karma-bundled
     - run: npm run karma-bundled-nojquery
     - run: npm run karma-bundled-nojquery-cjs
 
-    - run: codecov -X gcov -f js-test/coverage/lcov.info
+    - uses: codecov/codecov-action@v3
+      with:
+        files: js-test/coverage/lcov.info
 
   test-dotnet:
     runs-on: windows-latest
@@ -64,14 +71,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - run: pip install codecov
     - run: nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2022.2.3 JetBrains.dotCover.CommandLineTools
 
     - uses: ./.github/actions/dotnet-test-build
 
     - run: JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_dotnet.xml --TargetExecutable=net\dotnet-test-all.cmd
 
-    - run: codecov -X gcov -f coverage_dotnet.xml
+    - uses: codecov/codecov-action@v3
+      with:
+        files: coverage_dotnet.xml
 
   release-packages:
     runs-on: ubuntu-latest

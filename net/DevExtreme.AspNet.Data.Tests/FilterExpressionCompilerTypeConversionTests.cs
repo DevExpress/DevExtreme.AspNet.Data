@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using Xunit;
+
+#if NEWTONSOFT_TESTS
+using System.Collections;
+using Newtonsoft.Json;
+#endif
 
 namespace DevExtreme.AspNet.Data.Tests {
 
@@ -225,11 +225,15 @@ namespace DevExtreme.AspNet.Data.Tests {
             AssertEvaluation(obj, new[] { "NullableTime", "contains", "23" });
         }
 
+        #if NEWTONSOFT_TESTS
         [Theory]
         [InlineData(DateParseHandling.None)]
         [InlineData(DateParseHandling.DateTime)]
         [InlineData(DateParseHandling.DateTimeOffset)]
         public void Issue477(DateParseHandling dateParseHandling) {
+            //https://github.com/DevExpress/DevExtreme.AspNet.Data/pull/478
+            //https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/477
+
             var date = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
             var filterJSON = JsonConvert.SerializeObject(new object[] { "this", date });
             var deserializedFilter = JsonConvert.DeserializeObject<IList>(filterJSON, new JsonSerializerSettings {
@@ -243,6 +247,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             var loadResult = DataSourceLoader.Load(new[] { date }, loadOptions);
             Assert.Single(loadResult.data);
         }
+        #endif
     }
 
 }

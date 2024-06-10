@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DevExtreme.AspNet.Data;
+
 using Microsoft.AspNetCore.Mvc;
-using Sample.Models;
-using DevExtreme.AspNet.Data;
-using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+
+using Newtonsoft.Json;
+
+using Sample.Models;
 
 namespace Sample.Controllers {
 
@@ -24,6 +23,10 @@ namespace Sample.Controllers {
                 o.OrderId,
                 o.CustomerId,
                 o.OrderDate,
+                //----------------------------------------
+                o.OrderDateOnly,
+                o.OrderTimeOnly,
+                //----------------------------------------
                 o.Freight,
                 o.ShipCountry,
                 o.ShipRegion,
@@ -93,6 +96,7 @@ namespace Sample.Controllers {
         [HttpPost("insert-order")]
         public async Task<IActionResult> InsertOrder(string values) {
             var order = new Order();
+
             JsonConvert.PopulateObject(values, order);
 
             if(!TryValidateModel(order))
