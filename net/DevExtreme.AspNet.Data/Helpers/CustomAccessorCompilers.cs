@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace DevExtreme.AspNet.Data.Helpers {
@@ -96,7 +95,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
     }
 
     public class AccessorLibrary {
-        Dictionary<string, Dictionary<string, Accessor>> _dctAccessors = new Dictionary<string, Dictionary<string, Accessor>>();
+        ConcurrentDictionary<string, Dictionary<string, Accessor>> _dctAccessors = new ConcurrentDictionary<string, Dictionary<string, Accessor>>();
         public AccessorLibrary() {
         }
 
@@ -105,7 +104,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_dctAccessors.ContainsKey(TypeName)) {
                 var expressionForType = _dctAccessors[TypeName];
                 expressionForType[PropertyName] = _accessor;
-            } else _dctAccessors.Add(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
+            } else _dctAccessors.TryAdd(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
         }
 
         public void Add(string TypeName, string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
@@ -113,7 +112,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_dctAccessors.ContainsKey(TypeName)) {
                 var expressionForType = _dctAccessors[TypeName];
                 expressionForType[PropertyName] = _accessor;
-            } else _dctAccessors.Add(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
+            } else _dctAccessors.TryAdd(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
         }
         public void Add<T>(string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
             Add(typeof(T).Name, PropertyName, ResolveExprFunc);
@@ -139,7 +138,6 @@ namespace DevExtreme.AspNet.Data.Helpers {
 
             return null;
         }
-
     }
 
     public class Accessor {
