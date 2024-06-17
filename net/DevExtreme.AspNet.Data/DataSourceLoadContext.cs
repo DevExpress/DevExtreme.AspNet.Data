@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data.Aggregation;
+﻿using AutoMapper;
+using DevExtreme.AspNet.Data.Aggregation;
 using DevExtreme.AspNet.Data.Helpers;
 using DevExtreme.AspNet.Data.Types;
 using System;
@@ -12,11 +13,14 @@ namespace DevExtreme.AspNet.Data {
         readonly DataSourceLoadOptionsBase _options;
         readonly QueryProviderInfo _providerInfo;
         readonly Type _itemType;
+        readonly IMapper _mapper;
 
-        public DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType) {
+        public DataSourceLoadContext(DataSourceLoadOptionsBase options, QueryProviderInfo providerInfo, Type itemType,
+            IMapper mapper = null) {
             _options = options;
             _providerInfo = providerInfo;
             _itemType = itemType;
+            _mapper = mapper;
         }
 
         public bool GuardNulls {
@@ -78,6 +82,15 @@ namespace DevExtreme.AspNet.Data {
         public bool UseStringToLower => _options.StringToLower ?? DataSourceLoadOptionsBase.StringToLowerDefault ?? _providerInfo.IsLinqToObjects;
         public bool SupportsEqualsMethod => !_providerInfo.IsXPO;
     }
+
+    // Projection
+    partial class DataSourceLoadContext {
+        public IMapper Mapper => _mapper;
+        public bool HasProjection => _mapper != null;
+        public object AutomapperProjectionParameters { get; set; }
+        public bool ProjectBeforeFilter => _options.ProjectBeforeFilter ?? false;
+    }
+
 
     // Grouping
     partial class DataSourceLoadContext {
@@ -307,4 +320,6 @@ namespace DevExtreme.AspNet.Data {
             }
         }
     }
+
+
 }

@@ -23,7 +23,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             KEY_FILTER = "filter",
             KEY_TOTAL_SUMMARY = "totalSummary",
             KEY_GROUP_SUMMARY = "groupSummary",
-            KEY_SELECT = "select";
+            KEY_SELECT = "select",
+            KEY_PROJECTBEFOREFILTER = "projectbeforefilter";
 
         /// <summary>
         /// Converts the string representations of the data processing settings to equivalent values of appropriate types.
@@ -42,6 +43,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
             var totalSummary = valueSource(KEY_TOTAL_SUMMARY);
             var groupSummary = valueSource(KEY_GROUP_SUMMARY);
             var select = valueSource(KEY_SELECT);
+            var projectbeforefilter = valueSource(KEY_PROJECTBEFOREFILTER);
 
             if(!String.IsNullOrEmpty(requireTotalCount))
                 loadOptions.RequireTotalCount = Convert.ToBoolean(requireTotalCount);
@@ -74,7 +76,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
                 loadOptions.GroupSummary = JsonSerializer.Deserialize<SummaryInfo[]>(groupSummary, DEFAULT_SERIALIZER_OPTIONS);
 
             if(!String.IsNullOrEmpty(select))
-                loadOptions.Select = JsonSerializer.Deserialize<string[]>(select);
+                loadOptions.Select =  JsonSerializer.Deserialize<string[]>(select);
+
+            if(!String.IsNullOrEmpty(projectbeforefilter))
+                loadOptions.ProjectBeforeFilter = Convert.ToBoolean(isCountQuery);
         }
     }
 

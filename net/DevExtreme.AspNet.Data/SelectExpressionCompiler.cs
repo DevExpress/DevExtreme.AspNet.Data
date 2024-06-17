@@ -11,8 +11,8 @@ namespace DevExtreme.AspNet.Data {
     class SelectExpressionCompiler : ExpressionCompiler {
         AnonTypeNewTweaks _anonTypeNewTweaks;
 
-        public SelectExpressionCompiler(Type itemType, bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks = null)
-            : base(itemType, guardNulls) {
+        public SelectExpressionCompiler(Type itemType, bool guardNulls, AnonTypeNewTweaks anonTypeNewTweaks = null, object runtimeResolutionContext = null)
+            : base(itemType, guardNulls, runtimeResolutionContext) {
             _anonTypeNewTweaks = anonTypeNewTweaks;
         }
 

@@ -8,8 +8,3 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DevExtreme.AspNet.Data.Tests.Xpo")]
 #endif
 
-[assembly: CLSCompliant(true)]
-
-#if !DEBUG
-[assembly: AssemblyKeyFile("release.snk")]
-#endif
