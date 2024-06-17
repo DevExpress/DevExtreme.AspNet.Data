@@ -11,7 +11,7 @@ namespace DevExtreme.AspNet.Data {
         public readonly bool IsXPO;
         public readonly bool IsNH;
         public readonly bool IsL2S;
-        public readonly bool IsMongoDBB;
+        public readonly bool IsMongoDB;
         public readonly Version Version;
 
         public QueryProviderInfo(IQueryProvider provider) {
@@ -33,7 +33,7 @@ namespace DevExtreme.AspNet.Data {
                 else if(typeName.StartsWith("System.Data.Linq."))
                     IsL2S = true;
                 else if(typeName.StartsWith("MongoDB.Driver.Linq."))
-                    IsMongoDBB = true;
+                    IsMongoDB = true;
                 else if(typeName.StartsWith("LinqKit.ExpandableQueryProvider`1") || typeName.StartsWith("LinqKit.ExpandableIncludableQueryProvider`1")) {
                     switch(providerAssembly.GetName().Name) {
                         case "LinqKit.Microsoft.EntityFrameworkCore":

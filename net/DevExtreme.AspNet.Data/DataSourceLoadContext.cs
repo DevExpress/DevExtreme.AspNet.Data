@@ -48,7 +48,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         public AnonTypeNewTweaks CreateAnonTypeNewTweaks() => new AnonTypeNewTweaks {
-            AllowEmpty = !_providerInfo.IsL2S && !_providerInfo.IsMongoDBB,
+            AllowEmpty = !_providerInfo.IsL2S && !_providerInfo.IsMongoDB,
             AllowUnusedMembers = !_providerInfo.IsL2S
         };
 
