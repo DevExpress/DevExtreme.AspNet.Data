@@ -20,7 +20,7 @@ namespace Sample {
                 .AddEntityFrameworkSqlServer()
                 .AddDbContext<NorthwindContext>(options => options
                     //.UseSqlServer("Server=.\\SQLEXPRESS; Database=Northwind; Trusted_Connection=True")
-                    .UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB; Database=Northwind; Integrated Security=True; MultipleActiveResultSets=True; App=EntityFramework")
+                    .UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnectionString"))
                 );
 
             var app = builder.Build();
