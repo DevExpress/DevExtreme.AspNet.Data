@@ -30,8 +30,9 @@ namespace DevExtreme.AspNet.Data.Tests.NH {
                 //Map(i => i.DateO); //used by all fixtures, requires nh feature support (see skip)
             }
         }
-
+#pragma warning disable xUnit1004
         [Fact(Skip = "Skip until https://github.com/nhibernate/nhibernate-core/issues/2912 is implemented?")]
+#pragma warning restore xUnit1004
         public async Task Scenario() {
             await SessionFactoryHelper.ExecAsync(session => {
                 session.Save(new DataItem());

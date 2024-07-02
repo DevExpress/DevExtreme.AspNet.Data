@@ -55,8 +55,9 @@ namespace DevExtreme.AspNet.Data.Tests.Xpo {
             }
 //#endif
         }
-
+#pragma warning disable xUnit1004
         [Fact(Skip = "Skip until proper DevExpress.Xpo dll / nupkg with Date Time Only support?")]
+#pragma warning restore xUnit1004
         public async Task Scenario() {
             await UnitOfWorkHelper.ExecAsync(uow => {
                 new DataItem(uow);
