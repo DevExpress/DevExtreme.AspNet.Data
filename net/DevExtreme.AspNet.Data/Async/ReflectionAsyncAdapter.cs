@@ -64,7 +64,9 @@ namespace DevExtreme.AspNet.Data.Async {
             public static readonly MethodInfo CountAsyncMethod;
             public static readonly MethodInfo ToListAsyncMethod;
             static EF6Methods() {
+#pragma warning disable DX0004
                 var extensionsType = Type.GetType("System.Data.Entity.QueryableExtensions, EntityFramework");
+#pragma warning restore DX0004
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
             }
@@ -74,7 +76,9 @@ namespace DevExtreme.AspNet.Data.Async {
             public static readonly MethodInfo CountAsyncMethod;
             public static readonly MethodInfo ToListAsyncMethod;
             static EFCoreMethods() {
+#pragma warning disable DX0004
                 var extensionsType = Type.GetType("Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions, Microsoft.EntityFrameworkCore");
+#pragma warning restore DX0004
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
             }
@@ -84,7 +88,9 @@ namespace DevExtreme.AspNet.Data.Async {
             public static readonly MethodInfo CountAsyncMethod;
             public static readonly MethodInfo ToListAsyncMethod;
             static NHMethods() {
+#pragma warning disable DX0004
                 var extensionsType = Type.GetType("NHibernate.Linq.LinqExtensionMethods, NHibernate");
+#pragma warning restore DX0004
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToListAsyncMethod = FindToListAsyncMethod(extensionsType);
             }
@@ -95,7 +101,9 @@ namespace DevExtreme.AspNet.Data.Async {
             public static readonly MethodInfo ToArrayAsyncMethod;
             static XpoMethods() {
                 var asm = Array.Find(AppDomain.CurrentDomain.GetAssemblies(), a => a.FullName.StartsWith("DevExpress.Xpo.v"));
+#pragma warning disable DX0004
                 var extensionsType = asm.GetType("DevExpress.Xpo.XPQueryExtensions");
+#pragma warning restore DX0004
                 CountAsyncMethod = FindCountAsyncMethod(extensionsType);
                 ToArrayAsyncMethod = FindToArrayAsyncMethod(extensionsType);
             }

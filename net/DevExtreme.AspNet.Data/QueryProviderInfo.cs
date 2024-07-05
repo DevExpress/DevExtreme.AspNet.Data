@@ -38,12 +38,16 @@ namespace DevExtreme.AspNet.Data {
                     switch(providerAssembly.GetName().Name) {
                         case "LinqKit.Microsoft.EntityFrameworkCore":
                             IsEFCore = true;
+#pragma warning disable DX0010
                             providerAssembly = Assembly.Load("Microsoft.EntityFrameworkCore");
+#pragma warning restore DX0010
                             break;
 
                         case "LinqKit.EntityFramework":
                             IsEFClassic = true;
+#pragma warning disable DX0010
                             providerAssembly = Assembly.Load("EntityFramework");
+#pragma warning restore DX0010
                             break;
                     }
                 }
