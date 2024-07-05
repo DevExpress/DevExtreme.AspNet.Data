@@ -6,7 +6,7 @@ using Xunit;
 namespace DevExtreme.AspNet.Data.Tests {
 
     public class ResponseModelTests {
-#pragma warning disable xUnit1004
+#pragma warning disable xUnit1004 // skip until external / dependency reason is resolved
         [Fact(Skip = "Skip until consolidation or target bump to net7 and ShouldSerialize")]
 #pragma warning restore xUnit1004
         public void EmptyLoadResultSerialization() {
