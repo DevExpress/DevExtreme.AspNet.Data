@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.14</Version>
+    <Version>1.15</Version>
     <PackageId>DXAutomap.AspNet.Data</PackageId>
     <Description>DevExtreme data layer extension for ASP.NET supporting Automapper</Description>
     <Authors>Devexpress_Statler</Authors>
