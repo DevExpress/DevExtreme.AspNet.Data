@@ -95,7 +95,7 @@ namespace DevExtreme.AspNet.Data.Helpers {
     }
 
     public class AccessorLibrary {
-        ConcurrentDictionary<string, Dictionary<string, Accessor>> _dctAccessors = new ConcurrentDictionary<string, Dictionary<string, Accessor>>();
+        ConcurrentDictionary<string, ConcurrentDictionary<string, Accessor>> _dctAccessors = new ConcurrentDictionary<string, ConcurrentDictionary<string, Accessor>>();
         public AccessorLibrary() {
         }
 
@@ -104,7 +104,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_dctAccessors.ContainsKey(TypeName)) {
                 var expressionForType = _dctAccessors[TypeName];
                 expressionForType[PropertyName] = _accessor;
-            } else _dctAccessors.TryAdd(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
+            } else {
+                var accessorDct = new ConcurrentDictionary<string, Accessor>() { [PropertyName] = _accessor };
+                _dctAccessors.TryAdd(TypeName, accessorDct);
+            }
         }
 
         public void Add(string TypeName, string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
@@ -112,7 +115,10 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_dctAccessors.ContainsKey(TypeName)) {
                 var expressionForType = _dctAccessors[TypeName];
                 expressionForType[PropertyName] = _accessor;
-            } else _dctAccessors.TryAdd(TypeName, new Dictionary<string, Accessor>() { [PropertyName] = _accessor });
+            } else {
+                var accessorDct = new ConcurrentDictionary<string, Accessor>() { [PropertyName] = _accessor };
+                _dctAccessors.TryAdd(TypeName, accessorDct);
+            }
         }
         public void Add<T>(string PropertyName, Func<object, LambdaExpression> ResolveExprFunc) {
             Add(typeof(T).Name, PropertyName, ResolveExprFunc);
