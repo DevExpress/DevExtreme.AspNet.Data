@@ -1,28 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>99.0</Version>
-    <PackageId>DevExtreme.AspNet.Data</PackageId>
-    <Description>%meta_description%</Description>
-    <Authors>%meta_company%</Authors>
-    <Copyright>%meta_copyright%</Copyright>
-    <PackageProjectUrl>%meta_project_url%</PackageProjectUrl>
+    <Version>1.16</Version>
+    <PackageId>DXAutomap.AspNet.Data</PackageId>
+    <Description>DevExtreme data layer extension for ASP.NET supporting Automapper</Description>
+    <Authors>Devexpress_Statler</Authors>
+    <PackageProjectUrl>https://github.com/statler/DevExtreme.AspNet.Data</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://secure.gravatar.com/avatar/6b38f1e9ffd8b069bcdc2741934fdbcf?s=512&amp;r=g</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>DevExtreme.AspNet.Data</AssemblyName>
-    <AssemblyVersion>99.0</AssemblyVersion>
-    <TargetFrameworks>net461;net6.0</TargetFrameworks>
+    <AssemblyName>DXAutomap.AspNet.Data</AssemblyName>
+    <AssemblyVersion>1.16</AssemblyVersion>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\$(TargetFramework)\DevExtreme.AspNet.Data.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <FileVersion>1.16.0.0</FileVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="System.Text.Json" Version="6.0.9" />
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>

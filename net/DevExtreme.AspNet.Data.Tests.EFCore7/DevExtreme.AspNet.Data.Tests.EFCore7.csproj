@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
-    <ProjectReference Include="..\DevExtreme.AspNet.Data.Tests.Common\DevExtreme.AspNet.Data.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
