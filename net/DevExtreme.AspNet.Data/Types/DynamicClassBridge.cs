@@ -16,10 +16,12 @@ namespace DevExtreme.AspNet.Data.Types {
 
         static DynamicClassBridge() {
             try {
+#pragma warning disable DX0010,DX0004 // known assembly and types
                 var assembly = Assembly.Load("System.Linq.Dynamic.Core");
                 FACTORY_TYPE = assembly.GetType("System.Linq.Dynamic.Core.DynamicClassFactory");
                 CLASS_TYPE = assembly.GetType("System.Linq.Dynamic.Core.DynamicClass");
                 PROP_TYPE = assembly.GetType("System.Linq.Dynamic.Core.DynamicProperty");
+#pragma warning restore DX0010,DX0004 // known assembly and types
                 CREATE_TYPE_METHOD = FACTORY_TYPE.GetMethod("CreateType");
                 INDEXER_METHOD = CLASS_TYPE.GetMethod("get_Item");
             } catch(FileNotFoundException x) {
