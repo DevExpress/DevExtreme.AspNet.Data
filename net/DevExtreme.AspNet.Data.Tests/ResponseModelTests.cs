@@ -33,6 +33,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 #if NET4
         [Fact]
         public void JavaScriptSerializer() {
+#pragma warning disable DX0011 // this is assembly with tests, known serializer type
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 
             var loadResultJson = serializer.Serialize(new LoadResult());
@@ -42,6 +43,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains("\"summary\":", loadResultJson);
 
             var groupJson = serializer.Serialize(new Group());
+#pragma warning restore DX0011 // this is assembly with tests, known serializer type
             Assert.Contains("\"key\":", groupJson);
             Assert.Contains("\"items\":", groupJson);
             Assert.Contains("\"count\":", groupJson);
