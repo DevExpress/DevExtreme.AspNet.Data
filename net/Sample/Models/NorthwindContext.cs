@@ -126,13 +126,5 @@ namespace Sample.Models {
             });
         }
 
-#if NET6_0 || NET7_0
-        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
-            base.ConfigureConventions(configurationBuilder);
-            configurationBuilder.Properties<DateOnly>().HaveConversion<NetLess8DateOnlyValueConverter>();
-            configurationBuilder.Properties<TimeOnly>().HaveConversion<NetLess8TimeOnlyValueConverter>();
-        }
-#endif
-
     }
 }
