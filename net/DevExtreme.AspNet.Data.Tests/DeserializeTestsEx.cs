@@ -13,6 +13,13 @@ namespace DevExtreme.AspNet.Data.Tests {
             var deserializedList = JsonConvert.DeserializeObject<IList>(rawJsonCriteria);
             Assert.Equal(3, deserializedList.Count);
         }
+
+        [Fact]
+        public void FilterOperandValueCanBeObject() {
+            var deserializedList = JsonConvert.DeserializeObject<IList>(@"[""fieldName1"",""="",{""Value"":0}]");
+            Assert.Equal(3, deserializedList.Count);
+            Assert.Equal("{\r\n  \"Value\": 0\r\n}", deserializedList[2].ToString());
+        }
     }
 
 }
