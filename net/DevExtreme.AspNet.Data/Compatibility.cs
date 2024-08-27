@@ -43,6 +43,8 @@ namespace DevExtreme.AspNet.Data {
                     if(jsonElement.TryGetDecimal(out var decimalValue))
                         return decimalValue;
                     throw new NotImplementedException();
+                case JsonValueKind.Object:
+                    return jsonElement;
                 default:
                     throw new NotImplementedException();
             }

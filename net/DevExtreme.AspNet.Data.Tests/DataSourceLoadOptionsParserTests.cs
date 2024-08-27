@@ -73,6 +73,20 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void MustParseObject() {
+            var opts = new SampleLoadOptions();
+
+            DataSourceLoadOptionsParser.Parse(opts, key => {
+                if(key == DataSourceLoadOptionsParser.KEY_FILTER)
+                    return @"[ ""fieldName1"", ""="", {""Value"":0} ]";
+                return null;
+            });
+
+            Assert.Equal(3, opts.Filter.Count);
+            Assert.Equal("{\"Value\":0}", opts.Filter[2].ToString());
+        }
+
+        [Fact]
         public void MustParseNumericAsString() {
             var opts = new SampleLoadOptions();
 
