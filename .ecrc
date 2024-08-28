@@ -2,6 +2,7 @@
   "NoColor": false,
   "Exclude": [
     "^docs/",
+    "net/Directory.Packages.props",
     "\\.dbml(\\.layout)?$",
     "\\.designer\\.cs$",
     "\\.snk\\.enc$"
