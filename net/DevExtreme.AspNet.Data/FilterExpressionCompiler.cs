@@ -175,6 +175,7 @@ namespace DevExtreme.AspNet.Data {
         }
 
         bool HasComparisonOperator(Type type) {
+            // Starting with target net7 type.GetMethod("op_GreaterThan", ...) returns not null for Guid
             if(type == typeof(Guid))
                 return false;
 
