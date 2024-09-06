@@ -175,10 +175,9 @@ namespace DevExtreme.AspNet.Data {
         }
 
         bool HasComparisonOperator(Type type) {
-#if !NET4
             if(type == typeof(Guid))
                 return false;
-#endif
+
             if(type.IsEnum)
                 return false;
 
