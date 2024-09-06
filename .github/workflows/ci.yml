@@ -93,7 +93,7 @@ jobs:
         dotnet-quality: ga
         dotnet-version: |
           3.1
-          6.0
+          8.0
 
     - uses: actions/checkout@v3
 

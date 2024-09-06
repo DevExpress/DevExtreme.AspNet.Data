@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" VersionOverride="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
   </ItemGroup>
 
   <Target Name="Clean dx-aspnet-data-js" BeforeTargets="LibraryManagerRestore">
