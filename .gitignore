@@ -1,6 +1,7 @@
 bin/
 obj/
 .vs/
+.idea/
 node_modules/
 net/packages/
 net/DevExtreme.AspNet.Data/release.snk
