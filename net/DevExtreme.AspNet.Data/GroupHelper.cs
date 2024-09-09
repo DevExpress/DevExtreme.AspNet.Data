@@ -43,8 +43,7 @@ namespace DevExtreme.AspNet.Data {
                 Group group;
                 if(!groupsIndex.TryGetValue(groupIndexKey, out group)) {
                     var newGroup = new Group { key = groupKey };
-                    group = newGroup;
-                    groupsIndex[groupIndexKey] = group;
+                    groupsIndex.Add(groupIndexKey, group = newGroup);
                     groups.Add(newGroup);
                 }
 

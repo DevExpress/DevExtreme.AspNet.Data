@@ -55,8 +55,7 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             if(!_defaultValues.TryGetValue(selector, out value)) {
                 var expr = CompileAccessorExpression(CreateItemParam(), selector);
                 var acc = AccumulatorFactory.Create(Utils.StripNullableType(expr.Type));
-                value = acc.GetValue();
-                _defaultValues[selector] = value;
+                _defaultValues.Add(selector, value = acc.GetValue());
             }
 
             return value;
