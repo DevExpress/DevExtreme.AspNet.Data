@@ -116,7 +116,7 @@ jobs:
       with:
         name: release-packages
         path: |
-          net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/Release/*
           devextreme-aspnet-data-*.tgz
 
   docfx:
