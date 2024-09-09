@@ -16,7 +16,8 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_accessors == null)
                 _accessors = new Dictionary<string, Func<T, object>>();
 
-            if(!_accessors.TryGetValue(selector, out Func<T, object> func)) {
+            Func<T, object> func;
+            if(!_accessors.TryGetValue(selector, out func)) {
                 var param = CreateItemParam();
                 func = Expression.Lambda<Func<T, object>>(
                     Expression.Convert(CompileAccessorExpression(param, selector), typeof(Object)),
