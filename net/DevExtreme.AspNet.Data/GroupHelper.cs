@@ -40,13 +40,13 @@ namespace DevExtreme.AspNet.Data {
                 var groupKey = GetKey(item, groupInfo);
                 var groupIndexKey = groupKey ?? NULL_KEY;
 
-                if(!groupsIndex.ContainsKey(groupIndexKey)) {
+                Group group;
+                if(!groupsIndex.TryGetValue(groupIndexKey, out group)) {
                     var newGroup = new Group { key = groupKey };
-                    groupsIndex[groupIndexKey] = newGroup;
+                    groupsIndex.Add(groupIndexKey, group = newGroup);
                     groups.Add(newGroup);
                 }
 
-                var group = groupsIndex[groupIndexKey];
                 if(group.items == null)
                     group.items = new List<T>();
                 group.items.Add(item);

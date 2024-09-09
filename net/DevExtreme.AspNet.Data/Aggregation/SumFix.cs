@@ -51,13 +51,14 @@ namespace DevExtreme.AspNet.Data.Aggregation {
             if(_defaultValues == null)
                 _defaultValues = new Dictionary<string, object>();
 
-            if(!_defaultValues.ContainsKey(selector)) {
+            object value;
+            if(!_defaultValues.TryGetValue(selector, out value)) {
                 var expr = CompileAccessorExpression(CreateItemParam(), selector);
                 var acc = AccumulatorFactory.Create(Utils.StripNullableType(expr.Type));
-                _defaultValues[selector] = acc.GetValue();
+                _defaultValues.Add(selector, value = acc.GetValue());
             }
 
-            return _defaultValues[selector];
+            return value;
         }
     }
 

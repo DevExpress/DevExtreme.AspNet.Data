@@ -16,16 +16,16 @@ namespace DevExtreme.AspNet.Data.Helpers {
             if(_accessors == null)
                 _accessors = new Dictionary<string, Func<T, object>>();
 
-            if(!_accessors.ContainsKey(selector)) {
+            Func<T, object> func;
+            if(!_accessors.TryGetValue(selector, out func)) {
                 var param = CreateItemParam();
-
-                _accessors[selector] = Expression.Lambda<Func<T, object>>(
+                _accessors.Add(selector, func = Expression.Lambda<Func<T, object>>(
                     Expression.Convert(CompileAccessorExpression(param, selector), typeof(Object)),
                     param
-                ).Compile();
+                ).Compile());
             }
 
-            return _accessors[selector](obj);
+            return func(obj);
         }
     }
 
