@@ -110,13 +110,13 @@ jobs:
     - run: npm pack ./js-nojquery
 
     - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release
+      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release --include-symbols
 
     - uses: actions/upload-artifact@v3
       with:
         name: release-packages
         path: |
-          net/DevExtreme.AspNet.Data/bin/Release/*
+          net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
           devextreme-aspnet-data-*.tgz
 
   docfx:
