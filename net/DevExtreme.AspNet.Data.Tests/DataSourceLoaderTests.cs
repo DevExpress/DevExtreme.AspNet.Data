@@ -270,7 +270,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var item = DataSourceLoader.Load(data, loadOptions).data.Cast<IDictionary<string, object>>().First();
 
-            Assert.Equal(1, item.Keys.Count);
+            Assert.Single(item.Keys);
             Assert.Equal(2, item["f2"]);
         }
 
@@ -357,8 +357,8 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(3, item.Keys.Count);
             Assert.Equal(2, address.Keys.Count);
-            Assert.Equal(1, addressStreet.Keys.Count);
-            Assert.Equal(1, contacts.Keys.Count);
+            Assert.Single(addressStreet.Keys);
+            Assert.Single(contacts.Keys);
 
             Assert.Equal(data[0].Name, item["Name"]);
             Assert.Equal(data[0].Address.City, address["City"]);
@@ -381,7 +381,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
 
             var item = result.data.Cast<IDictionary<string, object>>().First();
-            Assert.Equal(1, item.Keys.Count);
+            Assert.Single(item.Keys);
             Assert.True(item.ContainsKey("Item1"));
         }
 
@@ -441,7 +441,7 @@ namespace DevExtreme.AspNet.Data.Tests {
                 select: new[] { "b", "c" }
             );
 
-            Assert.Equal(1, item.Keys.Count);
+            Assert.Single(item.Keys);
             Assert.True(item.ContainsKey("b"));
         }
 
