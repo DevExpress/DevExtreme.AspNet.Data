@@ -8,7 +8,9 @@ namespace DevExtreme.AspNet.Data.Tests {
     public class IsSummaryQueryTests {
 
         [Theory]
+#pragma warning disable xUnit1042 // skip until rewrite CombinatorialBool to TheoryData / use any ready dep
         [MemberData(nameof(CombinatorialBool), 4)]
+#pragma warning restore xUnit1042
         public void Case(bool remoteGrouping, bool requireTotalCount, bool hasGroups, bool hasSummary) {
             var loadOptions = new SampleLoadOptions {
                 IsSummaryQuery = true,

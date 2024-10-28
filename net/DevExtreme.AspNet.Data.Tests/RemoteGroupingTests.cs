@@ -616,7 +616,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             DataSourceLoader.Load(source, loadOptions);
 
-            Assert.Single(loadOptions.ExpressionLog.Where(line => line.Contains("GroupBy")));
+            Assert.Single(loadOptions.ExpressionLog, line => line.Contains("GroupBy"));
         }
     }
 
