@@ -13,7 +13,7 @@
             factory(
                 unwrapESModule(require("xhr-mock")),
                 unwrapESModule(require("devextreme/core/version")),
-                unwrapESModule(require("devextreme/data/data_source")),
+                unwrapESModule(require("devextreme/common/data/data_source")),
                 unwrapESModule(require("devextreme/core/utils/ajax")),
                 require(ASPNET_DATA_SCRIPT)
             );
@@ -22,7 +22,7 @@
         module.exports = factory(
             unwrapESModule(require("xhr-mock")),
             unwrapESModule(require("devextreme/core/version")),
-            unwrapESModule(require("devextreme/data/data_source")),
+            unwrapESModule(require("devextreme/common/data/data_source")),
             unwrapESModule(require("devextreme/core/utils/ajax")),
             require(ASPNET_DATA_SCRIPT)
         );

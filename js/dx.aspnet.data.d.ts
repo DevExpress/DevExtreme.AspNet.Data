@@ -1,4 +1,4 @@
-import DxCustomStore from "devextreme/data/custom_store";
+import DxCustomStore from "devextreme/common/data/custom_store";
 
 interface Options {
     key?: string|Array<string>,

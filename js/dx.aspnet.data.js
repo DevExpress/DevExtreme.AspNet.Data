@@ -16,8 +16,8 @@
                 unwrapESModule(require("devextreme/core/utils/ajax")),
                 require("jquery").Deferred,
                 require("jquery").extend,
-                unwrapESModule(require("devextreme/data/custom_store")),
-                unwrapESModule(require("devextreme/data/utils"))
+                unwrapESModule(require("devextreme/common/data/custom_store")),
+                unwrapESModule(require("devextreme/common/data/utils"))
             );
         });
     } else if (typeof module === "object" && module.exports) {
@@ -25,8 +25,8 @@
             unwrapESModule(require("devextreme/core/utils/ajax")),
             require("jquery").Deferred,
             require("jquery").extend,
-            unwrapESModule(require("devextreme/data/custom_store")),
-            unwrapESModule(require("devextreme/data/utils"))
+            unwrapESModule(require("devextreme/common/data/custom_store")),
+            unwrapESModule(require("devextreme/common/data/utils"))
         );
     } else {
         DevExpress.data.AspNet = factory(
