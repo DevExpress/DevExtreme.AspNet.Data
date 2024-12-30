@@ -156,11 +156,11 @@ TFM: `net472`
   <!-- .NET PackageReferences -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0'">
     <PackageVersion Include="Azure.Identity" Version="1.12.0" />
-    <PackageVersion Include="DevExpress.Xpo" Version="24.2.1-alpha-24260" />
+    <PackageVersion Include="DevExpress.Xpo" Version="24.2.3" />
     <PackageVersion Include="FluentNHibernate" Version="3.4.0" />
     <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
