@@ -64,6 +64,11 @@ jobs:
 
     # Custom build for C#
     - if: matrix.language == 'csharp'
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9
+
+    - if: matrix.language == 'csharp'
       uses: ./.github/actions/dotnet-test-build
 
     - name: Perform CodeQL Analysis
