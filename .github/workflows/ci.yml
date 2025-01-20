@@ -88,7 +88,7 @@ jobs:
       RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
 
     steps:
-    - uses: actions/setup-dotnet@v3
+    - uses: actions/setup-dotnet@v4
       with:
         dotnet-quality: ga
         dotnet-version: 3.1
@@ -97,9 +97,11 @@ jobs:
 
     - if: ${{ env.RELEASE_KEY_SECRET != '' }}
       run: |
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
         curl -L -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
         unzip /opt/secure-file.zip -d /opt/secure-file
-        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
+        DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
 
     - run: node build/make-nojquery
     - run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
