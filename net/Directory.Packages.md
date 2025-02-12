@@ -144,13 +144,13 @@ TFM: `net472`
   </PropertyGroup>
   <!-- Common (.NET/.NET Framework) PackageReferences -->
   <ItemGroup>
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Include="xunit" Version="2.9.2" />
     <PackageVersion Include="xunit.assert" Version="2.9.2" />
     <PackageVersion Include="xunit.core" Version="2.9.2" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.3.3" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
   <!-- .NET PackageReferences -->
