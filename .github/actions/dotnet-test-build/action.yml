@@ -5,16 +5,15 @@ runs:
   using: "composite"
 
   steps:
-  - uses: actions/setup-dotnet@v3
+  - uses: actions/setup-dotnet@v4
     with:
       dotnet-quality: ga
       dotnet-version: |
         6.0
         7.0
-        8.0
-        9.0.x
+        9.0
 
-  - uses: actions/cache@v3
+  - uses: actions/cache@v4
     with:
       key: ${{ runner.os }}-nuget-${{ hashFiles('net/**/*.csproj') }}
       restore-keys: ${{ runner.os }}-nuget-
