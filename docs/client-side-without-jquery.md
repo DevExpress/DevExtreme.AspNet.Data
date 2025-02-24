@@ -61,3 +61,7 @@ import { DxDataGridModule } from 'devextreme-angular';
 })
 export class AppModule { }
 ```
+
+## Intercept HTTP Requests in Angular Applications
+
+In v24.1, we added the ability to intercept Ajax requests in DevExtreme Angular components. For more information, refer to the following help topic: [Intercept HTTP Requests](https://js.devexpress.com/Angular/Documentation/Guide/Angular_Components/Common_Features/Intercept_HTTP_Requests/).
