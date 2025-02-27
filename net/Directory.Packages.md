@@ -18,6 +18,10 @@
 
 - tfm: `net472`: [Assemblies: 3, Package References: 7, References: 4](#net-framework-472-dependencies)
 
+[net10.0](#net100-projects)
+
+- tfm: ``: [Assemblies: 1, Package References: 5 (override version 1)](#net100-dependencies)
+
 [Expected Directory.Packages.props file](expected-directorypackagesprops-file)
 
 ## Package References (by Target Framework)
@@ -80,6 +84,18 @@ TFM: `net472`
 - `xunit`
 - `xunit.runner.visualstudio`
 
+### net10.0 Dependencies
+
+TFM: ``
+
+- `LinqKit.Microsoft.EntityFrameworkCore`
+- `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.NET.Test.Sdk`
+- `xunit`
+- `xunit.runner.visualstudio`
+---
+- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.1.25081.1`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview1250811)
+
 ## Projects (by Target Framework)
 
 ### .NET 8.0 Projects
@@ -115,12 +131,23 @@ TFM: `net472`
 - DevExtreme.AspNet.Data.Tests.EF6 (`\DevExtreme.AspNet.Data.Tests.EF6\DevExtreme.AspNet.Data.Tests.EF6.csproj`)
 - DevExtreme.AspNet.Data.Tests.L2S (`\DevExtreme.AspNet.Data.Tests.L2S\DevExtreme.AspNet.Data.Tests.L2S.csproj`)
 
+### net10.0 Projects
+
+TFM: ``
+
+- DevExtreme.AspNet.Data.Tests.EFCore10 (`\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`)
+
 ## Projects with exact Versions or VersionOverrides
 
 ### TFM: `net9.0`
 
 #### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`9.0.0`
 - `\DevExtreme.AspNet.Data.Tests.EFCore9\DevExtreme.AspNet.Data.Tests.EFCore9.csproj`
+
+### TFM: ``
+
+#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.1.25081.1`
+- `\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`
 
 ## Projects with deprecated packages
 
@@ -172,6 +199,12 @@ TFM: `net472`
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net472'">
     <PackageVersion Include="EntityFramework" Version="6.5.1" />
     <PackageVersion Include="LinqKit.EntityFramework" Version="1.2.3" />
+  </ItemGroup>
+  <!-- (Unknown) PackageReferences -->
+  <ItemGroup Condition="'$(TargetFramework)' == ''">
+    <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
   </ItemGroup>
 </Project>
 
