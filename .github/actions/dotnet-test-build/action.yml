@@ -8,7 +8,9 @@ runs:
   - uses: actions/setup-dotnet@v4
     with:
       dotnet-quality: ga
-      dotnet-version: 9.0
+      dotnet-version: |
+        9.0
+        10.0.x
 
   - uses: actions/cache@v4
     with:
