@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" VersionOverride="10.0.0-preview.1.25081.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" VersionOverride="10.0.0-preview.2.25163.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
