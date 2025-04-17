@@ -94,7 +94,7 @@ TFM: ``
 - `xunit`
 - `xunit.runner.visualstudio`
 ---
-- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.1.25081.1`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview1250811)
+- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.3.25171.6`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview3251716)
 
 ## Projects (by Target Framework)
 
@@ -146,7 +146,7 @@ TFM: ``
 
 ### TFM: ``
 
-#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.1.25081.1`
+#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.3.25171.6`
 - `\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`
 
 ## Projects with deprecated packages
