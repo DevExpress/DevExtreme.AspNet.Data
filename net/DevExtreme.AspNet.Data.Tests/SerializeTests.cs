@@ -41,13 +41,20 @@ namespace DevExtreme.AspNet.Data.Tests {
                 //, DataSourceLoadOptionsParser.DEFAULT_SERIALIZER_OPTIONS
                 // does not require options, because deserializes from just serialized instance
                 );
-            Assert.Equal("100", loadOptionsDeserialized.Group[0].GroupInterval);
-            Assert.Equal("freight", loadOptionsDeserialized.Group[0].Selector);
-            Assert.Equal(3, loadOptionsDeserialized.Filter.Count);
-            var strFilter0STJ = (IList<object>)loadOptionsDeserialized.Filter[0];
-            Assert.Equal("orderDate", strFilter0STJ[0]);
-            Assert.Equal(">=", strFilter0STJ[1]);
-            Assert.Equal("2011-12-13T14:15:16", strFilter0STJ[2]);
+            Assert.Equal(loadOptions.Group[0].GroupInterval, loadOptionsDeserialized.Group[0].GroupInterval);
+            Assert.Equal(loadOptions.Group[0].Selector, loadOptionsDeserialized.Group[0].Selector);
+            Assert.Equal(loadOptions.Filter.Count, loadOptionsDeserialized.Filter.Count);
+            var filter0Orig = (IList<object>)loadOptions.Filter[0];
+            var filter0STJ = (IList<object>)loadOptionsDeserialized.Filter[0];
+            Assert.Equal(filter0Orig[0], filter0STJ[0]);
+            Assert.Equal(filter0Orig[1], filter0STJ[1]);
+            //TODO:
+            //https://github.com/dotnet/runtime/issues/31423
+            //https://learn.microsoft.com/en-us/dotnet/standard/datetime/system-text-json-support
+            //https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/js/dx.aspnet.data.js -> serializeDate
+            //Assert.Equal(filter0Orig[2], filter0STJ[2]);
+            Assert.Equal("2011-12-13T14:15:16", filter0STJ[2]);
+
         }
     }
 

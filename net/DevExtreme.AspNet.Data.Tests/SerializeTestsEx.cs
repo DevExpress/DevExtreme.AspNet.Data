@@ -37,13 +37,14 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Contains($"{loadOptionsStrGroup},{loadOptionsStrFilter}", loadOptionsSerialized);
 
             var loadOptionsDeserialized = JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(loadOptionsSerialized);
-            Assert.Equal("100", loadOptionsDeserialized.Group[0].GroupInterval);
-            Assert.Equal("freight", loadOptionsDeserialized.Group[0].Selector);
-            Assert.Equal(3, loadOptionsDeserialized.Filter.Count);
-            var strFilter0NTSF = (JArray)loadOptionsDeserialized.Filter[0];
-            Assert.Equal("orderDate", strFilter0NTSF[0]);
-            Assert.Equal(">=", strFilter0NTSF[1]);
-            Assert.Equal("2011-12-13T14:15:16", strFilter0NTSF[2]);
+            Assert.Equal(loadOptions.Group[0].GroupInterval, loadOptionsDeserialized.Group[0].GroupInterval);
+            Assert.Equal(loadOptions.Group[0].Selector, loadOptionsDeserialized.Group[0].Selector);
+            Assert.Equal(loadOptions.Filter.Count, loadOptionsDeserialized.Filter.Count);
+            var filter0Orig = (IList<object>)loadOptions.Filter[0];
+            var filter0NTSF = (JArray)loadOptionsDeserialized.Filter[0];
+            Assert.Equal(filter0Orig[0], ((JValue)filter0NTSF[0]).Value);
+            Assert.Equal(filter0Orig[1], ((JValue)filter0NTSF[1]).Value);
+            Assert.Equal(filter0Orig[2], ((JValue)filter0NTSF[2]).Value);
         }
     }
 
