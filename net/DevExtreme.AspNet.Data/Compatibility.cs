@@ -75,10 +75,7 @@ namespace DevExtreme.AspNet.Data {
             return Compatibility.UnwrapList(deserializedList);
         }
 
-        public override void Write(Utf8JsonWriter writer, IList value, JsonSerializerOptions options) {
-            var serializedList = JsonSerializer.Serialize(value);
-            writer.WriteStringValue(serializedList);
-        }
+        public override void Write(Utf8JsonWriter writer, IList value, JsonSerializerOptions options) => JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 
 }
