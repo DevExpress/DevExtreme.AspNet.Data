@@ -8,6 +8,9 @@ namespace DevExtreme.AspNet.Data.Helpers {
     /// A parser for the data processing settings.
     /// </summary>
     public static class DataSourceLoadOptionsParser {
+#if DEBUG
+        internal
+#endif
         static readonly JsonSerializerOptions DEFAULT_SERIALIZER_OPTIONS = new JsonSerializerOptions(JsonSerializerDefaults.Web) {
             Converters = { new ListConverter() }
         };

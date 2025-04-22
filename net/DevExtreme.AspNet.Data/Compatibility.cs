@@ -66,7 +66,7 @@ namespace DevExtreme.AspNet.Data {
             throw new NotImplementedException();
         }
 
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStringValue(value);
     }
 
     class ListConverter : JsonConverter<IList> {
@@ -75,7 +75,7 @@ namespace DevExtreme.AspNet.Data {
             return Compatibility.UnwrapList(deserializedList);
         }
 
-        public override void Write(Utf8JsonWriter writer, IList value, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, IList value, JsonSerializerOptions options) => JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 
 }
