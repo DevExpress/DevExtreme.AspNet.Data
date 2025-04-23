@@ -54,7 +54,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             //https://github.com/DevExpress/DevExtreme.AspNet.Data/blob/master/js/dx.aspnet.data.js -> serializeDate
             //Assert.Equal(filter0Orig[2], filter0STJ[2]);
             Assert.Equal("2011-12-13T14:15:16", filter0STJ[2]);
-
         }
     }
 
