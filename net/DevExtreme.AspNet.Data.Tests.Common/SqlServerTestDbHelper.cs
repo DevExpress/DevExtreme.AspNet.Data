@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace DevExtreme.AspNet.Data.Tests {
 
@@ -32,10 +29,12 @@ namespace DevExtreme.AspNet.Data.Tests {
                 conn.Open();
 
                 void Exec(string sql) {
+#pragma warning disable DX0024 // this is assembly with tests
                     using(var cmd = conn.CreateCommand()) {
                         cmd.CommandText = sql;
                         cmd.ExecuteNonQuery();
                     }
+#pragma warning restore DX0024 // this is assembly with tests
                 }
 
                 try {
