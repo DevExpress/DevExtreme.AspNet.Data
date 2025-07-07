@@ -94,7 +94,7 @@ TFM: ``
 - `xunit`
 - `xunit.runner.visualstudio`
 ---
-- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.3.25171.6`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview3251716)
+- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.5.25277.114`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview525277114)
 
 ## Projects (by Target Framework)
 
@@ -146,7 +146,7 @@ TFM: ``
 
 ### TFM: ``
 
-#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.3.25171.6`
+#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.5.25277.114`
 - `\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`
 
 ## Projects with deprecated packages
@@ -183,7 +183,7 @@ TFM: ``
   <!-- .NET PackageReferences -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0'">
     <PackageVersion Include="Azure.Identity" Version="1.12.0" />
-    <PackageVersion Include="DevExpress.Xpo" Version="24.2.3" />
+    <PackageVersion Include="DevExpress.Xpo" Version="25.1.3" />
     <PackageVersion Include="FluentNHibernate" Version="3.4.0" />
     <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.11" />
