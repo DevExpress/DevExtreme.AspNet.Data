@@ -2,13 +2,17 @@
 
 ## Summary
 
+[.NET 10.0](#net-100-projects)
+
+- tfm: `net10.0`: [Assemblies: 2, Package References: 9 (override version 1)](#net-100-dependencies)
+
 [.NET 8.0](#net-80-projects)
 
-- tfm: `net8.0`: [Assemblies: 7, Package References: 20, References: 1](#net-80-dependencies)
+- tfm: `net8.0`: [Assemblies: 6, Package References: 16, References: 1](#net-80-dependencies)
 
 [.NET 9.0](#net-90-projects)
 
-- tfm: `net9.0`: [Assemblies: 1, Package References: 5 (override version 1)](#net-90-dependencies)
+- tfm: `net9.0`: [Assemblies: 1, Package References: 7 (override version 1)](#net-90-dependencies)
 
 [.NET Framework 4.6.2](#net-framework-462-projects)
 
@@ -18,13 +22,25 @@
 
 - tfm: `net472`: [Assemblies: 3, Package References: 7, References: 4](#net-framework-472-dependencies)
 
-[net10.0](#net100-projects)
-
-- tfm: ``: [Assemblies: 1, Package References: 5 (override version 1)](#net100-dependencies)
-
 [Expected Directory.Packages.props file](expected-directorypackagesprops-file)
 
 ## Package References (by Target Framework)
+
+### .NET 10.0 Dependencies
+
+TFM: `net10.0`
+
+- `Azure.Identity`
+- `LinqKit.Microsoft.EntityFrameworkCore`
+- `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.IdentityModel.Protocols.OpenIdConnect`
+- `Microsoft.NET.Test.Sdk`
+- `Microsoft.Web.LibraryManager.Build`
+- `Newtonsoft.Json`[Deprecated ->](#newtonsoftjson-tfmnet100)
+- `xunit`
+- `xunit.runner.visualstudio`
+---
+- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.7.25380.108`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview725380108)
 
 ### .NET 8.0 Dependencies
 
@@ -34,14 +50,10 @@ TFM: `net8.0`
 - `DevExpress.Xpo`
 - `FluentNHibernate`
 - `LinqKit.Microsoft.EntityFrameworkCore`
-- `Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation`
 - `Microsoft.EntityFrameworkCore.SqlServer`
-- `Microsoft.Identity.Client`
+- `Microsoft.IdentityModel.Protocols.OpenIdConnect`
 - `Microsoft.NET.Test.Sdk`
-- `Microsoft.Web.LibraryManager.Build`
-- `Newtonsoft.Json`[Deprecated ->](#newtonsoftjson-tfmnet80)
 - `System.Data.SqlClient`
-- `System.Formats.Asn1`
 - `System.Linq.Dynamic.Core`
 - `System.Net.Http`
 - `System.Text.Json`
@@ -55,13 +67,15 @@ TFM: `net8.0`
 
 TFM: `net9.0`
 
+- `Azure.Identity`
 - `LinqKit.Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.IdentityModel.Protocols.OpenIdConnect`
 - `Microsoft.NET.Test.Sdk`
 - `xunit`
 - `xunit.runner.visualstudio`
 ---
-- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`9.0.0`[->](#microsoftentityframeworkcoresqlserver-versionoverride900)
+- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`9.0.8`[->](#microsoftentityframeworkcoresqlserver-versionoverride908)
 
 ### .NET Framework 4.6.2 Dependencies
 
@@ -84,19 +98,14 @@ TFM: `net472`
 - `xunit`
 - `xunit.runner.visualstudio`
 
-### net10.0 Dependencies
-
-TFM: ``
-
-- `LinqKit.Microsoft.EntityFrameworkCore`
-- `Microsoft.EntityFrameworkCore.SqlServer`
-- `Microsoft.NET.Test.Sdk`
-- `xunit`
-- `xunit.runner.visualstudio`
----
-- `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.5.25277.114`[->](#microsoftentityframeworkcoresqlserver-versionoverride1000-preview525277114)
-
 ## Projects (by Target Framework)
+
+### .NET 10.0 Projects
+
+TFM: `net10.0`
+
+- DevExtreme.AspNet.Data.Tests.EFCore10 (`\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`)
+- Sample (`\Sample\Sample.csproj`)
 
 ### .NET 8.0 Projects
 
@@ -108,7 +117,6 @@ TFM: `net8.0`
 - DevExtreme.AspNet.Data.Tests.EFCore8 (`\DevExtreme.AspNet.Data.Tests.EFCore8\DevExtreme.AspNet.Data.Tests.EFCore8.csproj`)
 - DevExtreme.AspNet.Data.Tests.NH (`\DevExtreme.AspNet.Data.Tests.NH\DevExtreme.AspNet.Data.Tests.NH.csproj`)
 - DevExtreme.AspNet.Data.Tests.Xpo (`\DevExtreme.AspNet.Data.Tests.Xpo\DevExtreme.AspNet.Data.Tests.Xpo.csproj`)
-- Sample (`\Sample\Sample.csproj`)
 
 ### .NET 9.0 Projects
 
@@ -131,29 +139,24 @@ TFM: `net472`
 - DevExtreme.AspNet.Data.Tests.EF6 (`\DevExtreme.AspNet.Data.Tests.EF6\DevExtreme.AspNet.Data.Tests.EF6.csproj`)
 - DevExtreme.AspNet.Data.Tests.L2S (`\DevExtreme.AspNet.Data.Tests.L2S\DevExtreme.AspNet.Data.Tests.L2S.csproj`)
 
-### net10.0 Projects
-
-TFM: ``
-
-- DevExtreme.AspNet.Data.Tests.EFCore10 (`\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`)
-
 ## Projects with exact Versions or VersionOverrides
+
+### TFM: `net10.0`
+
+#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.7.25380.108`
+- `\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`
+- `\Sample\Sample.csproj`
 
 ### TFM: `net9.0`
 
-#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`9.0.0`
+#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`9.0.8`
 - `\DevExtreme.AspNet.Data.Tests.EFCore9\DevExtreme.AspNet.Data.Tests.EFCore9.csproj`
-
-### TFM: ``
-
-#### `Microsoft.EntityFrameworkCore.SqlServer` VersionOverride=`10.0.0-preview.5.25277.114`
-- `\DevExtreme.AspNet.Data.Tests.EFCore10\DevExtreme.AspNet.Data.Tests.EFCore10.csproj`
 
 ## Projects with deprecated packages
 
-### TFM: `net8.0`
+### TFM: `net10.0`
 
-#### Newtonsoft.Json tfm=`net8.0`
+#### Newtonsoft.Json tfm=`net10.0`
 - `\Sample\Sample.csproj`
 
 ### TFM: `net472`
@@ -181,17 +184,15 @@ TFM: ``
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
   <!-- .NET PackageReferences -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0'">
-    <PackageVersion Include="Azure.Identity" Version="1.12.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0'">
+    <PackageVersion Include="Azure.Identity" Version="1.14.2" />
     <PackageVersion Include="DevExpress.Xpo" Version="25.1.3" />
     <PackageVersion Include="FluentNHibernate" Version="3.4.0" />
     <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.11" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.61.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.19" />
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-    <PackageVersion Include="System.Formats.Asn1" Version="8.0.1" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
@@ -199,12 +200,6 @@ TFM: ``
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net472'">
     <PackageVersion Include="EntityFramework" Version="6.5.1" />
     <PackageVersion Include="LinqKit.EntityFramework" Version="1.2.3" />
-  </ItemGroup>
-  <!-- (Unknown) PackageReferences -->
-  <ItemGroup Condition="'$(TargetFramework)' == ''">
-    <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
   </ItemGroup>
 </Project>
 
