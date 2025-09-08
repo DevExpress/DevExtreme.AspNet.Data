@@ -55,7 +55,7 @@ jobs:
 
     - run: npm ci --omit=peer
     - run: npm i --no-save "devextreme@${{ matrix.version }}"
-    - name: Instal devextreme-dist
+    - name: Install devextreme-dist
       if: ${{ matrix.version == '>=23.1.0' }}
       run: npm i --no-save "devextreme-dist@${{ matrix.version }}"
     - run: npm run dts
