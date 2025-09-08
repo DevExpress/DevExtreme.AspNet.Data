@@ -32,9 +32,8 @@ jobs:
     - run: curl -L https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.3.5/ec-linux-amd64.tar.gz  | tar xzf - -C /opt
     - run: /opt/bin/ec-linux-amd64 -v
 
-    - env:
-        ESLINT_VERSION: $(node -p "require('./package-lock.json').packages['node_modules/eslint'].version")
-      run: |
+    - run: |
+        ESLINT_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/eslint'].version")
         npm i --no-save eslint@$ESLINT_VERSION
         echo "ESLint version: $ESLINT_VERSION"
     - run: npm run eslint
