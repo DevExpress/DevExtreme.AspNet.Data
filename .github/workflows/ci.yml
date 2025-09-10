@@ -32,7 +32,10 @@ jobs:
     - run: curl -L https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.3.5/ec-linux-amd64.tar.gz  | tar xzf - -C /opt
     - run: /opt/bin/ec-linux-amd64 -v
 
-    - run: npm i eslint
+    - name: Install ESLint
+      run: |
+        ESLINT_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/eslint'].version")
+        npm i --no-save eslint@$ESLINT_VERSION
     - run: npm run eslint
 
   test-js:
@@ -50,9 +53,9 @@ jobs:
 
     - run: node build/make-nojquery
 
-    - run: npm i --omit=peer
+    - run: npm ci --omit=peer
     - run: npm i --no-save "devextreme@${{ matrix.version }}"
-    - name: Instal devextreme-dist
+    - name: Install devextreme-dist
       if: ${{ matrix.version == '>=23.1.0' }}
       run: npm i --no-save "devextreme-dist@${{ matrix.version }}"
     - run: npm run dts

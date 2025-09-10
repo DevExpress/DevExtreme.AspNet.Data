@@ -19,7 +19,7 @@ runs:
       path: ~/.nuget/packages
 
   - shell: bash
-    run: cd net/Sample && npm i
+    run: cd net/Sample && npm ci
 
   - shell: bash
     run: dotnet build -c Debug net/DevExtreme.AspNet.Data.sln
