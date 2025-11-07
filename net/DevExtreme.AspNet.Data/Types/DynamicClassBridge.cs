@@ -23,7 +23,10 @@ namespace DevExtreme.AspNet.Data.Types {
                 PROP_TYPE = assembly.GetType("System.Linq.Dynamic.Core.DynamicProperty");
 #pragma warning restore DX0010,DX0004 // known assembly and types
                 CREATE_TYPE_METHOD = FACTORY_TYPE.GetMethod("CreateType");
-                INDEXER_METHOD = CLASS_TYPE.GetMethod("get_Item");
+
+                var indexerNameField = CLASS_TYPE.GetField("IndexerName", BindingFlags.NonPublic | BindingFlags.Static);
+                var indexerName = indexerNameField?.GetValue(null) as string ?? "Item";
+                INDEXER_METHOD = CLASS_TYPE.GetMethod("get_" + indexerName);
             } catch(FileNotFoundException x) {
                 throw new Exception("Please install 'System.Linq.Dynamic.Core' package", x);
             }
