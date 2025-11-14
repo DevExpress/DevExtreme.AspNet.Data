@@ -9,6 +9,7 @@
     <PackageReference Include="Azure.Identity" />
     <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" VersionOverride="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Microsoft.Identity.Client" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />

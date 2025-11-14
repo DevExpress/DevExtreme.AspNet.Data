@@ -4,15 +4,15 @@
 
 [.NET 10.0](#net-100-projects)
 
-- tfm: `net10.0`: [Assemblies: 2, Package References: 9 (override version 1)](#net-100-dependencies)
+- tfm: `net10.0`: [Assemblies: 2, Package References: 10 (override version 1)](#net-100-dependencies)
 
 [.NET 8.0](#net-80-projects)
 
-- tfm: `net8.0`: [Assemblies: 6, Package References: 16, References: 1](#net-80-dependencies)
+- tfm: `net8.0`: [Assemblies: 6, Package References: 17, References: 1](#net-80-dependencies)
 
 [.NET 9.0](#net-90-projects)
 
-- tfm: `net9.0`: [Assemblies: 1, Package References: 7 (override version 1)](#net-90-dependencies)
+- tfm: `net9.0`: [Assemblies: 1, Package References: 8 (override version 1)](#net-90-dependencies)
 
 [.NET Framework 4.6.2](#net-framework-462-projects)
 
@@ -33,6 +33,7 @@ TFM: `net10.0`
 - `Azure.Identity`
 - `LinqKit.Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.Identity.Client`
 - `Microsoft.IdentityModel.Protocols.OpenIdConnect`
 - `Microsoft.NET.Test.Sdk`
 - `Microsoft.Web.LibraryManager.Build`
@@ -51,6 +52,7 @@ TFM: `net8.0`
 - `FluentNHibernate`
 - `LinqKit.Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.Identity.Client`
 - `Microsoft.IdentityModel.Protocols.OpenIdConnect`
 - `Microsoft.NET.Test.Sdk`
 - `System.Data.SqlClient`
@@ -70,6 +72,7 @@ TFM: `net9.0`
 - `Azure.Identity`
 - `LinqKit.Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
+- `Microsoft.Identity.Client`
 - `Microsoft.IdentityModel.Protocols.OpenIdConnect`
 - `Microsoft.NET.Test.Sdk`
 - `xunit`
@@ -190,6 +193,7 @@ TFM: `net472`
     <PackageVersion Include="FluentNHibernate" Version="3.4.1" />
     <PackageVersion Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.19" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.77.1" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
