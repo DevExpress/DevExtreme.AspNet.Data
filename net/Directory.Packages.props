@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Azure.Identity" Version="1.14.2" />
-    <PackageVersion Include="DevExpress.Xpo" Version="25.1.4" />
+    <PackageVersion Include="DevExpress.Xpo" Version="25.1.7" />
     <PackageVersion Include="EntityFramework" Version="6.5.1" />
     <PackageVersion Include="FluentNHibernate" Version="3.4.1" />
     <PackageVersion Include="LinqKit.EntityFramework" Version="1.2.3" />
