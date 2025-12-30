@@ -44,20 +44,25 @@ jobs:
     strategy:
       matrix:
         version:
-          - '~18.1.0'
-          - '~22.2.0'
-          - '>=23.1.0'
+          - '18.1'
+          - '22.2'
+          - 'latest'
 
     steps:
-    - uses: actions/checkout@v4
 
-    - run: node build/make-nojquery
+    - name: Checkout sources
+      uses: actions/checkout@v4
 
-    - run: npm ci --omit=peer
-    - run: npm i --no-save "devextreme@${{ matrix.version }}"
-    - name: Install devextreme-dist
-      if: ${{ matrix.version == '>=23.1.0' }}
-      run: npm i --no-save "devextreme-dist@${{ matrix.version }}"
+    - name: Build no-jquery package
+      run: node build/make-nojquery
+
+    - name: Move lockfile
+      if: ${{ matrix.version != 'latest' }}
+      shell: bash
+      run: cp -f js-test/${{ matrix.version }}/package-lock.json package-lock.json
+
+    - run: npm ci
+
     - run: npm run dts
     - run: npm run karma
     - run: npm run karma-bundled
