@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/jquery": "3.5.33",
-    "eslint": "5.16.0",
+    "eslint": "9.39.1",
     "jquery": "3.7.1",
     "karma": "6.4.4",
     "karma-chrome-launcher": "2.2.0",
