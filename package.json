@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/jquery": "3.5.33",
-    "devextreme-dist": "~25.2.3",
+    "devextreme-dist": "25.2.3",
     "eslint": "5.16.0",
     "jquery": "3.7.1",
     "karma": "6.4.4",
