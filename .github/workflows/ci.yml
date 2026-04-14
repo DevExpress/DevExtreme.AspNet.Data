@@ -122,7 +122,7 @@ jobs:
     - run: npm pack ./js-nojquery
 
     - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release --include-symbols
+      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - uses: actions/upload-artifact@v4
       with:
