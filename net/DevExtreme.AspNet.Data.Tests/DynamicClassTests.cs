@@ -2,6 +2,7 @@
 using DevExtreme.AspNet.Data.Types;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -108,7 +109,7 @@ namespace DevExtreme.AspNet.Data.Tests {
             };
 
             var loadResult = DataSourceLoader.Load(source, loadOptions);
-            var item = loadResult.data.Cast<System.Collections.Generic.IDictionary<string, object>>().First();
+            var item = loadResult.data.Cast<IDictionary<string, object>>().First();
 
             Assert.Equal(42, item["p"]);
         }
