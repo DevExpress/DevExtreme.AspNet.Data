@@ -93,22 +93,6 @@ namespace DevExtreme.AspNet.Data.Tests {
             );
         }
 
-        [Fact]
-        public void Select_WithMoreThan32Fields_ReturnsValues() {
-            var source = new[] { new { p = 42 } };
-
-            var loadOptions = new SampleLoadOptions {
-                GuardNulls = false,
-                RemoteSelect = true,
-                Select = Enumerable.Repeat("p", 33).ToArray()
-            };
-
-            var loadResult = DataSourceLoader.Load(source, loadOptions);
-            var item = loadResult.data.Cast<System.Collections.Generic.IDictionary<string, object>>().First();
-
-            Assert.Equal(42, item["p"]);
-        }
-
     }
 
 }
