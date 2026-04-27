@@ -12,7 +12,7 @@
 
 [.NET 8.0](#net-80-projects)
 
-- tfm: `net8.0`: [Assemblies: 6, Package References: 17, References: 1](#net-80-dependencies)
+- tfm: `net8.0`: [Assemblies: 6, Package References: 18, References: 1](#net-80-dependencies)
 
 [.NET 9.0](#net-90-projects)
 
@@ -75,6 +75,7 @@ TFM: `net8.0`
 - `System.Data.SqlClient`[Deprecated ->](#systemdatasqlclient-tfmnet80)
 - `System.Linq.Dynamic.Core`
 - `System.Net.Http`
+- `System.Security.Cryptography.Xml`
 - `System.Text.Json`
 - `System.Text.RegularExpressions`
 - `xunit`
