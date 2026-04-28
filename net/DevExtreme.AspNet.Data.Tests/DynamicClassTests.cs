@@ -123,7 +123,9 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         static MethodInfo GetDynamicClassBridgeMethod(string methodName) {
+#pragma warning disable DX0004 // this is assembly with tests, known (our own) assembly and types, low level reflection test for #683
             var bridgeType = typeof(AnonType).Assembly.GetType("DevExtreme.AspNet.Data.Types.DynamicClassBridge");
+#pragma warning restore DX0004 // this is assembly with tests, known (our own) assembly and types, low level reflection test for #683
             return bridgeType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
         }
 
