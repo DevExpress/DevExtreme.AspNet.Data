@@ -35,6 +35,10 @@ jobs:
           3.1
           8.0
 
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
     - uses: actions/checkout@v4
 
     - name: Decrypt signing key
@@ -51,9 +55,6 @@ jobs:
 
     - name: Set package versions
       run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
-
-    - name: Install deps
-      run: npm ci
 
     - name: Pack npm packages
       run: |
