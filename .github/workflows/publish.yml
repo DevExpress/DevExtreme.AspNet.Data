@@ -1,0 +1,86 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  NUGET_XMLDOC_MODE: "skip"
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+
+    env:
+      RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+      IS_TAG: ${{ startsWith(github.ref, 'refs/tags/') }}
+
+    steps:
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-quality: ga
+        dotnet-version: |
+          3.1
+          8.0
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+        registry-url: 'https://registry.npmjs.org'
+
+    - uses: actions/checkout@v4
+
+    - name: Decrypt signing key
+      if: ${{ env.RELEASE_KEY_SECRET != '' }}
+      run: |
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+        curl -L -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
+        unzip /opt/secure-file.zip -d /opt/secure-file
+        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
+
+    - name: Build no-jquery package
+      run: node build/make-nojquery
+
+    - name: Set package versions
+      run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
+
+    - name: Install deps
+      run: npm ci
+
+    - name: Pack npm packages
+      run: |
+        npm pack
+        npm pack ./js-nojquery
+
+    - name: Pack NuGet package
+      if: ${{ env.RELEASE_KEY_SECRET != '' }}
+      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release --include-symbols
+
+    - name: Publish to npmjs
+      if: ${{ env.IS_TAG == 'true' }}
+      run: |
+        npm publish devextreme-aspnet-data-nojquery-*.tgz --provenance --access public
+        npm publish devextreme-aspnet-data-*.tgz --provenance --access public
+
+    - name: Upload NuGet packages as artifacts
+      if: ${{ env.RELEASE_KEY_SECRET != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
+
+    - name: Upload npm packages as artifacts
+      if: ${{ env.IS_TAG != 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-packages
+        path: devextreme-aspnet-data-*.tgz
