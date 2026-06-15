@@ -1,16 +1,14 @@
 # Using CI Builds
 
-You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/publish.yml?query=branch%3Amaster). Please note that you need to be signed in to GitHub.
+You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml?query=branch%3Amaster). Please note that you need to be signed in to GitHub.
 
-- Click the most recent successful workflow run result.
-- At the bottom of the opened page, download the `npm-packages` and/or `nuget-packages` archives.
+- Click the most recent successful workflow run result. 
+- At the bottom of the opened page, download the `release-packages` archive.
 
-The `npm-packages` archive contains the following files:
+It contains the following files:
+- `net/DevExtreme.AspNet.Data/bin/Release/DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg`
 - `devextreme-aspnet-data-99.0.0-ci-NNN.tgz`
 - `devextreme-aspnet-data-nojquery-99.0.0-ci-NNN.tgz`
-
-The `nuget-packages` archive contains the following file:
-- `DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg`
 
 ## Client-Side Script / NPM
 
