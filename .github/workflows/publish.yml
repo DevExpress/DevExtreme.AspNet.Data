@@ -96,5 +96,5 @@ jobs:
 
     - name: Publish to npmjs
       run: |
-        npm publish devextreme-aspnet-data-nojquery-*.tgz --provenance --access public ${{ inputs.dry-run && '--dry-run' || '' }}
-        npm publish devextreme-aspnet-data-[0-9]*.tgz --provenance --access public ${{ inputs.dry-run && '--dry-run' || '' }}
+        npm publish devextreme-aspnet-data-nojquery-*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
+        npm publish devextreme-aspnet-data-[0-9]*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
