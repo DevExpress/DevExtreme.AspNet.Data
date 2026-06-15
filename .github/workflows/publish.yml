@@ -9,7 +9,6 @@ on:
         default: false
 
 permissions:
-  id-token: write
   contents: read
 
 env:
@@ -83,6 +82,9 @@ jobs:
     needs: pack
     if: startsWith(github.ref, 'refs/tags/')
     environment: npmjs
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
     - uses: actions/setup-node@v4
