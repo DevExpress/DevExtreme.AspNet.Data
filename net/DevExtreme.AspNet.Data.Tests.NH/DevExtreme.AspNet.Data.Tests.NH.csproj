@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" />
+    <PackageReference Include="NHibernate" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="System.Net.Http" />
     <PackageReference Include="System.Text.RegularExpressions" />
