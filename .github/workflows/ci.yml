@@ -137,11 +137,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-quality: ga
-        dotnet-version: 11.0.x
-
     - run: dotnet build net/DevExtreme.AspNet.Data
     - run: net\docfx\build.cmd
 
