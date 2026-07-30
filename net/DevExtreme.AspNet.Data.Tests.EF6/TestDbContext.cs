@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExtreme.AspNet.Data.Tests.EF6 {
 
-    [DbConfigurationType(typeof(MicrosoftSqlDbConfiguration))]
     class TestDbContext : DbContext {
         static TestDbContext INSTANCE;
 

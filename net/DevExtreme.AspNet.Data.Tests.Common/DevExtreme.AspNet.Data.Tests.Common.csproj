@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevExtreme.AspNet.Data\DevExtreme.AspNet.Data.csproj" />
-    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="xunit.assert" />
     <PackageReference Include="xunit.core" />
   </ItemGroup>
