@@ -77,7 +77,7 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             var result = DataSourceLoader.Load(items, options);
 
-            Assert.Equal([1], result.data.Cast<DateTimeOffsetTestDto>().Select(i => i.Id));
+            Assert.Equal(new[] { 1 }, result.data.Cast<DateTimeOffsetTestDto>().Select(i => i.Id));
         }
 
         [Fact]
