@@ -69,12 +69,9 @@ namespace DevExtreme.AspNet.Data.Tests {
                 new DateTimeOffsetTestDto { Id = 2, At = new DateTimeOffset(2024, 6, 2, 4, 30, 0, TimeSpan.Zero) }
             };
 
-            var filterQueryParam = @"[""At"",""="",""2024-06-01T10:00:00+05:30""]";
-
-            var options = new SampleLoadOptions();
-            DataSourceLoadOptionsParser.Parse(options, key =>
-                key == DataSourceLoadOptionsParser.KEY_FILTER ? filterQueryParam : null);
-
+            var options = new SampleLoadOptions {
+                Filter = new[] { "At", "=", "2024-06-01T10:00:00+05:30" }
+            };
             var result = DataSourceLoader.Load(items, options);
 
             Assert.Equal(new[] { 1 }, result.data.Cast<DateTimeOffsetTestDto>().Select(i => i.Id));
