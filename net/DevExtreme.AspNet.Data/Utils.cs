@@ -45,6 +45,9 @@ namespace DevExtreme.AspNet.Data {
             if(type == typeof(DateTime) && value is String)
                 return DateTime.Parse((string)value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
+            if(type == typeof(DateTimeOffset) && value is String)
+                return DateTimeOffset.Parse((string)value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+
             if(type == typeof(DateTimeOffset) && value is DateTime date)
                 return new DateTimeOffset(date);
 

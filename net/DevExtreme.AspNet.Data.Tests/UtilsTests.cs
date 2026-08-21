@@ -105,6 +105,49 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal(123L, output);
         }
 
-    }
+        [Fact]
+        public void ConvertClientValue_DateTimeOffset_PreservesExplicitOffset() {
+            var output = Utils.ConvertClientValue("2024-06-01T10:00:00+05:30", typeof(DateTimeOffset));
 
+            Assert.IsType<DateTimeOffset>(output);
+            Assert.Equal(new DateTimeOffset(2024, 6, 1, 10, 0, 0, TimeSpan.FromHours(5.5)), output);
+            Assert.Equal(TimeSpan.FromHours(5.5), ((DateTimeOffset)output).Offset);
+        }
+
+        [Fact]
+        public void ConvertClientValue_DateTimeOffset_Utc() {
+            var output = Utils.ConvertClientValue("2024-06-01T04:30:00Z", typeof(DateTimeOffset));
+
+            Assert.Equal(new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero), output);
+        }
+
+        [Fact]
+        public void ConvertClientValue_DateTimeOffset_DifferentOffsets_SameInstantAreEqual() {
+            var fromClient = (DateTimeOffset)Utils.ConvertClientValue("2024-06-01T10:00:00+05:30", typeof(DateTimeOffset));
+            var utcEquivalent = new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero);
+
+            Assert.Equal(utcEquivalent, fromClient);
+        }
+
+        [Fact]
+        public void ConvertClientValue_NullableDateTimeOffset_FromString() {
+            var output = Utils.ConvertClientValue("2024-06-01T10:00:00+05:30", typeof(DateTimeOffset?));
+
+            Assert.Equal(new DateTimeOffset(2024, 6, 1, 10, 0, 0, TimeSpan.FromHours(5.5)), output);
+        }
+
+        [Fact]
+        public void ConvertClientValue_DateTimeOffset_FromDateTime_UsesLocalOffset() {
+            // Compatibility path: Newtonsoft-based callers may already have parsed the value into a DateTime.
+            var date = new DateTime(2024, 6, 1, 10, 0, 0);
+            var output = Utils.ConvertClientValue(date, typeof(DateTimeOffset));
+
+            Assert.Equal(new DateTimeOffset(date), output);
+        }
+
+        [Fact]
+        public void ConvertClientValue_DateTimeOffset_InvalidString_Throws() {
+            Assert.ThrowsAny<FormatException>(() => Utils.ConvertClientValue("not-a-date", typeof(DateTimeOffset)));
+        }
+    }
 }
