@@ -33,6 +33,8 @@ namespace Sample.Models {
 
         public TimeOnly? OrderTimeOnly { get; set; }
 
+        public DateTimeOffset? OrderDateTimeOffset { get; set; }
+
         //----------------------------------------
 
         [Column(TypeName = "datetime")]
