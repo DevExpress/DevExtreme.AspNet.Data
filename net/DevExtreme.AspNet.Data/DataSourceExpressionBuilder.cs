@@ -33,7 +33,7 @@ namespace DevExtreme.AspNet.Data {
 
         public Expression BuildLoadGroupsExpr(bool paginate, bool suppressGroups = false, bool suppressTotals = false) {
             AddFilter();
-            AddRemoteGrouping(suppressGroups, suppressTotals);
+            AddRemoteGrouping(suppressGroups, suppressTotals, suppressGroups);
             if(paginate)
                 AddPaging();
             return Expr;
@@ -41,8 +41,15 @@ namespace DevExtreme.AspNet.Data {
 
         public Expression BuildGroupCountExpr() {
             AddFilter();
-            Expr = CreateSelectCompiler().CompileSingle(Expr, Context.Group.Single().Selector);
-            Expr = QueryableCall(nameof(Queryable.Distinct));
+
+            var group = Context.Group.Single();
+            if(String.IsNullOrEmpty(group.GroupInterval)) {
+                Expr = CreateSelectCompiler().CompileSingle(Expr, Context.Group.Single().Selector);
+                Expr = QueryableCall(nameof(Queryable.Distinct));
+            } else {
+                AddRemoteGrouping(false, true, true);
+            }
+
             AddCount();
             return Expr;
         }
@@ -75,12 +82,12 @@ namespace DevExtreme.AspNet.Data {
                 Expr = QueryableCall(nameof(Queryable.Take), Expression.Constant(Context.Take));
         }
 
-        void AddRemoteGrouping(bool suppressGroups, bool suppressTotals) {
+        void AddRemoteGrouping(bool suppressGroups, bool suppressTotals, bool suppressGroupSummary) {
             var compiler = new RemoteGroupExpressionCompiler(
                 GetItemType(), Context.GuardNulls, Context.ExpandLinqSumType, Context.CreateAnonTypeNewTweaks(),
                 suppressGroups ? null : Context.Group,
                 suppressTotals ? null : Context.TotalSummary,
-                suppressGroups ? null : Context.GroupSummary
+                suppressGroupSummary ? null : Context.GroupSummary
             );
             Expr = compiler.Compile(Expr);
         }

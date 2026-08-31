@@ -339,6 +339,33 @@ namespace DevExtreme.AspNet.Data.Tests {
                 })
             );
         }
+
+        [Fact]
+        public void BuildGroupCountExpr_IntervalGrouping() {
+            string BuildExpr(DataSourceLoadOptionsBase options) => Compat.CreateDataSourceExpressionBuilder<Tuple<int, DateTime>>(options)
+                .BuildGroupCountExpr()
+                .ToString();
+
+            Assert.Equal(
+                "data.Where(obj => (obj.Item1 == 1))" +
+                    ".GroupBy(obj => new AnonType`1(I0 = Convert(obj.Item2.Year, Nullable`1)))" +
+                    ".OrderBy(g => g.Key.I0)" +
+                    ".Select(g => new AnonType`2(I0 = g.Count(), I1 = g.Key.I0))" +
+                    ".Count()",
+
+                BuildExpr(new SampleLoadOptions {
+                    GuardNulls = false,
+                    Filter = new[] { "Item1", "1" },
+                    RequireGroupCount = true,
+                    Group = new[] {
+                        new GroupingInfo { Selector = "Item2", GroupInterval = "year" }
+                    },
+                    GroupSummary = new[] {
+                        new SummaryInfo { Selector = "Item2", SummaryType = "max" }
+                    }
+                })
+            );
+        }
     }
 
 }
