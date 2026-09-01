@@ -348,7 +348,13 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(
                 "data.Where(obj => (obj.Item1 == 1))" +
+                // "Convert" expression is displayed differently in the .NET Framework and .NET Core
+                // https://github.com/microsoft/referencesource/blob/ec9fa9ae770d522a5b5f0607898044b7478574a3/System.Core/Microsoft/Scripting/Ast/ExpressionStringBuilder.cs#L657
+#if NET4
+                    ".GroupBy(obj => new AnonType`1(I0 = Convert(obj.Item2.Year)))" +
+#else
                     ".GroupBy(obj => new AnonType`1(I0 = Convert(obj.Item2.Year, Nullable`1)))" +
+#endif
                     ".OrderBy(g => g.Key.I0)" +
                     ".Select(g => new AnonType`2(I0 = g.Count(), I1 = g.Key.I0))" +
                     ".Count()",
