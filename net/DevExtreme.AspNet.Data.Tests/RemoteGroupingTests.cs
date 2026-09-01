@@ -269,6 +269,27 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void RequireGroupCount_Intervals() {
+            var source = new[] {
+                new { G1 = new DateTime(2025, 1, 1), PK = 0 },
+                new { G1 = new DateTime(2025, 2, 2), PK = 1 },
+                new { G1 = new DateTime(2026, 3, 3), PK = 2 }
+            };
+
+            var loadOptions = new SampleLoadOptions {
+                RemoteGrouping = true,
+                RequireGroupCount = true,
+                Group = new[] {
+                    new GroupingInfo { Selector = "G1", IsExpanded = false, GroupInterval = "year" },
+                },
+                Skip = 1
+            };
+
+            var loadResult = DataSourceLoader.Load(source, loadOptions);
+            Assert.Equal(2, loadResult.groupCount);
+        }
+
+        [Fact]
         public void Summary_MissingOverload() {
             // Neither of Min, Max, Sum, Average provides an overload for byte sequences
             var data = new byte[] { 1, 3, 5 };
