@@ -44,7 +44,7 @@ namespace DevExtreme.AspNet.Data {
 
             var group = Context.Group.Single();
             if(String.IsNullOrEmpty(group.GroupInterval)) {
-                Expr = CreateSelectCompiler().CompileSingle(Expr, Context.Group.Single().Selector);
+                Expr = CreateSelectCompiler().CompileSingle(Expr, group.Selector);
                 Expr = QueryableCall(nameof(Queryable.Distinct));
             } else {
                 AddRemoteGrouping(false, true, true);
