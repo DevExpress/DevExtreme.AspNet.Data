@@ -32,6 +32,9 @@
     "webpack-cli": "4.10.0",
     "xhr-mock": "2.5.1"
   },
+  "overrides": {
+    "qs": "6.16.0"
+  },
   "scripts": {
     "karma": "cd js-test && karma start",
     "karma-bundled": "cd js-test && webpack && karma start --bundled",
