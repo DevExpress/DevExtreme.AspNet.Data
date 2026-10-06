@@ -4,6 +4,9 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number || github.sha}}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   push:
     branches-ignore:
@@ -94,26 +97,19 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+      BUILD_CONFIGURATION: ${{ (github.repository == 'DevExpress/DevExtreme.AspNet.Data' && github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) && 'Release' || 'Debug' }}
 
     steps:
+    - uses: actions/checkout@v4
+
     - uses: actions/setup-dotnet@v4
+      if: env.BUILD_CONFIGURATION == 'Release'
       with:
         dotnet-quality: ga
         dotnet-version: |
           3.1
-          10.0
-
-    - uses: actions/checkout@v4
-
-    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: |
-        wget https://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        curl -L -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
-        unzip /opt/secure-file.zip -d /opt/secure-file
-        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
+          10.0.x
 
     - run: node build/make-nojquery
     - run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
@@ -121,15 +117,36 @@ jobs:
     - run: npm pack
     - run: npm pack ./js-nojquery
 
-    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release --include-symbols
+    - name: Prepare NuGet deps
+      if: env.BUILD_CONFIGURATION == 'Release'
+      env:
+        RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
+      run: |
+        if [ -z "$RELEASE_KEY_SECRET" ]; then
+          echo "::error::RELEASE_KEY_SECRET is required."
+          exit 1
+        fi
+        wget https://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+        curl -fL -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
+        unzip /opt/secure-file.zip -d /opt/secure-file
+        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret "$RELEASE_KEY_SECRET"
+
+    - name: Pack NuGet package
+      run: |
+        dotnet pack net/DevExtreme.AspNet.Data -c "$BUILD_CONFIGURATION" --include-symbols
+        if [ "$BUILD_CONFIGURATION" = "Release" ]; then
+          rm -f net/DevExtreme.AspNet.Data/release.snk
+        fi
 
     - uses: actions/upload-artifact@v4
       with:
         name: release-packages
         path: |
-          net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
           devextreme-aspnet-data-*.tgz
+        retention-days: 14
+        if-no-files-found: error
 
   docfx:
     runs-on: windows-latest
