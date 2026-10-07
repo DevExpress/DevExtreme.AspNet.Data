@@ -1,0 +1,46 @@
+name: prepare-nuget-deps
+description: Sets up Release NuGet packaging dependencies and decrypts supplied signing key
+
+inputs:
+  encrypted-key-path:
+    description: Path to encrypted signing key, relative to workspace
+    required: true
+  release-key-secret:
+    description: Password for encrypted signing key
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+  - uses: actions/setup-dotnet@v4
+    with:
+      dotnet-quality: ga
+      dotnet-version: |
+        3.1
+        10.0.x
+
+  - name: Install Linux dependencies
+    if: runner.os == 'Linux'
+    shell: bash
+    run: |
+      wget https://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+      sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
+
+  - name: Prepare secure-file tool
+    shell: bash
+    run: |
+      curl -fL -o "$RUNNER_TEMP/secure-file.zip" https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
+      unzip "$RUNNER_TEMP/secure-file.zip" -d "$RUNNER_TEMP/secure-file"
+
+  - name: Decrypt signing key
+    shell: bash
+    env:
+      ENCRYPTED_KEY_PATH: ${{ inputs.encrypted-key-path }}
+      RELEASE_KEY_SECRET: ${{ inputs.release-key-secret }}
+    run: |
+      if [ -z "$RELEASE_KEY_SECRET" ]; then
+        echo "::error::RELEASE_KEY_SECRET is required."
+        exit 1
+      fi
+      dotnet "$RUNNER_TEMP/secure-file/secure-file.dll" -decrypt "$ENCRYPTED_KEY_PATH" -secret "$RELEASE_KEY_SECRET"

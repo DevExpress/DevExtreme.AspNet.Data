@@ -103,14 +103,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      if: env.BUILD_CONFIGURATION == 'Release'
-      with:
-        dotnet-quality: ga
-        dotnet-version: |
-          3.1
-          10.0.x
-
     - run: node build/make-nojquery
     - run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
 
@@ -119,18 +111,10 @@ jobs:
 
     - name: Prepare NuGet deps
       if: env.BUILD_CONFIGURATION == 'Release'
-      env:
-        RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
-      run: |
-        if [ -z "$RELEASE_KEY_SECRET" ]; then
-          echo "::error::RELEASE_KEY_SECRET is required."
-          exit 1
-        fi
-        wget https://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        curl -fL -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
-        unzip /opt/secure-file.zip -d /opt/secure-file
-        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret "$RELEASE_KEY_SECRET"
+      uses: ./.github/actions/prepare-nuget-deps
+      with:
+        encrypted-key-path: net/DevExtreme.AspNet.Data/release.snk.enc
+        release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
 
     - name: Pack NuGet package
       run: |
