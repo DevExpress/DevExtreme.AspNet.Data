@@ -32,17 +32,11 @@ Alternatively, you can get the JavaScript file directly [from the master branch]
 
 ## NuGet Package
 
-The CI `release-packages` artifact is retained for 14 days and includes the NuGet package and symbols, built with the same CI version as the npm packages. Only pushes to the default branch (`master`) in the upstream `DevExpress/DevExtreme.AspNet.Data` repository produce Release NuGet packages containing strong-name-signed assemblies, with package version `99.0.0-ci-NNN`. Pull requests, other branch pushes, scheduled runs, manual CI runs, and fork runs produce Debug NuGet packages containing unsigned assemblies under `bin/Debug`, without preparing signing dependencies or accessing the signing secret. Fork package versions also include the fork owner name.
-
-For tagged releases, the [Publish workflow](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/publish.yml) runs only when manually dispatched against a tag in the upstream repository. Version tags set the package version. It saves NuGet packages containing strong-name-signed Release assemblies in `nuget-packages` and npm packages in `npm-packages`, each retained for 7 days. Dry runs also generate these artifacts but skip actual npm publishing. The workflow does not push packages to a NuGet registry.
-
 Follow [these instructions](https://stackoverflow.com/q/10240029) to install the downloaded .nupkg file.
 
 ## Add an Assembly Binding Redirect
 
-The following redirect applies to strong-name-signed Release assemblies.
-
-For .NET framework projects, use the assembly version of the downloaded package in place of `99.0.0.0` below and add a binding redirect to the `web.config` or `app.config` file:
+For .NET framework projects, add a binding redirect to the `web.config` or `app.config` file:
 
 ```xml
 <configuration>
