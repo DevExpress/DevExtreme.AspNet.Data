@@ -59,10 +59,11 @@ jobs:
         release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
 
     - name: Pack NuGet package
-      run: dotnet pack net/DevExtreme.AspNet.Data -c "$BUILD_CONFIGURATION" --include-symbols
+      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} --include-symbols
 
     - name: Remove signing key
       if: always()
+      shell: bash
       run: rm -f net/DevExtreme.AspNet.Data/release.snk
 
     - name: Upload npm packages as artifacts
