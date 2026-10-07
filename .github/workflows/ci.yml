@@ -4,8 +4,7 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number || github.sha}}
   cancel-in-progress: true
 
-permissions:
-  contents: read
+permissions: {}
 
 on:
   push:
@@ -27,6 +26,8 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - run: git config --global core.autocrlf true
@@ -43,6 +44,8 @@ jobs:
 
   test-js:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -79,6 +82,8 @@ jobs:
 
   test-dotnet:
     runs-on: windows-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
@@ -95,6 +100,8 @@ jobs:
 
   release-packages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
@@ -135,6 +142,8 @@ jobs:
 
   docfx:
     runs-on: windows-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v4

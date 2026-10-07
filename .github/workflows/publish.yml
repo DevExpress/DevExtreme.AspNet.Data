@@ -12,8 +12,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: read
+permissions: {}
 
 env:
   NPM_CONFIG_AUDIT: "false"
@@ -27,6 +26,8 @@ jobs:
     if: github.repository == 'DevExpress/DevExtreme.AspNet.Data' && github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     environment: nuget
+    permissions:
+      contents: read
 
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
