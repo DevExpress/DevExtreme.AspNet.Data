@@ -12,7 +12,6 @@ on:
       - "dependabot/**"
       - "renovate/**"
   pull_request:
-  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 6'
 
