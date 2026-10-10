@@ -75,7 +75,7 @@ jobs:
     - run: npm run karma-bundled-nojquery
     - run: npm run karma-bundled-nojquery-cjs
 
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
       with:
         files: js-test/coverage/lcov.info
 
@@ -93,7 +93,7 @@ jobs:
 
     - run: JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_dotnet.xml --TargetExecutable=net\dotnet-test-all.cmd
 
-    - uses: codecov/codecov-action@v4
+    - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
       with:
         files: coverage_dotnet.xml
 
