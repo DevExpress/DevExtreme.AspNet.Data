@@ -26,6 +26,7 @@ namespace Sample.Controllers {
                 //----------------------------------------
                 o.OrderDateOnly,
                 o.OrderTimeOnly,
+                o.OrderDateTimeOffset,
                 //----------------------------------------
                 o.Freight,
                 o.ShipCountry,

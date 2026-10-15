@@ -9,10 +9,23 @@ ALTER TABLE [Orders]
 ADD [OrderTimeOnly] time NULL
 GO
 UPDATE [Orders] SET [OrderTimeOnly] = CONVERT(time, DATEADD(hour, ([OrderID] + 1), [OrderDate]))
+GO
+ALTER TABLE [Orders]
+ADD [OrderDateTimeOffset] datetimeoffset NULL
+GO
+-- (-14:00..+14:00)
+-- IF EXISTS (
+--     SELECT 1
+--     FROM [Orders]
+--     WHERE ([OrderID] - 10247) NOT BETWEEN -840 AND 840
+-- )
+--     THROW 50000, 'OrderDateTimeOffset offset minutes must be between -840 and 840.', 1
+-- GO
+UPDATE [Orders] SET [OrderDateTimeOffset] = TODATETIMEOFFSET([OrderDate], ([OrderID] - 10247))
 
 ---
 
-dotnet add package Microsoft.EntityFrameworkCore.Tools
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet package add Microsoft.EntityFrameworkCore.Tools --project Sample
+dotnet package add Microsoft.EntityFrameworkCore.SqlServer --project Sample
 
 Scaffold-DbContext "Data Source=(localdb)\MSSQLLocalDB; Database=Northwind; Integrated Security=True; MultipleActiveResultSets=True; App=EntityFramework" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

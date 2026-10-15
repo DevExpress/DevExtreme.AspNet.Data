@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data.ResponseModel;
+﻿using DevExtreme.AspNet.Data.Helpers;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,26 @@ namespace DevExtreme.AspNet.Data.Tests {
 
             Assert.Equal(4, result.totalCount);
             Assert.Equal(new[] { 3, 4 }, result.data.Cast<int>());
+        }
+
+        class DateTimeOffsetTestDto {
+            public int Id;
+            public DateTimeOffset At;
+        }
+
+        [Fact]
+        public void Load_FilterByDateTimeOffset_RoundTripsThroughRemoteQueryString() {
+            var items = new[] {
+                new DateTimeOffsetTestDto { Id = 1, At = new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero) },
+                new DateTimeOffsetTestDto { Id = 2, At = new DateTimeOffset(2024, 6, 2, 4, 30, 0, TimeSpan.Zero) }
+            };
+
+            var options = new SampleLoadOptions {
+                Filter = new[] { "At", "=", "2024-06-01T10:00:00+05:30" }
+            };
+            var result = DataSourceLoader.Load(items, options);
+
+            Assert.Equal(new[] { 1 }, result.data.Cast<DateTimeOffsetTestDto>().Select(i => i.Id));
         }
 
         [Fact]

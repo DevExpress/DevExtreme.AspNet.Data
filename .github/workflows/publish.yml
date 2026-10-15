@@ -1,0 +1,110 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Dry run (skip actual publishing)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  NUGET_XMLDOC_MODE: "skip"
+
+jobs:
+
+  pack:
+    if: github.repository == 'DevExpress/DevExtreme.AspNet.Data' && github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      contents: read
+
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+      BUILD_CONFIGURATION: Release
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: Build no-jquery package
+      run: node build/make-nojquery
+
+    - name: Set package versions
+      run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
+
+    - name: Pack npm packages
+      run: |
+        npm pack
+        npm pack ./js-nojquery
+
+    - name: Prepare NuGet deps
+      uses: ./.github/actions/prepare-nuget-deps
+      with:
+        encrypted-key-path: net/DevExtreme.AspNet.Data/release.snk.enc
+        release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
+
+    - name: Pack NuGet package
+      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+
+    - name: Remove signing key
+      if: always()
+      shell: bash
+      run: rm -f net/DevExtreme.AspNet.Data/release.snk
+
+    - name: Upload npm packages as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-packages
+        path: devextreme-aspnet-data-*.tgz
+        retention-days: 7
+        if-no-files-found: error
+
+    - name: Upload NuGet packages as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: |
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.snupkg
+        retention-days: 7
+        if-no-files-found: error
+
+  publish:
+    runs-on: ubuntu-slim
+    needs: pack
+    if: github.repository == 'DevExpress/DevExtreme.AspNet.Data' && github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/')
+    environment: npmjs
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        registry-url: 'https://registry.npmjs.org'
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: npm-packages
+
+    - name: Publish to npmjs
+      run: |
+        npm publish devextreme-aspnet-data-nojquery-*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
+        npm publish devextreme-aspnet-data-[0-9]*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}

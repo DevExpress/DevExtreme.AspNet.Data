@@ -1,0 +1,17 @@
+name: Repository Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  invoke:
+    name: Invoke
+    uses: DevExpress/github-actions/.github/workflows/repository-check.yml@repository-check

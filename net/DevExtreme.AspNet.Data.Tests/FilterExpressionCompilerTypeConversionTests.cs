@@ -168,6 +168,28 @@ namespace DevExtreme.AspNet.Data.Tests {
             Assert.Equal("False", compiler.Compile(new[] { "byte", "-3" }).Body.ToString());
             Assert.Equal("False", compiler.Compile(new[] { "byte", "257" }).Body.ToString());
             Assert.Equal("False", compiler.Compile(new[] { "int", "not-int" }).Body.ToString());
+            Assert.Equal("False", compiler.Compile(new[] { "dateTimeOffset", "not-a-date" }).Body.ToString());
+        }
+
+        [Fact]
+        public void DateTimeOffset_DifferentOffset_MatchesSameInstant() {
+            var obj = new Structs {
+                dateTimeOffset = new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero)
+            };
+
+            // Same instant, expressed with a client-side offset that differs from the stored value's offset.
+            AssertEvaluation(obj, "dateTimeOffset", "=", "2024-06-01T10:00:00+05:30");
+            AssertEvaluation(obj, "dateTimeOffset", "<=", "2024-06-01T10:00:00+05:30");
+            AssertEvaluation(obj, "dateTimeOffset", ">=", "2024-06-01T10:00:00+05:30");
+        }
+
+        [Fact]
+        public void NullableDateTimeOffset_DifferentOffset_MatchesSameInstant() {
+            var obj = new NullableStructs {
+                dateTimeOffset = new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero)
+            };
+
+            AssertEvaluation(obj, "dateTimeOffset", "=", "2024-06-01T10:00:00+05:30");
         }
 
 

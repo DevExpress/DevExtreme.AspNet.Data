@@ -281,6 +281,17 @@ namespace DevExtreme.AspNet.Data.Tests {
         }
 
         [Fact]
+        public void T819075_DateTimeOffset() {
+            dynamic sourceItem = new ExpandoObject();
+            sourceItem.p = new DateTimeOffset(2024, 6, 1, 4, 30, 0, TimeSpan.Zero);
+
+            Assert.Equal(1, DataSourceLoader.Load(new[] { sourceItem }, new SampleLoadOptions {
+                Filter = new[] { "p", "2024-06-01T10:00:00+05:30" },
+                RequireTotalCount = true
+            }).totalCount);
+        }
+
+        [Fact]
         public void Issue413() {
             // https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/413#issuecomment-580766581
 

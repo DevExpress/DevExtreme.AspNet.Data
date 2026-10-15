@@ -1,12 +1,14 @@
 # Using CI Builds
 
-You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml?query=branch%3Amaster). Please note that you need to be signed in to GitHub.
+You can download automated build artifacts [here](https://github.com/DevExpress/DevExtreme.AspNet.Data/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush). Please note that you need to be signed in to GitHub.
 
 - Click the most recent successful workflow run result. 
-- At the bottom of the opened page, download the `release-packages` archive.
+- At the bottom of the opened page, download the `release-packages` archive for npm packages and the NuGet package and symbols.
 
-It contains the following files:
+The `release-packages` archive from an upstream default-branch push contains the following files:
+
 - `net/DevExtreme.AspNet.Data/bin/Release/DevExtreme.AspNet.Data.99.0.0-ci-NNN.nupkg`
+- `net/DevExtreme.AspNet.Data/bin/Release/DevExtreme.AspNet.Data.99.0.0-ci-NNN.symbols.nupkg`
 - `devextreme-aspnet-data-99.0.0-ci-NNN.tgz`
 - `devextreme-aspnet-data-nojquery-99.0.0-ci-NNN.tgz`
 
