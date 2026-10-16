@@ -13,7 +13,7 @@ runs:
   using: "composite"
 
   steps:
-  - uses: actions/setup-dotnet@v4
+  - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
     with:
       dotnet-quality: ga
       dotnet-version: |
