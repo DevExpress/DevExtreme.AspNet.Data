@@ -4,13 +4,14 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number || github.sha}}
   cancel-in-progress: true
 
+permissions: {}
+
 on:
   push:
     branches-ignore:
       - "dependabot/**"
       - "renovate/**"
   pull_request:
-  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 6'
 
@@ -24,10 +25,12 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - run: git config --global core.autocrlf true
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - run: curl -L https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.3.5/ec-linux-amd64.tar.gz  | tar xzf - -C /opt
     - run: /opt/bin/ec-linux-amd64 -v
@@ -40,6 +43,8 @@ jobs:
 
   test-js:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -52,7 +57,7 @@ jobs:
     steps:
 
     - name: Checkout sources
-      uses: actions/checkout@v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Build no-jquery package
       run: node build/make-nojquery
@@ -70,15 +75,17 @@ jobs:
     - run: npm run karma-bundled-nojquery
     - run: npm run karma-bundled-nojquery-cjs
 
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
       with:
         files: js-test/coverage/lcov.info
 
   test-dotnet:
     runs-on: windows-latest
+    permissions:
+      contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - run: nuget install -Verbosity quiet -ExcludeVersion -OutputDirectory . -Version 2022.2.3 JetBrains.dotCover.CommandLineTools
 
@@ -86,34 +93,21 @@ jobs:
 
     - run: JetBrains.dotCover.CommandLineTools\tools\dotCover cover --ReturnTargetExitCode --ReportType=DetailedXML --Filters="+:module=DevExtreme.AspNet.Data" --Output=coverage_dotnet.xml --TargetExecutable=net\dotnet-test-all.cmd
 
-    - uses: codecov/codecov-action@v4
+    - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
       with:
         files: coverage_dotnet.xml
 
   release-packages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     env:
-      RELEASE_KEY_SECRET: ${{ secrets.RELEASE_KEY_SECRET }}
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+      BUILD_CONFIGURATION: ${{ (github.repository == 'DevExpress/DevExtreme.AspNet.Data' && github.event_name == 'push' && github.ref == 'refs/heads/releases/v5') && 'Release' || 'Debug' }}
 
     steps:
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-quality: ga
-        dotnet-version: |
-          3.1
-          8.0
-
-    - uses: actions/checkout@v4
-
-    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: |
-        wget https://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5_amd64.deb
-        curl -L -o /opt/secure-file.zip https://github.com/appveyor/secure-file/releases/download/1.0.1/secure-file.zip
-        unzip /opt/secure-file.zip -d /opt/secure-file
-        dotnet /opt/secure-file/secure-file.dll -decrypt net/DevExtreme.AspNet.Data/release.snk.enc -secret ${{ env.RELEASE_KEY_SECRET }}
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - run: node build/make-nojquery
     - run: node build/replace-meta "${{ github.run_number }}" "${{ github.ref }}" "${{ github.repository }}"
@@ -121,26 +115,42 @@ jobs:
     - run: npm pack
     - run: npm pack ./js-nojquery
 
-    - if: ${{ env.RELEASE_KEY_SECRET != '' }}
-      run: dotnet pack net/DevExtreme.AspNet.Data --configuration=Release --include-symbols
+    - name: Prepare NuGet deps
+      if: env.BUILD_CONFIGURATION == 'Release'
+      uses: ./.github/actions/prepare-nuget-deps
+      with:
+        encrypted-key-path: net/DevExtreme.AspNet.Data/release.snk.enc
+        release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
 
-    - uses: actions/upload-artifact@v4
+    - name: Pack NuGet package
+      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} --include-symbols
+
+    - name: Remove signing key
+      if: always()
+      shell: bash
+      run: rm -f net/DevExtreme.AspNet.Data/release.snk
+
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
       with:
         name: release-packages
         path: |
-          net/DevExtreme.AspNet.Data/bin/Release/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
           devextreme-aspnet-data-*.tgz
+        retention-days: 14
+        if-no-files-found: error
 
   docfx:
     runs-on: windows-latest
+    permissions:
+      contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - run: dotnet build net/DevExtreme.AspNet.Data
     - run: net\docfx\build.cmd
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
       with:
         name: docfx-site
         path: net/docfx/build/site
