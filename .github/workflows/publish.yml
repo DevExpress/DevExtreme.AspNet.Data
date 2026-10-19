@@ -103,6 +103,12 @@ jobs:
         name: npm-packages
 
     - name: Publish to npmjs
+      shell: bash
       run: |
-        npm publish devextreme-aspnet-data-nojquery-*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
-        npm publish devextreme-aspnet-data-[0-9]*.tgz --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
+        tags=(--tag latest)
+        if [[ "${GITHUB_REF%%+*}" == *-* ]]; then
+          tags=(--tag pre)
+        fi
+
+        npm publish devextreme-aspnet-data-nojquery-*.tgz "${tags[@]}" --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
+        npm publish devextreme-aspnet-data-[0-9]*.tgz "${tags[@]}" --provenance --access public ${{ inputs['dry-run'] && '--dry-run' || '' }}
