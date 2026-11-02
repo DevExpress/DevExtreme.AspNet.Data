@@ -20,6 +20,11 @@
       "excludePackageNames": [ "DevExpress.Xpo", "FluentNHibernate" ],
       "matchUpdateTypes": [ "major" ],
       "enabled": false
+    },
+    {
+      "matchManagers": [ "github-actions" ],
+      "matchUpdateTypes": [ "major" ],
+      "enabled": true
     }
   ],
   "reviewers": [
