@@ -60,7 +60,7 @@ jobs:
         release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
 
     - name: Pack NuGet package
-      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} --include-symbols
+      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Remove signing key
       if: always()
@@ -79,7 +79,9 @@ jobs:
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
       with:
         name: nuget-packages
-        path: net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
+        path: |
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.snupkg
         retention-days: 7
         if-no-files-found: error
 

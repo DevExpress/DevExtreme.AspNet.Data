@@ -123,7 +123,7 @@ jobs:
         release-key-secret: ${{ secrets.RELEASE_KEY_SECRET }}
 
     - name: Pack NuGet package
-      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} --include-symbols
+      run: dotnet pack net/DevExtreme.AspNet.Data -c ${{ env.BUILD_CONFIGURATION }} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Remove signing key
       if: always()
@@ -135,6 +135,7 @@ jobs:
         name: release-packages
         path: |
           net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.nupkg
+          net/DevExtreme.AspNet.Data/bin/${{ env.BUILD_CONFIGURATION }}/*.snupkg
           devextreme-aspnet-data-*.tgz
         retention-days: 14
         if-no-files-found: error
