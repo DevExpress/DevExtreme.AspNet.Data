@@ -33,6 +33,11 @@
     "webpack-cli": "7.3.1",
     "xhr-mock": "2.5.1"
   },
+  "overrides": {
+    "eslint": {
+      "minimatch": "11.0.4"
+    }
+  },
   "scripts": {
     "karma": "cd js-test && karma start",
     "karma-bundled": "cd js-test && webpack && karma start --bundled",
