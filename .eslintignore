@@ -1,5 +1,0 @@
-docs
-js-test/check-ts-compilation.*
-js-test/test-bundle.js
-net
-node_modules

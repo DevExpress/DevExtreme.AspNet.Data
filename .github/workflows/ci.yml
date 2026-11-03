@@ -41,18 +41,13 @@ jobs:
     - name: Lint
       run: npm run eslint
 
+    - name: Check DevExtreme and jQuery versions are in sync
+      run: node build/check-deps-sync
+
   test-js:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
-    strategy:
-      fail-fast: false
-      matrix:
-        version:
-          - '18.1'
-          - '22.2'
-          - 'latest'
 
     steps:
 
@@ -61,11 +56,6 @@ jobs:
 
     - name: Build no-jquery package
       run: node build/make-nojquery
-
-    - name: Move lockfile
-      if: ${{ matrix.version != 'latest' }}
-      shell: bash
-      run: cp -f js-test/${{ matrix.version }}/package-lock.json package-lock.json
 
     - run: npm ci
 

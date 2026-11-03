@@ -1,5 +1,4 @@
-/* eslint-env browser */
-/* global ASPNET_DATA_SCRIPT:false, DevExpress:false, Promise:false */
+/* global ASPNET_DATA_SCRIPT:false, DevExpress:false, Promise:false, window:false, document:false */
 
 (function(factory) {
     "use strict";

@@ -1,7 +1,7 @@
 {
   "name": "sample",
   "dependencies": {
-    "devextreme-dist": "~23.2.0",
+    "devextreme-dist": "26.1.6",
     "jquery": "3.7.1"
   }
 }

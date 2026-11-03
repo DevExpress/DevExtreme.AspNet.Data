@@ -1,4 +1,3 @@
-/* eslint-env node, es6 */
 "use strict";
 
 const DefinePlugin = require("webpack").DefinePlugin;
