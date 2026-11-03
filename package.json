@@ -34,9 +34,7 @@
     "xhr-mock": "2.5.1"
   },
   "overrides": {
-    "eslint": {
-      "minimatch": "11.0.4"
-    }
+    "minimatch@^10": "11.0.4"
   },
   "scripts": {
     "karma": "cd js-test && karma start",
