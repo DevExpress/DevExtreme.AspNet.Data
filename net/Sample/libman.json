@@ -2,22 +2,22 @@
   "version": "1.0",
   "libraries": [
     {
-      "library": "node_modules/jquery/dist/jquery.js",
+      "library": "../../node_modules/jquery/dist/jquery.js",
       "provider": "filesystem",
       "destination": "wwwroot/lib/"
     },
     {
-      "library": "node_modules/devextreme-dist/js/dx.all.debug.js",
+      "library": "../../node_modules/devextreme-dist/js/dx.all.debug.js",
       "provider": "filesystem",
       "destination": "wwwroot/lib/devextreme/js/"
     },
     {
-      "library": "node_modules/devextreme-dist/css/dx.light.css",
+      "library": "../../node_modules/devextreme-dist/css/dx.light.css",
       "provider": "filesystem",
       "destination": "wwwroot/lib/devextreme/css/"
     },
     {
-      "library": "node_modules/devextreme-dist/css/icons/",
+      "library": "../../node_modules/devextreme-dist/css/icons/",
       "provider": "filesystem",
       "destination": "wwwroot/lib/devextreme/css/icons"
     },

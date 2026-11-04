@@ -20,6 +20,10 @@
       "excludePackageNames": [ "DevExpress.Xpo", "FluentNHibernate" ],
       "matchUpdateTypes": [ "major" ],
       "enabled": false
+    },
+    {
+      "matchPackageNames": [ "devextreme", "devextreme-dist", "jquery" ],
+      "enabled": false
     }
   ],
   "reviewers": [
